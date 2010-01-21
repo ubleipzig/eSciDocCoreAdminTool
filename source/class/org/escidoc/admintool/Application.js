@@ -106,7 +106,7 @@ qx.Class.define("org.escidoc.admintool.Application", {
             resourceFolder.add(userAccountsTreeFile);
             
             //Custom Resource to be added.
-            var aResourceTreeFile = new qx.ui.tree.TreeFile("a Resource");
+            var aResourceTreeFile = new qx.ui.tree.TreeFile("A Resource");
             aResourceTreeFile.setIcon(userAccountIcon);
             resourceFolder.add(aResourceTreeFile);
             
@@ -116,7 +116,7 @@ qx.Class.define("org.escidoc.admintool.Application", {
             
             //add table to  resource Page.
             aResourceTreeFile.tabPage.add(this.createTable());
-
+            
             resourceFolder.tabView.add(aResourceTreeFile.tabPage);
             adminToolRootFolder.add(resourceFolder);
             
@@ -153,13 +153,13 @@ qx.Class.define("org.escidoc.admintool.Application", {
         
         createTable: function(){
             // Create the initial data
-            //var rowData = this.createRandomRows(50);
+            var rowData = this.createRandomRows(10);
             
             // table model
             var tableModel = new qx.ui.table.model.Simple();
             
-            tableModel.setColumns(["ID", "A number", "A date", "Boolean"]);
-            // tableModel.setData(rowData);
+            tableModel.setColumns(["ID", "Name", "Created On", "Active"]);
+            tableModel.setData(rowData);
             tableModel.setColumnEditable(1, true);
             tableModel.setColumnEditable(2, true);
             tableModel.setColumnSortable(3, false);
@@ -185,10 +185,20 @@ qx.Class.define("org.escidoc.admintool.Application", {
             
             return table;
         },
-        
-        /*
-         Displays the appropriate tabs for a navigationTree entry.
-         */
+        createRandomRows: function(numberOfRows){
+            var now = new Date().getTime();
+            var dateRange = 365 * 24 * 60 * 60 * 1000;
+            var userId = 0;
+            
+            var rowData = [];
+            for (var rowIndex = 0; rowIndex < numberOfRows; rowIndex++) {
+                //What this line of code actually doing? => refactor to a function
+                var date = new Date(now + Math.random() * dateRange - dateRange / 2);
+                rowData.push([userId++, Math.random() * 10000, date, (Math.random() > 0.5)]);
+            }
+            return rowData;
+        },
+        // Displays the appropriate tabs for a navigationTree entry.
         showFolderView: function(folder, tab){
             var label = folder.getLabel();
             if (folder.tabView) {
