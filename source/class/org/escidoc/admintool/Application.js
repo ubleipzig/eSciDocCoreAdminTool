@@ -112,15 +112,20 @@ qx.Class.define("org.escidoc.admintool.Application", {
             
             //Tab page for aResource
             aResourceTreeFile.tabPage = new qx.ui.tabview.Page("A Resource", userAccountIcon);
-            aResourceTreeFile.tabPage.setLayout(new qx.ui.layout.HBox());
+            aResourceTreeFile.tabPage.setLayout(new qx.ui.layout.VBox());
+            
+            //Add toolbar to tab page
+            var toolbar = new qx.ui.toolbar.ToolBar();
+            var createNewResourceButton = new qx.ui.toolbar.Button("Create New Resource");
+            toolbar.add(createNewResourceButton);
+            aResourceTreeFile.tabPage.add(toolbar);
             
             //add table to  resource Page.
             aResourceTreeFile.tabPage.add(this.createTable());
-            
+
             resourceFolder.tabView.add(aResourceTreeFile.tabPage);
-            adminToolRootFolder.add(resourceFolder);
-            
-            
+			adminToolRootFolder.add(resourceFolder);
+                        
             // listener
             navigationTree.addListener("changeSelection", function(e){
                 var data = e.getData();
@@ -158,7 +163,7 @@ qx.Class.define("org.escidoc.admintool.Application", {
             // table model
             var tableModel = new qx.ui.table.model.Simple();
             
-            tableModel.setColumns(["ID", "Name", "Created On", "Active"]);
+            tableModel.setColumns(["Resource ID", "Name", "Created On", "Active"]);
             tableModel.setData(rowData);
             tableModel.setColumnEditable(1, true);
             tableModel.setColumnEditable(2, true);
@@ -198,6 +203,18 @@ qx.Class.define("org.escidoc.admintool.Application", {
             }
             return rowData;
         },
+        createTableControls: function(){
+            var toolbar = new qx.ui.toolbar.Toolbar();
+            var part, createButton;
+            
+            part = new qx.ui.toolbar.Part();
+            toolbar.add(part);
+            
+            createButton = new qx.ui.toolbar.Button("Create new Resource", "icon/16/apps/office-calendar.png");
+            part.add(createButton);
+            return toolbar;
+        },
+        
         // Displays the appropriate tabs for a navigationTree entry.
         showFolderView: function(folder, tab){
             var label = folder.getLabel();
