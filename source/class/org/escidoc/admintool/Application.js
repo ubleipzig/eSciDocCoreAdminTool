@@ -126,7 +126,7 @@ qx.Class.define("org.escidoc.admintool.Application", {
             //add table to  resource Page.
             aResourceTreeFile.tabPage.add(this.createTable());
             
-            resourceFolder.tabView.add( aResourceTreeFile.tabPage);
+            resourceFolder.tabView.add(aResourceTreeFile.tabPage);
             
             adminToolRootFolder.add(resourceFolder);
             
@@ -137,6 +137,11 @@ qx.Class.define("org.escidoc.admintool.Application", {
             
             newResourceTreeFile.tabPage = new org.escidoc.admintool.tabview.page.NewResource();
             resourceFolder.tabView.add(newResourceTreeFile.tabPage);
+            newResourceTreeFile.tabPage.addListener("addNewResource", function(e){
+                var newResourceTab = new org.escidoc.admintool.tabview.page.NewResource();
+                resourceFolder.tabView.add(newResourceTab);
+                resourceFolder.tabView.setSelection([newResourceTab])
+            }, this);
             
             // listener
             navigationTree.addListener("changeSelection", function(e){
@@ -224,7 +229,8 @@ qx.Class.define("org.escidoc.admintool.Application", {
             return toolbar;
         },
         addCreateNewResourceTab: function(){
-            var tab = new org.escidoc.admintool.tabview.page.Experiment();
+            // alert("new Resource");
+            //var tab = new org.escidoc.admintool.tabview.page.Experiment();
             //tabview.add(tab);
             //tabview.setSelection([tab]);
         },

@@ -9,7 +9,7 @@ qx.Class.define("org.escidoc.admintool.tabview.page.NewResource", {
         
         this.add(container);
         this.addToolbar(container);
-
+        
         this.bind("title", this, "label");
     },
     
@@ -19,7 +19,7 @@ qx.Class.define("org.escidoc.admintool.tabview.page.NewResource", {
     
     members: {
         icon: "icon/16/apps/utilities-system-monitor.png",
-        form: null,       
+        form: null,
         createContainer: function(){
             var container = new qx.ui.container.Composite();
             container.setLayout(new qx.ui.layout.VBox());
@@ -28,17 +28,16 @@ qx.Class.define("org.escidoc.admintool.tabview.page.NewResource", {
         addToolbar: function(container){
             var toolbar = new qx.ui.toolbar.ToolBar();
             var createNewResourceButton = new qx.ui.toolbar.Button("Create New Resource");
-	        createNewResourceButton.addListener("execute", 
-				this.addCreateNewResourceTab, this);
-			toolbar.add(createNewResourceButton);
+            createNewResourceButton.addListener("execute", function(){
+				this.fireEvent("addNewResource");
+			}, this);
+            toolbar.add(createNewResourceButton);
             container.add(toolbar);
             return container;
         },
-		addCreateNewResourceTab: function(){
-            var tab = new org.escidoc.admintool.tabview.page.Experiment();
-            //this.getParent().add(tab);
-            //this.setSelection([tab]);
-        }
+    },
+    events: {
+        "addNewResource": "qx.event.type.Data"
     },
     properties: {
         id: {
