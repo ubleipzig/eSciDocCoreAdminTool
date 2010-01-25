@@ -120,13 +120,13 @@ qx.Class.define("org.escidoc.admintool.Application", {
             aResourceTreeFile.setIcon(userAccountIcon);
             resourceFolder.add(aResourceTreeFile);
             
-            aResourceTreeFile.tabPage = new org.escidoc.admintool.tabview.page.NewResource();
+            aResourceTreeFile.tabPage = new org.escidoc.admintool.tabview.page.Resource();
             resourceFolder.tabView.add(aResourceTreeFile.tabPage);
             
             aResourceTreeFile.tabPage.addListener("addNewResource", function(){
-                var newResourceTab = new org.escidoc.admintool.tabview.page.NewResource();
-                resourceFolder.tabView.add(newResourceTab);
-                resourceFolder.tabView.setSelection([newResourceTab]);
+                var ResourceTab = new org.escidoc.admintool.tabview.page.Resource();
+                resourceFolder.tabView.add(ResourceTab);
+                resourceFolder.tabView.setSelection([ResourceTab]);
             }, this);
             
             // listener

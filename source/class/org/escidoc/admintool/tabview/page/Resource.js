@@ -1,25 +1,15 @@
-qx.Class.define("org.escidoc.admintool.tabview.page.NewResource", {
+qx.Class.define("org.escidoc.admintool.tabview.page.Resource", {
     extend: qx.ui.tabview.Page,
     construct: function(){
         this.base(arguments, this.title, this.icon);
         this.setLayout(new qx.ui.layout.VBox());
         this.setShowCloseButton(true);
-        
         var container = this.createContainer();
-        
         this.add(container);
         this.addToolbar(container);
-        
-        //add table to  resource Page.
         this.add(this.createTable());
-        
         this.bind("title", this, "label");
     },
-    
-    statics: {
-        DEFAULT_VALIDATOR: null
-    },
-    
     members: {
         icon: "icon/16/apps/utilities-system-monitor.png",
         form: null,
