@@ -236,8 +236,5 @@ qx.Class.define("org.escidoc.admintool.Application", {
                 alert("Folder without view.");
             }
         }
-    },
-    events: {
-        "addNewResource": "qx.event.type.Data"
     }
 });
