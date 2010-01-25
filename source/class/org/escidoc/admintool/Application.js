@@ -113,8 +113,8 @@ qx.Class.define("org.escidoc.admintool.Application", {
             userAccountsTreeFile.tabPage.setLayout(new qx.ui.layout.VBox());
             
             resourceFolder.tabView.add(userAccountsTreeFile.tabPage);
-            
-            
+			
+			/***********************************************************/
             //A Resource section.
             var aResourceTreeFile = new qx.ui.tree.TreeFile("A Resource");
             aResourceTreeFile.setIcon(userAccountIcon);
@@ -124,9 +124,9 @@ qx.Class.define("org.escidoc.admintool.Application", {
             resourceFolder.tabView.add(aResourceTreeFile.tabPage);
             
             aResourceTreeFile.tabPage.addListener("addNewResource", function(){
-                var ResourceTab = new org.escidoc.admintool.tabview.page.Resource();
-                resourceFolder.tabView.add(ResourceTab);
-                resourceFolder.tabView.setSelection([ResourceTab]);
+                var newResoucePage = new org.escidoc.admintool.tabview.page.NewResource();
+                resourceFolder.tabView.add(newResoucePage);
+                resourceFolder.tabView.setSelection([newResoucePage]);
             }, this);
             
             // listener
