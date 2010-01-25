@@ -97,7 +97,7 @@ qx.Class.define("org.escidoc.admintool.tabview.page.NewResource", {
             event: "changeId"
         },
         title: {
-            init: "New Resource",
+            init: "A Resource",
             check: "String",
             nullable: false,
             event: "changeTitle"

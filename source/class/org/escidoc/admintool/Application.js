@@ -82,6 +82,8 @@ qx.Class.define("org.escidoc.admintool.Application", {
             
             //Resources
             var resourceFolder = new qx.ui.tree.TreeFolder("Resources");
+            adminToolRootFolder.add(resourceFolder);
+            
             resourceFolder.setOpen(true);
             
             //create a tav view for this resource folder.
@@ -111,10 +113,9 @@ qx.Class.define("org.escidoc.admintool.Application", {
             userAccountsTreeFile.tabPage.setLayout(new qx.ui.layout.VBox());
             
             resourceFolder.tabView.add(userAccountsTreeFile.tabPage);
-
-            adminToolRootFolder.add(resourceFolder);
             
-            //new Resource section.
+            
+            //A Resource section.
             var aResourceTreeFile = new qx.ui.tree.TreeFile("A Resource");
             aResourceTreeFile.setIcon(userAccountIcon);
             resourceFolder.add(aResourceTreeFile);
