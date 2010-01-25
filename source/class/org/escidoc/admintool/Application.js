@@ -111,36 +111,21 @@ qx.Class.define("org.escidoc.admintool.Application", {
             userAccountsTreeFile.tabPage.setLayout(new qx.ui.layout.VBox());
             
             resourceFolder.tabView.add(userAccountsTreeFile.tabPage);
+
+            adminToolRootFolder.add(resourceFolder);
             
-            //Custom Resource to be added.
+            //new Resource section.
             var aResourceTreeFile = new qx.ui.tree.TreeFile("A Resource");
             aResourceTreeFile.setIcon(userAccountIcon);
             resourceFolder.add(aResourceTreeFile);
             
-            aResourceTreeFile.tabPage = new qx.ui.tabview.Page("A Resource", userAccountIcon);
-            aResourceTreeFile.tabPage.setLayout(new qx.ui.layout.VBox());
-            
-            //Add toolbar to tab page
-            aResourceTreeFile.tabPage.add(this.addToolbar());
-            
-            //add table to  resource Page.
-            aResourceTreeFile.tabPage.add(this.createTable());
-            
+            aResourceTreeFile.tabPage = new org.escidoc.admintool.tabview.page.NewResource();
             resourceFolder.tabView.add(aResourceTreeFile.tabPage);
             
-            adminToolRootFolder.add(resourceFolder);
-            
-            //new Resource section.
-            var newResourceTreeFile = new qx.ui.tree.TreeFile("A New Resource");
-            newResourceTreeFile.setIcon(userAccountIcon);
-            resourceFolder.add(newResourceTreeFile);
-            
-            newResourceTreeFile.tabPage = new org.escidoc.admintool.tabview.page.NewResource();
-            resourceFolder.tabView.add(newResourceTreeFile.tabPage);
-            newResourceTreeFile.tabPage.addListener("addNewResource", function(e){
+            aResourceTreeFile.tabPage.addListener("addNewResource", function(){
                 var newResourceTab = new org.escidoc.admintool.tabview.page.NewResource();
                 resourceFolder.tabView.add(newResourceTab);
-                resourceFolder.tabView.setSelection([newResourceTab])
+                resourceFolder.tabView.setSelection([newResourceTab]);
             }, this);
             
             // listener
@@ -224,15 +209,11 @@ qx.Class.define("org.escidoc.admintool.Application", {
             var toolbar = new qx.ui.toolbar.ToolBar();
             var createNewResourceButton = new qx.ui.toolbar.Button("Create New Resource");
             
-            createNewResourceButton.addListener("execute", this.addCreateNewResourceTab, this);
+            createNewResourceButton.addListener("execute", function(){
+                this.fireEvent("addNewResource");
+            }, this);
             toolbar.add(createNewResourceButton);
             return toolbar;
-        },
-        addCreateNewResourceTab: function(){
-            // alert("new Resource");
-            //var tab = new org.escidoc.admintool.tabview.page.Experiment();
-            //tabview.add(tab);
-            //tabview.setSelection([tab]);
         },
         // Displays the appropriate tabs for a navigationTree entry.
         showFolderView: function(folder, tab){
@@ -254,5 +235,8 @@ qx.Class.define("org.escidoc.admintool.Application", {
                 alert("Folder without view.");
             }
         }
+    },
+    events: {
+        "addNewResource": "qx.event.type.Data"
     }
 });
