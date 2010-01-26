@@ -3,7 +3,6 @@ qx.Class.define("org.escidoc.admintool.tabview.page.Resource", {
     construct: function(){
         this.base(arguments, this.title, this.icon);
         this.setLayout(new qx.ui.layout.VBox());
-        this.setShowCloseButton(true);
         var container = this.createContainer();
         this.add(container);
         this.addToolbar(container);
@@ -20,11 +19,19 @@ qx.Class.define("org.escidoc.admintool.tabview.page.Resource", {
         },
         addToolbar: function(container){
             var toolbar = new qx.ui.toolbar.ToolBar();
+            
             var createNewResourceButton = new qx.ui.toolbar.Button("Create New Resource");
             createNewResourceButton.addListener("execute", function(){
                 this.fireEvent("addNewResource");
             }, this);
             toolbar.add(createNewResourceButton);
+            
+            var deleteSelectedResourceButton = new qx.ui.toolbar.Button("Delete");
+            deleteSelectedResourceButton.addListener("execute", function(){
+                this.fireEvent("deleteSelectedResources");
+            }, this);
+            toolbar.add(deleteSelectedResourceButton);
+            
             container.add(toolbar);
             return container;
         },
@@ -60,6 +67,19 @@ qx.Class.define("org.escidoc.admintool.tabview.page.Resource", {
             // use a different header renderer
             tcm.setHeaderCellRenderer(2, new qx.ui.table.headerrenderer.Icon("icon/16/apps/office-calendar.png", "A date"));
             
+            table.setStatusBarVisible(false);
+            
+			table.addListener("deleteSelectedResources",function(){
+				alert("me");
+			
+			/*	var selection =[];
+				table.getSelectionModel().iterateSelection(function(ind){
+					selection.push(ind+"");
+				})
+				alert(selection.join(", "));
+			*/},this);
+			
+			
             return table;
         },
         createRandomRows: function(numberOfRows){
@@ -68,6 +88,7 @@ qx.Class.define("org.escidoc.admintool.tabview.page.Resource", {
             var userId = 0;
             
             var rowData = [];
+            var deleteButton = new qx.ui.form.Button("Delete");
             for (var rowIndex = 0; rowIndex < numberOfRows; rowIndex++) {
                 //What this line of code actually doing? => refactor to a function
                 var date = new Date(now + Math.random() * dateRange - dateRange / 2);
@@ -77,7 +98,8 @@ qx.Class.define("org.escidoc.admintool.tabview.page.Resource", {
         }
     },
     events: {
-        "addNewResource": "qx.event.type.Data"
+        "addNewResource": "qx.event.type.Data",
+        "deleteSelectedResources": "qx.event.type.Data"
     },
     properties: {
         id: {

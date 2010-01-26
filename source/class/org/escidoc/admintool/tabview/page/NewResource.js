@@ -8,16 +8,11 @@ qx.Class.define("org.escidoc.admintool.tabview.page.NewResource", {
         this.setLayout(new qx.ui.layout.HBox());
         this.setShowCloseButton(true);
         
-        // one container containing everything else (to dont strech content
-        // over the whole page)
         var container = new qx.ui.container.Composite();
         container.forms = new Array();
         container.setLayout(new qx.ui.layout.VBox());
         this.add(container);
         
-        // data from infrastructure
-        // make store
-        // make binding
         this.bind("title", this, "label");
         
         // Page display consists of several Forms
@@ -35,26 +30,22 @@ qx.Class.define("org.escidoc.admintool.tabview.page.NewResource", {
         this.form.add(tfName, "Name", org.escidoc.admintool.tabview.page.Experiment.DEFAULT_VALIDATOR, "name");
         tfName.bind("value", this, "title");
         
-        
         var loginName = new qx.ui.form.TextField();
         loginName.setRequired(true);
         loginName.setWidth(400);
         this.form.add(loginName, "Login Name", org.escidoc.admintool.tabview.page.Experiment.DEFAULT_VALIDATOR, "login-name");
         //loginName.bind("value", this, "login-name"); */
         
+		// mail
+        var tfEmail = new qx.ui.form.TextField();
+        this.form.add(tfEmail, "Email", qx.util.Validate.email(), "email");
+        tfEmail.bind("value", this, "email");     
         
         // description
         var tfDescription = new qx.ui.form.TextArea();
         //tfDescription.setWidth(400);
         this.form.add(tfDescription, "Description", org.escidoc.admintool.tabview.page.Experiment.DEFAULT_VALIDATOR, "description");
         tfDescription.bind("value", this, "description");
-        
-        // id (readonly)
-        var tfId = new qx.ui.form.TextField(this.id);
-        //tfId.setWidth(100);
-        tfId.setReadOnly(true);
-        this.form.add(tfId, "ID", org.escidoc.admintool.tabview.page.Experiment.DEFAULT_VALIDATOR, "id");
-        //this.bind("id", tfId, "value");
         
         // context aka workspace
         var tfWorkspace = new qx.ui.form.TextField();
@@ -74,12 +65,7 @@ qx.Class.define("org.escidoc.admintool.tabview.page.NewResource", {
         tfDepositService.setRequired(true);
         this.form.add(tfDepositService, "Deposit Service URL", qx.util.Validate.url(), "depositServiceUrl");
         tfDepositService.bind("value", this, "depositServiceUrl");
-        
-        // mail
-        var tfEmail = new qx.ui.form.TextField();
-        this.form.add(tfEmail, "Email", qx.util.Validate.email(), "email");
-        tfEmail.bind("value", this, "email");
-        
+
         var formView = new qx.ui.form.renderer.Single(this.form);
         container.add(formView);
         
@@ -188,12 +174,10 @@ qx.Class.define("org.escidoc.admintool.tabview.page.NewResource", {
         folderBox.add(durationBox);
         container.add(folderBox);
         
-    },
-    
+    },    
     statics: {
         DEFAULT_VALIDATOR: null
     },
-    
     properties: {
         id: {
             init: "",
@@ -201,28 +185,24 @@ qx.Class.define("org.escidoc.admintool.tabview.page.NewResource", {
             nullable: false,
             event: "changeId"
         },
-        
         title: {
             init: "New User",
             check: "String",
             nullable: false,
             event: "changeTitle"
-        },
-        
+        },  
         description: {
             init: "",
             check: "String",
             nullable: false,
             event: "changeDescription"
-        },
-        
+        },       
         contextId: {
             init: "escidoc:persistent3",
             check: "String",
             nullable: false,
             event: "changeContextId"
-        },
-        
+        },   
         eSyncDaemonUrl: {
             init: "",
             check: "String",
