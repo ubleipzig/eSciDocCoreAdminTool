@@ -18,7 +18,7 @@ qx.Class.define("org.escidoc.admintool.tabview.page.Resource", {
         }, this);
     },
     members: {
-        icon: "icon/16/apps/utilities-system-monitor.png",
+        icon: "icon/16/apps/preferences-users.png",
         form: null,
         createContainer: function(){
             var container = new qx.ui.container.Composite();

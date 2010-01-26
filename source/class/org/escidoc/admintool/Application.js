@@ -104,19 +104,20 @@ qx.Class.define("org.escidoc.admintool.Application", {
 					});
 			resourceFolder.tabPage = resourcePageInfo
 			resourceFolder.tabView.add(resourceFolder.tabPage);
+			var userAccountIcon = "icon/16/apps/preferences-users.png";
 
 			// User Accounts
-			var userAccountsTreeFile = new qx.ui.tree.TreeFile("User Accounts");
-			var userAccountIcon = "icon/16/apps/utilities-system-monitor.png";
-			userAccountsTreeFile.setIcon(userAccountIcon);
-			resourceFolder.add(userAccountsTreeFile);
-
-			// create tab page for user accounts tree file.
-			userAccountsTreeFile.tabPage = new qx.ui.tabview.Page(
-					"User Accounts", userAccountIcon);
-			userAccountsTreeFile.tabPage.setLayout(new qx.ui.layout.VBox());
-
-			resourceFolder.tabView.add(userAccountsTreeFile.tabPage);
+			// var userAccountsTreeFile = new qx.ui.tree.TreeFile("User
+			// Accounts");
+			// userAccountsTreeFile.setIcon(userAccountIcon);
+			// resourceFolder.add(userAccountsTreeFile);
+			//
+			// // create tab page for user accounts tree file.
+			// userAccountsTreeFile.tabPage = new qx.ui.tabview.Page(
+			// "User Accounts", userAccountIcon);
+			// userAccountsTreeFile.tabPage.setLayout(new qx.ui.layout.VBox());
+			//
+			// resourceFolder.tabView.add(userAccountsTreeFile.tabPage);
 
 			/** ******************************************************** */
 			// A Resource section.
@@ -132,7 +133,6 @@ qx.Class.define("org.escidoc.admintool.Application", {
 				resourceFolder.tabView.add(newResoucePage);
 				resourceFolder.tabView.setSelection([newResoucePage]);
 			}, this);
-
 
 			// listener
 			navigationTree.addListener("changeSelection", function(e) {
