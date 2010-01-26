@@ -3,18 +3,18 @@ qx.Class.define("org.escidoc.admintool.tabview.page.Resource", {
     construct: function(){
         this.base(arguments, this.title, this.icon);
         this.setLayout(new qx.ui.layout.VBox());
-        var container = this.createContainer();
-        this.add(container);
-        this.addToolbar(container);
-        var aTable = this.createTable();
-        this.add(aTable);
+        this._container = this.createContainer();
+        this.add(this._container);
+        this.addToolbar(this._container);
+        this._table = this.createTable();
+        this.add(this._table);
         this.bind("title", this, "label");
         this.addListener("deleteSelectedResources", function(){
             var selection = [];
-            aTable.getSelectionModel().iterateSelection(function(ind){
+            this._table.getSelectionModel().iterateSelection(function(ind){
                 selection.push(ind + "");
             })
-			alert("row: "+selection+" will be deleted.");
+            alert("row: " + selection + " will be deleted.");
         }, this);
     },
     members: {
@@ -52,9 +52,8 @@ qx.Class.define("org.escidoc.admintool.tabview.page.Resource", {
             
             tableModel.setColumns(["Resource ID", "Name", "Created On", "Active", "a Column", "a Column", "a Column", "a Column", "a Column", "a Column"]);
             tableModel.setData(rowData);
-            tableModel.setColumnEditable(1, true);
-            tableModel.setColumnEditable(2, true);
-            tableModel.setColumnSortable(3, false);
+            tableModel.setColumnSortable(3, true);
+            tableModel.setColumnSortable(4, false);
             
             // table
             var table = new qx.ui.table.Table(tableModel);
@@ -92,7 +91,7 @@ qx.Class.define("org.escidoc.admintool.tabview.page.Resource", {
                 var date = new Date(now + Math.random() * dateRange -
                 dateRange /
                 2);
-                rowData.push([userId++, Math.random() * 10000, date, (Math.random() > 0.5)]);
+                rowData.push([userId++, Math.random() * 10000, date, (Math.random() > 0.5), "Edit Button"]);
             }
             return rowData;
         }
