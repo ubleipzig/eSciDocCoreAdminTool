@@ -42,11 +42,12 @@ qx.Class.define("org.escidoc.admintool.tabview.page.NewResource", {
 				var label = new qx.ui.basic.Label("Password");
 				label.setBuddy(passwordField);
 				this.form.add(passwordField, "Password", "password");
+                
 				// Email
-				var tfEmail = new qx.ui.form.TextField();
-				this.form.add(tfEmail, "Email", qx.util.Validate.email(),
+				var emailTextField = new qx.ui.form.TextField();
+				this.form.add(emailTextField, "Email", qx.util.Validate.email(),
 						"email");
-				tfEmail.bind("value", this, "email");
+				emailTextField.bind("value", this, "email");
 
 				// grants
 				var comboBox = new qx.ui.form.ComboBox();
@@ -66,6 +67,7 @@ qx.Class.define("org.escidoc.admintool.tabview.page.NewResource", {
 				validationManager
 						.add(loginTextField, qx.util.Validate.required);
 				validationManager.add(passwordField, qx.util.Validate.required);
+                validationManager.add(emailTextField, qx.util.Validate.email());
 
 				// invoke the serialization
 				createButton.addListener("execute", function() {
