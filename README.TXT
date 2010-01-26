@@ -10,6 +10,7 @@ Requirements
 TODO
 	add multi-selection of resources for delete.
 	add edit button in resource table
+		according to [1], we should use HTML renderer to create a button.
 	add admin login form.
 	load data
 		load static JSON data from file system
@@ -21,3 +22,8 @@ Notes
 	
 Features
 	Manual ingest using user defined identifier.
+
+References:
+
+[1] "Re: [qooxdoo-devel] [SPAM] Buttons on a table, "
+http://www.mail-archive.com/qooxdoo-devel@lists.sourceforge.net/msg19622.html
