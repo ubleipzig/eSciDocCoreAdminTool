@@ -133,6 +133,7 @@ qx.Class.define("org.escidoc.admintool.Application", {
 				resourceFolder.tabView.setSelection([newResoucePage]);
 			}, this);
 
+
 			// listener
 			navigationTree.addListener("changeSelection", function(e) {
 						var data = e.getData();

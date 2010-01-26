@@ -3,7 +3,6 @@ qx.Class.define("org.escidoc.admintool.tabview.page.Experiment",
   extend: qx.ui.tabview.Page,
   construct: function(id)
   {
-
     // init this Page (superclass)
     this.base(arguments, this.title, this.icon);
     this.setLayout(new qx.ui.layout.HBox());

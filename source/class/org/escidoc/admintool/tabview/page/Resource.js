@@ -6,8 +6,16 @@ qx.Class.define("org.escidoc.admintool.tabview.page.Resource", {
         var container = this.createContainer();
         this.add(container);
         this.addToolbar(container);
-        this.add(this.createTable());
+        var aTable = this.createTable();
+        this.add(aTable);
         this.bind("title", this, "label");
+        this.addListener("deleteSelectedResources", function(){
+            var selection = [];
+            aTable.getSelectionModel().iterateSelection(function(ind){
+                selection.push(ind + "");
+            })
+			alert("row: "+selection+" will be deleted.");
+        }, this);
     },
     members: {
         icon: "icon/16/apps/utilities-system-monitor.png",
@@ -69,17 +77,6 @@ qx.Class.define("org.escidoc.admintool.tabview.page.Resource", {
             
             table.setStatusBarVisible(false);
             
-			table.addListener("deleteSelectedResources",function(){
-				alert("me");
-			
-			/*	var selection =[];
-				table.getSelectionModel().iterateSelection(function(ind){
-					selection.push(ind+"");
-				})
-				alert(selection.join(", "));
-			*/},this);
-			
-			
             return table;
         },
         createRandomRows: function(numberOfRows){
@@ -90,8 +87,11 @@ qx.Class.define("org.escidoc.admintool.tabview.page.Resource", {
             var rowData = [];
             var deleteButton = new qx.ui.form.Button("Delete");
             for (var rowIndex = 0; rowIndex < numberOfRows; rowIndex++) {
-                //What this line of code actually doing? => refactor to a function
-                var date = new Date(now + Math.random() * dateRange - dateRange / 2);
+                // What this line of code actually doing? => refactor to a
+                // function
+                var date = new Date(now + Math.random() * dateRange -
+                dateRange /
+                2);
                 rowData.push([userId++, Math.random() * 10000, date, (Math.random() > 0.5)]);
             }
             return rowData;
