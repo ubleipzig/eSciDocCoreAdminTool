@@ -12,14 +12,8 @@ qx.Class.define("org.escidoc.admintool.tabview.page.NewResource", {
 				container.forms = new Array();
 				container.setLayout(new qx.ui.layout.VBox());
 				this.add(container);
-
 				this.bind("title", this, "label");
 
-				// Page display consists of several Forms
-
-				/*
-				 * Form containing User informations
-				 */
 				this.form = new qx.ui.form.Form();
 				container.forms.push(this.form);
 
@@ -27,26 +21,26 @@ qx.Class.define("org.escidoc.admintool.tabview.page.NewResource", {
 				var nameTextField = new qx.ui.form.TextField(this.getTitle());
 				nameTextField.setRequired(true);
 				nameTextField.setWidth(200);
-				this.form.add(nameTextField, "Name", "name");
+				this.form.add(nameTextField, "Name", null, "name");
 				nameTextField.bind("value", this, "title");
 
 				// login name
 				var loginTextField = new qx.ui.form.TextField();
 				loginTextField.setRequired(true);
 				loginTextField.setWidth(400);
-				this.form.add(loginTextField, "Login Name", "login-name");
+				this.form.add(loginTextField, "Login Name", null, "login-name");
 
 				// password
 				var passwordField = new qx.ui.form.PasswordField();
 				passwordField.setRequired(true);
 				var label = new qx.ui.basic.Label("Password");
 				label.setBuddy(passwordField);
-				this.form.add(passwordField, "Password", "password");
-                
+				this.form.add(passwordField, "Password", null, "password");
+
 				// Email
 				var emailTextField = new qx.ui.form.TextField();
-				this.form.add(emailTextField, "Email", qx.util.Validate.email(),
-						"email");
+				this.form.add(emailTextField, "Email",
+						qx.util.Validate.email(), "email");
 				emailTextField.bind("value", this, "email");
 
 				// grants
@@ -54,7 +48,7 @@ qx.Class.define("org.escidoc.admintool.tabview.page.NewResource", {
 				comboBox.setPlaceholder("Grants");
 				label = new qx.ui.basic.Label("Grant:");
 				label.setBuddy(comboBox);
-				this.form.add(comboBox, "Grant", "grant");
+				this.form.add(comboBox, "Grant", null, "grant");
 				this.createItems(comboBox);
 
 				// create button
@@ -67,15 +61,21 @@ qx.Class.define("org.escidoc.admintool.tabview.page.NewResource", {
 				validationManager
 						.add(loginTextField, qx.util.Validate.required);
 				validationManager.add(passwordField, qx.util.Validate.required);
-                validationManager.add(emailTextField, qx.util.Validate.email());
+				validationManager.add(emailTextField, qx.util.Validate.email());
+
+				// binding
+				var formController = new qx.data.controller.Form(null,
+						this.form);
+				//model = formController.createModel();
 
 				// invoke the serialization
 				createButton.addListener("execute", function() {
 							if (validationManager.validate()) {
-								alert("All valid.");
+								// alert("You entered: "
+								// + qx.util.Serializer.toJson(model)
+								// + " and valid.");
 							}
 						}, this);
-				// //////////////////////////////////
 
 				var formView = new qx.ui.form.renderer.Single(this.form);
 				container.add(formView);
