@@ -23,6 +23,9 @@ TODO
 			create a wrapper class for this.
 		load data from server
 			depends on: eSciDocXml2Json Service
+
+Known bugs
+	when the user navigate between folders, the tab size changes.
 	
 Notes
 	related:INFR-800 Creator VS Owner.
