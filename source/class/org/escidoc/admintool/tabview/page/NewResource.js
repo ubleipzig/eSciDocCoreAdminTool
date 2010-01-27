@@ -18,72 +18,57 @@ qx.Class.define("org.escidoc.admintool.tabview.page.NewResource", {
 				container.forms.push(this.form);
 
 				// name
-				var nameTextField = new qx.ui.form.TextField(this.getTitle());
-				nameTextField.setRequired(true);
-				nameTextField.setWidth(200);
+				var nameTextField = this.createNameTextField();
 				this.form.add(nameTextField, "Name", null, "name");
 				nameTextField.bind("value", this, "title");
 
 				// login name
-				var loginTextField = new qx.ui.form.TextField();
-				loginTextField.setRequired(true);
-				loginTextField.setWidth(400);
-				this.form.add(loginTextField, "Login Name", null, "login-name");
+				var loginTextField = this.createLoginTextField();
+				this.form.add(loginTextField, "Login Name", null, "loginName");
 
-				// password
+				// // password
 				var passwordField = new qx.ui.form.PasswordField();
 				passwordField.setRequired(true);
-				var label = new qx.ui.basic.Label("Password");
-				label.setBuddy(passwordField);
 				this.form.add(passwordField, "Password", null, "password");
 
 				// Email
 				var emailTextField = new qx.ui.form.TextField();
 				this.form.add(emailTextField, "Email",
-						qx.util.Validate.email(), "email");
+						null, "email");
 				emailTextField.bind("value", this, "email");
 
-				// grants
+				// roles
 				var comboBox = new qx.ui.form.ComboBox();
-				comboBox.setPlaceholder("Grants");
-				label = new qx.ui.basic.Label("Grant:");
-				label.setBuddy(comboBox);
-				this.form.add(comboBox, "Grant", null, "grant");
+				comboBox.setPlaceholder("Roles");
+				this.form.add(comboBox, "Roles", null, "role");
 				this.createItems(comboBox);
 
 				// create button
 				var createButton = new qx.ui.form.Button("Create");
 				this.form.addButton(createButton);
 
-				// create validation manager
-				var validationManager = new qx.ui.form.validation.Manager();
-				validationManager.add(nameTextField, qx.util.Validate.required);
-				validationManager
-						.add(loginTextField, qx.util.Validate.required);
-				validationManager.add(passwordField, qx.util.Validate.required);
-				validationManager.add(emailTextField, qx.util.Validate.email());
-
 				// binding
 				var formController = new qx.data.controller.Form(null,
 						this.form);
-				//model = formController.createModel();
+				var model = formController.createModel();
 
 				// invoke the serialization
 				createButton.addListener("execute", function() {
-							if (validationManager.validate()) {
-								// alert("You entered: "
-								// + qx.util.Serializer.toJson(model)
-								// + " and valid.");
-							}
+							if (this.form.validate()) {
+								alert("You entered: "
+										+ qx.util.Serializer.toJson(model)
+										+ " and valid.");
+							} 
 						}, this);
 
 				var formView = new qx.ui.form.renderer.Single(this.form);
 				container.add(formView);
-
-				var folderBox = new qx.ui.groupbox.GroupBox("Folder");
-				folderBox.setLayout(new qx.ui.layout.VBox());
-
-				container.add(folderBox);
+				/*
+				 * var folderBox = new qx.ui.groupbox.GroupBox("Folder");
+				 * folderBox.setLayout(new qx.ui.layout.VBox());
+				 * 
+				 * container.add(folderBox);
+				 */
 			},
 			statics : {
 				ITEM_SIZE : 5,
@@ -119,9 +104,22 @@ qx.Class.define("org.escidoc.admintool.tabview.page.NewResource", {
 			members : {
 				icon : "icon/16/apps/preferences-users.png",
 				form : null,
+				createNameTextField : function() {
+					var nameTextField = new qx.ui.form.TextField(this
+							.getTitle());
+					nameTextField.setRequired(true);
+					nameTextField.setWidth(200);
+					return nameTextField;
+				},
+				createLoginTextField : function() {
+					var nameTextField = new qx.ui.form.TextField();
+					nameTextField.setRequired(true);
+					nameTextField.setWidth(200);
+					return nameTextField;
+				},
 				createItems : function(widget) {
 					for (var i = 0; i < this.self(arguments).ITEM_SIZE; i++) {
-						var tempItem = new qx.ui.form.ListItem("Grant " + i);
+						var tempItem = new qx.ui.form.ListItem("Roles " + i);
 						widget.add(tempItem);
 					}
 				}
