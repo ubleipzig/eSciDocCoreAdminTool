@@ -20,13 +20,6 @@
  */
 qx.Class.define("org.escidoc.admintool.Application", {
 	extend : qx.application.Standalone,
-
-	/*
-	 * ****************************************************************************
-	 * MEMBERS
-	 * ****************************************************************************
-	 */
-
 	members : {
 		/**
 		 * This method contains the initial application code and gets called
@@ -35,45 +28,44 @@ qx.Class.define("org.escidoc.admintool.Application", {
 		 * @lint ignoreDeprecated(alert)
 		 */
 		main : function() {
-			// Call super class
 			this.base(arguments);
-			this.enableLogging();
-			this.showListFormAndLabelBinding();
+			this.__enableLogging();
+            this.__testLoadingDataFromStore();
+			this.__showListFormAndLabelBinding();
 		},
-		enableLogging : function() {
-			// Enable logging in debug variant
+		__rawData : [{
+					"name" : "John",
+					"email" : "john.dalton@example.com"
+				}, {
+					"name" : "Bill",
+					"email" : "bill.joe@example.com"
+				}],
+		__enableLogging : function() {
 			if (qx.core.Variant.isSet("qx.debug", "on")) {
-				// support native logging capabilities, e.g. Firebug for
-				// Firefox
 				qx.log.appender.Native;
-				// support additional cross-browser console. Press F7 to
-				// toggle visibility
 				qx.log.appender.Console;
 			}
 		},
-		showListFormAndLabelBinding : function() {
-			// create the UI.
-			// create a group box
+//		__testLoadingDataFromStore : function() {
+//			var model = new qx.data.store.Json("data.json").getModel();
+//            this.debug(model.getItems().getName());
+//		},
+		__showListFormAndLabelBinding : function() {
 			var groupBox = new qx.ui.groupbox.GroupBox("Simple Form");
-			// set group box layout to vertical box.
 			groupBox.setLayout(new qx.ui.layout.VBox(5));
 			this.getRoot().add(groupBox, {
 						left : 10,
 						top : 10
 					});
-
-			// create the input form.
 			var inputForm = new qx.ui.form.Form();
 			inputForm.addGroupHeader("Registration");
 
-			// add one form item i.e. a text field.
 			var nameTextField = new qx.ui.form.TextField();
 			nameTextField.setRequired(true);
 			nameTextField.setWidth(200);
 
 			inputForm.add(nameTextField, "Name", null, "name");
 
-			// email field
 			var emailTextField = new qx.ui.form.TextField();
 			// emailTextField.setRequired(true);
 			emailTextField.setWidth(100);
@@ -99,15 +91,21 @@ qx.Class.define("org.escidoc.admintool.Application", {
 
 			groupBox.add(new qx.ui.form.renderer.Single(inputForm));
 
-			// create the output list
 			var outputList = new qx.ui.form.List();
 			outputList.setWidth(240);
 			groupBox.add(outputList);
 
-			// create a details view of an object model.
 			var detailsView = new qx.ui.basic.Label("Details");
 			groupBox.add(detailsView);
 
+			var deleteButton = new qx.ui.form.Button("Delete");
+			groupBox.add(deleteButton);
+
+			var arrayWrapper = qx.data.marshal.Json.createModel(this.__rawData);
+
+			// create the controller for list
+			var listController = new qx.data.controller.List(arrayWrapper,
+					outputList, "name");
 			// binding selected item in the list with details view.
 			// user selects an item, details view shows its property.
 			// for example: the user selects item "Anna", details view shows
@@ -129,25 +127,6 @@ qx.Class.define("org.escidoc.admintool.Application", {
 
 			// better way, use data binding: Object data binding.
 			// create the controller
-
-			var deleteButton = new qx.ui.form.Button("Delete");
-			groupBox.add(deleteButton);
-
-			// an array of raw data containing 2 objects.
-			var rawData = [{
-						"name" : "John",
-						"email" : "john.dalton@example.com"
-					}, {
-						"name" : "Bill",
-						"email" : "bill.joe@example.com"
-					}];
-
-			var arrayWrapper = qx.data.marshal.Json.createModel(rawData);
-
-			// create the controller for list
-			var listController = new qx.data.controller.List(arrayWrapper,
-					outputList, "name");
-
 			listController.bind("selection[0].name", detailsView, "value");
 
 			// add behaviour to save Button.
