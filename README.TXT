@@ -30,6 +30,8 @@ Known bugs
 Notes
 	related:INFR-800 Creator VS Owner.
 	existing solutions using Qooxdoo
+		"CAS PIA, " http://www.cas-pia.de/en/try.html
+			great example, a lot of different features.
 		"Bibliograph, "rsoz.rewi.hu-berlin.de/~baer/bibliograph/frontend/build/
 		"Zed Build and Bugs, " http://demo.hericus.com 
 		"Agrammon, " http://model.agrammon.ch
