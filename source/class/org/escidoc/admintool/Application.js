@@ -286,12 +286,13 @@ qx.Class.define("org.escidoc.admintool.Application", {
 			// the naive way:
 			// iterate the arrayWrapper, read each properties and put it in an
 			// array
-
-            var rowData = [];
+			var rowData = [];
 			for (var index = 0; index < arrayWrapper.length; index++) {
 				rowData.push([arrayWrapper.getItem(index).getName(),
 						arrayWrapper.getItem(index).getEmail()]);
 			}
+			// TODO: Re-factor:put table model in private variable, i.e.,
+			// __tableModel
 			tableModel.setData(rowData);
 			tableModel.setColumns(["Name", "E-mail"]);
 			tableModel.setColumnSortable(1, true);
@@ -310,11 +311,30 @@ qx.Class.define("org.escidoc.admintool.Application", {
 						left : 400,
 						top : 20
 					});
+
+			// Next steps is to sync model with table widget. Keep in mind that
+			// currently qooxdoo does not have a controller for table widget.
+			// However, there are a couple Qooxdoo real world application that
+			// manipulate its model using table, e.g.,
+			// http://demo.hericus.com/index.html
+
+			var tableRefreshButton = new qx.ui.form.Button("Refresh");
+			groupBox.add(tableRefreshButton);
+
+			tableRefreshButton.addListener("execute", function() {
+						// naive
+						var rowData = [];
+						for (var index = 0; index < arrayWrapper.length; index++) {
+							rowData.push([
+									arrayWrapper.getItem(index).getName(),
+									arrayWrapper.getItem(index).getEmail()]);
+						}
+						tableModel.setData(rowData);
+					}, this);
 		},
 		destruct : function() {
 			this.__rawData = null;
 			this._disposeObjects("__rawData");
 		}
-
 	}
 });
