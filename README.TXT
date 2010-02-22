@@ -29,7 +29,11 @@ Known bugs
 	
 Notes
 	related:INFR-800 Creator VS Owner.
-	
+	existing solutions using Qooxdoo
+		"Bibliograph, "rsoz.rewi.hu-berlin.de/~baer/bibliograph/frontend/build/
+		"Zed Build and Bugs, " http://demo.hericus.com 
+		"Agrammon, " http://model.agrammon.ch
+		
 Features
 	Manual ingest using user defined identifier.
 	Check if a existing user with exact/similar login or name already exists
