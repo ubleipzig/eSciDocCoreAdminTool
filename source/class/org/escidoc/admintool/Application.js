@@ -267,9 +267,30 @@ qx.Class.define("org.escidoc.admintool.Application", {
 						arrayWrapper.remove(selectedItem);
 					}, this)
 
-			// groupBox.add(new qx.ui.embed.Html("<b>HELLO</b>"));
-
 			// show data as table(GET)
+			var tableComposite = new qx.ui.container.Composite(new qx.ui.layout.VBox());
+
+			this.getRoot().add(tableComposite, {
+						left : 400,
+						top : 20
+					});
+			// Toolbar
+			// TODO: add icon
+			var tableToolbar = new qx.ui.toolbar.ToolBar();
+			tableComposite.add(tableToolbar);
+
+			var toolbarPart = new qx.ui.toolbar.Part();
+			tableToolbar.add(toolbarPart);
+			var refreshButton = new qx.ui.toolbar.Button("Refresh")
+			toolbarPart.add(refreshButton);
+			var newButton = new qx.ui.toolbar.Button("New")
+			toolbarPart.add(newButton);
+			var editButton = new qx.ui.toolbar.Button("Edit")
+			toolbarPart.add(editButton);
+			var deleteButton = new qx.ui.toolbar.Button("Delete")
+			toolbarPart.add(deleteButton);
+
+			// Table
 			var tableModel = new qx.ui.table.model.Simple();
 
 			// the input for simple table model is a 2-dimensional array [] [].
@@ -314,14 +335,12 @@ qx.Class.define("org.escidoc.admintool.Application", {
 
 			table.set({
 						width : 300,
-						height : 400,
+						height : 200,
 						decorator : null
 					});
 
-			// TODO: create a container to add groupBox and table
-			this.getRoot().add(table, {
-						left : 400,
-						top : 20
+			tableComposite.add(table, {
+						flex : 1
 					});
 
 			// Next steps is to sync model with table widget. Keep in mind that
@@ -329,10 +348,7 @@ qx.Class.define("org.escidoc.admintool.Application", {
 			// However, there are a couple Qooxdoo real world application that
 			// manipulate its model using table, e.g.,
 			// http://demo.hericus.com/index.html
-			var tableRefreshButton = new qx.ui.form.Button("Refresh");
-			groupBox.add(tableRefreshButton);
-
-			tableRefreshButton.addListener("execute", function() {
+			refreshButton.addListener("execute", function() {
 						// naive
 						var rowData = [];
 						for (var index = 0; index < arrayWrapper.length; index++) {
