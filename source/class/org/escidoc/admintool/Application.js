@@ -23,10 +23,12 @@ qx.Class.define("org.escidoc.admintool.Application", {
 	members : {
 		__rawData : [{
 					"name" : "John",
-					"email" : "john.dalton@example.com"
+					"email" : "john.dalton@example.com",
+					"creationDate" : new Date()
 				}, {
 					"name" : "Bill",
-					"email" : "bill.joe@example.com"
+					"email" : "bill.joe@example.com",
+					"creationDate" : new Date()
 				}],
 		/**
 		 * This method contains the initial application code and gets called
@@ -135,7 +137,8 @@ qx.Class.define("org.escidoc.admintool.Application", {
 							arrayWrapper.push(qx.data.marshal.Json.createModel(
 									{
 										name : nameTextField.getValue(),
-										email : emailTextField.getValue()
+										email : emailTextField.getValue(),
+										creationDate : new Date()
 									}));
 							inputForm.reset();
 						}
@@ -268,7 +271,18 @@ qx.Class.define("org.escidoc.admintool.Application", {
 					}, this)
 
 			// show data as table(GET)
-			var tableComposite = new qx.ui.container.Composite(new qx.ui.layout.VBox());
+			// var tableComposite = new qx.ui.container.Composite(new
+			// qx.ui.layout.VBox());
+			var tableComposite = new qx.ui.window.Window().set({
+						width : 600,
+						height : 400,
+						contentPadding : [0, 0, 0, 0],
+						showClose : false,
+						showMinimize : false,
+						showMaximize : false
+					});
+			tableComposite.setLayout(new qx.ui.layout.VBox());
+			tableComposite.open();
 
 			this.getRoot().add(tableComposite, {
 						left : 400,
@@ -313,14 +327,17 @@ qx.Class.define("org.escidoc.admintool.Application", {
 			// loadData(..)
 			var rowData = [];
 			for (var index = 0; index < arrayWrapper.length; index++) {
-				rowData.push([arrayWrapper.getItem(index).getName(),
-						arrayWrapper.getItem(index).getEmail()]);
+				var person = arrayWrapper.getItem(index);
+				rowData.push([person.getName(), person.getEmail(),
+						person.getCreationDate()]);
 			}
 
 			tableModel.setData(rowData);
-			tableModel.setColumns(["Name", "E-mail"]);
+			tableModel.setColumns(["Name", "E-mail", "Created On"]);
+
 			tableModel.setColumnSortable(1, true);
 			tableModel.setColumnSortable(2, true);
+			tableModel.setColumnSortable(3, true);
 
 			// create the table ui
 			// TODO: how to set the width of a certain column.
@@ -352,9 +369,9 @@ qx.Class.define("org.escidoc.admintool.Application", {
 						// naive
 						var rowData = [];
 						for (var index = 0; index < arrayWrapper.length; index++) {
-							rowData.push([
-									arrayWrapper.getItem(index).getName(),
-									arrayWrapper.getItem(index).getEmail()]);
+							var person = arrayWrapper.getItem(index);
+							rowData.push([person.getName(), person.getEmail(),
+									person.getCreationDate()]);
 						}
 						tableModel.setData(rowData);
 					}, this);
