@@ -286,20 +286,32 @@ qx.Class.define("org.escidoc.admintool.Application", {
 			// the naive way:
 			// iterate the arrayWrapper, read each properties and put it in an
 			// array
+			// TODO: Re-factor:
+			// 1. put table model in private variable, i.e., __tableModel
+			// 2. extract row data init to a private function, i.e.,
+			// loadData(..)
 			var rowData = [];
 			for (var index = 0; index < arrayWrapper.length; index++) {
 				rowData.push([arrayWrapper.getItem(index).getName(),
 						arrayWrapper.getItem(index).getEmail()]);
 			}
-			// TODO: Re-factor:put table model in private variable, i.e.,
-			// __tableModel
+
 			tableModel.setData(rowData);
 			tableModel.setColumns(["Name", "E-mail"]);
 			tableModel.setColumnSortable(1, true);
 			tableModel.setColumnSortable(2, true);
 
 			// create the table ui
-			var table = new qx.ui.table.Table(tableModel);
+			// TODO: how to set the width of a certain column.
+			// @See: Qooxdoo DemoBrowser: Table_Resize_Bolumn.js
+			// var table = new qx.ui.table.Table(tableModel);
+			var custom = {
+				tableColumnModel : function(obj) {
+					return new qx.ui.table.columnmodel.Resize(obj);
+				}
+			};
+			var table = new qx.ui.table.Table(tableModel, custom);
+
 			table.set({
 						width : 300,
 						height : 400,
@@ -317,7 +329,6 @@ qx.Class.define("org.escidoc.admintool.Application", {
 			// However, there are a couple Qooxdoo real world application that
 			// manipulate its model using table, e.g.,
 			// http://demo.hericus.com/index.html
-
 			var tableRefreshButton = new qx.ui.form.Button("Refresh");
 			groupBox.add(tableRefreshButton);
 
