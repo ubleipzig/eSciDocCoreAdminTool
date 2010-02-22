@@ -21,6 +21,13 @@
 qx.Class.define("org.escidoc.admintool.Application", {
 	extend : qx.application.Standalone,
 	members : {
+		__rawData : [{
+					"name" : "John",
+					"email" : "john.dalton@example.com"
+				}, {
+					"name" : "Bill",
+					"email" : "bill.joe@example.com"
+				}],
 		/**
 		 * This method contains the initial application code and gets called
 		 * during startup of the application
@@ -30,26 +37,20 @@ qx.Class.define("org.escidoc.admintool.Application", {
 		main : function() {
 			this.base(arguments);
 			this.__enableLogging();
-            this.__testLoadingDataFromStore();
+			// this.__testLoadingDataFromStore();
 			this.__showListFormAndLabelBinding();
 		},
-		__rawData : [{
-					"name" : "John",
-					"email" : "john.dalton@example.com"
-				}, {
-					"name" : "Bill",
-					"email" : "bill.joe@example.com"
-				}],
+
 		__enableLogging : function() {
 			if (qx.core.Variant.isSet("qx.debug", "on")) {
 				qx.log.appender.Native;
 				qx.log.appender.Console;
 			}
 		},
-//		__testLoadingDataFromStore : function() {
-//			var model = new qx.data.store.Json("data.json").getModel();
-//            this.debug(model.getItems().getName());
-//		},
+		// __testLoadingDataFromStore : function() {
+		// var model = new qx.data.store.Json("data.json").getModel();
+		// this.debug(model.getItems().getName());
+		// },
 		__showListFormAndLabelBinding : function() {
 			var groupBox = new qx.ui.groupbox.GroupBox("Simple Form");
 			groupBox.setLayout(new qx.ui.layout.VBox(5));
@@ -103,7 +104,6 @@ qx.Class.define("org.escidoc.admintool.Application", {
 
 			var arrayWrapper = qx.data.marshal.Json.createModel(this.__rawData);
 
-			// create the controller for list
 			var listController = new qx.data.controller.List(arrayWrapper,
 					outputList, "name");
 			// binding selected item in the list with details view.
@@ -248,8 +248,6 @@ qx.Class.define("org.escidoc.admintool.Application", {
 							groupBox.remove(renderedEditForm);
 						}, this);
 			}, this)
-
-			// Delete
 			deleteButton.addListener("execute", function() {
 						// REFACTOR: extract method, duplicate in editButton.
 						if (arrayWrapper.getLength() === 0) {
@@ -268,6 +266,55 @@ qx.Class.define("org.escidoc.admintool.Application", {
 
 						arrayWrapper.remove(selectedItem);
 					}, this)
+
+			// groupBox.add(new qx.ui.embed.Html("<b>HELLO</b>"));
+
+			// show data as table(GET)
+			var tableModel = new qx.ui.table.model.Simple();
+
+			// the input for simple table model is a 2-dimensional array [] [].
+			// The first dimension is for the row, second dimension is for the
+			// column.
+
+			// what we have right now, is an array of objects, i.e.,
+			// arrayWrapper
+			// so need to convert this 1-dim array to 2-dim array.
+			// each properties of the object in arrayWrapper will be inserted in
+			// second array.
+
+			// How do we do that?
+			// the naive way:
+			// iterate the arrayWrapper, read each properties and put it in an
+			// array
+
+            var rowData = [];
+			for (var index = 0; index < arrayWrapper.length; index++) {
+				rowData.push([arrayWrapper.getItem(index).getName(),
+						arrayWrapper.getItem(index).getEmail()]);
+			}
+			tableModel.setData(rowData);
+			tableModel.setColumns(["Name", "E-mail"]);
+			tableModel.setColumnSortable(1, true);
+			tableModel.setColumnSortable(2, true);
+
+			// create the table ui
+			var table = new qx.ui.table.Table(tableModel);
+			table.set({
+						width : 300,
+						height : 400,
+						decorator : null
+					});
+
+			// TODO: create a container to add groupBox and table
+			this.getRoot().add(table, {
+						left : 400,
+						top : 20
+					});
+		},
+		destruct : function() {
+			this.__rawData = null;
+			this._disposeObjects("__rawData");
 		}
+
 	}
 });
