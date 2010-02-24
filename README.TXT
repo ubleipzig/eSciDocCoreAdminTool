@@ -7,7 +7,8 @@ Requirements
 		-....
 	I, as a sys admin, can multi-select resources and delete them.
 
-TODO
+@next actions
+	creating a parser to parse JSON sent by eSciDoc infrastructure.
 	add multi-selection of resources for delete.
 		committed. However, the current implementation is not intuitive for
 		users. Better, add a check box in the first column of each rows.
@@ -16,7 +17,6 @@ TODO
 			"Are you sure want to delete resource a,b,c, ..."		
 	add edit button in resource table
 		according to [1], we should use HTML renderer to create a button.
-	
 	add admin login form.
 	load data
 		load static JSON data from file system
