@@ -9,10 +9,11 @@ Requirements
 
 @next actions
 	creating a parser to parse JSON sent by eSciDoc infrastructure.
+		parse BadgerFish JSON without namespaces.
+		
 	add multi-selection of resources for delete.
 		committed. However, the current implementation is not intuitive for
 		users. Better, add a check box in the first column of each rows.
-		
 		add modal dialog to confirm the user.
 			"Are you sure want to delete resource a,b,c, ..."		
 	add edit button in resource table
