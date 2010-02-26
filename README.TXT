@@ -10,23 +10,31 @@ Requirements
 @next actions
 	creating a parser to parse JSON sent by eSciDoc infrastructure.
 		parse BadgerFish JSON without namespaces.
-		
-	add multi-selection of resources for delete.
+		Resource: http://news.qooxdoo.org/parsing-atom-feeds
+	create multi-selection of resources for delete.
 		committed. However, the current implementation is not intuitive for
 		users. Better, add a check box in the first column of each rows.
 		add modal dialog to confirm the user.
 			"Are you sure want to delete resource a,b,c, ..."		
-	add edit button in resource table
+	create edit button in resource table
 		according to [1], we should use HTML renderer to create a button.
-	add admin login form.
+		NOTES:
+			work around: Buttons are in the toolbar.
+	create login form.
+		validate input
+		mask password
 	load data
 		load static JSON data from file system
+			experiment with user account.
 			create a wrapper class for this.
+				@See: UserAccount.js
 		load data from server
 			depends on: eSciDocXml2Json Service
-
+	send data to the server
+		depends on: eSciDocXml2Json Service
+		
 Known bugs
-	when the user navigate between folders, the tab size changes.
+	[Old] when the user navigate between folders, the tab size changes.
 	
 Notes
 	related:INFR-800 Creator VS Owner.
