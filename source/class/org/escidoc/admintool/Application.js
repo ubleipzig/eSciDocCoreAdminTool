@@ -39,8 +39,9 @@ qx.Class.define("org.escidoc.admintool.Application", {
 		main : function() {
 			this.base(arguments);
 			this.__enableLogging();
-			// this.__testLoadingDataFromStore();
 			this.__showListFormAndLabelBinding();
+			// this.__createUserAccountFromJson();
+			// this.__createUserAccountArrayFromJson();
 		},
 
 		__enableLogging : function() {
@@ -49,10 +50,18 @@ qx.Class.define("org.escidoc.admintool.Application", {
 				qx.log.appender.Console;
 			}
 		},
-		// __testLoadingDataFromStore : function() {
-		// var model = new qx.data.store.Json("data.json").getModel();
-		// this.debug(model.getItems().getName());
-		// },
+		__createUserAccountArrayFromJson : function() {
+			var userAccounts = org.escidoc.admintool.io.Parser
+					.parseUserAccounts(this.__userAccountsRawData);
+			for (var index = 0; index < userAccounts.length; index++) {
+				this.debug("user account: " + userAccounts[index].toString());
+			}
+		},
+		__createUserAccountFromJson : function() {
+			var userAccount = org.escidoc.admintool.io.Parser
+					.parseUserAccount(this.__userAccountRawData);
+			this.debug("user account: " + userAccount.toString());
+		},
 		__showListFormAndLabelBinding : function() {
 			var groupBox = new qx.ui.groupbox.GroupBox("Simple Form");
 			groupBox.setLayout(new qx.ui.layout.VBox(5));
@@ -89,7 +98,7 @@ qx.Class.define("org.escidoc.admintool.Application", {
 			inputForm.addButton(debugButton);
 			debugButton.addListener("execute", function() {
 						this.debug("array wrapper now: "
-								+ qx.util.Serializer.toJson(arrayWrapper))
+								+ qx.util.Serializer.toJson(arrayWrapper));
 					}, this);
 
 			groupBox.add(new qx.ui.form.renderer.Single(inputForm));
@@ -145,7 +154,7 @@ qx.Class.define("org.escidoc.admintool.Application", {
 					}, this);
 
 			resetButton.addListener("execute", function() {
-						inputForm.reset()
+						inputForm.reset();
 					}, this);
 			// Update
 			var editButton = new qx.ui.form.Button("Edit");
@@ -250,7 +259,7 @@ qx.Class.define("org.escidoc.admintool.Application", {
 							editForm.reset();
 							groupBox.remove(renderedEditForm);
 						}, this);
-			}, this)
+			}, this);
 			deleteButton.addListener("execute", function() {
 						// REFACTOR: extract method, duplicate in editButton.
 						if (arrayWrapper.getLength() === 0) {
@@ -268,7 +277,7 @@ qx.Class.define("org.escidoc.admintool.Application", {
 								+ qx.dev.Debug.debugProperties(selectedItem));
 
 						arrayWrapper.remove(selectedItem);
-					}, this)
+					}, this);
 
 			// show data as table(GET)
 			// var tableComposite = new qx.ui.container.Composite(new
@@ -295,15 +304,16 @@ qx.Class.define("org.escidoc.admintool.Application", {
 
 			var toolbarPart = new qx.ui.toolbar.Part();
 			tableToolbar.add(toolbarPart);
-			var refreshButton = new qx.ui.toolbar.Button("Refresh")
+			var refreshButton = new qx.ui.toolbar.Button("Refresh");
 			toolbarPart.add(refreshButton);
-			var newButton = new qx.ui.toolbar.Button("New")
+			var newButton = new qx.ui.toolbar.Button("New");
 			toolbarPart.add(newButton);
-			var editButton = new qx.ui.toolbar.Button("Edit")
+			var editButton = new qx.ui.toolbar.Button("Edit");
 			toolbarPart.add(editButton);
-			var deleteButton = new qx.ui.toolbar.Button("Delete")
+			var deleteButton = new qx.ui.toolbar.Button("Delete");
 			toolbarPart.add(deleteButton);
-
+			var debugToolbarButton = new qx.ui.toolbar.Button("Debug");
+			toolbarPart.add(debugToolbarButton);
 			// Table
 			var tableModel = new qx.ui.table.model.Simple();
 
@@ -326,10 +336,20 @@ qx.Class.define("org.escidoc.admintool.Application", {
 			// 2. extract row data init to a private function, i.e.,
 			// loadData(..)
 			var rowData = [];
-			for (var index = 0; index < arrayWrapper.length; index++) {
-				var person = arrayWrapper.getItem(index);
-				rowData.push([person.getName(), person.getEmail(),
-						person.getCreationDate()]);
+			// for (var index = 0; index < arrayWrapper.length; index++) {
+			// var person = arrayWrapper.getItem(index);
+			// rowData.push([person.getName(), person.getEmail(),
+			// person.getCreationDate()]);
+			// }
+
+			
+            var userAccounts = new qx.data.Array(org.escidoc.admintool.io.Parser
+					.parseUserAccounts(this.__userAccountsRawData));
+			for (var index = 0; index < userAccounts.length; index++) {
+				var userAccount = userAccounts.getItem(index);
+				rowData.push([userAccount.getName(),
+						userAccount.getLoginName(),
+						userAccount.getCreationDate()]);
 			}
 
 			tableModel.setData(rowData);
@@ -375,10 +395,444 @@ qx.Class.define("org.escidoc.admintool.Application", {
 						}
 						tableModel.setData(rowData);
 					}, this);
+
+			// add behaviour to the debug button in the toolbar.
+			// it shows which row is selected(we start with single selection
+			// first)
+			// after that we need to get the object in the selected row.
+			// after we achieve this, we can add double click feature on the
+			// selected item to show the debug message.
+			debugToolbarButton.addListener("execute", function(evt) {
+						var selection = [];
+						var selectionModel = table.getSelectionModel();
+						// selectionModel.
+						// selectionModel.iterateSelection(
+						// function(ind) {
+						// selection.push(ind + "");
+						// });
+						this.debug("selected: "
+								+ qx.dev.Debug.debugProperties(selectionModel));
+					}, this);
+
 		},
 		destruct : function() {
 			this.__rawData = null;
 			this._disposeObjects("__rawData");
+		},
+		__userAccountsRawData : {
+			"user-account-list" : {
+				"@type" : "simple",
+				"@title" : "User Account List",
+				"@base" : "http://localhost:8080",
+				"user-account" : [{
+					"@type" : "simple",
+					"@title" : "System Administrator User",
+					"@href" : "/aa/user-account/escidoc:exuser1",
+					"@last-modification-date" : "2010-02-10T10:04:08.688Z",
+					"properties" : {
+						"creation-date" : {
+							"$" : "2010-02-10T10:04:08.688Z"
+						},
+						"created-by" : {
+							"@type" : "simple",
+							"@title" : "System Administrator User",
+							"@href" : "/aa/user-account/escidoc:exuser1"
+						},
+						"modified-by" : {
+							"@type" : "simple",
+							"@title" : "System Administrator User",
+							"@href" : "/aa/user-account/escidoc:exuser1"
+						},
+						"name" : {
+							"$" : "System Administrator User"
+						},
+						"login-name" : {
+							"$" : "sysadmin"
+						},
+						"active" : {
+							"$" : true
+						}
+					},
+					"resources" : {
+						"@type" : "simple",
+						"@title" : "Virtual Resources",
+						"@href" : "/aa/user-account/escidoc:exuser1/resources",
+						"current-grants" : {
+							"@type" : "simple",
+							"@title" : "Current Grants",
+							"@href" : "/aa/user-account/escidoc:exuser1/resources/current-grants"
+						},
+						"preferences" : {
+							"@type" : "simple",
+							"@title" : "Preferences",
+							"@href" : "/aa/user-account/escidoc:exuser1/resources/preferences"
+						},
+						"attributes" : null
+					}
+				}, {
+					"@type" : "simple",
+					"@title" : "System Inspector User (Read Only Super User)",
+					"@href" : "/aa/user-account/escidoc:exuser2",
+					"@last-modification-date" : "2010-02-10T10:04:08.688Z",
+					"properties" : {
+						"creation-date" : {
+							"$" : "2010-02-10T10:04:08.688Z"
+						},
+						"created-by" : {
+							"@type" : "simple",
+							"@title" : "System Administrator User",
+							"@href" : "/aa/user-account/escidoc:exuser1"
+						},
+						"modified-by" : {
+							"@type" : "simple",
+							"@title" : "System Administrator User",
+							"@href" : "/aa/user-account/escidoc:exuser1"
+						},
+						"name" : {
+							"$" : "System Inspector User (Read Only SuperUser)"
+						},
+						"login-name" : {
+							"$" : "sysinspector"
+						},
+						"active" : {
+							"$" : true
+						}
+					},
+					"resources" : {
+						"@type" : "simple",
+						"@title" : "Virtual Resources",
+						"@href" : "/aa/user-account/escidoc:exuser2/resources",
+						"current-grants" : {
+							"@type" : "simple",
+							"@title" : "Current Grants",
+							"@href" : "/aa/user-account/escidoc:exuser2/resources/current-grants"
+						},
+						"preferences" : {
+							"@type" : "simple",
+							"@title" : "Preferences",
+							"@href" : "/aa/user-account/escidoc:exuser2/resources/preferences"
+						},
+						"attributes" : null
+					}
+				}, {
+					"@type" : "simple",
+					"@title" : "Depositor User",
+					"@href" : "/aa/user-account/escidoc:exuser4",
+					"@last-modification-date" : "2010-02-10T10:04:08.688Z",
+					"properties" : {
+						"creation-date" : {
+							"$" : "2010-02-10T10:04:08.688Z"
+						},
+						"created-by" : {
+							"@type" : "simple",
+							"@title" : "System Administrator User",
+							"@href" : "/aa/user-account/escidoc:exuser1"
+						},
+						"modified-by" : {
+							"@type" : "simple",
+							"@title" : "System Administrator User",
+							"@href" : "/aa/user-account/escidoc:exuser1"
+						},
+						"name" : {
+							"$" : "Depositor User"
+						},
+						"login-name" : {
+							"$" : "depositor"
+						},
+						"active" : {
+							"$" : true
+						}
+					},
+					"resources" : {
+						"@type" : "simple",
+						"@title" : "Virtual Resources",
+						"@href" : "/aa/user-account/escidoc:exuser4/resources",
+						"current-grants" : {
+							"@type" : "simple",
+							"@title" : "Current Grants",
+							"@href" : "/aa/user-account/escidoc:exuser4/resources/current-grants"
+						},
+						"preferences" : {
+							"@type" : "simple",
+							"@title" : "Preferences",
+							"@href" : "/aa/user-account/escidoc:exuser4/resources/preferences"
+						},
+						"attributes" : null
+					}
+				}, {
+					"@type" : "simple",
+					"@title" : "Ingestor User",
+					"@href" : "/aa/user-account/escidoc:exuser5",
+					"@last-modification-date" : "2010-02-10T10:04:08.688Z",
+					"properties" : {
+						"creation-date" : {
+							"$" : "2010-02-10T10:04:08.688Z"
+						},
+						"created-by" : {
+							"@type" : "simple",
+							"@title" : "System Administrator User",
+							"@href" : "/aa/user-account/escidoc:exuser1"
+						},
+						"modified-by" : {
+							"@type" : "simple",
+							"@title" : "System Administrator User",
+							"@href" : "/aa/user-account/escidoc:exuser1"
+						},
+						"name" : {
+							"$" : "Ingestor User"
+						},
+						"login-name" : {
+							"$" : "ingester"
+						},
+						"active" : {
+							"$" : true
+						}
+					},
+					"resources" : {
+						"@type" : "simple",
+						"@title" : "Virtual Resources",
+						"@href" : "/aa/user-account/escidoc:exuser5/resources",
+						"current-grants" : {
+							"@type" : "simple",
+							"@title" : "Current Grants",
+							"@href" : "/aa/user-account/escidoc:exuser5/resources/current-grants"
+						},
+						"preferences" : {
+							"@type" : "simple",
+							"@title" : "Preferences",
+							"@href" : "/aa/user-account/escidoc:exuser5/resources/preferences"
+						},
+						"attributes" : null
+					}
+				}, {
+					"@type" : "simple",
+					"@title" : "Collaborator User",
+					"@href" : "/aa/user-account/escidoc:exuser6",
+					"@last-modification-date" : "2010-02-10T10:04:08.688Z",
+					"properties" : {
+						"creation-date" : {
+							"$" : "2010-02-10T10:04:08.688Z"
+						},
+						"created-by" : {
+							"@type" : "simple",
+							"@title" : "System Administrator User",
+							"@href" : "/aa/user-account/escidoc:exuser1"
+						},
+						"modified-by" : {
+							"@type" : "simple",
+							"@title" : "System Administrator User",
+							"@href" : "/aa/user-account/escidoc:exuser1"
+						},
+						"name" : {
+							"$" : "Collaborator User"
+						},
+						"login-name" : {
+							"$" : "collaborator"
+						},
+						"active" : {
+							"$" : true
+						}
+					},
+					"resources" : {
+						"@type" : "simple",
+						"@title" : "Virtual Resources",
+						"@href" : "/aa/user-account/escidoc:exuser6/resources",
+						"current-grants" : {
+							"@type" : "simple",
+							"@title" : "Current Grants",
+							"@href" : "/aa/user-account/escidoc:exuser6/resources/current-grants"
+						},
+						"preferences" : {
+							"@type" : "simple",
+							"@title" : "Preferences",
+							"@href" : "/aa/user-account/escidoc:exuser6/resources/preferences"
+						},
+						"attributes" : null
+					}
+				}, {
+					"@type" : "simple",
+					"@title" : "roland",
+					"@href" : "/aa/user-account/escidoc:user42",
+					"@last-modification-date" : "2010-02-10T10:04:10.266Z",
+					"properties" : {
+						"creation-date" : {
+							"$" : "2010-02-10T10:04:10.266Z"
+						},
+						"created-by" : {
+							"@type" : "simple",
+							"@title" : "System Administrator User",
+							"@href" : "/aa/user-account/escidoc:exuser1"
+						},
+						"modified-by" : {
+							"@type" : "simple",
+							"@title" : "System Administrator User",
+							"@href" : "/aa/user-account/escidoc:exuser1"
+						},
+						"name" : {
+							"$" : "roland"
+						},
+						"login-name" : {
+							"$" : "roland"
+						},
+						"active" : {
+							"$" : true
+						}
+					},
+					"resources" : {
+						"@type" : "simple",
+						"@title" : "Virtual Resources",
+						"@href" : "/aa/user-account/escidoc:user42/resources",
+						"current-grants" : {
+							"@type" : "simple",
+							"@title" : "Current Grants",
+							"@href" : "/aa/user-account/escidoc:user42/resources/current-grants"
+						},
+						"preferences" : {
+							"@type" : "simple",
+							"@title" : "Preferences",
+							"@href" : "/aa/user-account/escidoc:user42/resources/preferences"
+						},
+						"attributes" : null
+					}
+				}, {
+					"@type" : "simple",
+					"@title" : "Inspector (Read Only Super User)",
+					"@href" : "/aa/user-account/escidoc:user44",
+					"@last-modification-date" : "2010-02-10T10:04:10.266Z",
+					"properties" : {
+						"creation-date" : {
+							"$" : "2010-02-10T10:04:10.266Z"
+						},
+						"created-by" : {
+							"@type" : "simple",
+							"@title" : "System Administrator User",
+							"@href" : "/aa/user-account/escidoc:exuser1"
+						},
+						"modified-by" : {
+							"@type" : "simple",
+							"@title" : "System Administrator User",
+							"@href" : "/aa/user-account/escidoc:exuser1"
+						},
+						"name" : {
+							"$" : "Inspector (Read Only Super User)"
+						},
+						"login-name" : {
+							"$" : "inspector"
+						},
+						"active" : {
+							"$" : true
+						}
+					},
+					"resources" : {
+						"@type" : "simple",
+						"@title" : "Virtual Resources",
+						"@href" : "/aa/user-account/escidoc:user44/resources",
+						"current-grants" : {
+							"@type" : "simple",
+							"@title" : "Current Grants",
+							"@href" : "/aa/user-account/escidoc:user44/resources/current-grants"
+						},
+						"preferences" : {
+							"@type" : "simple",
+							"@title" : "Preferences",
+							"@href" : "/aa/user-account/escidoc:user44/resources/preferences"
+						},
+						"attributes" : null
+					}
+				}, {
+					"@type" : "simple",
+					"@title" : "Test Depositor Scientist",
+					"@href" : "/aa/user-account/escidoc:user1",
+					"@last-modification-date" : "2010-02-10T10:04:10.266Z",
+					"properties" : {
+						"creation-date" : {
+							"$" : "2010-02-10T10:04:10.266Z"
+						},
+						"created-by" : {
+							"@type" : "simple",
+							"@title" : "Test Depositor Scientist",
+							"@href" : "/aa/user-account/escidoc:user1"
+						},
+						"modified-by" : {
+							"@type" : "simple",
+							"@title" : "Test Depositor Scientist",
+							"@href" : "/aa/user-account/escidoc:user1"
+						},
+						"name" : {
+							"$" : "Test Depositor Scientist"
+						},
+						"login-name" : {
+							"$" : "test_dep_scientist"
+						},
+						"active" : {
+							"$" : true
+						}
+					},
+					"resources" : {
+						"@type" : "simple",
+						"@title" : "Virtual Resources",
+						"@href" : "/aa/user-account/escidoc:user1/resources",
+						"current-grants" : {
+							"@type" : "simple",
+							"@title" : "Current Grants",
+							"@href" : "/aa/user-account/escidoc:user1/resources/..."
+						}
+					}
+				}]
+			}
+		},
+		__userAccountRawData : {
+			"user-account" : {
+				"@base" : "http://localhost:8080",
+				"@type" : "simple",
+				"@title" : "System Administrator User",
+				"@href" : "/aa/user-account/escidoc:exuser1",
+				"@last-modification-date" : "2010-02-10T10:04:08.688Z",
+				"properties" : {
+					"creation-date" : {
+						"$" : "2010-02-10T10:04:08.688Z"
+					},
+					"created-by" : {
+						"@type" : "simple",
+						"@title" : "System Administrator User",
+						"@href" : "/aa/user-account/escidoc:exuser1"
+					},
+					"modified-by" : {
+						"@type" : "simple",
+						"@title" : "System Administrator User",
+						"@href" : "/aa/user-account/escidoc:exuser1"
+					},
+					"name" : {
+						"$" : "System Administrator User"
+					},
+					"login-name" : {
+						"$" : "sysadmin"
+					},
+					"active" : {
+						"$" : true
+					}
+				},
+				"resources" : {
+					"@type" : "simple",
+					"@title" : "Virtual Resources",
+					"@href" : "/aa/user-account/escidoc:exuser1/resources",
+					"current-grants" : {
+						"@type" : "simple",
+						"@title" : "Current Grants",
+						"@href" : "/aa/user-account/escidoc:exuser1/resources/current-grants"
+					},
+					"preferences" : {
+						"@type" : "simple",
+						"@title" : "Preferences",
+						"@href" : "/aa/user-account/escidoc:exuser1/resources/preferences"
+					},
+					"attributes" : {
+						"@type" : "simple",
+						"@title" : "Attributes",
+						"@href" : "/aa/user-account/escidoc:exuser1/resources/attributes"
+					}
+				}
+			}
 		}
 	}
 });
