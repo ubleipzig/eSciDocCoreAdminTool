@@ -72,10 +72,8 @@ qx.Class.define("org.escidoc.admintool.view.UserAccount", {
 		},
 		__createListenerForNewButton : function(newButton) {
 			newButton.addListener("execute", function() {
-						var form=new org.escidoc.admintool.view.Form();
-						this.add(form, {
-									flex : 1
-								});
+						var modalWindow = new org.escidoc.admintool.view.ModalWindow();
+						modalWindow.open();
 					}, this);
 		},
 		_loadRowData : function() {
