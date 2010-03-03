@@ -28,13 +28,35 @@
  * @author CHH
  */
 qx.Class.define("org.escidoc.admintool.view.ModalWindow", {
-			extend :  qx.ui.window.Window,
+			extend : qx.ui.window.Window,
 			construct : function() {
 				this.base(arguments);
-                
+				this._initSelf();
+				this._addUserForm();
 			},
 			properties : {},
-			members : {},
+			members : {
+				__userAccountForm : null,
+				_initSelf : function() {
+					this.setLayout(new qx.ui.layout.VBox(10));
+					this.setModal(true);
+					this.setShowClose(false);
+					this.setShowMaximize(false);
+					this.setShowMinimize(false);
+					this.setShowStatusbar(false);
+
+					// refactor this, calculate the middle point from browser
+					// window size.
+					this.moveTo(350, 100);
+				},
+				_addUserForm : function() {
+					var test = new org.escidoc.admintool.view.Form();
+					this.add(test);
+					// this.__userAccountForm = new
+					// org.escidoc.admintool.view.Form();
+					// this.add(this.__userAccountForm);
+				}
+			},
 			destruct : function() {
 				this._disposeObjects();
 			}

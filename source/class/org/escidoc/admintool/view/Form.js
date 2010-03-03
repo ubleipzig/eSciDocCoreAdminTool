@@ -34,7 +34,7 @@ qx.Class.define("org.escidoc.admintool.view.Form", {
 				this.setLayout(new qx.ui.layout.VBox(5));
 
 				var inputForm = new qx.ui.form.Form();
-				inputForm.addGroupHeader("Registration");
+				inputForm.addGroupHeader("New User Account");
 
 				var nameTextField = new qx.ui.form.TextField();
 				nameTextField.setRequired(true);
@@ -46,9 +46,9 @@ qx.Class.define("org.escidoc.admintool.view.Form", {
 				inputForm.add(loginNameTextField, "Login Name", null,
 						"loginName");
 
-				var resetButton = new qx.ui.form.Button("Reset");
-				resetButton.setWidth(70);
-				inputForm.addButton(resetButton);
+				var cancelButton = new qx.ui.form.Button("Cancel");
+				cancelButton.setWidth(70);
+				inputForm.addButton(cancelButton);
 
 				var saveButton = new qx.ui.form.Button("Save");
 				saveButton.setWidth(70);
