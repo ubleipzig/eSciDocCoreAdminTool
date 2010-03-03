@@ -27,40 +27,62 @@
 /**
  * @author CHH
  */
-qx.Class.define("org.escidoc.admintool.model.UserAccount", {
-			extend : qx.core.Object,
-			// TODO: change nullable to true in production code.
-			properties : {
-				name : {
-					check : "String",
-					event : "changeName"
-				},
-				creationDate : {
-					check : Date,
-					event : "changeDate"
-				},
-				loginName : {
-					check : "String",
-					event : "changeLoginName"
-				},
-				isActive : {
-					check : Boolean,
-					event : "changeIsActive"
-				},
-				email : {
-					check : "String",
-					event : "changeEmail",
-					nullable : true
-				}
-			},
-			members : {
-				toString : function() {
-					return "[name: " + this.getName() + "]" + "[creationDate: "
-							+ this.getCreationDate() + "]" + "[loginName: "
-							+ this.getLoginName() + "]"+ "[isActive: "
-                            + this.getIsActive() + "]"+ "[e-mail: "
-							+ this.getEmail() + "]";
-				}
-				// how to compare equality? implement equals() and hashCode()?
-			}
-		});
+qx.Class.define("org.escidoc.admintool.model.RootFolder",
+{
+  extend : qx.core.Object,
+
+
+  construct : function(title)
+  {
+    this.base(arguments);
+
+    this.setTitle(title);
+    this.setChildren(new qx.data.Array());
+  },
+
+  properties :
+  {
+    /** Title / Name of the item */
+    title :
+    {
+      check : "String",
+      event : "changeTitle",
+      init: "Folder"
+    },
+
+
+    /** The feed category */
+    category :
+    {
+      check : "String",
+      init : "",
+      event : "dataModified"
+    },
+
+
+    children :
+    {
+      check : "qx.data.Array",
+      event: "changeChildren"
+    },
+
+
+    /** Array of articles. This is needed for the data binding. */
+    articles :
+    {
+      check : "qx.data.Array",
+      event : "changeArticles",
+      init: new qx.data.Array()
+    },
+
+
+    /** The loading state of the folder. Needed for data binding. */
+    state :
+    {
+      check : ["new", "loading", "loaded", "error"],
+      init : "null",
+      event : "stateModified",
+      apply: "_applyState"
+    }
+  }
+});

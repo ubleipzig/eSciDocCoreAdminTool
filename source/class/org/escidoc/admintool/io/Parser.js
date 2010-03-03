@@ -19,7 +19,7 @@
  */
 
 /*
- * Copyright 2006-${year} Fachinformationszentrum Karlsruhe Gesellschaft fuer
+ * Copyright 2006-2010 Fachinformationszentrum Karlsruhe Gesellschaft fuer
  * wissenschaftlich-technische Information mbH and Max-Planck- Gesellschaft zur
  * Foerderung der Wissenschaft e.V. All rights reserved. Use is subject to
  * license terms.

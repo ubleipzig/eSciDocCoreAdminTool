@@ -27,40 +27,36 @@
 /**
  * @author CHH
  */
-qx.Class.define("org.escidoc.admintool.model.UserAccount", {
+qx.Class.define("org.escidoc.admintool.model.UserAccounts", {
 			extend : qx.core.Object,
-			// TODO: change nullable to true in production code.
-			properties : {
-				name : {
-					check : "String",
-					event : "changeName"
-				},
-				creationDate : {
-					check : Date,
-					event : "changeDate"
-				},
-				loginName : {
-					check : "String",
-					event : "changeLoginName"
-				},
-				isActive : {
-					check : Boolean,
-					event : "changeIsActive"
-				},
-				email : {
-					check : "String",
-					event : "changeEmail",
-					nullable : true
-				}
+			construct : function(title) {
+				this.base(arguments);
+
+				this.set({
+							title : title
+						});
+
+				this.setUserAccounts(new qx.data.Array());
 			},
-			members : {
-				toString : function() {
-					return "[name: " + this.getName() + "]" + "[creationDate: "
-							+ this.getCreationDate() + "]" + "[loginName: "
-							+ this.getLoginName() + "]"+ "[isActive: "
-                            + this.getIsActive() + "]"+ "[e-mail: "
-							+ this.getEmail() + "]";
+			properties : {
+				userAccounts : {
+					check : "qx.data.Array",
+					event : "changeUserAccount"
+				},
+				selectedUserAccount : {
+					check : "org.escidoc.admintool.model.UserAccount",
+					nullable : true
+				},
+				title : {
+					check : "String",
+					event : "changeTitle"
+				},
+
+				/** The current loading state */
+				state : {
+					check : ["new", "loading", "loaded", "error"],
+					init : "new",
+					event : "stateModified"
 				}
-				// how to compare equality? implement equals() and hashCode()?
 			}
 		});

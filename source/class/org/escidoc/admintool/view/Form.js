@@ -27,40 +27,38 @@
 /**
  * @author CHH
  */
-qx.Class.define("org.escidoc.admintool.model.UserAccount", {
-			extend : qx.core.Object,
-			// TODO: change nullable to true in production code.
-			properties : {
-				name : {
-					check : "String",
-					event : "changeName"
-				},
-				creationDate : {
-					check : Date,
-					event : "changeDate"
-				},
-				loginName : {
-					check : "String",
-					event : "changeLoginName"
-				},
-				isActive : {
-					check : Boolean,
-					event : "changeIsActive"
-				},
-				email : {
-					check : "String",
-					event : "changeEmail",
-					nullable : true
-				}
+qx.Class.define("org.escidoc.admintool.view.Form", {
+			extend : qx.ui.groupbox.GroupBox,
+			construct : function() {
+				this.base(arguments);
+				this.setLayout(new qx.ui.layout.VBox(5));
+
+				var inputForm = new qx.ui.form.Form();
+				inputForm.addGroupHeader("Registration");
+
+				var nameTextField = new qx.ui.form.TextField();
+				nameTextField.setRequired(true);
+				nameTextField.setWidth(200);
+				inputForm.add(nameTextField, "Name", null, "name");
+
+				var loginNameTextField = new qx.ui.form.TextField();
+				loginNameTextField.setWidth(100);
+				inputForm.add(loginNameTextField, "Login Name", null,
+						"loginName");
+
+				var resetButton = new qx.ui.form.Button("Reset");
+				resetButton.setWidth(70);
+				inputForm.addButton(resetButton);
+
+				var saveButton = new qx.ui.form.Button("Save");
+				saveButton.setWidth(70);
+				inputForm.addButton(saveButton);
+                
+				this.add(new qx.ui.form.renderer.Single(inputForm));
 			},
-			members : {
-				toString : function() {
-					return "[name: " + this.getName() + "]" + "[creationDate: "
-							+ this.getCreationDate() + "]" + "[loginName: "
-							+ this.getLoginName() + "]"+ "[isActive: "
-                            + this.getIsActive() + "]"+ "[e-mail: "
-							+ this.getEmail() + "]";
-				}
-				// how to compare equality? implement equals() and hashCode()?
+			properties : {},
+			members : {},
+			destruct : function() {
+				this._disposeObjects();
 			}
 		});

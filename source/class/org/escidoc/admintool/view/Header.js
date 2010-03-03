@@ -27,40 +27,19 @@
 /**
  * @author CHH
  */
-qx.Class.define("org.escidoc.admintool.model.UserAccount", {
-			extend : qx.core.Object,
-			// TODO: change nullable to true in production code.
-			properties : {
-				name : {
-					check : "String",
-					event : "changeName"
-				},
-				creationDate : {
-					check : Date,
-					event : "changeDate"
-				},
-				loginName : {
-					check : "String",
-					event : "changeLoginName"
-				},
-				isActive : {
-					check : Boolean,
-					event : "changeIsActive"
-				},
-				email : {
-					check : "String",
-					event : "changeEmail",
-					nullable : true
-				}
-			},
-			members : {
-				toString : function() {
-					return "[name: " + this.getName() + "]" + "[creationDate: "
-							+ this.getCreationDate() + "]" + "[loginName: "
-							+ this.getLoginName() + "]"+ "[isActive: "
-                            + this.getIsActive() + "]"+ "[e-mail: "
-							+ this.getEmail() + "]";
-				}
-				// how to compare equality? implement equals() and hashCode()?
+qx.Class.define("org.escidoc.admintool.view.Header", {
+			extend : qx.ui.container.Composite,
+			construct : function() {
+				this.base(arguments);
+
+				this.setLayout(new qx.ui.layout.HBox);
+				this.setAppearance("app-header");
+
+				var title = new qx.ui.basic.Label("Admin Tool");
+
+				this.add(title);
+				this.add(new qx.ui.core.Spacer, {
+							flex : 1
+						});
 			}
 		});
