@@ -81,46 +81,59 @@ qx.Class.define("org.escidoc.admintool.view.UserAccount", {
 		},
 		__createListenerForDeleteButton : function(deleteButton) {
 			deleteButton.addListener("execute", function() {
-				// user selects an item and press delete button
-				// item remove from the >>model<<
-				// >>view<< updated.
-				if (this.__userAccounts.getLength() === 0) {
+				if (this.__isEmpty(this.__userAccounts)) {
 					this.debug("No item in the list.");
 					return;
 				}
-				// replace list controller
-				// how to get seletected item in the table?
-				// var selectedUserAccount = // here comes the code.
-				var selection = [];
-				this.__table.getSelectionModel().iterateSelection(
-						function(rowIndex) {
-							selection.push(rowIndex + "");
-						});
-
-				var selectedRow = this.__tableModel.getRowData(selection[0]);
-
-				var selectedUserAccount = null;
-
-				// straight away, but bad way to do:O(n);
-				// we can achieve in O(1) by creating an map or storing the
-				// resource ID in the both user accounts and row objects
-				for (var index = 0; index < this.__userAccounts.length; index++) {
-					if (this.__userAccounts.getItem(index).getName() === selectedRow[0]) {
-						selectedUserAccount = this.__userAccounts
-								.getItem(index);
+                var selectedRowNumber = this.__getSelectedRowNumber();
+				if (selectedRowNumber) {
+					var selectedUserAccount = this
+							.__getSelectedUserAccount(selectedRowNumber);
+					this
+							.debug("delete this: "
+									+ qx.dev.Debug
+											.debugProperties(selectedUserAccount));
+					// send DELETE request to the server to delete this
+					// resource. If successful, remove the selected resource
+					// from the model.
+					var isSuccesful = true;
+					if (isSuccesful) {
+						this.__userAccounts.remove(selectedUserAccount);
 					}
-				}
-                
-				if (selectedUserAccount == null) {
+
+					// TODO: add message for the user in the toolbar and undo
+					// button.
+					this.__tableModel.removeRows(this.__table.getFocusedRow(),
+							1);
+					this.__table.resetCellFocus();
+				} else {
+					// TODO: show to the user.
 					this.debug("Please select item to delete!");
-					return;
 				}
-
-				this.debug("delete this: "
-						+ qx.dev.Debug.debugProperties(selectedUserAccount));
-
-				this.__userAccounts.remove(selectedUserAccount);
 			}, this);
+		},
+		__isEmpty : function(array) {
+			return array.getLength() === 0;
+		},
+		__getSelectedRowNumber : function() {
+			var selection = [];
+			this.__table.getSelectionModel().iterateSelection(
+					function(rowIndex) {
+						selection.push(rowIndex + "");
+					});
+			return this.__tableModel.getRowData(selection[0]);
+		},
+		// FIXME:
+		// straight away, but bad way to do:O(n);
+		// we can achieve in O(1) by creating an map or storing
+		// the resource ID in the both user accounts and row objects
+		__getSelectedUserAccount : function(selectedRowNumber) {
+			for (var index = 0; index < this.__userAccounts.length; index++) {
+				if (this.__userAccounts.getItem(index).getName() === selectedRowNumber[0]) {
+					return this.__userAccounts.getItem(index);
+				}
+			}
+			throw Error("Table model and view is not syncronized.");
 		},
 		_loadRowData : function() {
 			this.__userAccounts = new qx.data.Array(org.escidoc.admintool.io.Parser

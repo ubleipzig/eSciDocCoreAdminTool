@@ -34,6 +34,7 @@ Requirements
 		depends on: eSciDocXml2Json Service
 	R+D Smart Table Model[3], as subtitute for Qooxdoo Simple 
 		Table Model
+	add destructor in every classes.
 		
 Known bugs
 	[Old] when the user navigate between folders, the tab size changes.
