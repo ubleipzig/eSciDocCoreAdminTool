@@ -38,8 +38,7 @@ qx.Class.define("org.escidoc.admintool.view.Toolbar", {
 				// Reload button
 				// FIXME: fix error while loading icons.
 				// add behaviour to the buttons.
-				var reloadBtn = new qx.ui.toolbar.Button(this.tr("Reload"),
-						"icon/22/actions/view-refresh.png");
+				var reloadBtn = new qx.ui.toolbar.Button(this.tr("Reload"));
 
 				// var reloadCmd = controller.getCommand("reload");
 				// reloadBtn.setCommand(reloadCmd);
@@ -58,8 +57,7 @@ qx.Class.define("org.escidoc.admintool.view.Toolbar", {
 				// Login button
 				// TODO: add behaviour to the login button. Temporary fix, open
 				// new tab or window showing old admin tool login page.
-				var aboutBtn = new qx.ui.toolbar.Button(this.tr("Login"),
-						"icon/22/actions/help-about.png");
+				var aboutBtn = new qx.ui.toolbar.Button(this.tr("Login"));
 				// var aboutCmd = controller.getCommand("about");
 				// aboutBtn.setCommand(aboutCmd);
 				// aboutBtn.setToolTipText("(" + aboutCmd.toString() + ")");

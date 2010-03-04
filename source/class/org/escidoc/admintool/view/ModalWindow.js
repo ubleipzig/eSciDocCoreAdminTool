@@ -40,11 +40,12 @@ qx.Class.define("org.escidoc.admintool.view.ModalWindow", {
 				_initSelf : function() {
 					this.setLayout(new qx.ui.layout.VBox(10));
 					this.setModal(true);
-					this.setShowClose(false);
 					this.setShowMaximize(false);
 					this.setShowMinimize(false);
 					this.setShowStatusbar(false);
-
+                    this.setMovable(false);
+                    
+					// TODO: set not movable.
 					// refactor this, calculate the middle point from browser
 					// window size.
 					this.moveTo(350, 100);

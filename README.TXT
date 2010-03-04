@@ -32,6 +32,8 @@ Requirements
 			depends on: eSciDocXml2Json Service
 	send data to the server
 		depends on: eSciDocXml2Json Service
+	R+D Smart Table Model[3], as subtitute for Qooxdoo Simple 
+		Table Model
 		
 Known bugs
 	[Old] when the user navigate between folders, the tab size changes.
@@ -60,3 +62,6 @@ http://www.mail-archive.com/qooxdoo-devel@lists.sourceforge.net/msg19622.html
 
 [2] "Wrapping Backend Data, " 
 http://qooxdoo.org/documentation/1.0/enterprise_application_development#wrapping_backend_data
+
+[3] "Smart Table Model, " 
+http://qooxdoo.org/contrib/project/smarttablemodel

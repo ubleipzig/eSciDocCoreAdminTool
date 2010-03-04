@@ -31,10 +31,12 @@ qx.Class.define("org.escidoc.admintool.view.UserAccount", {
 	extend : qx.ui.container.Composite,
 	construct : function() {
 		this.base(arguments);
+		// TODO: refactor, separate layout from model.
 		this._createLayout();
 		this._loadRowData();
 		this._initTableModel();
 		this._createTable();
+		this.__createListenerForDeleteButton(this.__deleteButton);
 	},
 	properties : {
 		userAccounts : {
@@ -45,6 +47,7 @@ qx.Class.define("org.escidoc.admintool.view.UserAccount", {
 	},
 	members : {
 		__toolbar : null,
+		__userAccounts : null,
 		__rowData : [],
 		__tableModel : null,
 		__table : null,
@@ -67,8 +70,8 @@ qx.Class.define("org.escidoc.admintool.view.UserAccount", {
 			var editButton = new qx.ui.toolbar.Button("Edit");
 			toolbarPart.add(editButton);
 
-			var deleteButton = new qx.ui.toolbar.Button("Delete");
-			toolbarPart.add(deleteButton);
+			this.__deleteButton = new qx.ui.toolbar.Button("Delete");
+			toolbarPart.add(this.__deleteButton);
 		},
 		__createListenerForNewButton : function(newButton) {
 			newButton.addListener("execute", function() {
@@ -76,11 +79,54 @@ qx.Class.define("org.escidoc.admintool.view.UserAccount", {
 						modalWindow.open();
 					}, this);
 		},
+		__createListenerForDeleteButton : function(deleteButton) {
+			deleteButton.addListener("execute", function() {
+				// user selects an item and press delete button
+				// item remove from the >>model<<
+				// >>view<< updated.
+				if (this.__userAccounts.getLength() === 0) {
+					this.debug("No item in the list.");
+					return;
+				}
+				// replace list controller
+				// how to get seletected item in the table?
+				// var selectedUserAccount = // here comes the code.
+				var selection = [];
+				this.__table.getSelectionModel().iterateSelection(
+						function(rowIndex) {
+							selection.push(rowIndex + "");
+						});
+
+				var selectedRow = this.__tableModel.getRowData(selection[0]);
+
+				var selectedUserAccount = null;
+
+				// straight away, but bad way to do:O(n);
+				// we can achieve in O(1) by creating an map or storing the
+				// resource ID in the both user accounts and row objects
+				for (var index = 0; index < this.__userAccounts.length; index++) {
+					if (this.__userAccounts.getItem(index).getName() === selectedRow[0]) {
+						selectedUserAccount = this.__userAccounts
+								.getItem(index);
+					}
+				}
+                
+				if (selectedUserAccount == null) {
+					this.debug("Please select item to delete!");
+					return;
+				}
+
+				this.debug("delete this: "
+						+ qx.dev.Debug.debugProperties(selectedUserAccount));
+
+				this.__userAccounts.remove(selectedUserAccount);
+			}, this);
+		},
 		_loadRowData : function() {
-			var userAccounts = new qx.data.Array(org.escidoc.admintool.io.Parser
+			this.__userAccounts = new qx.data.Array(org.escidoc.admintool.io.Parser
 					.parseUserAccounts(this.__getUserAccounts()));
-			for (var index = 0; index < userAccounts.length; index++) {
-				var userAccount = userAccounts.getItem(index);
+			for (var index = 0; index < this.__userAccounts.length; index++) {
+				var userAccount = this.__userAccounts.getItem(index);
 				this.__rowData.push([userAccount.getName(),
 						userAccount.getLoginName(),
 						userAccount.getCreationDate()]);
