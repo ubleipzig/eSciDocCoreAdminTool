@@ -29,21 +29,17 @@
  */
 qx.Class.define("org.escidoc.admintool.view.ModalWindow", {
 			extend : qx.ui.window.Window,
-			construct : function() {
+			construct : function(model) {
 				this.base(arguments);
-				this._initSelf();
-				this._addUserForm();
-				this._addCloseEventListener();
-			},
-			properties : {},
-			events : {
-				"exClose" : "qx.event.type.Data"
+				qx.core.Assert.assertNotNull(model, "model must not be null.");
+				this.__model = model;
+				this.__initSelf().__addUserForm();
 			},
 			members : {
+				__model : null,
 				__userAccountForm : null,
-				_initSelf : function() {
+				__initSelf : function() {
 					this.setLayout(new qx.ui.layout.VBox(10));
-
 					this.set({
 								modal : true,
 								showMinimize : false,
@@ -52,33 +48,31 @@ qx.Class.define("org.escidoc.admintool.view.ModalWindow", {
 								showStatusbar : false,
 								movable : false
 							});
-
+					this.__makeBackgroundDark().__moveToNearAddButton();
+					return this;
+				},
+				__makeBackgroundDark : function() {
 					this.getApplicationRoot().set({
 								blockerColor : '#bfbfbf',
 								blockerOpacity : 0.8
 							});
-
-					// TODO: set not movable.
-					// refactor this, calculate the middle point from browser
-					// window size.
-					this.moveTo(350, 100);
+					return this;
 				},
-				_addUserForm : function() {
+				__moveToNearAddButton : function() {
+					this.moveTo(350, 100);
+					return this;
+				},
+				__addUserForm : function() {
 					// FIXME: this is a hack! why pass the window object to its
 					// child. Temporary hack to allow cancel button close the
 					// window when it's clicked.
-                    
-					this.add(new org.escidoc.admintool.view.Form(this));
+					this.__userAccountForm = new org.escidoc.admintool.view.Form(
+							this, this.__model);
+
+					this.add(this.__userAccountForm);
 				},
-				// FIXME: is it the right way to do this?
-				// Problem: this method is not execute at all.
-				// Why? maybe:
-				// 1. event "exClose" is not fired.
-				// 2.
-				_addCloseEventListener : function() {
-					this.addListenerOnce("exClose", function() {
-								this.debug("got your message");
-							});
+				setTableModel : function(tableModel) {
+					this.__userAccountForm.setTableModel(tableModel);
 				}
 			},
 			destruct : function() {

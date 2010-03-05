@@ -36,7 +36,11 @@ qx.Class.define("org.escidoc.admintool.view.UserAccount", {
 		this._loadRowData();
 		this._initTableModel();
 		this._createTable();
+
+		// layout have to be created first before executing this.
 		this.__createListenerForDeleteButton(this.__deleteButton);
+		this.__createListenerForNewButton(this.__newButton);
+
 	},
 	properties : {
 		userAccounts : {
@@ -51,6 +55,8 @@ qx.Class.define("org.escidoc.admintool.view.UserAccount", {
 		__rowData : [],
 		__tableModel : null,
 		__table : null,
+		__deleteButton : null,
+		__newButton : null,
 		_createLayout : function() {
 			this.setLayout(new qx.ui.layout.VBox());
 
@@ -63,9 +69,8 @@ qx.Class.define("org.escidoc.admintool.view.UserAccount", {
 			var refreshButton = new qx.ui.toolbar.Button("Refresh");
 			toolbarPart.add(refreshButton);
 
-			var newButton = new qx.ui.toolbar.Button("New");
-			toolbarPart.add(newButton);
-			this.__createListenerForNewButton(newButton);
+			this.__newButton = new qx.ui.toolbar.Button("New");
+			toolbarPart.add(this.__newButton);
 
 			var editButton = new qx.ui.toolbar.Button("Edit");
 			toolbarPart.add(editButton);
@@ -74,10 +79,11 @@ qx.Class.define("org.escidoc.admintool.view.UserAccount", {
 			toolbarPart.add(this.__deleteButton);
 		},
 		__createListenerForNewButton : function(newButton) {
-			newButton.addListener("execute", function() {
-						var modalWindow = new org.escidoc.admintool.view.ModalWindow();
-						modalWindow.open();
-					}, this);
+			this.__newButton.addListener("execute", function() {
+				var modalWindow = new org.escidoc.admintool.view.ModalWindow(this.__userAccounts);
+				modalWindow.setTableModel(this.__tableModel);
+				modalWindow.open();
+			}, this);
 		},
 		__createListenerForDeleteButton : function(deleteButton) {
 			deleteButton.addListener("execute", function() {
@@ -85,7 +91,7 @@ qx.Class.define("org.escidoc.admintool.view.UserAccount", {
 					this.debug("No item in the list.");
 					return;
 				}
-                var selectedRowNumber = this.__getSelectedRowNumber();
+				var selectedRowNumber = this.__getSelectedRowNumber();
 				if (selectedRowNumber) {
 					var selectedUserAccount = this
 							.__getSelectedUserAccount(selectedRowNumber);
@@ -175,5 +181,9 @@ qx.Class.define("org.escidoc.admintool.view.UserAccount", {
 		__getUserAccounts : function() {
 			return org.escidoc.admintool.data.UserAccounts.getData();
 		}
+	},
+	destruct : function() {
+		this._disposeObjects("__toolbar", "__userAccounts", "__rowData",
+				"__tableModel", "__table", "__deleteButton", "__newButton");
 	}
 });
