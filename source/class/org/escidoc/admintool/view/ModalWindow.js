@@ -33,32 +33,55 @@ qx.Class.define("org.escidoc.admintool.view.ModalWindow", {
 				this.base(arguments);
 				this._initSelf();
 				this._addUserForm();
+				this._addCloseEventListener();
 			},
 			properties : {},
+			events : {
+				"exClose" : "qx.event.type.Data"
+			},
 			members : {
 				__userAccountForm : null,
 				_initSelf : function() {
 					this.setLayout(new qx.ui.layout.VBox(10));
-					this.setModal(true);
-					this.setShowMaximize(false);
-					this.setShowMinimize(false);
-					this.setShowStatusbar(false);
-                    this.setMovable(false);
-                    
+
+					this.set({
+								modal : true,
+								showMinimize : false,
+								showMaximize : false,
+								allowMaximize : false,
+								showStatusbar : false,
+								movable : false
+							});
+
+					this.getApplicationRoot().set({
+								blockerColor : '#bfbfbf',
+								blockerOpacity : 0.8
+							});
+
 					// TODO: set not movable.
 					// refactor this, calculate the middle point from browser
 					// window size.
 					this.moveTo(350, 100);
 				},
 				_addUserForm : function() {
-					var test = new org.escidoc.admintool.view.Form();
-					this.add(test);
-					// this.__userAccountForm = new
-					// org.escidoc.admintool.view.Form();
-					// this.add(this.__userAccountForm);
+					// FIXME: this is a hack! why pass the window object to its
+					// child. Temporary hack to allow cancel button close the
+					// window when it's clicked.
+                    
+					this.add(new org.escidoc.admintool.view.Form(this));
+				},
+				// FIXME: is it the right way to do this?
+				// Problem: this method is not execute at all.
+				// Why? maybe:
+				// 1. event "exClose" is not fired.
+				// 2.
+				_addCloseEventListener : function() {
+					this.addListenerOnce("exClose", function() {
+								this.debug("got your message");
+							});
 				}
 			},
 			destruct : function() {
-				this._disposeObjects();
+				this._disposeObjects("__userAccountForm");
 			}
 		});

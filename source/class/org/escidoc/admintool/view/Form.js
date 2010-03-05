@@ -30,14 +30,20 @@
 qx.Class.define("org.escidoc.admintool.view.Form", {
 			// This may be not right. Why is a form a GroupBox? No!
 			extend : qx.ui.groupbox.GroupBox,
-			construct : function() {
+			construct : function(window) {
 				this.base(arguments);
+				this.__window = window;
 				this.__setVboxAsLayout().__createInputForm()
 						.__addNameTextField().__addLoginNameTextField()
-						.__addCancelButton().__addSaveButton().__addInputForm();
+						.__addCancelButton().__closeWindowWhenClicked()
+						.__addSaveButton().__done();
 			},
 			properties : {},
+			events : {
+				"exClose" : "qx.event.type.Data"
+			},
 			members : {
+				__window : null,
 				__inputForm : null,
 				__nameTextField : null,
 				__loginNameTextField : null,
@@ -73,13 +79,19 @@ qx.Class.define("org.escidoc.admintool.view.Form", {
 					this.__inputForm.addButton(this.__cancelButton);
 					return this;
 				},
+				__closeWindowWhenClicked : function() {
+					this.__cancelButton.addListener("execute", function() {
+						this.__window.close();
+						}, this);
+					return this;
+				},
 				__addSaveButton : function() {
 					this.__saveButton = new qx.ui.form.Button("Save");
 					this.__saveButton.setWidth(70);
 					this.__inputForm.addButton(this.__saveButton);
 					return this;
 				},
-				__addInputForm : function() {
+				__done : function() {
 					this.add(new qx.ui.form.renderer.Single(this.__inputForm));
 					return this;
 				}
