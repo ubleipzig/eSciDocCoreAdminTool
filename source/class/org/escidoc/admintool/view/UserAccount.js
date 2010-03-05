@@ -66,8 +66,8 @@ qx.Class.define("org.escidoc.admintool.view.UserAccount", {
 			var toolbarPart = new qx.ui.toolbar.Part();
 			this.__toolbar.add(toolbarPart);
 
-			var refreshButton = new qx.ui.toolbar.Button("Refresh");
-			toolbarPart.add(refreshButton);
+//			var refreshButton = new qx.ui.toolbar.Button("Refresh");
+//			toolbarPart.add(refreshButton);
 
 			this.__newButton = new qx.ui.toolbar.Button("New");
 			toolbarPart.add(this.__newButton);

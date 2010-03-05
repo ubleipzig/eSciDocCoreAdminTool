@@ -38,14 +38,14 @@ qx.Class.define("org.escidoc.admintool.view.Toolbar", {
 				// Reload button
 				// FIXME: fix error while loading icons.
 				// add behaviour to the buttons.
-				var reloadBtn = new qx.ui.toolbar.Button(this.tr("Reload"));
+				// var reloadBtn = new qx.ui.toolbar.Button(this.tr("Reload"));
 
 				// var reloadCmd = controller.getCommand("reload");
 				// reloadBtn.setCommand(reloadCmd);
 				// reloadBtn.setToolTipText(this.tr("Reload the data. (%1)",
 				// reloadCmd.toString()));
 
-				mainPart.add(reloadBtn);
+				// mainPart.add(reloadBtn);
 
 				// Add a spacer
 				this.addSpacer();
