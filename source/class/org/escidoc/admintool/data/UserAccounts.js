@@ -46,32 +46,8 @@ qx.Class.define("org.escidoc.admintool.data.UserAccounts", {
 			request.setTimeout(9999999999);
 			// register a listerner for completed event.
 			request.addListener("completed", function(response) {
-				return response.getContent();
-
-					// return json;
-					// var tmp = json['userAccounts'];
-					// for (var index = 0; index < tmp.length; index++) {
-					// this
-					// .debug("creationDate:"
-					// + tmp[index]['properties']['creationDateAsString']);
-					// var creationDate =
-					// org.escidoc.admintool.io.JsonParser
-					// .__isoDateStringToDate(tmp[index]['properties']['creationDateAsString']);
-					//
-					// this.debug(creationDate.toString());
-					// }
-					// var userAccountArray =
-					// org.escidoc.admintool.io.JsonParser
-					// .parseUserAccounts(json);
-					// for (var index = 0; index < userAccountArray.length;
-					// index++) {
-					// this.debug(userAccountArray[index].getLoginName());
-					// this.debug(userAccountArray[index].getName());
-					// this.debug(userAccountArray[index].getIsActive());
-					// this.debug(userAccountArray[index]
-					// .getCreationDate().toString());
-					// }
-				}, this);
+						return response.getContent();
+					}, this);
 
 			// // define error and time out handling function
 			// // define what happens after succesful request.

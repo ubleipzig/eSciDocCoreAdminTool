@@ -8,6 +8,7 @@ Requirements
 	I, as a sys admin, can multi-select resources and delete them.
 
 @next actions
+	create automated UI test using framework such Selenium.
 	creating a parser to parse JSON sent by eSciDoc infrastructure.
 		parse BadgerFish JSON without namespaces.
 		Resource: http://news.qooxdoo.org/parsing-atom-feeds

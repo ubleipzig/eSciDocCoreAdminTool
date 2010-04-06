@@ -52,7 +52,9 @@ qx.Class.define("org.escidoc.admintool.io.JsonParser", {
 			if (userAccountProperties['name']
 					&& userAccountProperties['loginName']
 					&& userAccountProperties['active']
-					&& userAccountProperties['creationDateAsString']) {
+					&& userAccountProperties['creationDateAsString']
+					&& userAccountProperties['modifiedBy']
+					&& userAccountProperties['createdBy']) {
 
 				// FIXME: some data contains new line characters.
 				var creationDateValue = org.escidoc.admintool.io.JsonParser
@@ -68,13 +70,16 @@ qx.Class.define("org.escidoc.admintool.io.JsonParser", {
 				// everthing we need are found and valid.
 				// TODO: we create an User Account object.
 				var userAccount = new org.escidoc.admintool.model.UserAccount();
+
 				userAccount.set({
 							name : userAccountProperties['name'] || "",
 							loginName : userAccountProperties['loginName']
 									|| "",
 							isActive : userAccountProperties['active'],
 							creationDate : creationDateValue || null,
-							email : null
+							email : null,
+							createdBy : userAccountProperties['createdBy']['objid']
+									|| ""
 						});
 			} else {
 				throw new Error("Error data: missing properties value");

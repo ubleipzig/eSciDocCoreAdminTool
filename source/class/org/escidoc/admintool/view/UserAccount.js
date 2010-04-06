@@ -33,8 +33,6 @@ qx.Class.define("org.escidoc.admintool.view.UserAccount", {
 		this.base(arguments);
 		// TODO: refactor, separate layout from model.
 		this._createLayout();
-		var service = new org.escidoc.admintool.io.EscidocService();
-		service.retrieveUserAccounts();
 		this._loadRowData();
 		this._initTableModel();
 		this._createTable();
@@ -138,18 +136,23 @@ qx.Class.define("org.escidoc.admintool.view.UserAccount", {
 			request.setTimeout(9999999999);
 			request.addListener("completed", function(response) {
 				var userAccountsInJson = response.getContent();
+				this.debug(userAccountsInJson.toString());
+
 				// JSON ==> User Accounts array.
 				var userAccountsTemp = org.escidoc.admintool.io.JsonParser
 						.parseUserAccounts(userAccountsInJson);
 				this
 						.debug("Retrieving user accounts from eSciDoc is completed: ");
+				var newRowData = [];
 				for (var index = 0; index < userAccountsTemp.length; index++) {
 					var userAccount = userAccountsTemp[index];
-					this.__rowData.push([userAccount.getName(),
+					// this.debug(qx.dev.Debug.debugProperties(userAccount));
+					newRowData.push([userAccount.getName(),
 							userAccount.getLoginName(),
-							userAccount.getCreationDate()]);
+							userAccount.getCreationDate(),
+							userAccount.getCreatedBy()]);
 				}
-				this.__table.resetCellFocus();
+				this.__tableModel.setData(newRowData);
 			}, this);
 			request.send();
 		},
@@ -177,14 +180,8 @@ qx.Class.define("org.escidoc.admintool.view.UserAccount", {
 			throw Error("Table model and view is not syncronized.");
 		},
 		_loadRowData : function() {
-			this.__userAccounts = new qx.data.Array(org.escidoc.admintool.io.Parser
-					.parseUserAccounts(this.__getUserAccounts()));
-			for (var index = 0; index < this.__userAccounts.length; index++) {
-				var userAccount = this.__userAccounts.getItem(index);
-				this.__rowData.push([userAccount.getName(),
-						userAccount.getLoginName(),
-						userAccount.getCreationDate()]);
-			}
+			this.__userAccounts = [];
+			this.__sendRequest();
 		},
 		__getUserAccounts : function() {
 			return org.escidoc.admintool.data.UserAccounts.getData();
@@ -192,7 +189,8 @@ qx.Class.define("org.escidoc.admintool.view.UserAccount", {
 		_initTableModel : function() {
 			this.__tableModel = new qx.ui.table.model.Simple();
 			this.__tableModel.setData(this.__rowData);
-			this.__tableModel.setColumns(["Name", "Login Name", "Created On"]);
+			this.__tableModel.setColumns(["Name", "Login Name", "Created On",
+					"Created By"]);
 			this.__tableModel.setColumnSortable(1, true);
 			this.__tableModel.setColumnSortable(2, true);
 			this.__tableModel.setColumnSortable(3, true);
