@@ -46,8 +46,7 @@ qx.Class.define("org.escidoc.admintool.data.UserAccounts", {
 			request.setTimeout(9999999999);
 			// register a listerner for completed event.
 			request.addListener("completed", function(response) {
-				json = response.getContent();
-				return json;
+				return response.getContent();
 
 					// return json;
 					// var tmp = json['userAccounts'];
