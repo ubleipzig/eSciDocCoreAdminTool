@@ -40,7 +40,7 @@ qx.Class.define("org.escidoc.admintool.view.UserAccount", {
 		// layout have to be created first before executing this.
 		this.__createListenerForDeleteButton(this.__deleteButton);
 		this.__createListenerForNewButton(this.__newButton);
-
+		this.__createListenerForRetrieveButton(this.__retrieveButton);
 	},
 	properties : {
 		userAccounts : {
@@ -57,6 +57,7 @@ qx.Class.define("org.escidoc.admintool.view.UserAccount", {
 		__table : null,
 		__deleteButton : null,
 		__newButton : null,
+		__retrieveButton : null,
 		_createLayout : function() {
 			this.setLayout(new qx.ui.layout.VBox());
 
@@ -66,8 +67,8 @@ qx.Class.define("org.escidoc.admintool.view.UserAccount", {
 			var toolbarPart = new qx.ui.toolbar.Part();
 			this.__toolbar.add(toolbarPart);
 
-//			var refreshButton = new qx.ui.toolbar.Button("Refresh");
-//			toolbarPart.add(refreshButton);
+			// var refreshButton = new qx.ui.toolbar.Button("Refresh");
+			// toolbarPart.add(refreshButton);
 
 			this.__newButton = new qx.ui.toolbar.Button("New");
 			toolbarPart.add(this.__newButton);
@@ -77,6 +78,9 @@ qx.Class.define("org.escidoc.admintool.view.UserAccount", {
 
 			this.__deleteButton = new qx.ui.toolbar.Button("Delete");
 			toolbarPart.add(this.__deleteButton);
+
+			this.__retrieveButton = new qx.ui.toolbar.Button("Retrieve");
+			toolbarPart.add(this.__retrieveButton);
 		},
 		__createListenerForNewButton : function(newButton) {
 			this.__newButton.addListener("execute", function() {
@@ -117,6 +121,52 @@ qx.Class.define("org.escidoc.admintool.view.UserAccount", {
 					this.debug("Please select item to delete!");
 				}
 			}, this);
+		},
+		__createListenerForRetrieveButton : function(retrieveButton) {
+			retrieveButton.addListener("execute", function() {
+						this.__sendRequest();
+					}, this);
+		},
+		__sendRequest : function() {
+
+			// feed.setState("loading");
+
+			var proxy, req;
+
+			// Redirect request through proxy (required for cross-domain
+			// loading)
+			// The proxy also translates the data from XML to JSON
+			proxy = "http://resources.qooxdoo.org/proxy_1.php?mode=jsonp&proxy="
+					+ "http://rss.sldashdot.org/Slashdot/slashdot";
+
+			// Create request object
+			req = new qx.io.remote.Request(
+					"http://localhost:8181/v1.2/users/sysadmin", "GET",
+					"text/plain");
+
+			// Json data is useable cross-domain (in fact it is jsonp in this
+			// case)
+			req.setCrossDomain(true);
+
+			// Wait longer on slow connections (normally always a lot of data)
+			req.setTimeout(30000);
+
+			// // Add the listener
+			req.addListener("completed", function() {
+						return function(response) {
+							var json = response.getContent();
+							alert(json);
+							alert("retrieving...");
+						} 
+					}, this);
+			// var failHandler = qx.lang.Function.bind(this.__onFail, this,
+			// this);
+			//
+			// req.addListener("timeout", failHandler, this);
+			// req.addListener("failed", failHandler, this);
+
+			// And finally send the request
+			req.send();
 		},
 		__isEmpty : function(array) {
 			return array.getLength() === 0;
@@ -184,6 +234,7 @@ qx.Class.define("org.escidoc.admintool.view.UserAccount", {
 	},
 	destruct : function() {
 		this._disposeObjects("__toolbar", "__userAccounts", "__rowData",
-				"__tableModel", "__table", "__deleteButton", "__newButton");
+				"__tableModel", "__table", "__deleteButton", "__newButton",
+				"__retrieveButton");
 	}
 });

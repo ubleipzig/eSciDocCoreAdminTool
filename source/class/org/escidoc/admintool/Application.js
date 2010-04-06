@@ -49,6 +49,10 @@ qx.Class.define("org.escidoc.admintool.Application", {
 		main : function() {
 			this.base(arguments);
 			this.__enableLogging();
+			this.__initAdminTool();
+			// this._showListFormAndLabelBinding();
+		},
+		__initAdminTool : function() {
 			this._createLayout();
 
 			this._initializeModel();
@@ -58,8 +62,6 @@ qx.Class.define("org.escidoc.admintool.Application", {
 			// configure tree view
 			this.__treeView.getRoot().setOpen(true);
 			this.__treeView.setHideRoot(true);
-
-			// this._showListFormAndLabelBinding();
 		},
 		__enableLogging : function() {
 			if (qx.core.Variant.isSet("qx.debug", "on")) {
@@ -131,8 +133,7 @@ qx.Class.define("org.escidoc.admintool.Application", {
 
 			this.__resourcesFolder
 					.getChildren()
-					.push(new org.escidoc.admintool.model.UserAccount(
-							"UserAccount"));
+					.push(new org.escidoc.admintool.model.UserAccount("UserAccount"));
 		},
 		_showListFormAndLabelBinding : function() {
 			var groupBox = new qx.ui.groupbox.GroupBox("Simple Form");
@@ -386,6 +387,58 @@ qx.Class.define("org.escidoc.admintool.Application", {
 			toolbarPart.add(deleteButton);
 			var debugToolbarButton = new qx.ui.toolbar.Button("Debug");
 			toolbarPart.add(debugToolbarButton);
+
+			var retrieveToolbarButton = new qx.ui.toolbar.Button("Retrieve");
+			toolbarPart.add(retrieveToolbarButton);
+
+			// FIXME: refactor this, no OO.
+			// Argument: DTSTTCPW
+			// http://c2.com/cgi/wiki?DoTheSimplestThingThatCouldPossiblyWork
+			retrieveToolbarButton.addListener("execute", function() {
+				this.debug("Retrieving...");
+				// setup the Remote Request.
+				// define POST or GET
+				// define Accept MIME TYPE PARAM
+				// define server and host ==> define Resource URI
+				var RESOURCE_URI = "http://localhost:8181/v1.2/users";
+				var request = new qx.io.remote.Request(RESOURCE_URI, "GET",
+						"application/json");
+				request.setCrossDomain(true);
+
+				// timeout
+				request.setTimeout(9999999999);
+				// register a listerner for completed event.
+
+				request.addListener("completed", function(response) {
+					var json = response.getContent();
+					var tmp = json['userAccounts'];
+					// for (var index = 0; index < tmp.length; index++) {
+					// this
+					// .debug("creationDate:"
+					// + tmp[index]['properties']['creationDateAsString']);
+					// var creationDate = org.escidoc.admintool.io.JsonParser
+					// .__isoDateStringToDate(tmp[index]['properties']['creationDateAsString']);
+					//
+					// this.debug(creationDate.toString());
+					// }
+					var userAccountArray = org.escidoc.admintool.io.JsonParser
+							.parseUserAccounts(json);
+					this.debug("UserAccounts object is created.");
+					for (var index = 0; index < userAccountArray.length; index++) {
+						this.debug(userAccountArray[index].getLoginName());
+						this.debug(userAccountArray[index].getName());
+						this.debug(userAccountArray[index].getIsActive());
+						this.debug(userAccountArray[index].getCreationDate()
+								.toString());
+					}
+				}, this);
+
+				// // define error and time out handling function
+				// // define what happens after succesful request.
+				// finally send the request to the server.
+				request.send();
+			}, this);
+
 			// Table
 			var tableModel = new qx.ui.table.model.Simple();
 
