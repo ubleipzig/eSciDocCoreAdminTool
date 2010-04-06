@@ -110,12 +110,14 @@ qx.Class.define("org.escidoc.admintool.view.Form", {
 
 								var newUserAccount = qx.data.marshal.Json
 										.createModel({
-													name : this.__nameTextField
-															.getValue(),
-													loginName : this.__loginNameTextField
-															.getValue(),
-													creationDate : new Date()
-												})
+											name : this.__nameTextField
+													.getValue(),
+											loginName : this.__loginNameTextField
+													.getValue(),
+											creationDate : new Date()
+										});
+								this.debug("new user Account in Json:"
+										+ newUserAccount.toString);
 								this.__model.push(newUserAccount);
 								qx.core.Assert.assertEquals(before + 1,
 										this.__model.length,

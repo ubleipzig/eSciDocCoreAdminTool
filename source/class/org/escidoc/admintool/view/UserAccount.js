@@ -146,11 +146,11 @@ qx.Class.define("org.escidoc.admintool.view.UserAccount", {
 				var newRowData = [];
 				for (var index = 0; index < userAccountsTemp.length; index++) {
 					var userAccount = userAccountsTemp[index];
-					// this.debug(qx.dev.Debug.debugProperties(userAccount));
 					newRowData.push([userAccount.getName(),
 							userAccount.getLoginName(),
 							userAccount.getCreationDate(),
-							userAccount.getCreatedBy()]);
+							userAccount.getCreatedBy(),
+							userAccount.getModifiedBy()]);
 				}
 				this.__tableModel.setData(newRowData);
 			}, this);
@@ -190,10 +190,12 @@ qx.Class.define("org.escidoc.admintool.view.UserAccount", {
 			this.__tableModel = new qx.ui.table.model.Simple();
 			this.__tableModel.setData(this.__rowData);
 			this.__tableModel.setColumns(["Name", "Login Name", "Created On",
-					"Created By"]);
+					"Created By", "Modified By"]);
 			this.__tableModel.setColumnSortable(1, true);
 			this.__tableModel.setColumnSortable(2, true);
 			this.__tableModel.setColumnSortable(3, true);
+			this.__tableModel.setColumnSortable(4, true);
+			this.__tableModel.setColumnSortable(5, true);
 		},
 		_createTable : function() {
 			var custom = {

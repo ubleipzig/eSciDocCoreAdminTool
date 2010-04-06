@@ -53,8 +53,8 @@ qx.Class.define("org.escidoc.admintool.io.JsonParser", {
 					&& userAccountProperties['loginName']
 					&& userAccountProperties['active']
 					&& userAccountProperties['creationDateAsString']
-					&& userAccountProperties['modifiedBy']
-					&& userAccountProperties['createdBy']) {
+					&& userAccountProperties['createdBy']
+					&& userAccountProperties['modifiedBy']) {
 
 				// FIXME: some data contains new line characters.
 				var creationDateValue = org.escidoc.admintool.io.JsonParser
@@ -79,6 +79,8 @@ qx.Class.define("org.escidoc.admintool.io.JsonParser", {
 							creationDate : creationDateValue || null,
 							email : null,
 							createdBy : userAccountProperties['createdBy']['objid']
+									|| "",
+							modifiedBy : userAccountProperties['modifiedBy']['objid']
 									|| ""
 						});
 			} else {

@@ -55,6 +55,10 @@ qx.Class.define("org.escidoc.admintool.model.UserAccount", {
 				createdBy : {
 					check : "String",
 					event : "changeCreatedBy"
+				},
+				modifiedBy : {
+					check : "String",
+					event : "changeModifiedBy"
 				}
 			},
 			members : {
@@ -63,8 +67,9 @@ qx.Class.define("org.escidoc.admintool.model.UserAccount", {
 							+ this.getCreationDate() + "]" + "[loginName: "
 							+ this.getLoginName() + "]" + "[isActive: "
 							+ this.getIsActive() + "]" + "[e-mail: "
-							+ this.getEmail() + "]"+ "[e-mail: "
-                            + this.getCreatedBy() + "]";
+							+ this.getEmail() + "]" + "[createdBy: "
+							+ this.getCreatedBy() + "]" + "[modifiedBy: "
+							+ this.getModifiedBy() + "]";
 				}
 				// how to compare equality? implement equals() and hashCode()?
 			}

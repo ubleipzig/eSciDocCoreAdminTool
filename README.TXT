@@ -8,6 +8,7 @@ Requirements
 	I, as a sys admin, can multi-select resources and delete them.
 
 @next actions
+    add missing important members in UserAccount UI, i.e. Last Modification Date.
 	create automated UI test using framework such Selenium.
 	creating a parser to parse JSON sent by eSciDoc infrastructure.
 		parse BadgerFish JSON without namespaces.
