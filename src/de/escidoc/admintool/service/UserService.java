@@ -108,7 +108,7 @@ public class UserService {
 
     // TODO refactor to use polymorphism. Duplicate code in method body:
     // activate and deactivate
-    private void activate(final String selectedItemId)
+    public void activate(final String selectedItemId)
         throws InternalClientException, TransportException,
         EscidocClientException {
 
@@ -119,10 +119,9 @@ public class UserService {
 
         client.activate(userAccount.getObjid(),
             lastModificationDate(userAccount));
-
     }
 
-    private void deactivate(final String selectedItemId)
+    public void deactivate(final String selectedItemId)
         throws InternalClientException, TransportException,
         EscidocClientException {
         assert !(selectedItemId == null || selectedItemId.isEmpty()) : "selectedItemId must not be null or empty";
