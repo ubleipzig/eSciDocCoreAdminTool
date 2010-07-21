@@ -17,7 +17,7 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Button.ClickEvent;
 
-import de.escidoc.admintool.view.validator.StringValidator;
+import de.escidoc.admintool.view.validator.EmptyStringValidator;
 import de.escidoc.core.resources.om.context.AdminDescriptor;
 import de.escidoc.core.resources.om.context.AdminDescriptors;
 
@@ -99,7 +99,7 @@ public class AdminDescriptorsEditView extends CustomField {
         final TextField adminDescriptorNameField = new TextField("Name");
 
         adminDescriptorNameField.setWidth("400px");
-        adminDescriptorNameField.addValidator(new StringValidator(
+        adminDescriptorNameField.addValidator(new EmptyStringValidator(
             "Admin Descriptor name can not be empty"));
         adminDescriptorsForm.addField(ADMIN_DESCRIPTOR_NAME + index,
             adminDescriptorNameField);
@@ -110,7 +110,7 @@ public class AdminDescriptorsEditView extends CustomField {
         System.out.println("index: " + index);
         final TextField adminDescriptorNameField = new TextField("Name");
         adminDescriptorNameField.setWidth("400px");
-        adminDescriptorNameField.addValidator(new StringValidator(
+        adminDescriptorNameField.addValidator(new EmptyStringValidator(
             "Admin Descriptor name can not be empty"));
         adminDescriptorNameField.setValue(value);
         adminDescriptorsForm.addField(ADMIN_DESCRIPTOR_NAME + index,
@@ -123,7 +123,7 @@ public class AdminDescriptorsEditView extends CustomField {
         adminDescriptorContentField.setWidth("400px");
 
         adminDescriptorContentField.setRows(3);
-        adminDescriptorContentField.addValidator(new StringValidator(
+        adminDescriptorContentField.addValidator(new EmptyStringValidator(
             "Admin Descriptor Content can not be empty"));
 
         adminDescriptorsForm.addField(ADMIN_DESCRIPTOR_CONTENT + index,
@@ -138,7 +138,7 @@ public class AdminDescriptorsEditView extends CustomField {
         adminDescriptorContentField.setWidth("400px");
 
         adminDescriptorContentField.setRows(3);
-        adminDescriptorContentField.addValidator(new StringValidator(
+        adminDescriptorContentField.addValidator(new EmptyStringValidator(
             "Admin Descriptor Content can not be empty"));
         adminDescriptorContentField.setValue(value);
         adminDescriptorsForm.addField(ADMIN_DESCRIPTOR_CONTENT + index,
