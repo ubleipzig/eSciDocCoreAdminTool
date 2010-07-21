@@ -23,7 +23,7 @@ import de.escidoc.admintool.lab.AdminDescriptorsEditView;
 import de.escidoc.admintool.service.ContextService;
 import de.escidoc.admintool.service.OrgUnitService;
 import de.escidoc.admintool.view.ViewConstants;
-import de.escidoc.admintool.view.validator.StringValidator;
+import de.escidoc.admintool.view.validator.EmptyStringValidator;
 import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
@@ -117,7 +117,7 @@ public class ContextEditForm extends Form implements ClickListener {
                 }
                 tf.setRequired(true);
                 tf.setRequiredError("Name is required");
-                tf.addValidator(new StringValidator("Name is required"));
+                tf.addValidator(new EmptyStringValidator("Name is required"));
             }
             else if (ViewConstants.DESCRIPTION_ID.equals(propertyId)) {
                 final TextField tf = (TextField) field;
@@ -131,7 +131,7 @@ public class ContextEditForm extends Form implements ClickListener {
                 tf.setRequired(true);
                 tf.setRequiredError("Description is required");
 
-                tf.addValidator(new StringValidator("Description is required"));
+                tf.addValidator(new EmptyStringValidator("Description is required"));
             }
             else if (ViewConstants.OBJECT_ID.equals(propertyId)) {
                 final TextField tf = (TextField) field;
@@ -174,7 +174,7 @@ public class ContextEditForm extends Form implements ClickListener {
                 tf.setRequired(true);
                 tf.setRequiredError("Type is required");
                 tf.setWidth("400px");
-                tf.addValidator(new StringValidator("Type is required"));
+                tf.addValidator(new EmptyStringValidator("Type is required"));
             }
 
             return field;

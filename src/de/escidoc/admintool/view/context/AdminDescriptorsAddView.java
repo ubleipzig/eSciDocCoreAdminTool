@@ -13,7 +13,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Button.ClickEvent;
 
-import de.escidoc.admintool.view.validator.StringValidator;
+import de.escidoc.admintool.view.validator.EmptyStringValidator;
 import de.escidoc.core.resources.om.context.AdminDescriptor;
 import de.escidoc.core.resources.om.context.AdminDescriptors;
 
@@ -81,7 +81,7 @@ public class AdminDescriptorsAddView {
         adminDescriptorContentField.setWidth("400px");
 
         adminDescriptorContentField.setRows(3);
-        adminDescriptorContentField.addValidator(new StringValidator(
+        adminDescriptorContentField.addValidator(new EmptyStringValidator(
             "Admin Descriptor Content can not be empty"));
         contextAddView.addField(ADMIN_DESCRIPTOR_CONTENT + index,
             adminDescriptorContentField);
@@ -91,7 +91,7 @@ public class AdminDescriptorsAddView {
     private AdminDescriptorsAddView addNameField() {
         final TextField adminDescriptorNameField = new TextField("Name");
         adminDescriptorNameField.setWidth("400px");
-        adminDescriptorNameField.addValidator(new StringValidator(
+        adminDescriptorNameField.addValidator(new EmptyStringValidator(
             "Admin Descriptor name can not be empty"));
         contextAddView.addField(ADMIN_DESCRIPTOR_NAME + index,
             adminDescriptorNameField);

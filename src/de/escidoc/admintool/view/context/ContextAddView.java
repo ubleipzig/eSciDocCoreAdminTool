@@ -18,7 +18,7 @@ import de.escidoc.admintool.service.ContextService;
 import de.escidoc.admintool.service.OrgUnitService;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.admintool.view.orgunit.OrgUnitAddView;
-import de.escidoc.admintool.view.validator.StringValidator;
+import de.escidoc.admintool.view.validator.EmptyStringValidator;
 import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
@@ -67,7 +67,7 @@ public class ContextAddView extends Form implements ClickListener {
         addField(ViewConstants.TYPE_ID, typeField);
         typeField.setWidth("400px");
         typeField.setRequired(true);
-        typeField.addValidator(new StringValidator(ViewConstants.TYPE_LABEL
+        typeField.addValidator(new EmptyStringValidator(ViewConstants.TYPE_LABEL
             + " can not be empty."));
         typeField.setRequiredError("Please enter a " + ViewConstants.TYPE_ID);
         return this;
@@ -88,7 +88,7 @@ public class ContextAddView extends Form implements ClickListener {
         addField(ViewConstants.NAME_ID, nameField);
         nameField.setWidth("400px");
         nameField.setRequired(true);
-        nameField.addValidator(new StringValidator("Name can not be empty."));
+        nameField.addValidator(new EmptyStringValidator("Name can not be empty."));
         nameField.setRequiredError("Please enter a " + ViewConstants.NAME_ID);
         return this;
     }
@@ -100,7 +100,7 @@ public class ContextAddView extends Form implements ClickListener {
         descriptionField.setRequired(true);
         descriptionField.setWidth("400px");
         descriptionField.setRows(3);
-        descriptionField.addValidator(new StringValidator(
+        descriptionField.addValidator(new EmptyStringValidator(
             "Description can not be empty."));
         descriptionField.setRequiredError("Please enter a "
             + ViewConstants.DESCRIPTION_ID);
