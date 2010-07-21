@@ -56,7 +56,7 @@ public class UserLabListView extends Table {
                     "properties.active", "properties.creationDate",
                     "properties.createdBy.objid", "lastModificationDate",
                     "properties.modifiedBy.objid");
-            sort(new Object[] { "properties.modifiedBy.objid" },
+            sort(new Object[] { "lastModificationDate" },
                 new boolean[] { false });
             setContainerDataSource(pojoContainer);
             setColumnHeaders(new String[] { ViewConstants.NAME_LABEL,
