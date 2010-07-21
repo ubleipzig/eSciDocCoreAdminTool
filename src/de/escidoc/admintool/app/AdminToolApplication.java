@@ -1,5 +1,7 @@
 package de.escidoc.admintool.app;
 
+import java.io.IOException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,17 +13,22 @@ import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.service.ApplicationContext;
+import com.vaadin.terminal.ExternalResource;
+import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.ThemeResource;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.FormLayout;
+import com.vaadin.ui.Window.CloseEvent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.SplitPanel;
+import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 
 import de.escidoc.admintool.service.ContextService;
 import de.escidoc.admintool.service.OrgUnitService;
@@ -44,6 +51,7 @@ import de.escidoc.admintool.view.user.lab.UserLabEditForm;
 import de.escidoc.admintool.view.user.lab.UserLabEditView;
 import de.escidoc.admintool.view.user.lab.UserLabListView;
 import de.escidoc.admintool.view.user.lab.UserLabView;
+import de.escidoc.admintool.view.util.LayoutHelper;
 import de.escidoc.core.client.Authentication;
 import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.client.exceptions.EscidocException;
@@ -52,26 +60,75 @@ import de.escidoc.core.client.exceptions.TransportException;
 import de.escidoc.core.client.exceptions.application.security.AuthenticationException;
 import de.escidoc.core.test.client.EscidocClientTestBase;
 
-//NOTE: the code of this prototype contains a lot of duplications, badly designed and implemented
-// Thus a Hack, it needs a lot of refactoring. Reason was to create a functional prototype as fast as possible.
-//After main functionality of the requirements are implemented, we can do the refactoring.
 @SuppressWarnings("serial")
 public class AdminToolApplication extends Application
     implements ApplicationContext.TransactionListener, ClickListener,
     ValueChangeListener, ItemClickListener {
     private final Logger log =
         LoggerFactory.getLogger(AdminToolApplication.class);
-
+    
     @Override
     public void init() {
-        log.info("Hello World!");
-
+        log.info("Starting application...");
         getContext().addTransactionListener(this);
+        buildMainLayout();
         showLoginWindow();
     }
 
+    // TODO: FIXME Login does not work!!!!
     private void showLoginWindow() {
-        setMainWindow(new LoginWindow());
+    	final Window window = new Window("Login");//
+    	/*
+        final TextField loginNameTextField;
+        final TextField passwordTextField;
+    	window.setModal(true);
+    	
+    	window.setHeight("230px"); //$NON-NLS-1$
+    	window.setWidth("400px"); //$NON-NLS-1$
+		
+    	FormLayout layout = new FormLayout();
+    	loginNameTextField = new TextField();
+    	layout.addComponent(LayoutHelper.create("Login Name:", loginNameTextField, "100px", true));
+    	passwordTextField = new TextField();
+    	passwordTextField.setSecret(true);
+    	layout.addComponent(LayoutHelper.create("Password:", passwordTextField, "100px", true));
+    	final Button okButton = new Button("Login");
+    	okButton.addListener(new Button.ClickListener() {
+			public void buttonClick(ClickEvent event) {
+		    	try{
+		    		currentApplication.set(AdminToolApplication.this);
+		    		String login = (String) loginNameTextField.getValue(); 
+		    		String pwd = (String) passwordTextField.getValue(); 
+//		    		AdminToolApplication.getInstance().authenticate(login, pwd);
+		    		authenticate(login, pwd);
+		    		getMainWindow().removeWindow(window);
+		    	} catch(Exception e){
+		    		e.printStackTrace();
+		    	}
+			}
+		});
+    	layout.addComponent(LayoutHelper.create(okButton));
+    	
+    	window.setContent(layout);
+    	
+
+        //setMainWindow(new LoginWindow());
+    	getMainWindow().addWindow(window);
+    	window.addListener(new Window.CloseListener() {
+			public void windowClose(CloseEvent e) {
+		    	Resource r = new ExternalResource(AdminToolApplication.getInstance().getURL());
+		    	getMainWindow().open(r);
+			}
+		});
+		*/
+		currentApplication.set(AdminToolApplication.this);
+		String login = "sysadmin"; 
+		String pwd = "escidoc"; 
+    	try{
+    		authenticate(login, pwd);
+    	} catch(Exception e){
+    		e.printStackTrace();
+    	}
     }
 
     // === Authentification related methods ===
@@ -104,7 +161,7 @@ public class AdminToolApplication extends Application
 
     public void authenticate(final String login, final String password)
         throws AuthenticationException, InternalClientException,
-        TransportException {
+        TransportException, IOException {
 
         final Authentication authentication = new Authentication();
         authentication.login(EscidocClientTestBase.DEFAULT_SERVICE_URL, login,
@@ -116,7 +173,7 @@ public class AdminToolApplication extends Application
             loadProtectedResources(authentication);
         }
         catch (final EscidocException e) {
-            // TODO log exception.
+            log.error("An unexpected error occured! See log for details.", e);
             e.printStackTrace();
         }
     }
@@ -173,7 +230,9 @@ public class AdminToolApplication extends Application
         new SplitPanel(SplitPanel.ORIENTATION_HORIZONTAL);
 
     private void buildMainLayout() {
-        setMainWindow(new Window("Admin Tool Prototype"));
+    	final Window window = new Window("Admin Tool Prototype");
+    	window.setSizeFull();
+    	setMainWindow(window);
 
         setTheme("contacts");
 
@@ -190,8 +249,7 @@ public class AdminToolApplication extends Application
         getMainWindow().setContent(layout);
     }
 
-    private final Button newOrgUnitButton = new Button("Add OU");
-
+    
     private final Button logoutButton = new Button("Sign out");
 
     private final Button newUserButton = new Button("Add User");
@@ -199,12 +257,13 @@ public class AdminToolApplication extends Application
     // TODO move this to separate class
     private HorizontalLayout createToolbar() {
         final HorizontalLayout layout = new HorizontalLayout();
-        layout.addComponent(newOrgUnitButton);
-        layout.addComponent(logoutButton);
+        final Embedded em = new Embedded("", new ThemeResource("images/escidoc-logo.jpg"));
+//            new Embedded("", new ThemeResource("images/escidoc-small-logo.jpg"));
+        layout.addComponent(em);
+        layout.setComponentAlignment(em, Alignment.MIDDLE_LEFT);
+        layout.setExpandRatio(em, 1);
 
-        newOrgUnitButton.addListener((ClickListener) this);
-        newOrgUnitButton
-            .setIcon(new ThemeResource("icons/32/document-add.png"));
+        layout.addComponent(logoutButton);
 
         logoutButton.addListener(new Button.ClickListener() {
             public void buttonClick(final Button.ClickEvent event) {
@@ -221,13 +280,6 @@ public class AdminToolApplication extends Application
         layout.setStyleName("toolbar");
 
         layout.setWidth("100%");
-
-        final Embedded em =
-            new Embedded("", new ThemeResource("images/escidoc-small-logo.jpg"));
-        layout.addComponent(em);
-        layout.setComponentAlignment(em, Alignment.MIDDLE_RIGHT);
-        layout.setExpandRatio(em, 1);
-
         return layout;
     }
 
@@ -254,11 +306,11 @@ public class AdminToolApplication extends Application
                         e.printStackTrace();
                     }
                     catch (final InternalClientException e) {
-                        // TODO Auto-generated catch block
+                    	log.error("An unexpected error occured! See log for details.", e);
                         e.printStackTrace();
                     }
                     catch (final TransportException e) {
-                        // TODO Auto-generated catch block
+                    	log.error("An unexpected error occured! See log for details.", e);
                         e.printStackTrace();
                     }
                 }
@@ -293,19 +345,19 @@ public class AdminToolApplication extends Application
                 orgUnitEditForm = new OrgUnitEditForm(this, orgUnitService);
             }
             catch (final EscidocException e) {
-                // TODO Auto-generated catch block
+            	log.error("An unexpected error occured! See log for details.", e);
                 e.printStackTrace();
             }
             catch (final InternalClientException e) {
-                // TODO Auto-generated catch block
+            	log.error("An unexpected error occured! See log for details.", e);
                 e.printStackTrace();
             }
             catch (final TransportException e) {
-                // TODO Auto-generated catch block
+            	log.error("An unexpected error occured! See log for details.", e);
                 e.printStackTrace();
             }
             catch (final UnsupportedOperationException e) {
-                // TODO Auto-generated catch block
+            	log.error("An unexpected error occured! See log for details.", e);
                 e.printStackTrace();
             }
             organizationalUnitlistView =
@@ -415,10 +467,7 @@ public class AdminToolApplication extends Application
 
     public void buttonClick(final ClickEvent event) {
         final Button source = event.getButton();
-        if (source == newOrgUnitButton) {
-            showOrganizationalUnitAddForm();
-        }
-        else if (source == newUserButton) {
+        if (source == newUserButton) {
             showUserAddForm();
         }
         else {
