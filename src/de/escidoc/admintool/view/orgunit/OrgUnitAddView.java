@@ -98,8 +98,7 @@ public class OrgUnitAddView {
 
             final ResourceRef organizationalUnitRef =
                 new ResourceRef(selected.getObjid());
-            organizationalUnitRefs
-                .addOrganizationalUnitRef(organizationalUnitRef);
+            organizationalUnitRefs.add(organizationalUnitRef);
         }
     }
 

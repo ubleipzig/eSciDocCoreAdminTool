@@ -202,7 +202,7 @@ public class ContextService {
         assert !(contextType == null || contextType.isEmpty()) : "contextType name can not be null or empty";
         assert adminDescriptors != null : "Admin Descriptor can not be null";
         assert (orgUnitRefs != null) : "orgUnitRefs can not be null";
-        assert (orgUnitRefs.getOrganizationalUnitRefs().size() > 0) : "orgUnitRefs can not be empty";
+        assert (orgUnitRefs.size() > 0) : "orgUnitRefs can not be empty";
 
         final Context backedContext =
             new ContextFactory().create(name, description, contextType,

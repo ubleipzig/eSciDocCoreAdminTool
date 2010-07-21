@@ -116,7 +116,7 @@ public class AdminDescriptorsAddView {
         }
         buildAdminDescriptors();
         // TODO iterate over adminDescriptors, debug its value
-        for (final AdminDescriptor ad : adminDescriptors.getAdminDescriptors()) {
+        for (final AdminDescriptor ad : adminDescriptors) {
             System.out.println(ad.getName());
             System.out.println(ad.getContent());
         }
@@ -153,7 +153,7 @@ public class AdminDescriptorsAddView {
 
             adminDescriptor.setContent(element);
 
-            adminDescriptors.addAdminDescriptor(adminDescriptor);
+            adminDescriptors.add(adminDescriptor);
         }
     }
 

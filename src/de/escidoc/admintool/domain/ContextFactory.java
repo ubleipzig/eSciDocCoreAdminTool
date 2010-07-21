@@ -48,8 +48,7 @@ public class ContextFactory {
     }
 
     private boolean isNotSet(final AdminDescriptors adminDescriptors) {
-        return adminDescriptors == null
-            || adminDescriptors.getAdminDescriptors().size() == 0;
+        return adminDescriptors == null || adminDescriptors.size() == 0;
     }
 
     public Context build() {

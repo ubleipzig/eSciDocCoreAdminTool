@@ -136,10 +136,8 @@ public class ContextListView extends Table {
                 context.getProperties().getPublicStatusComment(),
                 context.getProperties().getType(),
                 getOrgUnitsByResourceRef(context
-                    .getProperties().getOrganizationalUnitRefs()
-                    .getOrganizationalUnitRefs()),
-                context.getAdminDescriptors().getAdminDescriptors() }, context
-                .getObjid());
+                    .getProperties().getOrganizationalUnitRefs()),
+                context.getAdminDescriptors() }, context.getObjid());
         assert itemId != null : "Adding context to the list failed.";
     }
 

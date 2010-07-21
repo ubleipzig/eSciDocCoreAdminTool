@@ -49,7 +49,7 @@ public class ContextReadView extends Form implements ClickListener {
     private ContextReadView adminDesriptors() {
         final List<String> adminDescriptorsName = new ArrayList<String>();
         for (final AdminDescriptor adminDescriptor : context
-            .getAdminDescriptors().getAdminDescriptors()) {
+            .getAdminDescriptors()) {
             adminDescriptorsName.add(adminDescriptor.getName());
         }
         verticalLayout.addComponent(new Label(
@@ -103,9 +103,7 @@ public class ContextReadView extends Form implements ClickListener {
         verticalLayout.addComponent(orgUnitLabel);
 
         final Collection<ResourceRef> organizationalUnitRefs =
-            context
-                .getProperties().getOrganizationalUnitRefs()
-                .getOrganizationalUnitRefs();
+            context.getProperties().getOrganizationalUnitRefs();
         for (final ResourceRef resourceRef : organizationalUnitRefs) {
             verticalLayout.addComponent(new Label(resourceRef.getObjid()));
         }

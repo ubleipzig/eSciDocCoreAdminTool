@@ -238,13 +238,13 @@ public class AdminDescriptorsEditView extends CustomField {
 
             adminDescriptor.setContent(element);
 
-            adminDescriptors.addAdminDescriptor(adminDescriptor);
+            adminDescriptors.add(adminDescriptor);
         }
     }
 
     public void commitForm() {
-        adminDescriptorsProperty.setValue(adminDescriptors
-            .getAdminDescriptors());
+        // TODO adapt to the new API
+        adminDescriptorsProperty.setValue(adminDescriptors);
     }
 
     public AdminDescriptors getAdminDescriptors()

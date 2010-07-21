@@ -256,8 +256,7 @@ public class ContextEditForm extends Form implements ClickListener {
             try {
                 final AdminDescriptors adminDescriptors = getAdminDescriptors();
 
-                for (final AdminDescriptor enteredAdminDesc : adminDescriptors
-                    .getAdminDescriptors()) {
+                for (final AdminDescriptor enteredAdminDesc : adminDescriptors) {
 
                     System.out.println("name: " + enteredAdminDesc.getName());
                     System.out.println("content: "
@@ -308,7 +307,7 @@ public class ContextEditForm extends Form implements ClickListener {
             new OrganizationalUnitRefs();
         for (final ResourceRef resourceRef : (Collection<ResourceRef>) orgUnitSelectionView
             .getValue()) {
-            organizationalUnitRefs.addOrganizationalUnitRef(resourceRef);
+            organizationalUnitRefs.add(resourceRef);
         }
         return organizationalUnitRefs;
     }
