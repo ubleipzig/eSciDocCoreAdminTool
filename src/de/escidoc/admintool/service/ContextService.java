@@ -1,6 +1,7 @@
 package de.escidoc.admintool.service;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -52,6 +53,10 @@ public class ContextService {
         InternalClientException, TransportException {
         final Collection<Context> contexts =
             client.retrieveContexts(createdBySysAdmin()).getContexts();
+        if (contexts == null || contexts.size() == 0) {
+            return Collections.emptySet();
+        }
+
         for (final Context context : contexts) {
             contextById.put(context.getObjid(), context);
         }

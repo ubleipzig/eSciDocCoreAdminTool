@@ -2,9 +2,9 @@ package de.escidoc.admintool.view.context;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 
+import com.vaadin.data.util.POJOContainer;
 import com.vaadin.ui.Table;
 
 import de.escidoc.admintool.app.AdminToolApplication;
@@ -23,7 +23,7 @@ public class ContextListView extends Table {
 
     private final AdminToolApplication app;
 
-    private final ContextService service;
+    private final ContextService contextService;
 
     private final OrgUnitService orgUnitService;
 
@@ -31,7 +31,7 @@ public class ContextListView extends Table {
         final ContextService service, final OrgUnitService orgUnitService)
         throws EscidocException, InternalClientException, TransportException {
         this.app = app;
-        this.service = service;
+        contextService = service;
         this.orgUnitService = orgUnitService;
         buildView();
         bindDataSource();
@@ -39,8 +39,9 @@ public class ContextListView extends Table {
 
     private void buildView() {
         setSizeFull();
-        setColumnCollapsingAllowed(true);
-        setColumnReorderingAllowed(true);
+        setColumnCollapsingAllowed(false);
+        setColumnReorderingAllowed(false);
+
         setSelectable(true);
         setImmediate(true);
         addListener((ValueChangeListener) app);
@@ -49,79 +50,25 @@ public class ContextListView extends Table {
 
     private void bindDataSource() throws EscidocException,
         InternalClientException, TransportException {
-        addColumnsHeader();
-        fillTable(service.all());
-        // NOTE: this method should be call only after container property
-        // already defined
-        setColumnHeaders();
-        collapseColumns();
-    }
 
-    private void setColumnHeaders() {
-        this.setColumnHeaders(new String[] { ViewConstants.NAME_LABEL,
-            ViewConstants.DESCRIPTION_LABEL, ViewConstants.OBJECT_ID_LABEL,
-            ViewConstants.CREATED_ON_LABEL, ViewConstants.CREATED_BY_LABEL,
-            ViewConstants.MODIFIED_ON_LABEL, ViewConstants.MODIFIED_BY_LABEL,
-            ViewConstants.PUBLIC_STATUS_LABEL,
-            ViewConstants.PUBLIC_STATUS_COMMENT_LABEL,
-            ViewConstants.TYPE_LABEL, ViewConstants.ORGANIZATION_UNITS_LABEL,
-            ViewConstants.ADMIN_DESRIPTORS_LABEL });
-    }
+        final Collection<Context> allContexts = contextService.all();
 
-    private void collapseColumns() {
-        try {
-            setColumnCollapsed(ViewConstants.OBJECT_ID, true);
-            setColumnCollapsed(ViewConstants.DESCRIPTION_ID, true);
-            setColumnCollapsed(ViewConstants.CREATED_ON_ID, true);
-            setColumnCollapsed(ViewConstants.CREATED_BY_ID, true);
-            setColumnCollapsed(ViewConstants.MODIFIED_ON_ID, true);
-            setColumnCollapsed(ViewConstants.MODIFIED_BY_ID, true);
-            setColumnCollapsed(ViewConstants.PUBLIC_STATUS_ID, true);
-            setColumnCollapsed(ViewConstants.PUBLIC_STATUS_COMMENT_ID, true);
-            setColumnCollapsed(ViewConstants.TYPE_ID, true);
-            setColumnCollapsed(ViewConstants.ORGANIZATION_UNITS_ID, true);
-            setColumnCollapsed(ViewConstants.ADMIN_DESRIPTORS_ID, true);
-        }
-        catch (final IllegalAccessException e) {
-            // TODO log the exception
-            e.printStackTrace();
-        }
-    }
+        final POJOContainer<Context> contextContainer =
+            new POJOContainer<Context>(contextService.all(), "objid",
+                "properties.name", "properties.publicStatus",
+                "properties.publicStatusComment", "properties.creationDate",
+                "properties.createdBy.objid", "lastModificationDate",
+                "properties.modifiedBy.objid");
+        setContainerDataSource(contextContainer);
+        setVisibleColumns(new Object[] {});
 
-    private void addColumnsHeader() {
-        addContainerProperty(ViewConstants.NAME_ID, String.class, "");
-        this.addContainerProperty(ViewConstants.DESCRIPTION_ID, String.class,
-            "");
-        this.addContainerProperty(ViewConstants.OBJECT_ID, String.class, "");
-        this.addContainerProperty(ViewConstants.CREATED_ON_ID, Date.class, "");
-        this
-            .addContainerProperty(ViewConstants.CREATED_BY_ID, String.class, "");
-        this.addContainerProperty(ViewConstants.MODIFIED_ON_ID, Date.class, "");
-        this.addContainerProperty(ViewConstants.MODIFIED_BY_ID, String.class,
-            "");
-        this.addContainerProperty(ViewConstants.PUBLIC_STATUS_ID, String.class,
-            "");
-        this.addContainerProperty(ViewConstants.PUBLIC_STATUS_COMMENT_ID,
-            String.class, "");
-        this.addContainerProperty(ViewConstants.TYPE_ID, String.class, "");
-        this.addContainerProperty(ViewConstants.ORGANIZATION_UNITS_ID,
-            Collection.class, "");
-        this.addContainerProperty(ViewConstants.ADMIN_DESRIPTORS_ID,
-            Collection.class, "");
-    }
-
-    private void fillTable(final Collection<Context> contexts) {
-        for (final Context context : contexts) {
-            addContext(context);
-        }
-        sort();
+        sort(new Object[] { "lastModificationDate" }, new boolean[] { false });
+        setVisibleColumns(new Object[] { "properties.name" });
     }
 
     void addContext(final Context context) {
         assert context != null : "context must not be null.";
         debug(context);
-        // assert !containsId(context.getObjid()) :
-        // "Context already in the table";
 
         final Object itemId =
             addItem(new Object[] {
@@ -168,7 +115,7 @@ public class ContextListView extends Table {
     }
 
     public void updateContext(final String objectId) {
-        final Context selected = service.getSelected(objectId);
+        final Context selected = contextService.getSelected(objectId);
         removeContext(selected.getObjid());
         addContext(selected);
         sort(new Object[] { ViewConstants.MODIFIED_ON_ID },

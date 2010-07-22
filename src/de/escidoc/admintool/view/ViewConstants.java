@@ -104,7 +104,7 @@ public class ViewConstants {
 
     public static final String ADMIN_DESRIPTORS_LABEL = "Admin Descriptors";
 
-    public static final String PUBLIC_STATUS_ID = "Public Status";
+    public static final String PUBLIC_STATUS_ID = "properties.publicStatus";
 
     public static final String PUBLIC_STATUS_LABEL = "Public Status";
 
