@@ -145,7 +145,7 @@ public class OrgUnitTree extends CustomComponent {
 		Panel panel = new Panel();
 //		panel.setSizeUndefined();
 //		panel.setSizeFull();
-//		panel.setStyleName(Reindeer.PANEL_LIGHT);
+		panel.setStyleName(Reindeer.PANEL_LIGHT);
 		tree = new Tree();        
     	loadTree();
     	tree.setHeight(null);
