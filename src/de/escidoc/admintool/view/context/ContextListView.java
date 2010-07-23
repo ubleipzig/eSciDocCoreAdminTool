@@ -51,8 +51,6 @@ public class ContextListView extends Table {
     private void bindDataSource() throws EscidocException,
         InternalClientException, TransportException {
 
-        final Collection<Context> allContexts = contextService.all();
-
         final POJOContainer<Context> contextContainer =
             new POJOContainer<Context>(contextService.all(), "objid",
                 "properties.name", "properties.publicStatus",
@@ -60,7 +58,6 @@ public class ContextListView extends Table {
                 "properties.createdBy.objid", "lastModificationDate",
                 "properties.modifiedBy.objid");
         setContainerDataSource(contextContainer);
-        setVisibleColumns(new Object[] {});
 
         sort(new Object[] { "lastModificationDate" }, new boolean[] { false });
         setVisibleColumns(new Object[] { "properties.name" });
