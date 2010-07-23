@@ -331,8 +331,7 @@ public class AdminToolApplication extends Application
     private OrgUnitView organizationalUnitlistView;
 
     // TODO refactor to lazy init later.
-    private OrgUnitList orgUnitList = new OrgUnitList(this, orgUnitService);
-
+    private OrgUnitList orgUnitList;
     private OrgUnitEditForm orgUnitEditForm;
 
     private OrgUnitAddForm orgUnitAddForm;
