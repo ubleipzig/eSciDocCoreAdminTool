@@ -8,6 +8,7 @@ import com.vaadin.data.util.POJOContainer;
 import com.vaadin.ui.Table;
 
 import de.escidoc.admintool.app.AdminToolApplication;
+import de.escidoc.admintool.app.PropertyId;
 import de.escidoc.admintool.service.ContextService;
 import de.escidoc.admintool.service.OrgUnitService;
 import de.escidoc.admintool.view.ViewConstants;
@@ -50,17 +51,17 @@ public class ContextListView extends Table {
 
     private void bindDataSource() throws EscidocException,
         InternalClientException, TransportException {
-
         final POJOContainer<Context> contextContainer =
             new POJOContainer<Context>(contextService.all(),
-                ViewConstants.OBJECT_ID, "properties.name",
-                "properties.publicStatus", "properties.publicStatusComment",
-                "properties.creationDate", "properties.createdBy.objid",
-                "lastModificationDate", "properties.modifiedBy.objid");
+                PropertyId.OBJECT_ID, PropertyId.NAME,
+                PropertyId.PUBLIC_STATUS, PropertyId.PUBLIC_STATUS_COMMENT,
+                PropertyId.CREATION_DATE, PropertyId.CREATED_BY,
+                PropertyId.LAST_MODIFICATION_DATE, PropertyId.MODIFIED_BY);
         setContainerDataSource(contextContainer);
-
-        sort(new Object[] { "lastModificationDate" }, new boolean[] { false });
-        setVisibleColumns(new Object[] { "properties.name" });
+        sort(new Object[] { PropertyId.LAST_MODIFICATION_DATE },
+            new boolean[] { false });
+        setVisibleColumns(new Object[] { PropertyId.NAME });
+        setColumnHeader(PropertyId.NAME, ViewConstants.TITLE_LABEL);
     }
 
     void addContext(final Context context) {

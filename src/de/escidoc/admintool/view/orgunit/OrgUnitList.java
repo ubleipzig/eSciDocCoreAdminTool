@@ -82,7 +82,7 @@ public class OrgUnitList extends Table {
         setVisibleColumns(new Object[] { PropertyId.NAME });
         sort(new Object[] { PropertyId.LAST_MODIFICATION_DATE },
             new boolean[] { false });
-        setColumnHeaders();
+        setColumnHeader(PropertyId.NAME, ViewConstants.TITLE_LABEL);
     }
 
     // TODO create a delegate for OrgUnit.java to for fetching and storing MPDL
