@@ -34,8 +34,38 @@ public class LayoutHelper {
 		l.setSizeUndefined();
 		l.setWidth(width);
 		hor.setComponentAlignment(l, Alignment.MIDDLE_RIGHT);
+		
 		if (required){
 			hor.addComponent(new Label("&nbsp;<span style=\"color:red; position:relative; top:13px;\">*</span>", Label.CONTENT_XHTML));
+		} else{
+			hor.addComponent(new Label("&nbsp;&nbsp;", Label.CONTENT_XHTML));
+		}
+		hor.addComponent(comp);
+		hor.setComponentAlignment(comp, Alignment.MIDDLE_RIGHT);
+		hor.addComponent(new Label(" "));
+		hor.setSpacing(false);
+		return hor;
+	}
+
+	/** Helper method. Puts a blank in front of a component.
+	 * @param label The label in front of the controll.
+	 * @param comp The component to display.
+	 * @param width the fixed size of the label. The parameter has to be in css style, i.e. 400px for instance.
+	 * @param required should it be marked with an asterix.
+	 * @return The component in an horizontal layout. A blank in front and afterwards is inserted.
+	 */
+	public static synchronized HorizontalLayout create(String label, Component comp, String width, int height, boolean required){
+		HorizontalLayout hor = new HorizontalLayout();
+		hor.addComponent(new Label(" "));
+		String text = "<p align=\"right\">"+label+"</p>";
+		Label l;
+		hor.addComponent(l = new Label(text, Label.CONTENT_XHTML));
+		l.setSizeUndefined();
+		l.setWidth(width);
+		hor.setComponentAlignment(l, Alignment.MIDDLE_RIGHT);
+		
+		if (required){
+			hor.addComponent(new Label("&nbsp;<span style=\"color:red; position:relative; top:"+(height/2-13)+"px;\">*</span>", Label.CONTENT_XHTML));
 		} else{
 			hor.addComponent(new Label("&nbsp;&nbsp;", Label.CONTENT_XHTML));
 		}
