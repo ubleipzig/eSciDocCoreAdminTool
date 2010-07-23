@@ -52,11 +52,11 @@ public class ContextListView extends Table {
         InternalClientException, TransportException {
 
         final POJOContainer<Context> contextContainer =
-            new POJOContainer<Context>(contextService.all(), "objid",
-                "properties.name", "properties.publicStatus",
-                "properties.publicStatusComment", "properties.creationDate",
-                "properties.createdBy.objid", "lastModificationDate",
-                "properties.modifiedBy.objid");
+            new POJOContainer<Context>(contextService.all(),
+                ViewConstants.OBJECT_ID, "properties.name",
+                "properties.publicStatus", "properties.publicStatusComment",
+                "properties.creationDate", "properties.createdBy.objid",
+                "lastModificationDate", "properties.modifiedBy.objid");
         setContainerDataSource(contextContainer);
 
         sort(new Object[] { "lastModificationDate" }, new boolean[] { false });
