@@ -3,20 +3,20 @@ package de.escidoc.admintool.view.orgunit;
 import static de.escidoc.admintool.view.ViewConstants.ALTERNATIVE_ID;
 import static de.escidoc.admintool.view.ViewConstants.CITY_ID;
 import static de.escidoc.admintool.view.ViewConstants.COUNTRY_ID;
-import static de.escidoc.admintool.view.ViewConstants.CREATED_ON_ID;
 import static de.escidoc.admintool.view.ViewConstants.IDENTIFIER_ID;
 import static de.escidoc.admintool.view.ViewConstants.ORG_TYPE_ID;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.vaadin.data.util.POJOContainer;
 import com.vaadin.ui.Table;
 
 import de.escidoc.admintool.app.AdminToolApplication;
+import de.escidoc.admintool.app.PropertyId;
 import de.escidoc.admintool.domain.MetadataExtractor;
 import de.escidoc.admintool.service.OrgUnitService;
 import de.escidoc.admintool.view.ViewConstants;
@@ -41,20 +41,29 @@ public class OrgUnitList extends Table {
         this.app = app;
         service = orgUnitService;
 
-        // TODO should not be in constructor
         buildUI();
+        // TODO should not be in constructor
+        // TODO handle exception in the right abstraction. Tell the user what
+        // happens.
         try {
             bindDataSource();
         }
-        catch (final Exception e) {
-            e.getStackTrace();
+        catch (final EscidocException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        catch (final InternalClientException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        catch (final TransportException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
     }
 
     private void buildUI() {
         setSizeFull();
-        // this.setWidth("300px");
-        setColumnCollapsingAllowed(true);
         setColumnReorderingAllowed(true);
         setSelectable(true);
         setImmediate(true);
@@ -64,28 +73,21 @@ public class OrgUnitList extends Table {
 
     private void bindDataSource() throws EscidocException,
         InternalClientException, TransportException {
-
-        addColumnsHeader();
         allOrgUnits = service.all();
-        fillTable();
-        this.setColumnHeaders();
-        collapseColumns();
+        setContainerDataSource(new POJOContainer<OrganizationalUnit>(
+            allOrgUnits, PropertyId.OBJECT_ID, PropertyId.NAME,
+            PropertyId.DESCRIPTION, PropertyId.CREATION_DATE,
+            PropertyId.CREATED_BY, PropertyId.LAST_MODIFICATION_DATE,
+            PropertyId.MODIFIED_BY, PropertyId.PARENTS, PropertyId.PREDECESSORS));
+        setVisibleColumns(new Object[] { PropertyId.NAME });
+        sort(new Object[] { PropertyId.LAST_MODIFICATION_DATE },
+            new boolean[] { false });
+        setColumnHeaders();
     }
 
-    // TODO refactor constant to use ViewConstants.* instead of static imports.
+    // TODO create a delegate for OrgUnit.java to for fetching and storing MPDL
+    // Metadata
     private void addColumnsHeader() {
-        this.addContainerProperty(ViewConstants.OBJECT_ID, String.class, "");
-        this.addContainerProperty(ViewConstants.TITLE_ID, String.class, "");
-        this.addContainerProperty(ViewConstants.DESCRIPTION_ID, String.class,
-            "");
-        this.addContainerProperty(CREATED_ON_ID, Date.class, "");
-        this
-            .addContainerProperty(ViewConstants.CREATED_BY_ID, String.class, "");
-        this.addContainerProperty(ViewConstants.MODIFIED_ON_ID, Date.class, "");
-        this.addContainerProperty(ViewConstants.MODIFIED_BY_ID, String.class,
-            "");
-        this
-            .addContainerProperty(ViewConstants.CREATED_BY_ID, String.class, "");
         this.addContainerProperty(ALTERNATIVE_ID, String.class, "");
         this.addContainerProperty(IDENTIFIER_ID, String.class, "");
         this.addContainerProperty(ORG_TYPE_ID, String.class, "");
@@ -103,49 +105,16 @@ public class OrgUnitList extends Table {
     }
 
     private void setColumnHeaders() {
-        this.setColumnHeaders(new String[] { ViewConstants.OBJECT_ID_LABEL,
-            ViewConstants.TITLE_LABEL, ViewConstants.DESCRIPTION_LABEL,
-            ViewConstants.CREATED_ON_LABEL, ViewConstants.CREATED_BY_LABEL,
-            ViewConstants.MODIFIED_ON_LABEL, ViewConstants.MODIFIED_BY_LABEL,
-            ViewConstants.ALTERNATIVE_LABEL, ViewConstants.IDENTIFIER_LABEL,
-            ViewConstants.TYPE_LABEL, ViewConstants.COUNTRY_LABEL,
-            ViewConstants.CITY_LABEL, ViewConstants.COORDINATES_LABEL,
-            ViewConstants.START_DATE_LABEL, ViewConstants.END_DATE_LABEL,
-            ViewConstants.PARENTS_LABEL, ViewConstants.PREDECESSORS_LABEL });
-    }
-
-    private void collapseColumns() {
-        try {
-            setColumnCollapsed(ViewConstants.OBJECT_ID, true);
-            setColumnCollapsed(ViewConstants.DESCRIPTION_ID, true);
-            setColumnCollapsed(ViewConstants.IS_ACTIVE_ID, true);
-            setColumnCollapsed(ViewConstants.CREATED_ON_ID, true);
-            setColumnCollapsed(ViewConstants.CREATED_BY_ID, true);
-            setColumnCollapsed(ViewConstants.MODIFIED_ON_ID, true);
-            setColumnCollapsed(ViewConstants.MODIFIED_BY_ID, true);
-            setColumnCollapsed(ViewConstants.ALTERNATIVE_ID, true);
-            setColumnCollapsed(ViewConstants.IDENTIFIER_ID, true);
-            setColumnCollapsed(ViewConstants.ORG_TYPE_ID, true);
-            setColumnCollapsed(ViewConstants.COUNTRY_ID, true);
-            setColumnCollapsed(ViewConstants.CITY_ID, true);
-            setColumnCollapsed(ViewConstants.COORDINATES_ID, true);
-            setColumnCollapsed(ViewConstants.START_DATE_ID, true);
-            setColumnCollapsed(ViewConstants.END_DATE_ID, true);
-            setColumnCollapsed(ViewConstants.PARENTS_ID, true);
-            setColumnCollapsed(ViewConstants.PREDECESSORS_ID, true);
-        }
-        catch (final IllegalAccessException e) {
-            // TODO log the exception
-            e.printStackTrace();
-        }
-    }
-
-    private void fillTable() {
-        for (final OrganizationalUnit ou : allOrgUnits) {
-            addOrgUnit(ou);
-        }
-        this.sort(new Object[] { ViewConstants.MODIFIED_ON_ID },
-            new boolean[] { false });
+        setColumnHeader(PropertyId.NAME, ViewConstants.TITLE_LABEL);
+        // this.setColumnHeaders(new String[] { ViewConstants.OBJECT_ID_LABEL,
+        // ViewConstants.TITLE_LABEL, ViewConstants.DESCRIPTION_LABEL,
+        // ViewConstants.CREATED_ON_LABEL, ViewConstants.CREATED_BY_LABEL,
+        // ViewConstants.MODIFIED_ON_LABEL, ViewConstants.MODIFIED_BY_LABEL,
+        // ViewConstants.ALTERNATIVE_LABEL, ViewConstants.IDENTIFIER_LABEL,
+        // ViewConstants.TYPE_LABEL, ViewConstants.COUNTRY_LABEL,
+        // ViewConstants.CITY_LABEL, ViewConstants.COORDINATES_LABEL,
+        // ViewConstants.START_DATE_LABEL, ViewConstants.END_DATE_LABEL,
+        // ViewConstants.PARENTS_LABEL, ViewConstants.PREDECESSORS_LABEL });
     }
 
     // TODO Bad design
