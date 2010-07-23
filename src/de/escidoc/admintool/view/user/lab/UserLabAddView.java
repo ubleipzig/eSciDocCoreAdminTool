@@ -54,11 +54,14 @@ public class UserLabAddView extends CustomComponent implements ClickListener {
     	panel.addComponent(LayoutHelper.create(ViewConstants.NAME_LABEL, nameField = new TextField(), "100px", true));
         nameProperty = new ObjectProperty("", String.class);
         nameField.setPropertyDataSource(nameProperty);
+        nameField.setWidth("400px");
        
         panel.addComponent(LayoutHelper.create(ViewConstants.LOGIN_NAME_LABEL, loginNameField = new TextField(), "100px", true));
         
         loginNameProperty = new ObjectProperty("", String.class);
         loginNameField.setPropertyDataSource(loginNameProperty);
+        loginNameField.setWidth("400px");
+        
         panel.addComponent(addFooter());
     	setCompositionRoot(panel);
     }

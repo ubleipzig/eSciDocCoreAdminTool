@@ -59,29 +59,35 @@ public class UserLabEditForm extends CustomComponent implements ClickListener {
     	FormLayout form = new FormLayout();
     	panel.setContent(form);
     	form.setSpacing(false);
+    	
     	panel.setCaption("Edit User Account");
     	nameField = new TextField();
     	nameField.setWidth("400px");
     	nameField.setWriteThrough(false);
+    	
         panel.addComponent(LayoutHelper.create(ViewConstants.NAME_LABEL, nameField, "100px", true));
         loginNameField = new TextField();
         loginNameField.setWidth("400px");
         loginNameField.setWriteThrough(false);
-        panel.addComponent(LayoutHelper.create(ViewConstants.LOGIN_NAME_LABEL, loginNameField, "100px", true));
+        loginNameField.setReadOnly(true);
+        panel.addComponent(LayoutHelper.create(ViewConstants.LOGIN_NAME_LABEL, loginNameField, "100px", false));
+        
         objIdField = new TextField();
         objIdField.setReadOnly(true);
         panel.addComponent(LayoutHelper.create(ViewConstants.OBJECT_ID_LABEL, objIdField, "100px", false));
+        
         modifiedOn = new Label();
         modifiedBy = new Label();
         panel.addComponent(LayoutHelper.create("Modified", "by", modifiedOn, modifiedBy, "100px", "15px", false));
         
-        
-        state = new CheckBox();
-        panel.addComponent(LayoutHelper.create("Active status", state, "100px", false));
-        
         createdOn = new Label();
         createdBy = new Label();
         panel.addComponent(LayoutHelper.create("Created", "by", createdOn, createdBy, "100px", "15px", false));
+        
+        state = new CheckBox();
+        state.setWriteThrough(false);
+        panel.addComponent(LayoutHelper.create("Active status", state, "100px", false));
+        
         
         panel.addComponent(addFooter());
         setCompositionRoot(panel);
@@ -104,21 +110,16 @@ public class UserLabEditForm extends CustomComponent implements ClickListener {
             loginNameField.setValue("");
         }
         else if (source == save) {
-//			item.getItemProperty("properties.loginName").setValue("false");
             try {
             	boolean valid = true;
-//            	if (nameField.isModified()){
-                	valid = EmptyFieldValidator.isValid(nameField, "Please enter a " + ViewConstants.NAME_ID);
-//            	}
-            	
-//                if (loginNameField.isModified()) {
-                	valid &= (EmptyFieldValidator.isValid(loginNameField, "Please enter a " + ViewConstants.LOGIN_NAME_ID));
-//                }
-
-//                if (valid && nameField.isModified()){
-                 if (valid){
+               	valid = EmptyFieldValidator.isValid(nameField, "Please enter a " + ViewConstants.NAME_ID);
+               	valid &= (EmptyFieldValidator.isValid(loginNameField, "Please enter a " + ViewConstants.LOGIN_NAME_ID));
+               	if (valid){
                 	 userService.update(getSelectedItemId(), (String)item.getItemProperty(ViewConstants.NAME_ID).getValue());
-	        	}
+                	 if(state.isModified()){
+                		 changeState();
+                	 }
+                }
                 nameField.setComponentError(null);
                 loginNameField.setComponentError(null);
             	nameField.commit();
@@ -135,7 +136,10 @@ public class UserLabEditForm extends CustomComponent implements ClickListener {
             catch (final TransportException e) {
             	log.error("An unexpected error occured! See log for details.", e);
                 e.printStackTrace();
-            }
+            } catch (EscidocClientException e) {
+            	log.error("An unexpected error occured! See log for details.", e);
+				e.printStackTrace();
+			}
         }
     }
 

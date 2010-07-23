@@ -41,8 +41,6 @@ public class UserLabEditView extends VerticalLayout {
 
     private final Button deleteUserBtn =
         new Button("Delete", new DeleteUserListener());
-    private final Button stateUserBtn =
-        new Button("Active", new ActiveUserListener());
 
     private Item item;
 
@@ -52,7 +50,6 @@ public class UserLabEditView extends VerticalLayout {
         header.setSpacing(true);
         header.addComponent(newUserBtn);
         header.addComponent(deleteUserBtn);
-        header.addComponent(stateUserBtn);
         header.setVisible(true);
         return header;
     }
@@ -60,12 +57,6 @@ public class UserLabEditView extends VerticalLayout {
     public void setSelected(final Item item) {
         this.item = item;
         userLabEditForm.setSelected(item);
-        POJOProperty prop = (POJOProperty)item.getItemProperty("properties.active");
-        if (!(Boolean)prop.getValue()){
-        	stateUserBtn.setCaption("Activate");
-        } else {
-        	stateUserBtn.setCaption("Deactivate");
-        }
     }
 
     private class NewUserListener implements Button.ClickListener {
@@ -96,38 +87,6 @@ public class UserLabEditView extends VerticalLayout {
                 e.printStackTrace();
                 setComponentError(new SystemError(e.getMessage()));
             }
-        }
-    }
-    
-    private class ActiveUserListener implements Button.ClickListener {
-        public void buttonClick(final ClickEvent event) {
-            try {
-				userLabEditForm.changeState();
-		        POJOProperty prop = (POJOProperty)item.getItemProperty("properties.active");
-
-				if (!(Boolean)prop.getValue()){
-		            item.getItemProperty("properties.active").setValue(true);
-		            stateUserBtn.setCaption("Deactivate");
-		        }
-		        else {
-		            item.getItemProperty("properties.active").setValue(false);
-		           	stateUserBtn.setCaption("Activate");
-		        }
-				
-				
-			} catch (InternalClientException e) {
-				stateUserBtn.setComponentError(new SystemError(e.getMessage()));
-            	log.error("An unexpected error occured! See log for details.", e);
-				e.printStackTrace();
-			} catch (TransportException e) {
-				stateUserBtn.setComponentError(new SystemError(e.getMessage()));
-            	log.error("An unexpected error occured! See log for details.", e);
-				e.printStackTrace();
-			} catch (EscidocClientException e) {
-				stateUserBtn.setComponentError(new SystemError(e.getMessage()));
-            	log.error("An unexpected error occured! See log for details.", e);
-				e.printStackTrace();
-			}
         }
     }
 }
