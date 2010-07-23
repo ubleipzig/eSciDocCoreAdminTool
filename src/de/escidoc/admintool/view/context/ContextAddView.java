@@ -5,10 +5,13 @@ import java.util.Set;
 
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.vaadin.data.util.ObjectProperty;
+import com.vaadin.terminal.SystemError;
+import com.vaadin.terminal.UserError;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -27,7 +30,12 @@ import de.escidoc.admintool.service.OrgUnitService;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.admintool.view.orgunit.OrgUnitAddView;
 import de.escidoc.admintool.view.util.LayoutHelper;
+import de.escidoc.admintool.view.validator.EmptyFieldValidator;
+import de.escidoc.core.client.exceptions.EscidocException;
+import de.escidoc.core.client.exceptions.InternalClientException;
+import de.escidoc.core.client.exceptions.TransportException;
 import de.escidoc.core.resources.om.context.AdminDescriptors;
+import de.escidoc.core.resources.om.context.Context;
 import de.escidoc.core.resources.om.context.OrganizationalUnitRefs;
 
 @SuppressWarnings("serial")
@@ -48,6 +56,11 @@ public class ContextAddView extends CustomComponent implements ClickListener {
     private ObjectProperty descriptionProperty;
 	private ObjectProperty typeProperty;
 	private Object[][] orgUnits;
+    private HorizontalLayout footer;
+    private final Button save = new Button("Save", (ClickListener) this);
+    private final Button cancel = new Button("Cancel", (ClickListener) this);
+	private Accordion adminDescriptorAccordion;
+	private ListSelect orgUnitList;
     
     public ContextAddView(final AdminToolApplication app,
         final ContextListView contextListView,
@@ -87,14 +100,14 @@ public class ContextAddView extends CustomComponent implements ClickListener {
     	panel.addComponent(LayoutHelper.create(ViewConstants.TYPE_LABEL, typeField, "150px", true));
     	typeProperty = mapBinding("", typeField);
 
-        final ListSelect select = new ListSelect();
-    	panel.addComponent(LayoutHelper.create(ViewConstants.ORGANIZATION_UNITS_LABEL, select, "150px", 100, true));
-        select.setRows(5);
-        select.setWidth("400px");
-        select.setNullSelectionAllowed(true);
-        select.setMultiSelect(true);
-        select.setImmediate(true);
-        select.getValue();
+        orgUnitList = new ListSelect();
+    	panel.addComponent(LayoutHelper.create(ViewConstants.ORGANIZATION_UNITS_LABEL, orgUnitList, "150px", 100, true));
+        orgUnitList.setRows(5);
+        orgUnitList.setWidth("400px");
+        orgUnitList.setNullSelectionAllowed(true);
+        orgUnitList.setMultiSelect(true);
+        orgUnitList.setImmediate(true);
+        orgUnitList.getValue();
         
         Button addOrgUnitButton = new Button("Add");
 
@@ -116,15 +129,15 @@ public class ContextAddView extends CustomComponent implements ClickListener {
 						if (o instanceof HashSet){
 							HashSet<String> set = (HashSet<String>)o;
 							for (String str : set){
-								select.addItem(str);
+								orgUnitList.addItem(str);
 							}
 						} else if (o instanceof Set){
 							Set<String> set = (Set<String>)o;
 							for (String str : set){
-								select.addItem(str);
+								orgUnitList.addItem(str);
 							}
 						} else if (o instanceof Object){
-							select.addItem(o);
+							orgUnitList.addItem(o);
 						}
 						((Window) openTreeButtonWindow.getParent()).removeWindow(openTreeButtonWindow);
 					}
@@ -145,23 +158,14 @@ public class ContextAddView extends CustomComponent implements ClickListener {
         Button removeOrgUnitButton = new Button("Remove");
         panel.addComponent(LayoutHelper.create("", "", addOrgUnitButton, removeOrgUnitButton, "150px", "0px", false));
 
- 		Accordion accordion = new Accordion();
+ 		adminDescriptorAccordion = new Accordion();
 		// Have it take all space available in the layout.
-		accordion.setSizeFull();
-		accordion.setWidth("800px");
-		panel.addComponent(LayoutHelper.create("Admin Descriptors", accordion, "150px", 800, true));		
+		adminDescriptorAccordion.setSizeFull();
+		adminDescriptorAccordion.setWidth("800px");
+		panel.addComponent(LayoutHelper.create("Admin Descriptors", adminDescriptorAccordion, "150px", 800, true));		
         panel.addComponent(addFooter());
     	setCompositionRoot(panel);
     }
-    
-    
-//nameField.addValidator(new EmptyStringValidator("Name can not be empty."));
-//            nameField.setRequiredError("Please enter a " + ViewConstants.NAME_ID);
-//  descriptionField.addValidator(new EmptyStringValidator("Description can not be empty."));
-//  descriptionField.setRequiredError("Please enter a "+ ViewConstants.DESCRIPTION_ID);
-//    typeField.addValidator(new EmptyStringValidator(ViewConstants.TYPE_LABEL
-//            + " can not be empty."));
-//        typeField.setRequiredError("Please enter a " + ViewConstants.TYPE_ID);
     
 
 //    private ContextAddView addOrgUnits() {
@@ -174,86 +178,84 @@ public class ContextAddView extends CustomComponent implements ClickListener {
         return this;
     }
 
-
-    private HorizontalLayout footer;
-
-    private final Button save = new Button("Save", (ClickListener) this);
-
-    private final Button cancel = new Button("Cancel", (ClickListener) this);
-
     private HorizontalLayout addFooter() {
         footer = new HorizontalLayout();
         footer.setSpacing(true);
 
         footer.addComponent(save);
         footer.addComponent(cancel);
-
-//        setFooter(footer);
         return footer;
     }
 
     public void buttonClick(final ClickEvent event) {
-        final Button clickedButton = event.getButton();
-        if (clickedButton == save) {
-            save();
-        }
-        else if (clickedButton == cancel) {
-            clear();
-        }
-        else {
-            throw new RuntimeException("Unknown Button: " + clickedButton);
-        }
-    }
+        final Button source = event.getButton();
+        if (source == cancel) {
+            nameField.setValue("");
+            descriptionField.setValue("");
+            typeField.setValue("");
+            // TODO: Do we need to clear the fields below?
+//            adminDescriptorAccordion.removeTab();
+//            adminDescriptorsAddView.clear();
+//            orgUnitList.removeAllItems();
+//              setComponentError(null);
+        } else if (source == save) {
+        	boolean valid = true;
+        	valid = EmptyFieldValidator.isValid(nameField, "Name can not be empty.");
+        	valid &= EmptyFieldValidator.isValid(descriptionField, "Description can not be empty.");
+        	valid &= EmptyFieldValidator.isValid(typeField, ViewConstants.TYPE_LABEL+ " can not be empty.");
+        	valid &= EmptyFieldValidator.isValid(orgUnitList, "TODO: fill me!!!!!");        	//TODO: fill me!!!!!
 
-    private void save() {
-        /*
-    	if (isValid()) {
-            try {
-                final String contextName = enteredName();
-                final String contextDescription = enteredDescription();
-                final String contextType = enteredType();
-                final AdminDescriptors adminDescriptors =
-                    enteredAdminDescriptors();
-                final OrganizationalUnitRefs selectedOrgUnitRefs =
-                    enteredOrgUnits();
+        	// TODO: write a validator for the Accordion 
+        	valid &= false; // replace by the validator call. 
 
-                final Context newContext =
-                    contextService.create(contextName, contextDescription,
-                        contextType, selectedOrgUnitRefs, adminDescriptors);
-                contextListView.addContext(newContext);
-                contextListView.sort();
-                contextListView.select(newContext.getObjid());
-                setComponentError(null);
-            }
-            catch (final EscidocException e) {
-                System.out.println("root cause: "
-                    + ExceptionUtils.getRootCauseMessage(e));
+        	if(valid){
+                try {
+                	nameField.setComponentError(null);
+                	descriptionField.setComponentError(null);
+                	typeField.setComponentError(null);
+                	orgUnitList.setComponentError(null);
+                	adminDescriptorAccordion.setComponentError(null);
 
-                setComponentError(new UserError(e.getMessage()));
-                e.printStackTrace();
-            }
-            catch (final InternalClientException e) {
-                setComponentError(new UserError(e.getMessage()));
-                e.printStackTrace();
-            }
-            catch (final TransportException e) {
-                setComponentError(new UserError(e.getMessage()));
-                e.printStackTrace();
-            }
-            catch (final ParserConfigurationException e) {
-                setComponentError(new SystemError(e.getMessage()));
-                e.printStackTrace();
-            }
+                	final AdminDescriptors adminDescriptors =
+                        enteredAdminDescriptors();
+                    final OrganizationalUnitRefs selectedOrgUnitRefs =
+                        enteredOrgUnits();
+                	
+                	final Context newContext = contextService.create((String)nameField.getValue(),
+                			(String)descriptionField.getValue(),
+                			(String)typeField.getValue(),
+// TODO: Replace by real call.                			
+                			selectedOrgUnitRefs, adminDescriptors);
+                                contextListView.addContext(newContext);
+                                contextListView.sort();
+                                contextListView.select(newContext.getObjid());
+                            //    setComponentError(null);
+
+                } catch (final EscidocException e) {
+                	log.error("root cause: "+ ExceptionUtils.getRootCauseMessage(e), e);
+                    setComponentError(new UserError(e.getMessage()));
+                    // TODO: Where to set the error?
+                    e.printStackTrace();
+                } catch (final InternalClientException e) {
+                	log.error("An unexpected error occured! See log for details.", e);
+                	setComponentError(new UserError(e.getMessage()));
+                 // TODO: Where to set the error?
+                    e.printStackTrace();
+                }
+                catch (final TransportException e) {
+                	log.error("An unexpected error occured! See log for details.", e);
+                    // TODO: Where to set the error?
+                	setComponentError(new UserError(e.getMessage()));
+                    e.printStackTrace();
+                }
+                catch (final ParserConfigurationException e) {
+                	log.error("An unexpected error occured! See log for details.", e);
+                    // TODO: Where to set the error?
+                    setComponentError(new SystemError(e.getMessage()));
+                    e.printStackTrace();
+                }
+        	}
         }
-        else {
-            setValidationVisible(true);
-        }
-        */
-    }
-
-    private String enteredType() {
-//        return (String) getField(ViewConstants.TYPE_ID).getValue();
-    	return "";
     }
 
     private AdminDescriptors enteredAdminDescriptors()
@@ -265,21 +267,4 @@ public class ContextAddView extends CustomComponent implements ClickListener {
         return orgUnitAddView.getSelectedOrgUnits();
     }
 
-    private String enteredName() {
-    	return "";
-//       return (String) getField(ViewConstants.NAME_ID).getValue();
-    }
-
-    private String enteredDescription() {
-    	return "";
-//      return (String) getField(ViewConstants.DESCRIPTION_ID).getValue();
-    }
-
-    public void clear() {
-//        getField(ViewConstants.NAME_ID).setValue("");
-//        getField(ViewConstants.DESCRIPTION_ID).setValue("");
-//        getField(ViewConstants.TYPE_ID).setValue("");
-        adminDescriptorsAddView.clear();
-        setComponentError(null);
-    }
 }
