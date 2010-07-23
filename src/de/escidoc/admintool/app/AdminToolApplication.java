@@ -13,20 +13,12 @@ import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.service.ApplicationContext;
-import com.vaadin.terminal.ExternalResource;
-import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.ThemeResource;
-import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.FormLayout;
-import com.vaadin.ui.Window.CloseEvent;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.Embedded;
-import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.SplitPanel;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
@@ -34,8 +26,10 @@ import de.escidoc.admintool.service.ContextService;
 import de.escidoc.admintool.service.OrgUnitService;
 import de.escidoc.admintool.service.RoleService;
 import de.escidoc.admintool.service.UserService;
+import de.escidoc.admintool.view.ExtendedLoginWindow;
 import de.escidoc.admintool.view.LoginWindow;
 import de.escidoc.admintool.view.NavigationTree;
+import de.escidoc.admintool.view.Toolbar;
 import de.escidoc.admintool.view.context.ContextAddView;
 import de.escidoc.admintool.view.context.ContextEditForm;
 import de.escidoc.admintool.view.context.ContextEditViewWithToolbar;
@@ -51,7 +45,6 @@ import de.escidoc.admintool.view.user.lab.UserLabEditForm;
 import de.escidoc.admintool.view.user.lab.UserLabEditView;
 import de.escidoc.admintool.view.user.lab.UserLabListView;
 import de.escidoc.admintool.view.user.lab.UserLabView;
-import de.escidoc.admintool.view.util.LayoutHelper;
 import de.escidoc.core.client.Authentication;
 import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.client.exceptions.EscidocException;
@@ -71,15 +64,24 @@ public class AdminToolApplication extends Application
     public void init() {
         log.info("Starting application...");
         getContext().addTransactionListener(this);
+        logoutButton.setIcon(new ThemeResource("icons/32/user.png"));
+        logoutButton.addListener(new Button.ClickListener() {
+            public void buttonClick(final Button.ClickEvent event) {
+                AdminToolApplication.this.getMainWindow().showNotification(
+                    "Logout...");
+                AdminToolApplication.this.close();
+            }
+        });
         buildMainLayout();
         showLoginWindow();
     }
 
     // TODO: FIXME Login does not work!!!!
     private void showLoginWindow() {
-    	final Window window = new Window("Login");//
+    	setMainWindow(new LoginWindow());
     	/*
-        final TextField loginNameTextField;
+        final Window window = new Window("Login");//
+    	final TextField loginNameTextField;
         final TextField passwordTextField;
     	window.setModal(true);
     	
@@ -120,7 +122,6 @@ public class AdminToolApplication extends Application
 		    	getMainWindow().open(r);
 			}
 		});
-		*/
 		currentApplication.set(AdminToolApplication.this);
 		String login = "sysadmin"; 
 		String pwd = "escidoc"; 
@@ -129,6 +130,8 @@ public class AdminToolApplication extends Application
     	} catch(Exception e){
     		e.printStackTrace();
     	}
+    	*/
+		
     }
 
     // === Authentification related methods ===
@@ -238,8 +241,8 @@ public class AdminToolApplication extends Application
 
         final VerticalLayout layout = new VerticalLayout();
         layout.setSizeFull();
-
-        layout.addComponent(createToolbar());
+        
+        layout.addComponent(Toolbar.createToolbar(getMainWindow(), logoutButton));
         layout.addComponent(horizontalSplit);
         layout.setExpandRatio(horizontalSplit, 1);
 
@@ -254,7 +257,7 @@ public class AdminToolApplication extends Application
 
     private final Button newUserButton = new Button("Add User");
 
-    // TODO move this to separate class
+    /*
     private HorizontalLayout createToolbar() {
         final HorizontalLayout layout = new HorizontalLayout();
         final Embedded em = new Embedded("", new ThemeResource("images/escidoc-logo.jpg"));
@@ -282,6 +285,7 @@ public class AdminToolApplication extends Application
         layout.setWidth("100%");
         return layout;
     }
+    */
 
     private void setMainComponent(final Component c) {
         horizontalSplit.setSecondComponent(c);
