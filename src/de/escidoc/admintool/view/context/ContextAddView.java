@@ -10,13 +10,11 @@ import org.slf4j.LoggerFactory;
 
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.ui.Accordion;
-import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.FormLayout;
-import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.Panel;
@@ -61,14 +59,6 @@ public class ContextAddView extends CustomComponent implements ClickListener {
         init();
     }
 
-    private void buildUI() {
-    	addAdminDescriptos().addFooter();
-
-//        setWriteThrough(false);
-//  	setInvalidCommitted(false);
-        // setValidationVisible(true);
-    }
-
     private ObjectProperty mapBinding(String initText, TextField tf){
     	ObjectProperty op = new ObjectProperty(initText, String.class);
         tf.setPropertyDataSource(op);
@@ -89,7 +79,7 @@ public class ContextAddView extends CustomComponent implements ClickListener {
         descriptionField = new TextField();
         descriptionField.setWidth("400px");
         descriptionField.setRows(3);
-    	panel.addComponent(LayoutHelper.create(ViewConstants.DESCRIPTION_LABEL, descriptionField, "150px", true));
+    	panel.addComponent(LayoutHelper.create(ViewConstants.DESCRIPTION_LABEL, descriptionField, "150px", 80, true));
     	descriptionProperty = mapBinding("", descriptionField);
         
         typeField = new TextField();
@@ -98,19 +88,16 @@ public class ContextAddView extends CustomComponent implements ClickListener {
     	typeProperty = mapBinding("", typeField);
 
         final ListSelect select = new ListSelect();
-    	panel.addComponent(LayoutHelper.create(ViewConstants.ORGANIZATION_UNITS_LABEL, select, "150px", true));
+    	panel.addComponent(LayoutHelper.create(ViewConstants.ORGANIZATION_UNITS_LABEL, select, "150px", 100, true));
         select.setRows(5);
-        select.setWidth("300px");
+        select.setWidth("400px");
         select.setNullSelectionAllowed(true);
         select.setMultiSelect(true);
         select.setImmediate(true);
         select.getValue();
         
         Button addOrgUnitButton = new Button("Add");
-        
 
-        
-        
         addOrgUnitButton.addListener(new Button.ClickListener() {
 			public void buttonClick(ClickEvent event) {
 				final Window openTreeButtonWindow = new Window(ViewConstants.ORGANIZATION_UNITS_LABEL); //$NON-NLS-1$
@@ -119,12 +106,7 @@ public class ContextAddView extends CustomComponent implements ClickListener {
 				/* Set window size. */
 				openTreeButtonWindow.setHeight("650px"); //$NON-NLS-1$
 				openTreeButtonWindow.setWidth("550px"); //$NON-NLS-1$
-				GridLayout grid = new GridLayout(1,2);
-		        grid.addComponent(tree, 0, 0);
-		        grid.setComponentAlignment(tree, Alignment.MIDDLE_CENTER);
-		        grid.setSizeUndefined();
-		        grid.setSizeFull();
-				openTreeButtonWindow.setContent(grid);
+				openTreeButtonWindow.addComponent(tree);
 		    	Button okButton = new Button("OK");
 		    	okButton.addListener(new Button.ClickListener() {
 					
@@ -156,42 +138,18 @@ public class ContextAddView extends CustomComponent implements ClickListener {
 				});
 		    	
 		    	HorizontalLayout hor = LayoutHelper.create("", "", okButton, cancelButton, "10px", false);
-				grid.addComponent(hor, 0, 1);
-		    	grid.setComponentAlignment(hor, Alignment.BOTTOM_LEFT);
+		    	openTreeButtonWindow.addComponent(hor);
 				getApplication().getMainWindow().addWindow(openTreeButtonWindow);
 			}
 		});
         Button removeOrgUnitButton = new Button("Remove");
-        panel.addComponent(LayoutHelper.create("", "", addOrgUnitButton, removeOrgUnitButton, "150px", false));
+        panel.addComponent(LayoutHelper.create("", "", addOrgUnitButton, removeOrgUnitButton, "150px", "0px", false));
 
-    	
-		Accordion accordion = new Accordion();
+ 		Accordion accordion = new Accordion();
 		// Have it take all space available in the layout.
 		accordion.setSizeFull();
-
-//		accordion.setHeight("300px");
 		accordion.setWidth("800px");
-
-		// Trim its layout to allow the Accordion take all space.
-//		VerticalLayout adminDesc = new VerticalLayout(); //$NON-NLS-1$
-//		adminDesc.setSizeUndefined();
-//		adminDesc.setWidth("300px"); //$NON-NLS-1$
-//		adminDesc.setHeight("400px"); //$NON-NLS-1$
-//		adminDesc.addComponent(accordion);		
-	
-//		adminDesc.setSizeFull();
-//		adminDesc.getLayout().setMargin(false);
-		
-		panel.addComponent(LayoutHelper.create("Admin Descriptors", accordion, "150px", 300, true));		
-
-//		Panel pan = new Panel();
-//		pan.addComponent(accordion);
-//		pan.setScrollable(true);
-//		pan.setSizeUndefined();
-//		pan.setSizeFull();
-//		panel.addComponent(pan);
-
-        
+		panel.addComponent(LayoutHelper.create("Admin Descriptors", accordion, "150px", 800, true));		
         panel.addComponent(addFooter());
     	setCompositionRoot(panel);
     }
