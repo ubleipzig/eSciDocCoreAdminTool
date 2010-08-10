@@ -17,12 +17,12 @@ import com.vaadin.ui.TextField;
 import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.service.UserService;
 import de.escidoc.admintool.view.ViewConstants;
-import de.escidoc.admintool.view.util.LayoutHelper;
 import de.escidoc.admintool.view.validator.EmptyFieldValidator;
 import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
 import de.escidoc.core.resources.aa.useraccount.UserAccount;
+import de.escidoc.vaadin.utilities.LayoutHelper;
 
 public class UserLabAddView extends CustomComponent implements ClickListener {
 	private static final long serialVersionUID = 3007285643463919742L;
