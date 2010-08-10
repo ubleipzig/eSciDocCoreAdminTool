@@ -7,9 +7,9 @@ import java.util.Set;
 
 import com.vaadin.data.util.POJOContainer;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Select;
-import com.vaadin.ui.Button.ClickEvent;
 
 import de.escidoc.admintool.service.OrgUnitService;
 import de.escidoc.admintool.view.ViewConstants;
