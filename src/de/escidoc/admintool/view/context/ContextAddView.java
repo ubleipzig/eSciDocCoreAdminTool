@@ -19,8 +19,10 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.TabSheet.Tab;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
 
@@ -191,18 +193,71 @@ public class ContextAddView extends CustomComponent implements ClickListener {
         // AdminDescriptor
         adminDescriptorAccordion = new Accordion();
         adminDescriptorAccordion.setWidth("400px");
-        // Have it take all space available in the layout.
+        adminDescriptorAccordion.setSizeFull();
+
+        Panel accordionPanel = new Panel();
+        accordionPanel.setContent(adminDescriptorAccordion);
+        accordionPanel.setSizeFull();
+        accordionPanel.setWidth("400px");
+
         final Button addButton = new Button("Add");
         final Button editButton = new Button("Edit");
         final Button delButton = new Button("Delete");
+
+        addButton.addListener(new NewAdminDescriptorListener());
+        editButton.addListener(new EditAdminDescriptorListener());
+        delButton.addListener(new RemoveAdminDescriptorListener());
+
         panel.addComponent(LayoutHelper.create("Admin Descriptors",
-            adminDescriptorAccordion, "150px", 300, true, new Button[] {
-                addButton, editButton, delButton }));
+            accordionPanel, "150px", 300, true, new Button[] { addButton,
+                editButton, delButton }));
 
         // Footer
         panel.addComponent(addFooter());
 
         setCompositionRoot(panel);
+    }
+
+    private class NewAdminDescriptorListener implements Button.ClickListener {
+
+        public void buttonClick(ClickEvent event) {
+            getApplication().getMainWindow().addWindow(
+                new AdminDescriptorEditor(adminDescriptorAccordion));
+
+        }
+    }
+
+    private class EditAdminDescriptorListener implements Button.ClickListener {
+
+        public void buttonClick(ClickEvent event) {
+            AdminDescriptorEditor editWindow =
+                new AdminDescriptorEditor(adminDescriptorAccordion);
+
+            Tab tab =
+                adminDescriptorAccordion.getTab(adminDescriptorAccordion
+                    .getSelectedTab());
+            String name = "";
+            if (tab != null) {
+                name = tab.getCaption();
+            }
+            adminDescriptorAccordion.getSelectedTab().getCaption();
+            String description =
+                (String) ((Label) adminDescriptorAccordion.getSelectedTab())
+                    .getValue();
+
+            editWindow.setAdminDescriptorName(name);
+            editWindow.setAdminDescriptorContent(description);
+
+            getApplication().getMainWindow().addWindow(editWindow);
+        }
+    }
+
+    private class RemoveAdminDescriptorListener implements Button.ClickListener {
+
+        public void buttonClick(ClickEvent event) {
+            adminDescriptorAccordion.removeComponent(adminDescriptorAccordion
+                .getSelectedTab());
+        }
     }
 
     private HorizontalLayout addFooter() {
