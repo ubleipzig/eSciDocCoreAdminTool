@@ -55,7 +55,7 @@ public class ContextListView extends Table {
             new POJOContainer<Context>(contextService.all(),
                 PropertyId.OBJECT_ID, PropertyId.NAME,
                 PropertyId.PUBLIC_STATUS, PropertyId.PUBLIC_STATUS_COMMENT,
-                PropertyId.CREATION_DATE, PropertyId.CREATED_BY,
+                PropertyId.CREATED_ON, PropertyId.CREATED_BY,
                 PropertyId.LAST_MODIFICATION_DATE, PropertyId.MODIFIED_BY);
         setContainerDataSource(contextContainer);
         sort(new Object[] { PropertyId.LAST_MODIFICATION_DATE },

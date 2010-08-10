@@ -14,17 +14,18 @@ import com.vaadin.terminal.SystemError;
 import com.vaadin.terminal.UserError;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.TabSheet.Tab;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.TabSheet.Tab;
 
 import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.service.ContextService;
@@ -49,8 +50,6 @@ public class ContextAddView extends CustomComponent implements ClickListener {
     private final ContextListView contextListView;
 
     private final ContextService contextService;
-
-    private AdminDescriptorsAddView adminDescriptorsAddView;
 
     private OrgUnitAddView orgUnitAddView;
 
@@ -90,15 +89,15 @@ public class ContextAddView extends CustomComponent implements ClickListener {
         init();
     }
 
-    private ObjectProperty mapBinding(String initText, TextField tf) {
-        ObjectProperty op = new ObjectProperty(initText, String.class);
+    private ObjectProperty mapBinding(final String initText, final TextField tf) {
+        final ObjectProperty op = new ObjectProperty(initText, String.class);
         tf.setPropertyDataSource(op);
         return op;
     }
 
     private void init() {
-        Panel panel = new Panel();
-        FormLayout form = new FormLayout();
+        final Panel panel = new Panel();
+        final FormLayout form = new FormLayout();
         panel.setContent(form);
         form.setSpacing(false);
         panel.setCaption("Add a new Context");
@@ -132,10 +131,10 @@ public class ContextAddView extends CustomComponent implements ClickListener {
         orgUnitList.setImmediate(true);
         orgUnitList.getValue();
 
-        Button addOrgUnitButton = new Button("Add");
+        final Button addOrgUnitButton = new Button("Add");
 
         addOrgUnitButton.addListener(new Button.ClickListener() {
-            public void buttonClick(ClickEvent event) {
+            public void buttonClick(final ClickEvent event) {
                 final Window openTreeButtonWindow =
                     new Window(ViewConstants.ORGANIZATION_UNITS_LABEL); //$NON-NLS-1$
                 openTreeButtonWindow.setModal(true);
@@ -144,21 +143,21 @@ public class ContextAddView extends CustomComponent implements ClickListener {
                 openTreeButtonWindow.setHeight("650px"); //$NON-NLS-1$
                 openTreeButtonWindow.setWidth("550px"); //$NON-NLS-1$
                 openTreeButtonWindow.addComponent(tree);
-                Button okButton = new Button("OK");
+                final Button okButton = new Button("OK");
                 okButton.addListener(new Button.ClickListener() {
 
-                    public void buttonClick(ClickEvent event) {
-                        Object o = tree.getSelectedItems();
+                    public void buttonClick(final ClickEvent event) {
+                        final Object o = tree.getSelectedItems();
                         o.getClass().toString();
                         if (o instanceof HashSet) {
-                            HashSet<String> set = (HashSet<String>) o;
-                            for (String str : set) {
+                            final HashSet<String> set = (HashSet<String>) o;
+                            for (final String str : set) {
                                 orgUnitList.addItem(str);
                             }
                         }
                         else if (o instanceof Set) {
-                            Set<String> set = (Set<String>) o;
-                            for (String str : set) {
+                            final Set<String> set = (Set<String>) o;
+                            for (final String str : set) {
                                 orgUnitList.addItem(str);
                             }
                         }
@@ -169,16 +168,16 @@ public class ContextAddView extends CustomComponent implements ClickListener {
                             .removeWindow(openTreeButtonWindow);
                     }
                 });
-                Button cancelButton = new Button("Cancel");
+                final Button cancelButton = new Button("Cancel");
                 cancelButton.addListener(new Button.ClickListener() {
 
-                    public void buttonClick(ClickEvent event) {
+                    public void buttonClick(final ClickEvent event) {
                         ((Window) openTreeButtonWindow.getParent())
                             .removeWindow(openTreeButtonWindow);
                     }
                 });
 
-                HorizontalLayout hor =
+                final HorizontalLayout hor =
                     LayoutHelper.create("", "", okButton, cancelButton, "10px",
                         false);
                 openTreeButtonWindow.addComponent(hor);
@@ -186,7 +185,7 @@ public class ContextAddView extends CustomComponent implements ClickListener {
                     .getMainWindow().addWindow(openTreeButtonWindow);
             }
         });
-        Button removeOrgUnitButton = new Button("Remove");
+        final Button removeOrgUnitButton = new Button("Remove");
         panel.addComponent(LayoutHelper.create("", "", addOrgUnitButton,
             removeOrgUnitButton, "150px", "0px", false));
 
@@ -195,7 +194,7 @@ public class ContextAddView extends CustomComponent implements ClickListener {
         adminDescriptorAccordion.setWidth("400px");
         adminDescriptorAccordion.setSizeFull();
 
-        Panel accordionPanel = new Panel();
+        final Panel accordionPanel = new Panel();
         accordionPanel.setContent(adminDescriptorAccordion);
         accordionPanel.setSizeFull();
         accordionPanel.setWidth("400px");
@@ -219,42 +218,45 @@ public class ContextAddView extends CustomComponent implements ClickListener {
     }
 
     private class NewAdminDescriptorListener implements Button.ClickListener {
-
-        public void buttonClick(ClickEvent event) {
+        public void buttonClick(final ClickEvent event) {
             getApplication().getMainWindow().addWindow(
-                new AdminDescriptorEditor(adminDescriptorAccordion));
+                new AdminDescriptorAddView(adminDescriptorAccordion));
 
         }
     }
 
     private class EditAdminDescriptorListener implements Button.ClickListener {
 
-        public void buttonClick(ClickEvent event) {
-            AdminDescriptorEditor editWindow =
-                new AdminDescriptorEditor(adminDescriptorAccordion);
+        public void buttonClick(final ClickEvent event) {
+            final Component selectedTab =
+                adminDescriptorAccordion.getSelectedTab();
+            if (selectedTab == null) {
+                return;
+            }
 
-            Tab tab =
-                adminDescriptorAccordion.getTab(adminDescriptorAccordion
-                    .getSelectedTab());
+            getApplication().getMainWindow().addWindow(
+                new AdminDescriptorEditView(adminDescriptorAccordion,
+                    getName(adminDescriptorAccordion.getTab(selectedTab)),
+                    getContent(selectedTab)));
+        }
+
+        private String getName(final Tab tab) {
             String name = "";
             if (tab != null) {
                 name = tab.getCaption();
             }
-            adminDescriptorAccordion.getSelectedTab().getCaption();
-            String description =
-                (String) ((Label) adminDescriptorAccordion.getSelectedTab())
-                    .getValue();
+            return name;
+        }
 
-            editWindow.setAdminDescriptorName(name);
-            editWindow.setAdminDescriptorContent(description);
-
-            getApplication().getMainWindow().addWindow(editWindow);
+        private String getContent(final Component selectedTab) {
+            final String content = (String) ((Label) selectedTab).getValue();
+            return content;
         }
     }
 
     private class RemoveAdminDescriptorListener implements Button.ClickListener {
 
-        public void buttonClick(ClickEvent event) {
+        public void buttonClick(final ClickEvent event) {
             adminDescriptorAccordion.removeComponent(adminDescriptorAccordion
                 .getSelectedTab());
         }
@@ -294,8 +296,8 @@ public class ContextAddView extends CustomComponent implements ClickListener {
                     + " can not be empty.");
             valid &=
                 EmptyFieldValidator.isValid(orgUnitList, "TODO: fill me!!!!!"); // TODO:
-                                                                                // fill
-                                                                                // me!!!!!
+            // fill
+            // me!!!!!
 
             // TODO: write a validator for the Accordion
             valid &= false; // replace by the validator call.
@@ -324,9 +326,8 @@ public class ContextAddView extends CustomComponent implements ClickListener {
                     contextListView.select(newContext.getObjid());
                 }
                 catch (final EscidocException e) {
-                    log.error(
-                        "root cause: " + ExceptionUtils.getRootCauseMessage(e),
-                        e);
+                    log.error("root cause: "
+                        + ExceptionUtils.getRootCauseMessage(e), e);
                     setComponentError(new UserError(e.getMessage()));
                     // TODO: Where to set the error?
                     e.printStackTrace();
@@ -358,11 +359,11 @@ public class ContextAddView extends CustomComponent implements ClickListener {
 
     private AdminDescriptors enteredAdminDescriptors()
         throws ParserConfigurationException {
-        return adminDescriptorsAddView.getAdminDescriptors();
+        return null;
     }
 
     private OrganizationalUnitRefs enteredOrgUnits() {
-        return orgUnitAddView.getSelectedOrgUnits();
+        return null;
     }
 
 }
