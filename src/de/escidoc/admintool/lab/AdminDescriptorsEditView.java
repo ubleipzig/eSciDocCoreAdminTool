@@ -11,11 +11,11 @@ import org.w3c.dom.Element;
 
 import com.vaadin.data.Property;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CustomField;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Button.ClickEvent;
 
 import de.escidoc.admintool.view.validator.EmptyStringValidator;
 import de.escidoc.core.resources.om.context.AdminDescriptor;
