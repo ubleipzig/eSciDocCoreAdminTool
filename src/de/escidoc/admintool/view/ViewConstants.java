@@ -119,4 +119,12 @@ public class ViewConstants {
 
     public static final Object ADMIN_DESRIPTORS_ID = "adminDescriptor";
 
+    public static final String ADD_LABEL = "Add";
+
+    public static final String REMOVE_LABEL = "Remove";
+
+    public static final String OK_LABEL = "OK";
+
+    public static final String CANCEL_LABEL = "Cancel";
+
 }
