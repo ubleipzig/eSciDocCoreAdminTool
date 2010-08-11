@@ -25,7 +25,7 @@ public class AdminDescriptorAddView extends AdminDescriptorView {
 
         final String content = (String) adminDescContent.getValue();
         if (validate(content)) {
-            adminDesciptorAccordion.addTab(new Label(content,
+            adminDescriptorAccordion.addTab(new Label(content,
                 Label.CONTENT_PREFORMATTED), (String) adminDescName.getValue(),
                 null);
             closeWindow();

@@ -1,6 +1,8 @@
 package de.escidoc.admintool.view.context;
 
 import com.vaadin.ui.Accordion;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.TabSheet.Tab;
 
 @SuppressWarnings("serial")
 public class AdminDescriptorEditView extends AdminDescriptorView {
@@ -19,17 +21,16 @@ public class AdminDescriptorEditView extends AdminDescriptorView {
     protected void doSave() {
         final String content = (String) adminDescContent.getValue();
         if (validate(content)) {
-            getApplication().getMainWindow().showNotification("Edit");
-
-            // TODO replace selected tab with new name and content;
-
-            // adminDesciptorAccordion.replaceComponent(oldComponent,
-            // newComponent)
-
-            // addTab(new Label(content, Label.CONTENT_PREFORMATTED),
-            // (String) adminDescName.getValue(), null);
+            getTabTitle().setCaption((String) adminDescName.getValue());
+            adminDescriptorAccordion.replaceComponent(adminDescriptorAccordion
+                .getSelectedTab(), new Label(content,
+                Label.CONTENT_PREFORMATTED));
             closeWindow();
         }
     }
 
+    private Tab getTabTitle() {
+        return adminDescriptorAccordion.getTab(adminDescriptorAccordion
+            .getSelectedTab());
+    }
 }

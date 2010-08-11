@@ -2,12 +2,12 @@ package de.escidoc.admintool.view.context;
 
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
-import com.vaadin.ui.Button.ClickEvent;
 
 @SuppressWarnings("serial")
 public abstract class AdminDescriptorView extends Window {
@@ -27,22 +27,20 @@ public abstract class AdminDescriptorView extends Window {
 
     private final Button cancelButton = new Button("Cancel");
 
-    protected Accordion adminDesciptorAccordion = null;
+    protected Accordion adminDescriptorAccordion = null;
 
     protected String name;
 
     protected String content;
 
-    public AdminDescriptorView(
-        final Accordion adminDescriptorAccordion) {
-        adminDesciptorAccordion = adminDescriptorAccordion;
+    public AdminDescriptorView(final Accordion adminDescriptorAccordion) {
+        this.adminDescriptorAccordion = adminDescriptorAccordion;
         buildMainLayout();
     }
 
-    public AdminDescriptorView(
-        final Accordion adminDescriptorAccordion, final String name,
-        final String content) {
-        adminDesciptorAccordion = adminDescriptorAccordion;
+    public AdminDescriptorView(final Accordion adminDescriptorAccordion,
+        final String name, final String content) {
+        this.adminDescriptorAccordion = adminDescriptorAccordion;
         this.name = name;
         this.content = content;
         buildMainLayout();
@@ -100,7 +98,7 @@ public abstract class AdminDescriptorView extends Window {
         public void buttonClick(final ClickEvent event) {
             final String content = (String) adminDescContent.getValue();
             if (validate(content)) {
-                adminDesciptorAccordion.addTab(new Label(content,
+                adminDescriptorAccordion.addTab(new Label(content,
                     Label.CONTENT_PREFORMATTED), (String) adminDescName
                     .getValue(), null);
                 closeWindow();
