@@ -3,19 +3,23 @@ package de.escidoc.admintool.view.context;
 import java.util.Collection;
 
 import com.vaadin.data.Item;
+import com.vaadin.ui.Accordion;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.FormLayout;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.Window;
 
 import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.service.ContextService;
 import de.escidoc.admintool.service.OrgUnitService;
-import de.escidoc.admintool.view.OrgUnitTreeComponent;
+import de.escidoc.admintool.view.OrgUnitEditor;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.core.resources.oum.OrganizationalUnit;
 import de.escidoc.vaadin.utilities.LayoutHelper;
@@ -54,6 +58,14 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
 
     private Collection<OrganizationalUnit> organizationalUnits;
 
+    private final Button saveButton = new Button("Save", this);
+
+    private final Button cancelButton = new Button("Cancel", this);
+
+    private HorizontalLayout footer;
+
+    private Accordion adminDescriptorAccordion;
+
     public ContextEditForm(final AdminToolApplication adminToolApplication,
         final ContextService contextService, final OrgUnitService orgUnitService) {
         app = adminToolApplication;
@@ -65,27 +77,28 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
     private void init() {
         panel.addComponent(form);
         panel.setCaption(EDIT_USER_ACCOUNT);
+        String labelWidth = "170px";
 
         nameField.setWidth("400px");
         nameField.setWriteThrough(false);
         form.addComponent(LayoutHelper.create(ViewConstants.LOGIN_NAME_LABEL,
-            nameField, "100px", false));
+            nameField, labelWidth, false));
 
         // modified
         form.addComponent(LayoutHelper.create("Modified", "by", modifiedOn,
-            modifiedBy, "100px", "15px", false));
+            modifiedBy, labelWidth, "15px", false));
 
         // created
         form.addComponent(LayoutHelper.create("Created", "by", createdOn,
-            createdBy, "100px", "15px", false));
+            createdBy, labelWidth, "15px", false));
 
         // Status
-        form
-            .addComponent(LayoutHelper.create("Status", status, "100px", false));
+        form.addComponent(LayoutHelper.create("Status", status, labelWidth,
+            false));
 
         // Type
-        form.addComponent(LayoutHelper
-            .create("Type", typeField, "100px", false));
+        form.addComponent(LayoutHelper.create("Type", typeField, labelWidth,
+            false));
 
         // OrgUnit
         orgUnitList.setRows(5);
@@ -94,20 +107,67 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
         orgUnitList.setMultiSelect(true);
         orgUnitList.setImmediate(true);
         form.addComponent(LayoutHelper.create(
-            ViewConstants.ORGANIZATION_UNITS_LABEL, new OrgUnitTreeComponent(
-                orgUnitList), "100px", 400, false));
+            ViewConstants.ORGANIZATION_UNITS_LABEL, new OrgUnitEditor(
+                orgUnitList), labelWidth, 140, false));
+
+        // AdminDescriptor
+        adminDescriptorAccordion = new Accordion();
+        adminDescriptorAccordion.setWidth("400px");
+        adminDescriptorAccordion.setSizeFull();
+
+        final Panel accordionPanel = new Panel();
+        accordionPanel.setContent(adminDescriptorAccordion);
+        accordionPanel.setSizeFull();
+        accordionPanel.setWidth("400px");
+
+        final Button addButton = new Button("Add");
+        final Button editButton = new Button("Edit");
+        final Button delButton = new Button("Delete");
+        Window mainWindow = (Window) panel.getParent();
+        addButton.addListener(new NewAdminDescriptorListener(mainWindow,
+            adminDescriptorAccordion));
+        editButton.addListener(new EditAdminDescriptorListener(mainWindow,
+            adminDescriptorAccordion));
+        delButton.addListener(new RemoveAdminDescriptorListener(
+            adminDescriptorAccordion));
+
+        panel.addComponent(LayoutHelper.create("Admin Descriptors",
+            accordionPanel, labelWidth, 300, true, new Button[] { addButton,
+                editButton, delButton }));
+
+        // Footer
+        panel.addComponent(addFooter());
 
         setCompositionRoot(panel);
     }
 
-    public void buttonClick(ClickEvent event) {
-        // TODO Auto-generated method stub
+    private HorizontalLayout addFooter() {
+        footer = new HorizontalLayout();
+        footer.setSpacing(true);
 
+        footer.addComponent(saveButton);
+        footer.addComponent(cancelButton);
+        return footer;
+    }
+
+    public void buttonClick(ClickEvent event) {
+        final Button clickedButton = event.getButton();
+        if (clickedButton == saveButton) {
+            // save();
+        }
+        else if (clickedButton == cancelButton) {
+            // discard();
+        }
+        else {
+            throw new RuntimeException("Unknown Button " + clickedButton);
+        }
     }
 
     public void setSelected(Item item) {
-        // TODO Auto-generated method stub
-
+        // if (item != getItemDataSource()) {
+        // this.setItemDataSource(item);
+        // }
+        // showFooter(isClosed(item));
     }
 
     // private AdminDescriptorsEditView adminDescriptorsEditView;
@@ -215,10 +275,6 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
     // private TwinColSelect buildUiForOrgUnits(
     // final Item item, final boolean closed) {
     //
-    // final POJOContainer<OrganizationalUnit> pojoContainer =
-    // new POJOContainer<OrganizationalUnit>(organizationalUnits, "objid",
-    // "properties.name");
-    //
     // orgUnitSelectionView =
     // new TwinColSelect("Organizations", pojoContainer);
     //
@@ -256,29 +312,11 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
     // setFooter(footer);
     // }
     //
-    // public void setSelected(final Item item) {
-    // if (item != getItemDataSource()) {
-    // this.setItemDataSource(item);
-    // }
-    // showFooter(isClosed(item));
-    // }
     //
     // public void showFooter(final boolean isClosed) {
     // footer.setVisible(!isClosed);
     // }
     //
-    // public void buttonClick(final ClickEvent event) {
-    // final Button clickedButton = event.getButton();
-    // if (clickedButton == save) {
-    // save();
-    // }
-    // else if (clickedButton == cancel) {
-    // discard();
-    // }
-    // else {
-    // throw new RuntimeException("Unknown Button " + clickedButton);
-    // }
-    // }
     //
     // private void save() {
     // if (isValid()) {
