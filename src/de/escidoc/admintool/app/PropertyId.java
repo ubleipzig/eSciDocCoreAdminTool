@@ -18,9 +18,10 @@ public class PropertyId {
 
     public static final String DESCRIPTION = "properties.description";
 
-    public static final String CREATION_DATE = "properties.creationDate";
+    public static final String CREATED_ON = "properties.creationDate";
 
-    public static final String PUBLIC_STATUS_COMMENT = "properties.publicStatusComment";
+    public static final String PUBLIC_STATUS_COMMENT =
+        "properties.publicStatusComment";
 
     public static final String PUBLIC_STATUS = "properties.publicStatus";
 
