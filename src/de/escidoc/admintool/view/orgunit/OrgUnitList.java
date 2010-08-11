@@ -76,7 +76,7 @@ public class OrgUnitList extends Table {
         allOrgUnits = service.all();
         setContainerDataSource(new POJOContainer<OrganizationalUnit>(
             allOrgUnits, PropertyId.OBJECT_ID, PropertyId.NAME,
-            PropertyId.DESCRIPTION, PropertyId.CREATION_DATE,
+            PropertyId.DESCRIPTION, PropertyId.CREATED_ON,
             PropertyId.CREATED_BY, PropertyId.LAST_MODIFICATION_DATE,
             PropertyId.MODIFIED_BY, PropertyId.PARENTS, PropertyId.PREDECESSORS));
         setVisibleColumns(new Object[] { PropertyId.NAME });
