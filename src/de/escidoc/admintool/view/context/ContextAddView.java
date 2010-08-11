@@ -14,6 +14,8 @@ import com.vaadin.terminal.SystemError;
 import com.vaadin.terminal.UserError;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.FormLayout;
@@ -21,11 +23,9 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.TabSheet.Tab;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.TabSheet.Tab;
 
 import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.service.ContextService;
@@ -129,7 +129,6 @@ public class ContextAddView extends CustomComponent implements ClickListener {
         orgUnitList.setNullSelectionAllowed(true);
         orgUnitList.setMultiSelect(true);
         orgUnitList.setImmediate(true);
-        orgUnitList.getValue();
 
         final Button addOrgUnitButton = new Button("Add");
 
@@ -326,8 +325,9 @@ public class ContextAddView extends CustomComponent implements ClickListener {
                     contextListView.select(newContext.getObjid());
                 }
                 catch (final EscidocException e) {
-                    log.error("root cause: "
-                        + ExceptionUtils.getRootCauseMessage(e), e);
+                    log.error(
+                        "root cause: " + ExceptionUtils.getRootCauseMessage(e),
+                        e);
                     setComponentError(new UserError(e.getMessage()));
                     // TODO: Where to set the error?
                     e.printStackTrace();

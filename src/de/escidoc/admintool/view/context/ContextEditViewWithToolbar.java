@@ -8,9 +8,6 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.VerticalLayout;
 
 import de.escidoc.admintool.view.ViewConstants;
-import de.escidoc.core.client.exceptions.EscidocException;
-import de.escidoc.core.client.exceptions.InternalClientException;
-import de.escidoc.core.client.exceptions.TransportException;
 
 @SuppressWarnings("serial")
 public class ContextEditViewWithToolbar extends VerticalLayout {
@@ -29,17 +26,17 @@ public class ContextEditViewWithToolbar extends VerticalLayout {
         addComponent(contextEditForm);
     }
 
-    private final Button newContextBtn =
-        new Button("New", new NewContextListener());
+    private final Button newContextBtn = new Button("New",
+        new NewContextListener());
 
-    private final Button deleteContextBtn =
-        new Button("Delete", new DeleteContextListener());
+    private final Button deleteContextBtn = new Button("Delete",
+        new DeleteContextListener());
 
-    private final Button openContextBtn =
-        new Button("Open", new OpenContextListener());
+    private final Button openContextBtn = new Button("Open",
+        new OpenContextListener());
 
-    private final Button closeContextBtn =
-        new Button("Close", new CloseContextListener());
+    private final Button closeContextBtn = new Button("Close",
+        new CloseContextListener());
 
     private HorizontalLayout createHeader() {
         header = new HorizontalLayout();
@@ -93,22 +90,22 @@ public class ContextEditViewWithToolbar extends VerticalLayout {
 
     private class DeleteContextListener implements Button.ClickListener {
         public void buttonClick(final ClickEvent event) {
-            try {
-                contextEditForm.deleteContext();
-                ((ContextView) getParent()).remove();
-            }
-            catch (final EscidocException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-            catch (final InternalClientException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-            catch (final TransportException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
+            // try {
+            // // contextEditForm.deleteContext();
+            // ((ContextView) getParent()).remove();
+            // }
+            // catch (final EscidocException e) {
+            // // TODO Auto-generated catch block
+            // e.printStackTrace();
+            // }
+            // catch (final InternalClientException e) {
+            // // TODO Auto-generated catch block
+            // e.printStackTrace();
+            // }
+            // catch (final TransportException e) {
+            // // TODO Auto-generated catch block
+            // e.printStackTrace();
+            // }
         }
     }
 

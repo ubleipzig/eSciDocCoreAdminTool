@@ -7,148 +7,138 @@ import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.Reindeer;
 
 public class OrgUnitTree extends CustomComponent {
-	private Tree tree;        
-	     
-    private void loadTree(){
-		String rootOrg = "External Organizations"; 
-    	tree.addItem(rootOrg);
-    	
-		Object[] extOrg = 	new Object[]{ 
-				"Angelo State University",
-          		"Berlin University of the Arts",
-				"Bond University",
-             	"Brandeis University",
-             	"Bryn Mawr College",
-             	"Cardiff University",
-				"..."
-		};
+    private final Tree tree;
 
-		for (Object o : extOrg){
-			tree.addItem((String)o);
-			// Set it to be a child.
-			tree.setParent(o, rootOrg);
-			// Make the moons look like leaves.
-			tree.setChildrenAllowed(o, false);
-    	}
-		
-		rootOrg = "Kaiser-Wilhelm-Gesellschaft";
-		tree.addItem(rootOrg);
-		String child = "Kaiser Wilhelm Institut für Züchtungsforschung (geschlossen)";
-		tree.addItem(child);
-		// Set it to be a child.
-		tree.setParent(child, rootOrg);
-		// Make the moons look like leaves.
-		tree.setChildrenAllowed(child, false);
-	
-		rootOrg = "Max Planck Society";
-		tree.addItem(rootOrg);
-		
-		extOrg = 	new Object[]{ 
-						"Fritz Haber Institute",
-    					"Max Planck Digital Library",
-    					"MPI for Astrophysics",
-    					"MPI for biophysical chemistry",
-		};
-		
-		for (Object o : extOrg){
-			tree.addItem((String)o);
-			// Set it to be a child.
-			tree.setParent(o, rootOrg);
-			// Make the moons look like leaves.
-			tree.setChildrenAllowed(o, false);
-    	}
-		Object subParent =  "MPI for Chemical Ecology";
-		tree.addItem(subParent);
-		tree.setParent(subParent, rootOrg);
-		tree.setChildrenAllowed(subParent, true);
-		String subUnit = "Department of Biochemistry, Prof. J. Gershenzon";
-		tree.addItem((String)subUnit);
-		// Set it to be a child.
-		tree.setParent(subUnit, subParent);
-		// Make the moons look like leaves.
-		tree.setChildrenAllowed(subUnit, true);
-		
-		Object[] subsubUnit = new Object[]{			
-				"Research Group Dr. G. Kunert, Chemical Communication in Plant-Aphid-Interactions",
-				"Research Group Dr. J. D'Auria, Biochemistry and Evolution of Tropane Alkaloid Biosynthesis",
-				"Research Group Dr. S. Unsicker, Chemical Ecology of Trees"
-				};
+    /**
+     * Replace me by a call of the service.
+     */
+    private void loadTree() {
+        String rootOrg = "External Organizations";
+        tree.addItem(rootOrg);
 
-		for (Object o : subsubUnit){
-			tree.addItem((String)o);
-			// Set it to be a child.
-			tree.setParent(o, subUnit);
-			// Make the moons look like leaves.
-			tree.setChildrenAllowed(o, false);
-    	}
+        Object[] extOrg =
+            new Object[] { "Angelo State University",
+                "Berlin University of the Arts", "Bond University",
+                "Brandeis University", "Bryn Mawr College",
+                "Cardiff University", "..." };
 
-		Object[] restUnit = new Object[]{
-					"Department of Bioorganic Chemistry, Prof. Dr. W. Boland",
-					"Department of Entomology, Prof. D. G. Heckel",
-					"Department of Evolutionary Neuroethology, Prof. B. S. Hansson",
-					"Department of Genetics and Evolution",
-					"Department of Molecular Ecology, Prof. I. T. Baldwin",
-					"IMPRS on Ecological Interactions",
-					"Max Planck Research Group Insect Symbiosis",
-					"Research Group Biosynthesis / NMR",
-					"Research Group Mass Spectrometry",
-					"..."
-				};
-		
-		for (Object o : restUnit){
-			tree.addItem((String)o);
-			// Set it to be a child.
-			tree.setParent(o, subParent);
-			// Make the moons look like leaves.
-			tree.setChildrenAllowed(o, false);
-    	}
-		
-		rootOrg = "物質・材料研究機構/ National Institute for Materials Science";
-		tree.addItem(rootOrg);
-		
-		Object[] asia = new Object[]{
-    					"総務部 / General Affairs Division",
-    					"人事課 / Personnel Section",
-    					"契約課 / Contract Section",
-    					"..."
+        for (Object o : extOrg) {
+            tree.addItem(o);
+            // Set it to be a child.
+            tree.setParent(o, rootOrg);
+            // Make the moons look like leaves.
+            tree.setChildrenAllowed(o, false);
+        }
 
-    			};
-		
-		
-		for (Object o : asia){
-			tree.addItem((String)o);
-			// Set it to be a child.
-			tree.setParent(o, rootOrg);
-			// Make the moons look like leaves.
-			tree.setChildrenAllowed(o, false);
-    	}
+        rootOrg = "Kaiser-Wilhelm-Gesellschaft";
+        tree.addItem(rootOrg);
+        String child =
+            "Kaiser Wilhelm Institut für Züchtungsforschung (geschlossen)";
+        tree.addItem(child);
+        // Set it to be a child.
+        tree.setParent(child, rootOrg);
+        // Make the moons look like leaves.
+        tree.setChildrenAllowed(child, false);
+
+        rootOrg = "Max Planck Society";
+        tree.addItem(rootOrg);
+
+        extOrg =
+            new Object[] { "Fritz Haber Institute",
+                "Max Planck Digital Library", "MPI for Astrophysics",
+                "MPI for biophysical chemistry", };
+
+        for (Object o : extOrg) {
+            tree.addItem(o);
+            // Set it to be a child.
+            tree.setParent(o, rootOrg);
+            // Make the moons look like leaves.
+            tree.setChildrenAllowed(o, false);
+        }
+        Object subParent = "MPI for Chemical Ecology";
+        tree.addItem(subParent);
+        tree.setParent(subParent, rootOrg);
+        tree.setChildrenAllowed(subParent, true);
+        String subUnit = "Department of Biochemistry, Prof. J. Gershenzon";
+        tree.addItem(subUnit);
+        // Set it to be a child.
+        tree.setParent(subUnit, subParent);
+        // Make the moons look like leaves.
+        tree.setChildrenAllowed(subUnit, true);
+
+        Object[] subsubUnit =
+            new Object[] {
+                "Research Group Dr. G. Kunert, Chemical Communication in Plant-Aphid-Interactions",
+                "Research Group Dr. J. D'Auria, Biochemistry and Evolution of Tropane Alkaloid Biosynthesis",
+                "Research Group Dr. S. Unsicker, Chemical Ecology of Trees" };
+
+        for (Object o : subsubUnit) {
+            tree.addItem(o);
+            // Set it to be a child.
+            tree.setParent(o, subUnit);
+            // Make the moons look like leaves.
+            tree.setChildrenAllowed(o, false);
+        }
+
+        Object[] restUnit =
+            new Object[] {
+                "Department of Bioorganic Chemistry, Prof. Dr. W. Boland",
+                "Department of Entomology, Prof. D. G. Heckel",
+                "Department of Evolutionary Neuroethology, Prof. B. S. Hansson",
+                "Department of Genetics and Evolution",
+                "Department of Molecular Ecology, Prof. I. T. Baldwin",
+                "IMPRS on Ecological Interactions",
+                "Max Planck Research Group Insect Symbiosis",
+                "Research Group Biosynthesis / NMR",
+                "Research Group Mass Spectrometry", "..." };
+
+        for (Object o : restUnit) {
+            tree.addItem(o);
+            // Set it to be a child.
+            tree.setParent(o, subParent);
+            // Make the moons look like leaves.
+            tree.setChildrenAllowed(o, false);
+        }
+
+        rootOrg = "物質・材料研究機構/ National Institute for Materials Science";
+        tree.addItem(rootOrg);
+
+        Object[] asia =
+            new Object[] { "総務部 / General Affairs Division",
+                "人事課 / Personnel Section", "契約課 / Contract Section", "..."
+
+            };
+
+        for (Object o : asia) {
+            tree.addItem(o);
+            // Set it to be a child.
+            tree.setParent(o, rootOrg);
+            // Make the moons look like leaves.
+            tree.setChildrenAllowed(o, false);
+        }
     }
-    
-	/**
-	 * The constructor should first build the main layout, set the
-	 * composition root and then do any custom initialization.
-	 *
-	 * The constructor will not be automatically regenerated by the
-	 * visual editor.
-	 */
-	public OrgUnitTree(final Window parent) {
-		Panel panel = new Panel();
-//		panel.setSizeUndefined();
-//		panel.setSizeFull();
-		panel.setStyleName(Reindeer.PANEL_LIGHT);
-		tree = new Tree();        
-    	loadTree();
-    	tree.setHeight(null);
-		tree.setWidth("100%");
+
+    /**
+     * The constructor should first build the main layout, set the composition
+     * root and then do any custom initialization.
+     * 
+     * The constructor will not be automatically regenerated by the visual
+     * editor.
+     */
+    public OrgUnitTree(final Window parent) {
+        Panel panel = new Panel();
+        panel.setStyleName(Reindeer.PANEL_LIGHT);
+        tree = new Tree();
+        loadTree();
+        tree.setHeight(null);
+        tree.setWidth("100%");
         tree.setMultiSelect(true);
         tree.setImmediate(true);
-        panel.addComponent(tree);		
-		setCompositionRoot(panel);
-	}
-	
-	public Object getSelectedItems(){
-		return tree.getValue();
-	}
-	
+        panel.addComponent(tree);
+        setCompositionRoot(panel);
+    }
 
+    public Object getSelectedItems() {
+        return tree.getValue();
+    }
 }
