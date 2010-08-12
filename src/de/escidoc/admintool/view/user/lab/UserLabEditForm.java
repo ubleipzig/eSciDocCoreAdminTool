@@ -78,35 +78,36 @@ public class UserLabEditForm extends CustomComponent implements ClickListener {
         nameField = new TextField();
         nameField.setWidth("400px");
         nameField.setWriteThrough(false);
-
+        int labelWidth = 100;
+        int height = 15;
         panel.addComponent(LayoutHelper.create(ViewConstants.NAME_LABEL,
-            nameField, "100px", true));
+            nameField, labelWidth, true));
         loginNameField = new TextField();
         loginNameField.setWidth("400px");
         loginNameField.setWriteThrough(false);
         loginNameField.setReadOnly(true);
         panel.addComponent(LayoutHelper.create(ViewConstants.LOGIN_NAME_LABEL,
-            loginNameField, "100px", false));
+            loginNameField, labelWidth, false));
 
         objIdField = new TextField();
         objIdField.setReadOnly(true);
         panel.addComponent(LayoutHelper.create(ViewConstants.OBJECT_ID_LABEL,
-            objIdField, "100px", false));
+            objIdField, labelWidth, false));
 
         modifiedOn = new Label();
         modifiedBy = new Label();
         panel.addComponent(LayoutHelper.create("Modified", "by", modifiedOn,
-            modifiedBy, "100px", "15px", false));
+            modifiedBy, labelWidth, height, false));
 
         createdOn = new Label();
         createdBy = new Label();
         panel.addComponent(LayoutHelper.create("Created", "by", createdOn,
-            createdBy, "100px", "15px", false));
+            createdBy, labelWidth, height, false));
 
         state = new CheckBox();
         state.setWriteThrough(false);
-        panel.addComponent(LayoutHelper.create("Active status", state, "100px",
-            false));
+        panel.addComponent(LayoutHelper.create("Active status", state,
+            labelWidth, false));
 
         panel.addComponent(addFooter());
         setCompositionRoot(panel);

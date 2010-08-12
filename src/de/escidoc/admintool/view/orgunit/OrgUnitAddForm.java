@@ -1,18 +1,7 @@
 package de.escidoc.admintool.view.orgunit;
 
-import static de.escidoc.admintool.view.ViewConstants.ALTERNATIVE_ID;
-import static de.escidoc.admintool.view.ViewConstants.CITY_ID;
-import static de.escidoc.admintool.view.ViewConstants.COUNTRY_ID;
-import static de.escidoc.admintool.view.ViewConstants.DESCRIPTION_ID;
-import static de.escidoc.admintool.view.ViewConstants.IDENTIFIER_ID;
-import static de.escidoc.admintool.view.ViewConstants.IDENTIFIER_LABEL;
-import static de.escidoc.admintool.view.ViewConstants.ORGANIZATION_TYPE;
-import static de.escidoc.admintool.view.ViewConstants.ORG_TYPE_ID;
-import static de.escidoc.admintool.view.ViewConstants.PARENTS_ID;
-import static de.escidoc.admintool.view.ViewConstants.TITLE_ID;
 import static de.escidoc.admintool.view.ViewConstants.VISIBLE_PARENTS;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,37 +9,36 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.xml.sax.SAXException;
-
 import com.vaadin.data.Property;
-import com.vaadin.terminal.UserError;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.ComboBox;
-import com.vaadin.ui.Form;
+import com.vaadin.ui.CustomComponent;
+import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.ListSelect;
+import com.vaadin.ui.Panel;
 import com.vaadin.ui.TextField;
 
 import de.escidoc.admintool.app.AdminToolApplication;
-import de.escidoc.admintool.domain.OrgUnitFactory;
 import de.escidoc.admintool.service.OrgUnitService;
+import de.escidoc.admintool.view.OrgUnitEditor;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
 import de.escidoc.core.resources.oum.OrganizationalUnit;
 import de.escidoc.core.resources.oum.PredecessorForm;
+import de.escidoc.vaadin.utilities.LayoutHelper;
 
 @SuppressWarnings("serial")
-public class OrgUnitAddForm extends Form implements ClickListener, Serializable {
+public class OrgUnitAddForm extends CustomComponent
+    implements ClickListener, Serializable {
 
-    private final Button save = new Button("Save", (ClickListener) this);
+    private final Button save = new Button("Save", this);
 
-    private final Button cancel = new Button("Cancel", (ClickListener) this);
+    private final Button cancel = new Button("Cancel", this);
 
     private final AdminToolApplication app;
 
@@ -66,6 +54,39 @@ public class OrgUnitAddForm extends Form implements ClickListener, Serializable 
 
     private Button removePredecessor;
 
+    private final FormLayout form = new FormLayout();
+
+    private final Panel panel = new Panel();
+
+    private final TextField titleField = new TextField();
+
+    private final TextField descriptionField = new TextField();
+
+    private final TextField alternativeField = new TextField();
+
+    private final TextField identifierField = new TextField();
+
+    private final TextField orgTypeField = new TextField();
+
+    private final TextField cityField = new TextField();
+
+    private final TextField countryField = new TextField();
+
+    private final TextField coordinatesField = new TextField();
+
+    private final ListSelect orgUnitListSelect = new ListSelect();
+
+    private final Button addOrgUnitButton = new Button(ViewConstants.ADD_LABEL);
+
+    private final Button removeOrgUnitButton = new Button(
+        ViewConstants.REMOVE_LABEL);
+
+    private final Button addPredecessorButton = new Button(
+        ViewConstants.ADD_LABEL);
+
+    private final Button removePredecessorButton = new Button(
+        ViewConstants.REMOVE_LABEL);
+
     public OrgUnitAddForm(final AdminToolApplication app,
         final OrgUnitService service,
         final Collection<OrganizationalUnit> allOrgUnits,
@@ -74,83 +95,93 @@ public class OrgUnitAddForm extends Form implements ClickListener, Serializable 
         this.service = service;
         this.allOrgUnits = allOrgUnits;
         this.orgUnitList = orgUnitList;
-        buildForm();
+        init();
     }
 
-    private void buildForm() {
-        addTitleField()
-            .addDescriptionField().addAlternativeField().addIdentifierField()
-            .addOrgType().addCountryField().addCityField()
-            .addCoordinatesField().addParentsListSelect()
-            // .addPredecessorsListSelect().addPredecessorsType()
-            .predessorAddButton().predecessorTypeComboBox()
-            .removeAddPredecessor().predecessorListSelect();
-        addFooter();
-        setWriteThrough(false);
-        setInvalidCommitted(false);
-    }
+    private void init() {
+        setCompositionRoot(panel);
+        panel.setContent(form);
+        int labelWidth = 100;
 
-    private OrgUnitAddForm addTitleField() {
-        final TextField titleField = new TextField("Title");
-        addField(TITLE_ID, titleField);
-        titleField.setRequired(true);
-        titleField.setRequiredError("Please enter a " + ViewConstants.TITLE_ID);
+        // Title
         titleField.setWidth("400px");
-        return this;
-    }
+        form.addComponent(LayoutHelper.create(ViewConstants.TITLE_LABEL,
+            titleField, labelWidth, true));
+        // titleProperty = mapBinding("", titleField);
 
-    private OrgUnitAddForm addDescriptionField() {
-        final TextField descriptionField = new TextField("Description", "");
-        descriptionField.setRequired(true);
-        descriptionField.setRequiredError("Please enter a "
-            + ViewConstants.DESCRIPTION_ID);
+        // Description
         descriptionField.setWidth("400px");
-        addField(DESCRIPTION_ID, descriptionField);
-        return this;
-    }
+        descriptionField.setRows(5);
+        form.addComponent(LayoutHelper.create(ViewConstants.DESCRIPTION_LABEL,
+            descriptionField, labelWidth, true));
 
-    private OrgUnitAddForm addAlternativeField() {
-        final TextField textField = new TextField("Alternative Title", "");
-        textField.setWidth("400px");
-        addField(ALTERNATIVE_ID, textField);
-        return this;
-    }
+        // Alternative Title
+        alternativeField.setWidth("400px");
+        form.addComponent(LayoutHelper.create(ViewConstants.ALTERNATIVE_LABEL,
+            alternativeField, labelWidth, false));
 
-    private OrgUnitAddForm addIdentifierField() {
-        final TextField identifierField = new TextField(IDENTIFIER_LABEL, "");
+        // identifier
         identifierField.setWidth("400px");
-        addField(IDENTIFIER_ID, identifierField);
-        return this;
-    }
+        form.addComponent(LayoutHelper.create(ViewConstants.IDENTIFIER_LABEL,
+            identifierField, labelWidth, false));
 
-    private OrgUnitAddForm addOrgType() {
-        final TextField orgTypeField = new TextField(ORGANIZATION_TYPE, "");
+        // Org Type
         orgTypeField.setWidth("400px");
-        addField(ORG_TYPE_ID, orgTypeField);
-        return this;
-    }
+        form.addComponent(LayoutHelper.create(ViewConstants.ORGANIZATION_TYPE,
+            orgTypeField, labelWidth, false));
 
-    private OrgUnitAddForm addCountryField() {
-        final TextField countryField = new TextField("Country", "");
+        // city
+        cityField.setWidth("400px");
+        form.addComponent(LayoutHelper.create("City", cityField, labelWidth,
+            false));
+
+        // Country
         countryField.setWidth("400px");
-        addField(COUNTRY_ID, countryField);
-        return this;
-    }
+        form.addComponent(LayoutHelper.create("Country", orgTypeField,
+            labelWidth, false));
 
-    private OrgUnitAddForm addCityField() {
-        final TextField countryField = new TextField("City", "");
-        countryField.setWidth("400px");
-        addField(CITY_ID, countryField);
-        return this;
-    }
-
-    private OrgUnitAddForm addCoordinatesField() {
-        final TextField coordinatesField =
-            new TextField(ViewConstants.COORDINATES_LABEL, "");
+        // Org Unit
         coordinatesField.setWidth("400px");
-        addField(ViewConstants.COORDINATES_ID, coordinatesField);
-        return this;
+        form.addComponent(LayoutHelper.create(ViewConstants.COORDINATES_LABEL,
+            coordinatesField, labelWidth, false));
+
+        // Parent
+        orgUnitListSelect.setRows(5);
+        orgUnitListSelect.setWidth("400px");
+        orgUnitListSelect.setNullSelectionAllowed(true);
+        orgUnitListSelect.setMultiSelect(true);
+        orgUnitListSelect.setImmediate(true);
+
+        form.addComponent(LayoutHelper.create(
+            ViewConstants.ORGANIZATION_UNITS_LABEL, new OrgUnitEditor(
+                orgUnitListSelect, addOrgUnitButton, removeOrgUnitButton),
+            labelWidth, 140, false, new Button[] { addOrgUnitButton,
+                removeOrgUnitButton }));
+
+        // predecessor
+        objIds = new ArrayList<String>();
+        for (final OrganizationalUnit ou : allOrgUnits) {
+            objIds.add(ou.getObjid());
+        }
+
+        ListSelect predecessorsListSelect = new ListSelect("", objIds);
+        predecessorsListSelect.setRows(VISIBLE_PARENTS);
+        predecessorsListSelect.setMultiSelect(true);
+        predecessorsListSelect.setVisible(false);
+        form.addComponent(LayoutHelper.create(ViewConstants.PREDECESSORS_LABEL,
+            predecessorsListSelect, labelWidth, 140, false, new Button[] {
+                addPredecessorButton, removePredecessorButton }));
+
+        // panel.addComponent(form);
+        addFooter();
     }
+
+    // titleField.setRequiredError("Please enter a " + ViewConstants.TITLE_ID);
+    // descriptionField.setRequiredError("Please enter a "
+    // + ViewConstants.DESCRIPTION_ID);
+
+    // setWriteThrough(false);
+    // setInvalidCommitted(false);
 
     private OrgUnitAddForm addParentsListSelect() {
         // TODO move it to a data source class.
@@ -165,7 +196,7 @@ public class OrgUnitAddForm extends Form implements ClickListener, Serializable 
         parentListSelect.setNullSelectionAllowed(true);
         parentListSelect.setMultiSelect(true);
         parentListSelect.setWidth("200px");
-        addField(PARENTS_ID, parentListSelect);
+        // addField(PARENTS_ID, parentListSelect);
 
         return this;
     }
@@ -173,7 +204,7 @@ public class OrgUnitAddForm extends Form implements ClickListener, Serializable 
     private OrgUnitAddForm predessorAddButton() {
         addPredecessorLink = new Button("Add Predecessor");
         addPredecessorLink.setStyleName(Button.STYLE_LINK);
-        addField(ViewConstants.PREDECESSORS_TYPE_ID, addPredecessorLink);
+        // addField(ViewConstants.PREDECESSORS_TYPE_ID, addPredecessorLink);
         addPredecessorLink.addListener(new AddPredecessorListener());
         return this;
     }
@@ -182,10 +213,10 @@ public class OrgUnitAddForm extends Form implements ClickListener, Serializable 
 
     private OrgUnitAddForm predecessorTypeComboBox() {
         predecessorTypeComboBox =
-            new ComboBox(ViewConstants.PREDECESSORS_TYPE_LABEL, Arrays
-                .asList(PredecessorForm.values()));
-        OrgUnitAddForm.this.addField(ViewConstants.PREDECESSORS_TYPE_ID,
-            predecessorTypeComboBox);
+            new ComboBox(ViewConstants.PREDECESSORS_TYPE_LABEL,
+                Arrays.asList(PredecessorForm.values()));
+        // OrgUnitAddForm.this.addField(ViewConstants.PREDECESSORS_TYPE_ID,
+        // predecessorTypeComboBox);
         predecessorTypeComboBox.setImmediate(true);
         predecessorTypeComboBox.setVisible(false);
         predecessorTypeComboBox
@@ -195,30 +226,13 @@ public class OrgUnitAddForm extends Form implements ClickListener, Serializable 
 
     private List<String> objIds;
 
-    private OrgUnitAddForm predecessorListSelect() {
-        objIds = new ArrayList<String>();
-        for (final OrganizationalUnit ou : allOrgUnits) {
-            objIds.add(ou.getObjid());
-        }
-        predecessorsListSelect =
-            new ListSelect(ViewConstants.PREDECESSORS_LABEL, objIds);
-
-        predecessorsListSelect.setRows(VISIBLE_PARENTS);
-        predecessorsListSelect.setMultiSelect(true);
-        predecessorsListSelect.setVisible(false);
-
-        OrgUnitAddForm.this.addField(ViewConstants.PREDECESSORS_ID,
-            predecessorsListSelect);
-
-        return this;
-    }
-
     private boolean addPredecessor = false;
 
     private OrgUnitAddForm removeAddPredecessor() {
         removePredecessor = new Button("Remove");
         removePredecessor.setStyleName(Button.STYLE_LINK);
-        OrgUnitAddForm.this.addField("removeAddPredecessor", removePredecessor);
+        // OrgUnitAddForm.this.addField("removeAddPredecessor",
+        // removePredecessor);
         removePredecessor.addListener(new RemoveAddPredecessorListener());
         removePredecessor.setVisible(false);
         addPredecessor = false;
@@ -279,18 +293,18 @@ public class OrgUnitAddForm extends Form implements ClickListener, Serializable 
         footer.setSpacing(true);
         footer.addComponent(save);
         footer.addComponent(cancel);
-        setFooter(footer);
+        // setFooter(footer);
         return this;
     }
 
     public void buttonClick(final ClickEvent event) {
         final Button source = event.getButton();
         if (source == save) {
-            setValidationVisible(true);
+            // setValidationVisible(true);
             saveUserInput();
         }
         else if (source == cancel) {
-            discard();
+            // discard();
             app.showOrganizationalUnitView();
         }
         else {
@@ -301,17 +315,20 @@ public class OrgUnitAddForm extends Form implements ClickListener, Serializable 
     @SuppressWarnings("unchecked")
     private void saveUserInput() {
         // TODO this is crazy. Data binding to the rescue for later.
-        final String title = (String) getField(TITLE_ID).getValue();
-        final String description = (String) getField(DESCRIPTION_ID).getValue();
-        final String identifier = (String) getField(IDENTIFIER_ID).getValue();
-        final String alternative = (String) getField(ALTERNATIVE_ID).getValue();
-        final String orgType = (String) getField(ORG_TYPE_ID).getValue();
-        final String country = (String) getField(COUNTRY_ID).getValue();
-        final String city = (String) getField(CITY_ID).getValue();
-        final String coordinates =
-            (String) getField(ViewConstants.COORDINATES_ID).getValue();
-        final Set<String> parents =
-            (Set<String>) getField(PARENTS_ID).getValue();
+        // final String title = (String) getField(TITLE_ID).getValue();
+        // final String description = (String)
+        // getField(DESCRIPTION_ID).getValue();
+        // final String identifier = (String)
+        // getField(IDENTIFIER_ID).getValue();
+        // final String alternative = (String)
+        // getField(ALTERNATIVE_ID).getValue();
+        // final String orgType = (String) getField(ORG_TYPE_ID).getValue();
+        // final String country = (String) getField(COUNTRY_ID).getValue();
+        // final String city = (String) getField(CITY_ID).getValue();
+        // final String coordinates =
+        // (String) getField(ViewConstants.COORDINATES_ID).getValue();
+        // final Set<String> parents =
+        // (Set<String>) getField(PARENTS_ID).getValue();
 
         Set<String> predecessors = null;
         PredecessorForm predecessorType = null;
@@ -319,12 +336,12 @@ public class OrgUnitAddForm extends Form implements ClickListener, Serializable 
         // TODO fix this! due possible bug in Vaadin.
         if (addPredecessor) {
             System.out.println("adding");
-            predecessors =
-                (Set<String>) getField(ViewConstants.PREDECESSORS_ID)
-                    .getValue();
-            predecessorType =
-                (PredecessorForm) getField(ViewConstants.PREDECESSORS_TYPE_ID)
-                    .getValue();
+            // predecessors =
+            // (Set<String>) getField(ViewConstants.PREDECESSORS_ID)
+            // .getValue();
+            // predecessorType =
+            // (PredecessorForm) getField(ViewConstants.PREDECESSORS_TYPE_ID)
+            // .getValue();
 
             System.out.println("type: " + predecessorType);
 
@@ -332,49 +349,51 @@ public class OrgUnitAddForm extends Form implements ClickListener, Serializable 
                 System.out.println("pre: " + predecessor);
             }
         }
-        try {
-            if (isValid()) {
-                final OrganizationalUnit createdOrgUnit =
-                    storeInRepository(new OrgUnitFactory()
-                        .create(title, description).parents(parents)
-                        .predecessors(predecessors, predecessorType)
-                        .identifier(identifier).alternative(alternative)
-                        .orgType(orgType).country(country).city(city)
-                        .coordinates(coordinates).build());
-                commit();
-                updateOrgUnitTableView(createdOrgUnit);
-                app.showOrganizationalUnitView();
-            }
-        }
+        // try {
+        // if (isValid()) {
+        // final OrganizationalUnit createdOrgUnit =
+        // storeInRepository(new OrgUnitFactory()
+        // .create(title, description).parents(parents)
+        // .predecessors(predecessors, predecessorType)
+        // .identifier(identifier).alternative(alternative)
+        // .orgType(orgType).country(country).city(city)
+        // .coordinates(coordinates).build());
+        // commit();
+        // updateOrgUnitTableView(createdOrgUnit);
+        // app.showOrganizationalUnitView();
+        // }
+        // }
         // TODO refactor exception handling
-        catch (final EscidocException e) {
-            if (e instanceof de.escidoc.core.client.exceptions.application.invalid.InvalidStatusException) {
-                ((ListSelect) getField(ViewConstants.PREDECESSORS_ID))
-                    .setComponentError(new UserError(e.getHttpStatusMsg()));
-                System.out.println(e.getHttpStatusMsg());
-            }
-            e.printStackTrace();
-        }
-        catch (final InternalClientException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        catch (final TransportException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        catch (final ParserConfigurationException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        catch (final SAXException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        catch (final IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        // catch (final EscidocException e) {
+        // if (e instanceof
+        // de.escidoc.core.client.exceptions.application.invalid.InvalidStatusException)
+        // {
+        // ((ListSelect) getField(ViewConstants.PREDECESSORS_ID))
+        // .setComponentError(new UserError(e.getHttpStatusMsg()));
+        // System.out.println(e.getHttpStatusMsg());
+        // }
+        // e.printStackTrace();
+        // }
+        // catch (final InternalClientException e) {
+        // // TODO Auto-generated catch block
+        // e.printStackTrace();
+        // }
+        // catch (final TransportException e) {
+        // // TODO Auto-generated catch block
+        // e.printStackTrace();
+        // }
+        // catch (final ParserConfigurationException e) {
+        // // TODO Auto-generated catch block
+        // e.printStackTrace();
+        // }
+        // catch (final SAXException e) {
+        // // TODO Auto-generated catch block
+        // e.printStackTrace();
+        // }
+        // catch (final IOException e) {
+        // // TODO Auto-generated catch block
+        // e.printStackTrace();
+        // }
     }
 
     private OrganizationalUnit storeInRepository(

@@ -25,19 +25,29 @@ import de.escidoc.core.resources.aa.useraccount.UserAccount;
 import de.escidoc.vaadin.utilities.LayoutHelper;
 
 public class UserLabAddView extends CustomComponent implements ClickListener {
-	private static final long serialVersionUID = 3007285643463919742L;
-	 private static final Logger log =
-	        LoggerFactory.getLogger(UserLabAddView.class);
+`    private static final long serialVersionUID = 3007285643463919742L;
+
+    private static final Logger log = LoggerFactory
+        .getLogger(UserLabAddView.class);
+
     private final UserLabListView userLabList;
+
     private final UserService userService;
+
     private HorizontalLayout footer;
-    private final Button save = new Button("Save", (ClickListener) this);
-    private final Button cancel = new Button("Cancel", (ClickListener) this);
-    private TextField nameField; 
+
+    private final Button save = new Button("Save", this);
+
+    private final Button cancel = new Button("Cancel", this);
+
+    private TextField nameField;
+
     private TextField loginNameField;
+
     private ObjectProperty nameProperty;
+
     private ObjectProperty loginNameProperty;
-    
+
     public UserLabAddView(final AdminToolApplication app,
         final UserLabListView userLabList, final UserService userService) {
         this.userLabList = userLabList;
@@ -45,25 +55,28 @@ public class UserLabAddView extends CustomComponent implements ClickListener {
         init();
     }
 
-    public void init(){
-    	Panel panel = new Panel();
-    	FormLayout form = new FormLayout();
-    	panel.setContent(form);
-    	form.setSpacing(false);
-    	panel.setCaption("Add a new User Account");
-    	panel.addComponent(LayoutHelper.create(ViewConstants.NAME_LABEL, nameField = new TextField(), "100px", true));
+    public void init() {
+        Panel panel = new Panel();
+        FormLayout form = new FormLayout();
+        int labelWidth = 100;
+        panel.setContent(form);
+        form.setSpacing(false);
+        panel.setCaption("Add a new User Account");
+        panel.addComponent(LayoutHelper.create(ViewConstants.NAME_LABEL,
+            nameField = new TextField(), labelWidth, true));
         nameProperty = new ObjectProperty("", String.class);
         nameField.setPropertyDataSource(nameProperty);
         nameField.setWidth("400px");
-       
-        panel.addComponent(LayoutHelper.create(ViewConstants.LOGIN_NAME_LABEL, loginNameField = new TextField(), "100px", true));
-        
+
+        panel.addComponent(LayoutHelper.create(ViewConstants.LOGIN_NAME_LABEL,
+            loginNameField = new TextField(), labelWidth, true));
+
         loginNameProperty = new ObjectProperty("", String.class);
         loginNameField.setPropertyDataSource(loginNameProperty);
         loginNameField.setWidth("400px");
-        
+
         panel.addComponent(addFooter());
-    	setCompositionRoot(panel);
+        setCompositionRoot(panel);
     }
 
     private HorizontalLayout addFooter() {
@@ -74,44 +87,54 @@ public class UserLabAddView extends CustomComponent implements ClickListener {
         footer.setVisible(true);
         return footer;
     }
-    
+
     public void buttonClick(final ClickEvent event) {
         final Button source = event.getButton();
 
         if (source == cancel) {
-        	nameField.setValue("");
-        	loginNameField.setValue("");
+            nameField.setValue("");
+            loginNameField.setValue("");
         }
         else if (source == save) {
-        	boolean valid = true;
-        	valid = EmptyFieldValidator.isValid(nameField, "Please enter a " + ViewConstants.NAME_ID);
-        	valid &= (EmptyFieldValidator.isValid(loginNameField, "Please enter a " + ViewConstants.LOGIN_NAME_ID));
-        	
-        	if(valid){
-        		nameField.setComponentError(null);
-        		loginNameField.setComponentError(null);
-        		
+            boolean valid = true;
+            valid =
+                EmptyFieldValidator.isValid(nameField, "Please enter a "
+                    + ViewConstants.NAME_ID);
+            valid &=
+                (EmptyFieldValidator.isValid(loginNameField, "Please enter a "
+                    + ViewConstants.LOGIN_NAME_ID));
+
+            if (valid) {
+                nameField.setComponentError(null);
+                loginNameField.setComponentError(null);
+
                 try {
                     final UserAccount createdUserAccount =
-                        userService.create((String)nameProperty.getValue(), (String)loginNameProperty.getValue());
+                        userService.create((String) nameProperty.getValue(),
+                            (String) loginNameProperty.getValue());
                     userLabList.addUser(createdUserAccount);
                     userLabList.select(createdUserAccount);
-                	nameField.setValue("");
-                	loginNameField.setValue("");
-                } catch (final EscidocException e) {
-                	String error = "A user with login name "
-                        + (String)nameProperty.getValue()+ " already exist.";
-                	
+                    nameField.setValue("");
+                    loginNameField.setValue("");
+                }
+                catch (final EscidocException e) {
+                    String error =
+                        "A user with login name "
+                            + (String) nameProperty.getValue()
+                            + " already exist.";
+
                     loginNameField.setComponentError(new UserError(error));
                     e.printStackTrace();
-                	log.error(error, e);
+                    log.error(error, e);
                 }
                 catch (final InternalClientException e) {
-                	log.error("An unexpected error occured! See log for details.", e);
+                    log.error(
+                        "An unexpected error occured! See log for details.", e);
                     e.printStackTrace();
                 }
                 catch (final TransportException e) {
-                	log.error("An unexpected error occured! See log for details.", e);
+                    log.error(
+                        "An unexpected error occured! See log for details.", e);
                     e.printStackTrace();
                 }
             }

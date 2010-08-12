@@ -7,31 +7,29 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.ListSelect;
-import com.vaadin.ui.Panel;
-import com.vaadin.ui.themes.Reindeer;
-
-import de.escidoc.vaadin.utilities.LayoutHelper;
 
 public class OrgUnitEditor extends CustomComponent implements Serializable {
     private static final long serialVersionUID = 2985333143579122542L;
 
-    private final Panel panel = new Panel();
+    // private final Panel panel = new Panel();
 
     private final ListSelect orgUnitList;
 
-    private final Button addOrgUnitButton = new Button(ViewConstants.ADD_LABEL);
+    private final Button addOrgUnitButton;
 
-    private final Button removeOrgUnitButton = new Button(
-        ViewConstants.REMOVE_LABEL);
+    private final Button removeOrgUnitButton;
 
-    public OrgUnitEditor(final ListSelect orgUnitList) {
+    public OrgUnitEditor(final ListSelect orgUnitList, Button addOrgUnitButton,
+        Button removeOrgUnitButton) {
         this.orgUnitList = orgUnitList;
-        panel.setStyleName(Reindeer.PANEL_LIGHT);
-        panel.addComponent(orgUnitList);
-        panel.addComponent(LayoutHelper.create("", "", addOrgUnitButton,
-            removeOrgUnitButton, "150px", "0px", false));
+        // panel.setStyleName(Reindeer.PANEL_LIGHT);
+        // panel.addComponent(orgUnitList);
+        // panel.addComponent(LayoutHelper.create("", "", addOrgUnitButton,
+        // removeOrgUnitButton, "150px", "0px", false));
+        this.addOrgUnitButton = addOrgUnitButton;
+        this.removeOrgUnitButton = removeOrgUnitButton;
         addListeners();
-        setCompositionRoot(panel);
+        setCompositionRoot(orgUnitList);
     }
 
     private void addListeners() {

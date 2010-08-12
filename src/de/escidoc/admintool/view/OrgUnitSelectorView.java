@@ -34,7 +34,7 @@ public class OrgUnitSelectorView extends CustomComponent {
         openTreeButtonWindow.addComponent(orgUnitTree);
         addListeners();
         final HorizontalLayout hor =
-            LayoutHelper.create("", "", okButton, cancelButton, "10px", false);
+            LayoutHelper.create("", "", okButton, cancelButton, 10, false);
         openTreeButtonWindow.addComponent(hor);
     }
 

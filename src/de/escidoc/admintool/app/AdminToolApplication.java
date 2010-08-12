@@ -56,9 +56,9 @@ import de.escidoc.core.test.client.EscidocClientTestBase;
 public class AdminToolApplication extends Application
     implements ApplicationContext.TransactionListener, ClickListener,
     ValueChangeListener, ItemClickListener {
-    private final Logger log =
-        LoggerFactory.getLogger(AdminToolApplication.class);
-    
+    private final Logger log = LoggerFactory
+        .getLogger(AdminToolApplication.class);
+
     @Override
     public void init() {
         log.info("Starting application...");
@@ -77,60 +77,45 @@ public class AdminToolApplication extends Application
 
     // TODO: FIXME Login does not work!!!!
     private void showLoginWindow() {
-    	setMainWindow(new LoginWindow());
-    	/*
-        final Window window = new Window("Login");//
-    	final TextField loginNameTextField;
-        final TextField passwordTextField;
-    	window.setModal(true);
-    	
-    	window.setHeight("230px"); //$NON-NLS-1$
-    	window.setWidth("400px"); //$NON-NLS-1$
-		
-    	FormLayout layout = new FormLayout();
-    	loginNameTextField = new TextField();
-    	layout.addComponent(LayoutHelper.create("Login Name:", loginNameTextField, "100px", true));
-    	passwordTextField = new TextField();
-    	passwordTextField.setSecret(true);
-    	layout.addComponent(LayoutHelper.create("Password:", passwordTextField, "100px", true));
-    	final Button okButton = new Button("Login");
-    	okButton.addListener(new Button.ClickListener() {
-			public void buttonClick(ClickEvent event) {
-		    	try{
-		    		currentApplication.set(AdminToolApplication.this);
-		    		String login = (String) loginNameTextField.getValue(); 
-		    		String pwd = (String) passwordTextField.getValue(); 
-//		    		AdminToolApplication.getInstance().authenticate(login, pwd);
-		    		authenticate(login, pwd);
-		    		getMainWindow().removeWindow(window);
-		    	} catch(Exception e){
-		    		e.printStackTrace();
-		    	}
-			}
-		});
-    	layout.addComponent(LayoutHelper.create(okButton));
-    	
-    	window.setContent(layout);
-    	
+        setMainWindow(new LoginWindow());
+        /*
+         * final Window window = new Window("Login");// final TextField
+         * loginNameTextField; final TextField passwordTextField;
+         * window.setModal(true);
+         * 
+         * window.setHeight("230px"); //$NON-NLS-1$ window.setWidth("400px");
+         * //$NON-NLS-1$
+         * 
+         * FormLayout layout = new FormLayout(); loginNameTextField = new
+         * TextField(); layout.addComponent(LayoutHelper.create("Login Name:",
+         * loginNameTextField, "100px", true)); passwordTextField = new
+         * TextField(); passwordTextField.setSecret(true);
+         * layout.addComponent(LayoutHelper.create("Password:",
+         * passwordTextField, "100px", true)); final Button okButton = new
+         * Button("Login"); okButton.addListener(new Button.ClickListener() {
+         * public void buttonClick(ClickEvent event) { try{
+         * currentApplication.set(AdminToolApplication.this); String login =
+         * (String) loginNameTextField.getValue(); String pwd = (String)
+         * passwordTextField.getValue(); //
+         * AdminToolApplication.getInstance().authenticate(login, pwd);
+         * authenticate(login, pwd); getMainWindow().removeWindow(window); }
+         * catch(Exception e){ e.printStackTrace(); } } });
+         * layout.addComponent(LayoutHelper.create(okButton));
+         * 
+         * window.setContent(layout);
+         * 
+         * 
+         * //setMainWindow(new LoginWindow());
+         * getMainWindow().addWindow(window); window.addListener(new
+         * Window.CloseListener() { public void windowClose(CloseEvent e) {
+         * Resource r = new
+         * ExternalResource(AdminToolApplication.getInstance().getURL());
+         * getMainWindow().open(r); } });
+         * currentApplication.set(AdminToolApplication.this); String login =
+         * "sysadmin"; String pwd = "escidoc"; try{ authenticate(login, pwd); }
+         * catch(Exception e){ e.printStackTrace(); }
+         */
 
-        //setMainWindow(new LoginWindow());
-    	getMainWindow().addWindow(window);
-    	window.addListener(new Window.CloseListener() {
-			public void windowClose(CloseEvent e) {
-		    	Resource r = new ExternalResource(AdminToolApplication.getInstance().getURL());
-		    	getMainWindow().open(r);
-			}
-		});
-		currentApplication.set(AdminToolApplication.this);
-		String login = "sysadmin"; 
-		String pwd = "escidoc"; 
-    	try{
-    		authenticate(login, pwd);
-    	} catch(Exception e){
-    		e.printStackTrace();
-    	}
-    	*/
-		
     }
 
     // === Authentification related methods ===
@@ -228,20 +213,21 @@ public class AdminToolApplication extends Application
 
     private final NavigationTree tree = new NavigationTree(this);
 
-    private final SplitPanel horizontalSplit =
-        new SplitPanel(SplitPanel.ORIENTATION_HORIZONTAL);
+    private final SplitPanel horizontalSplit = new SplitPanel(
+        SplitPanel.ORIENTATION_HORIZONTAL);
 
     private void buildMainLayout() {
-    	final Window window = new Window("Admin Tool Prototype");
-    	window.setSizeFull();
-    	setMainWindow(window);
+        final Window window = new Window("Admin Tool Prototype");
+        window.setSizeFull();
+        setMainWindow(window);
 
         setTheme("contacts");
 
         final VerticalLayout layout = new VerticalLayout();
         layout.setSizeFull();
-        
-        layout.addComponent(Toolbar.createToolbar(getMainWindow(), logoutButton));
+
+        layout.addComponent(Toolbar
+            .createToolbar(getMainWindow(), logoutButton));
         layout.addComponent(horizontalSplit);
         layout.setExpandRatio(horizontalSplit, 1);
 
@@ -251,40 +237,32 @@ public class AdminToolApplication extends Application
         getMainWindow().setContent(layout);
     }
 
-    
     private final Button logoutButton = new Button("Sign out");
 
     private final Button newUserButton = new Button("Add User");
 
     /*
-    private HorizontalLayout createToolbar() {
-        final HorizontalLayout layout = new HorizontalLayout();
-        final Embedded em = new Embedded("", new ThemeResource("images/escidoc-logo.jpg"));
-//            new Embedded("", new ThemeResource("images/escidoc-small-logo.jpg"));
-        layout.addComponent(em);
-        layout.setComponentAlignment(em, Alignment.MIDDLE_LEFT);
-        layout.setExpandRatio(em, 1);
-
-        layout.addComponent(logoutButton);
-
-        logoutButton.addListener(new Button.ClickListener() {
-            public void buttonClick(final Button.ClickEvent event) {
-                AdminToolApplication.this.getMainWindow().showNotification(
-                    "Logout...");
-                AdminToolApplication.this.close();
-            }
-        });
-        logoutButton.setIcon(new ThemeResource("icons/32/user.png"));
-
-        layout.setMargin(true);
-        layout.setSpacing(true);
-
-        layout.setStyleName("toolbar");
-
-        layout.setWidth("100%");
-        return layout;
-    }
-    */
+     * private HorizontalLayout createToolbar() { final HorizontalLayout layout
+     * = new HorizontalLayout(); final Embedded em = new Embedded("", new
+     * ThemeResource("images/escidoc-logo.jpg")); // new Embedded("", new
+     * ThemeResource("images/escidoc-small-logo.jpg")); layout.addComponent(em);
+     * layout.setComponentAlignment(em, Alignment.MIDDLE_LEFT);
+     * layout.setExpandRatio(em, 1);
+     * 
+     * layout.addComponent(logoutButton);
+     * 
+     * logoutButton.addListener(new Button.ClickListener() { public void
+     * buttonClick(final Button.ClickEvent event) {
+     * AdminToolApplication.this.getMainWindow().showNotification( "Logout...");
+     * AdminToolApplication.this.close(); } }); logoutButton.setIcon(new
+     * ThemeResource("icons/32/user.png"));
+     * 
+     * layout.setMargin(true); layout.setSpacing(true);
+     * 
+     * layout.setStyleName("toolbar");
+     * 
+     * layout.setWidth("100%"); return layout; }
+     */
 
     private void setMainComponent(final Component c) {
         horizontalSplit.setSecondComponent(c);
@@ -309,11 +287,17 @@ public class AdminToolApplication extends Application
                         e.printStackTrace();
                     }
                     catch (final InternalClientException e) {
-                    	log.error("An unexpected error occured! See log for details.", e);
+                        log
+                            .error(
+                                "An unexpected error occured! See log for details.",
+                                e);
                         e.printStackTrace();
                     }
                     catch (final TransportException e) {
-                    	log.error("An unexpected error occured! See log for details.", e);
+                        log
+                            .error(
+                                "An unexpected error occured! See log for details.",
+                                e);
                         e.printStackTrace();
                     }
                 }
@@ -331,6 +315,7 @@ public class AdminToolApplication extends Application
 
     // TODO refactor to lazy init later.
     private OrgUnitList orgUnitList;
+
     private OrgUnitEditForm orgUnitEditForm;
 
     private OrgUnitAddForm orgUnitAddForm;
@@ -347,24 +332,30 @@ public class AdminToolApplication extends Application
                 orgUnitEditForm = new OrgUnitEditForm(this, orgUnitService);
             }
             catch (final EscidocException e) {
-            	log.error("An unexpected error occured! See log for details.", e);
+                log.error("An unexpected error occured! See log for details.",
+                    e);
                 e.printStackTrace();
             }
             catch (final InternalClientException e) {
-            	log.error("An unexpected error occured! See log for details.", e);
+                log.error("An unexpected error occured! See log for details.",
+                    e);
                 e.printStackTrace();
             }
             catch (final TransportException e) {
-            	log.error("An unexpected error occured! See log for details.", e);
+                log.error("An unexpected error occured! See log for details.",
+                    e);
                 e.printStackTrace();
             }
             catch (final UnsupportedOperationException e) {
-            	log.error("An unexpected error occured! See log for details.", e);
+                log.error("An unexpected error occured! See log for details.",
+                    e);
                 e.printStackTrace();
             }
             organizationalUnitlistView =
                 new OrgUnitView(orgUnitList, orgUnitEditForm);
         }
+        showOrganizationalUnitAddForm();
+
         return organizationalUnitlistView;
     }
 
@@ -429,8 +420,8 @@ public class AdminToolApplication extends Application
     // TODO fix this, why do we have to create the add form every time?
     private OrgUnitAddForm getOrganizationalUnitAddForm() {
         orgUnitAddForm =
-            new OrgUnitAddForm(this, orgUnitService, orgUnitList
-                .getAllOrgUnits(), orgUnitList);
+            new OrgUnitAddForm(this, orgUnitService,
+                orgUnitList.getAllOrgUnits(), orgUnitList);
         return orgUnitAddForm;
     }
 
