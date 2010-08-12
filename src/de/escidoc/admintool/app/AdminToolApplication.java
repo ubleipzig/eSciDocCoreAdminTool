@@ -26,7 +26,6 @@ import de.escidoc.admintool.service.ContextService;
 import de.escidoc.admintool.service.OrgUnitService;
 import de.escidoc.admintool.service.RoleService;
 import de.escidoc.admintool.service.UserService;
-import de.escidoc.admintool.view.ExtendedLoginWindow;
 import de.escidoc.admintool.view.LoginWindow;
 import de.escidoc.admintool.view.NavigationTree;
 import de.escidoc.admintool.view.Toolbar;
