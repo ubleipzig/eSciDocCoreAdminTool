@@ -19,14 +19,12 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.Window;
 
 import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.service.ContextService;
 import de.escidoc.admintool.service.OrgUnitService;
 import de.escidoc.admintool.view.OrgUnitEditor;
 import de.escidoc.admintool.view.ViewConstants;
-import de.escidoc.admintool.view.orgunit.OrgUnitAddView;
 import de.escidoc.admintool.view.validator.EmptyFieldValidator;
 import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
@@ -45,8 +43,6 @@ public class ContextAddView extends CustomComponent implements ClickListener {
     private final ContextListView contextListView;
 
     private final ContextService contextService;
-
-    private OrgUnitAddView orgUnitAddView;
 
     private final OrgUnitService orgUnitService;
 
@@ -74,6 +70,11 @@ public class ContextAddView extends CustomComponent implements ClickListener {
 
     private ListSelect orgUnitList;
 
+    private final Button addOrgUnitButton = new Button(ViewConstants.ADD_LABEL);
+
+    private final Button removeOrgUnitButton = new Button(
+        ViewConstants.REMOVE_LABEL);
+
     public ContextAddView(final AdminToolApplication app,
         final ContextListView contextListView,
         final ContextService contextService, final OrgUnitService orgUnitService) {
@@ -93,7 +94,7 @@ public class ContextAddView extends CustomComponent implements ClickListener {
     private void init() {
         final Panel panel = new Panel();
         final FormLayout form = new FormLayout();
-        String labelWidth = "170px";
+        int labelWidth = 170;
         panel.setContent(form);
         form.setSpacing(false);
         panel.setCaption("Add a new Context");
@@ -122,9 +123,12 @@ public class ContextAddView extends CustomComponent implements ClickListener {
         orgUnitList.setNullSelectionAllowed(true);
         orgUnitList.setMultiSelect(true);
         orgUnitList.setImmediate(true);
+
         form.addComponent(LayoutHelper.create(
             ViewConstants.ORGANIZATION_UNITS_LABEL, new OrgUnitEditor(
-                orgUnitList), labelWidth, 140, false));
+                orgUnitList, addOrgUnitButton, removeOrgUnitButton),
+            labelWidth, 140, false, new Button[] { addOrgUnitButton,
+                removeOrgUnitButton }));
 
         // AdminDescriptor
         adminDescriptorAccordion = new Accordion();
@@ -139,18 +143,17 @@ public class ContextAddView extends CustomComponent implements ClickListener {
         final Button addButton = new Button("Add");
         final Button editButton = new Button("Edit");
         final Button delButton = new Button("Delete");
-        Window mainWindow = (Window) panel.getParent();
 
-        addButton.addListener(new NewAdminDescriptorListener(mainWindow,
-            adminDescriptorAccordion));
-        editButton.addListener(new EditAdminDescriptorListener(mainWindow,
-            adminDescriptorAccordion));
+        addButton.addListener(new NewAdminDescriptorListener(app
+            .getMainWindow(), adminDescriptorAccordion));
+        editButton.addListener(new EditAdminDescriptorListener(app
+            .getMainWindow(), adminDescriptorAccordion));
         delButton.addListener(new RemoveAdminDescriptorListener(
             adminDescriptorAccordion));
 
         panel.addComponent(LayoutHelper.create("Admin Descriptors",
-            accordionPanel, labelWidth, 300, true, new Button[] { addButton,
-                editButton, delButton }));
+            accordionPanel, labelWidth + 2, 300, true, new Button[] {
+                addButton, editButton, delButton }));
 
         // Footer
         panel.addComponent(addFooter());

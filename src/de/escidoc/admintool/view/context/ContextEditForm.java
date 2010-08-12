@@ -66,6 +66,11 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
 
     private Accordion adminDescriptorAccordion;
 
+    private final Button addOrgUnitButton = new Button(ViewConstants.ADD_LABEL);
+
+    private final Button removeOrgUnitButton = new Button(
+        ViewConstants.REMOVE_LABEL);
+
     public ContextEditForm(final AdminToolApplication adminToolApplication,
         final ContextService contextService, final OrgUnitService orgUnitService) {
         app = adminToolApplication;
@@ -77,7 +82,8 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
     private void init() {
         panel.addComponent(form);
         panel.setCaption(EDIT_USER_ACCOUNT);
-        String labelWidth = "170px";
+        int labelWidth = 170;
+        int height = 15;
 
         nameField.setWidth("400px");
         nameField.setWriteThrough(false);
@@ -86,11 +92,11 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
 
         // modified
         form.addComponent(LayoutHelper.create("Modified", "by", modifiedOn,
-            modifiedBy, labelWidth, "15px", false));
+            modifiedBy, labelWidth, height, false));
 
         // created
         form.addComponent(LayoutHelper.create("Created", "by", createdOn,
-            createdBy, labelWidth, "15px", false));
+            createdBy, labelWidth, height, false));
 
         // Status
         form.addComponent(LayoutHelper.create("Status", status, labelWidth,
@@ -106,10 +112,14 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
         orgUnitList.setNullSelectionAllowed(true);
         orgUnitList.setMultiSelect(true);
         orgUnitList.setImmediate(true);
+        // form.addComponent(LayoutHelper.create(
+        // ViewConstants.ORGANIZATION_UNITS_LABEL, new OrgUnitEditor(
+        // orgUnitList), labelWidth, 140, false));
         form.addComponent(LayoutHelper.create(
             ViewConstants.ORGANIZATION_UNITS_LABEL, new OrgUnitEditor(
-                orgUnitList), labelWidth, 140, false));
-
+                orgUnitList, addOrgUnitButton, removeOrgUnitButton),
+            labelWidth, 140, false, new Button[] { addOrgUnitButton,
+                removeOrgUnitButton }));
         // AdminDescriptor
         adminDescriptorAccordion = new Accordion();
         adminDescriptorAccordion.setWidth("400px");
