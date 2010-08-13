@@ -6,7 +6,6 @@ import java.util.Set;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CustomComponent;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.ListSelect;
 
 public class OrgUnitEditor extends CustomComponent implements Serializable {
@@ -22,29 +21,12 @@ public class OrgUnitEditor extends CustomComponent implements Serializable {
 
     private final String caption;
 
-    private String[] types;
-
-    private Label predessorType;
-
     public OrgUnitEditor(final String caption, final ListSelect orgUnitList,
         Button addOrgUnitButton, Button removeOrgUnitButton) {
         this.caption = caption;
         this.orgUnitList = orgUnitList;
         this.addOrgUnitButton = addOrgUnitButton;
         this.removeOrgUnitButton = removeOrgUnitButton;
-        addListeners();
-        setCompositionRoot(orgUnitList);
-    }
-
-    public OrgUnitEditor(final String caption, final ListSelect orgUnitList,
-        Button addOrgUnitButton, Button removeOrgUnitButton,
-        final String[] types, final Label predessorType) {
-        this.caption = caption;
-        this.orgUnitList = orgUnitList;
-        this.addOrgUnitButton = addOrgUnitButton;
-        this.removeOrgUnitButton = removeOrgUnitButton;
-        this.types = types;
-        this.predessorType = predessorType;
         addListeners();
         setCompositionRoot(orgUnitList);
     }
@@ -69,8 +51,7 @@ public class OrgUnitEditor extends CustomComponent implements Serializable {
 
     public void addButtonClicked(ClickEvent event) {
         getApplication().getMainWindow().addWindow(
-            new OrgUnitSelectorView(caption, orgUnitList, types, predessorType)
-                .getWidget());
+            new OrgUnitSelectorView(caption, orgUnitList).getWidget());
     }
 
     public void removeButtonClicked(final ClickEvent event) {
