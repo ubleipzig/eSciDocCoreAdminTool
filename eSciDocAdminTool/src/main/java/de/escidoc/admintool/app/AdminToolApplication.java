@@ -34,7 +34,7 @@ import de.escidoc.admintool.view.context.ContextEditForm;
 import de.escidoc.admintool.view.context.ContextEditViewWithToolbar;
 import de.escidoc.admintool.view.context.ContextListView;
 import de.escidoc.admintool.view.context.ContextView;
-import de.escidoc.admintool.view.orgunit.OrgUnitAddForm;
+import de.escidoc.admintool.view.orgunit.OrgUnitAddView;
 import de.escidoc.admintool.view.orgunit.OrgUnitEditForm;
 import de.escidoc.admintool.view.orgunit.OrgUnitList;
 import de.escidoc.admintool.view.orgunit.OrgUnitView;
@@ -51,6 +51,7 @@ import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
 import de.escidoc.core.client.exceptions.application.security.AuthenticationException;
 import de.escidoc.core.test.client.EscidocClientTestBase;
+import de.escidoc.vaadin.dialog.ErrorDialog;
 
 @SuppressWarnings("serial")
 public class AdminToolApplication extends Application
@@ -318,7 +319,7 @@ public class AdminToolApplication extends Application
 
     private OrgUnitEditForm orgUnitEditForm;
 
-    private OrgUnitAddForm orgUnitAddForm;
+    private OrgUnitAddView orgUnitAddForm;
 
     /*
      * View getters exist so we can lazily generate the views, resulting in
@@ -349,6 +350,9 @@ public class AdminToolApplication extends Application
                 log.error("An unexpected error occured! See log for details.",
                     e);
                 e.printStackTrace();
+            }
+            catch (Exception e) {
+                new ErrorDialog(getMainWindow(), "Error", e.getMessage());
             }
             orgUnitView =
                 new OrgUnitView(this, orgUnitList, orgUnitEditForm,
@@ -418,9 +422,9 @@ public class AdminToolApplication extends Application
     }
 
     // TODO fix this, why do we have to create the add form every time?
-    private OrgUnitAddForm getOrganizationalUnitAddForm() {
+    private OrgUnitAddView getOrganizationalUnitAddForm() {
         orgUnitAddForm =
-            new OrgUnitAddForm(this, orgUnitService,
+            new OrgUnitAddView(this, orgUnitService,
                 orgUnitList.getAllOrgUnits(), orgUnitList);
         return orgUnitAddForm;
     }
@@ -523,7 +527,7 @@ public class AdminToolApplication extends Application
 
     public Component newOrgUnitAddView() throws EscidocException,
         InternalClientException, TransportException {
-        return new OrgUnitAddForm(this, orgUnitService,
+        return new OrgUnitAddView(this, orgUnitService,
             orgUnitService.getOrganizationalUnits(), orgUnitList);
     }
 }
