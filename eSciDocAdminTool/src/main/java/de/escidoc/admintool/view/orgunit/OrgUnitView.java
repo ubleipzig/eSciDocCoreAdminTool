@@ -19,7 +19,7 @@ public class OrgUnitView extends SplitPanel {
 
     public OrgUnitView(final AdminToolApplication app,
         final OrgUnitList orgUnitTable, final OrgUnitEditForm orgUnitEditForm,
-        OrgUnitAddForm orgUnitAddForm) {
+        OrgUnitAddView orgUnitAddForm) {
         this.app = app;
         this.addStyleName("view");
         this.setFirstComponent(orgUnitTable);

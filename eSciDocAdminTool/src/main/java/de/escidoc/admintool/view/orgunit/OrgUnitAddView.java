@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.vaadin.data.Property;
+import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -20,7 +21,6 @@ import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TextField;
@@ -38,10 +38,10 @@ import de.escidoc.core.resources.oum.PredecessorForm;
 import de.escidoc.vaadin.utilities.LayoutHelper;
 
 @SuppressWarnings("serial")
-public class OrgUnitAddForm extends CustomComponent
+public class OrgUnitAddView extends CustomComponent
     implements ClickListener, Serializable {
     private static final Logger log = LoggerFactory
-        .getLogger(OrgUnitAddForm.class);
+        .getLogger(OrgUnitAddView.class);
 
     private final Button save = new Button("Save", this);
 
@@ -94,7 +94,13 @@ public class OrgUnitAddForm extends CustomComponent
     private final Button removePredecessorButton = new Button(
         ViewConstants.REMOVE_LABEL);
 
-    public OrgUnitAddForm(final AdminToolApplication app,
+    private AbstractComponent predecessor;
+
+    private HorizontalLayout predecessorLayout;
+
+    private ListSelect select;
+
+    public OrgUnitAddView(final AdminToolApplication app,
         final OrgUnitService service,
         final Collection<OrganizationalUnit> allOrgUnits,
         final OrgUnitList orgUnitList) {
@@ -173,28 +179,58 @@ public class OrgUnitAddForm extends CustomComponent
         predecessorsListSelect.setRows(5);
         predecessorsListSelect.setWidth("400px");
         predecessorsListSelect.setImmediate(true);
-        Label predessorType = new Label();
-        String[] predecessorTypes =
-            { "splitting", "fusion", "spin-off", "affiliation", "replacement" };
-
-        form.addComponent(LayoutHelper.create(ViewConstants.PREDECESSORS_LABEL,
-            new OrgUnitEditor("Add Predecessor", predecessorsListSelect,
-                addPredecessorButton, removePredecessorButton,
-                predecessorTypes, predessorType), labelWidth, 100, false,
-            new Button[] { addPredecessorButton, removePredecessorButton }));
-        // panel.addComponent(form);
-
         // Type
-        predessorType.setWidth("400px");
-        form.addComponent(LayoutHelper.create("Predessor Type", predessorType,
-            labelWidth, false));
+        select =
+            new ListSelect("", Arrays.asList(new String[] { "splitting",
+                "fusion", "spin-off", "affiliation", "replacement" }));
+
+        select.setRows(1);
+        select.setImmediate(true);
+        // Set the URI Fragment when menu selection changes
+        // select.addListener(new Property.ValueChangeListener() {
+        // public void valueChange(ValueChangeEvent event) {
+        // String itemId = (String) event.getProperty().getValue();
+        // if (itemId.equals("splitting")) {
+        // predecessorLayout.replaceComponent(predecessor,
+        // predecessor = new SplittingPredeccesorView());
+        //
+        // }
+        // else if (itemId.equals("fusion")) {
+        // predecessorLayout.replaceComponent(predecessor,
+        // predecessor = new FusionPredeccesorView());
+        // }
+        // else if (itemId.equals("spin-off")) {
+        // predecessorLayout.replaceComponent(predecessor,
+        // predecessor = new SpinOffPredessorView());
+        // }
+        // else if (itemId.equals("affiliation")) {
+        // // predecessor
+        // }
+        // else if (itemId.equals("replacement")) {
+        // //
+        // }
+        // else {
+        // predecessor = new BlankPredessorView();
+        // }
+        // }
+        // });
+
+        HorizontalLayout hl = new HorizontalLayout();
+        hl.addComponent(select);
+        hl.addComponent(addPredecessorButton);
+        select.setWidth("400px");
+
+        form.addComponent(LayoutHelper.create("Predessor Type", hl, labelWidth,
+            40, false));
+        predecessor = new BlankPredessorView();
+        predecessorLayout =
+            LayoutHelper.create(ViewConstants.PREDECESSORS_LABEL, predecessor,
+                labelWidth, 100, false);
+        form.addComponent(predecessorLayout);
         addFooter();
     }
 
-    // setWriteThrough(false);
-    // setInvalidCommitted(false);
-
-    private OrgUnitAddForm addParentsListSelect() {
+    private OrgUnitAddView addParentsListSelect() {
         // TODO move it to a data source class.
         final List<String> objIds = new ArrayList<String>();
         objIds.add("");
@@ -212,7 +248,7 @@ public class OrgUnitAddForm extends CustomComponent
         return this;
     }
 
-    private OrgUnitAddForm predessorAddButton() {
+    private OrgUnitAddView predessorAddButton() {
         addPredecessorLink = new Button("Add Predecessor");
         addPredecessorLink.setStyleName(Button.STYLE_LINK);
         // addField(ViewConstants.PREDECESSORS_TYPE_ID, addPredecessorLink);
@@ -222,7 +258,7 @@ public class OrgUnitAddForm extends CustomComponent
 
     private ComboBox predecessorTypeComboBox;
 
-    private OrgUnitAddForm predecessorTypeComboBox() {
+    private OrgUnitAddView predecessorTypeComboBox() {
         predecessorTypeComboBox =
             new ComboBox(ViewConstants.PREDECESSORS_TYPE_LABEL,
                 Arrays.asList(PredecessorForm.values()));
@@ -239,7 +275,7 @@ public class OrgUnitAddForm extends CustomComponent
 
     private boolean addPredecessor = false;
 
-    private OrgUnitAddForm removeAddPredecessor() {
+    private OrgUnitAddView removeAddPredecessor() {
         removePredecessor = new Button("Remove");
         removePredecessor.setStyleName(Button.STYLE_LINK);
         // OrgUnitAddForm.this.addField("removeAddPredecessor",
@@ -299,7 +335,7 @@ public class OrgUnitAddForm extends CustomComponent
 
     }
 
-    private OrgUnitAddForm addFooter() {
+    private OrgUnitAddView addFooter() {
         final HorizontalLayout footer = new HorizontalLayout();
         footer.setSpacing(true);
         footer.addComponent(save);
