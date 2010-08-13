@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN" "http://java.sun.com/dtd/web-app_2_3.dtd">
+<web-app id="WebApp_ID">
+	<display-name>eSciDoc AdminTool</display-name>
+	<!--
+		Turn off productionMode (off by default). Setting productionMode=true
+		disables debug features. In when this is off, you can show debug
+		window by adding ?debug to your application URL. Always set this true
+		in production environment.
+	-->
+	<context-param>
+		<param-name>productionMode</param-name>
+		<param-value>false</param-value>
+		<description>Vaadin production mode</description>
+	</context-param>
+	<!-- ApplicationServlet from Vaadin jar will respond to requests. -->
+	<servlet>
+		<servlet-name>AdminTool</servlet-name>
+		<servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
+		<init-param>
+			<param-name>application</param-name>
+			<param-value>de.escidoc.admintool.app.AdminToolApplication</param-value>
+		</init-param>
+	</servlet>
+
+	<!-- Make the servlet respond to all requests. -->
+	<servlet-mapping>
+		<servlet-name>AdminTool</servlet-name>
+		<url-pattern>/*</url-pattern>
+	</servlet-mapping>
+</web-app>
