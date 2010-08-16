@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import com.vaadin.data.Property;
 import com.vaadin.ui.AbstractComponent;
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -24,11 +25,14 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.Window;
 
 import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.service.OrgUnitService;
 import de.escidoc.admintool.view.OrgUnitEditor;
 import de.escidoc.admintool.view.ViewConstants;
+import de.escidoc.admintool.view.orgunit.editor.IPredecessorEditor;
+import de.escidoc.admintool.view.orgunit.predecessor.BlankPredecessorView;
 import de.escidoc.admintool.view.validator.EmptyFieldValidator;
 import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
@@ -98,7 +102,11 @@ public class OrgUnitAddView extends CustomComponent
 
     private HorizontalLayout predecessorLayout;
 
-    private ListSelect select;
+    private final ListSelect select = new ListSelect("",
+        Arrays.asList(new PredecessorType[] { PredecessorType.BLANK,
+            PredecessorType.SPLITTING, PredecessorType.FUSION,
+            PredecessorType.SPIN_OFF, PredecessorType.AFFILIATION,
+            PredecessorType.REPLACEMENT }));
 
     public OrgUnitAddView(final AdminToolApplication app,
         final OrgUnitService service,
@@ -180,13 +188,9 @@ public class OrgUnitAddView extends CustomComponent
         predecessorsListSelect.setWidth("400px");
         predecessorsListSelect.setImmediate(true);
         // Type
-        select =
-            new ListSelect("", Arrays.asList(new String[] { "splitting",
-                "fusion", "spin-off", "affiliation", "replacement" }));
 
         select.setRows(1);
         select.setImmediate(true);
-        // Set the URI Fragment when menu selection changes
         // select.addListener(new Property.ValueChangeListener() {
         // public void valueChange(ValueChangeEvent event) {
         // String itemId = (String) event.getProperty().getValue();
@@ -217,12 +221,55 @@ public class OrgUnitAddView extends CustomComponent
 
         HorizontalLayout hl = new HorizontalLayout();
         hl.addComponent(select);
+        select.setNullSelectionAllowed(false);
+        hl.setComponentAlignment(select, Alignment.TOP_RIGHT);
         hl.addComponent(addPredecessorButton);
+        addPredecessorButton.addListener(new Button.ClickListener() {
+            public void buttonClick(ClickEvent event) {
+
+                try {
+                    Object selectObject = select.getValue();
+                    if (selectObject == null) {
+                        selectObject = PredecessorType.BLANK;
+                    }
+                    Class<?> c =
+                        Class.forName(((PredecessorType) selectObject)
+                            .getExecutionClass());
+                    IPredecessorEditor editor =
+                        (IPredecessorEditor) c.newInstance();
+                    Window window = editor.getWidget();
+                    window.setModal(true);
+                    editor.setParent(app.getMainWindow());
+                    editor.setList(select);
+                    editor.setPredecessorLayout(predecessorLayout);
+                    editor.setPredecessorResult(predecessor);
+                    app.getMainWindow().addWindow(window);
+                }
+                catch (ClassNotFoundException e) {
+                    log.error(
+                        "An unexpected error occured! See log for details.", e);
+                    e.printStackTrace();
+                }
+                catch (InstantiationException e) {
+                    log.error(
+                        "An unexpected error occured! See log for details.", e);
+                    e.printStackTrace();
+
+                }
+                catch (IllegalAccessException e) {
+                    log.error(
+                        "An unexpected error occured! See log for details.", e);
+                    e.printStackTrace();
+
+                }
+            }
+        });
+        hl.setComponentAlignment(addPredecessorButton, Alignment.MIDDLE_LEFT);
         select.setWidth("400px");
 
         form.addComponent(LayoutHelper.create("Predessor Type", hl, labelWidth,
             40, false));
-        predecessor = new BlankPredessorView();
+        predecessor = new BlankPredecessorView();
         predecessorLayout =
             LayoutHelper.create(ViewConstants.PREDECESSORS_LABEL, predecessor,
                 labelWidth, 100, false);

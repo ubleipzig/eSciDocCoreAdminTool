@@ -1,0 +1,10 @@
+String[] ss = {
+    "splitting",
+"fusion",
+"spin-off",
+"affiliation",
+"replacement"};
+
+for (String s : ss){
+    System.out.println(s.toUpperCase()+", ");
+}
