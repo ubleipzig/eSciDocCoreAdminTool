@@ -28,6 +28,10 @@ public class OrgUnitTree extends CustomComponent {
         setCompositionRoot(panel);
     }
 
+    public void setMultiSelect(boolean multiSelect) {
+        tree.setMultiSelect(multiSelect);
+    }
+
     /**
      * Replace me by a call of the service.
      */
