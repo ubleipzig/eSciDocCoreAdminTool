@@ -1,12 +1,6 @@
 package de.escidoc.admintool.view.orgunit.editor;
 
-import java.util.List;
-
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.FormLayout;
-
 import de.escidoc.admintool.view.orgunit.predecessor.ReplacementPredecessorView;
-import de.escidoc.vaadin.dialog.ErrorDialog;
 
 public class ReplacementPredecessorEditor extends AbstractPredecessorEditor {
 
@@ -17,23 +11,8 @@ public class ReplacementPredecessorEditor extends AbstractPredecessorEditor {
 
     private static final long serialVersionUID = 6885054493792037547L;
 
-    private final FormLayout mainLayout = new FormLayout();
-
-    @Override
-    protected void onOkClicked(ClickEvent event) {
-        List<Object> ret = super.getSelected();
-        if (ret.size() != 1) {
-            new ErrorDialog(super.getWidgetParent(), "Grave Error",
-                "Select exact one item, please.");
-        }
-        ReplacementPredecessorView replacementPredecessorView =
-            new ReplacementPredecessorView();
-
-        super.replacePredecessorView(replacementPredecessorView);
-        super.setPredecessorResult(replacementPredecessorView);
-
-        super.getWidgetParent().removeWindow(modalWindow);
-
+    public ReplacementPredecessorEditor() {
+        setMultiSelect(false);
     }
 
     @Override
@@ -44,5 +23,21 @@ public class ReplacementPredecessorEditor extends AbstractPredecessorEditor {
     @Override
     protected String getEditorDescription() {
         return EDITOR_DESCRIPTION;
+    }
+
+    @Override
+    protected boolean isValid(final int sizeOfSelectedOrgUnit) {
+        return sizeOfSelectedOrgUnit == 1;
+    }
+
+    @Override
+    protected void showAddedPredecessors() {
+        orgUnitAddView.showAddedPredecessors(new ReplacementPredecessorView());
+    }
+
+    @Override
+    protected void showErrorMessage() {
+        // TODO Auto-generated method stub
+
     }
 }

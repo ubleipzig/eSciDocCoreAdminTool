@@ -3,15 +3,15 @@ package de.escidoc.admintool.view.orgunit.editor;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CustomComponent;
-import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.Button.ClickEvent;
+
+import de.escidoc.admintool.view.orgunit.OrgUnitAddView;
 
 public class BlankPredecessorEditor extends CustomComponent
     implements IPredecessorEditor {
@@ -36,19 +36,19 @@ public class BlankPredecessorEditor extends CustomComponent
         return modalWindow;
     }
 
-    public void setParent(Window parent) {
+    public void setMainWindow(final Window parent) {
         this.parent = parent;
 
     }
 
-    public void setList(ListSelect select) {
+    public void setList(final ListSelect select) {
     }
 
     private void addListener() {
         okButton.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = -8695976921167275051L;
 
-            public void buttonClick(ClickEvent event) {
+            public void buttonClick(final ClickEvent event) {
                 parent.removeWindow(modalWindow);
             }
         });
@@ -58,13 +58,7 @@ public class BlankPredecessorEditor extends CustomComponent
         return new ArrayList<Object>();
     }
 
-    public void setPredecessorResult(AbstractComponent predecessor) {
-    }
+    public void setOrgUnitAddView(final OrgUnitAddView orgUnitAddView) {
 
-    public void setPredecessorLayout(HorizontalLayout predecessorLayout) {
     }
-
-    public void replacePredecessorView(AbstractComponent predecessor) {
-    }
-
 }

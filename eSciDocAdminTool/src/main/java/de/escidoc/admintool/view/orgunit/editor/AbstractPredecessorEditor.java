@@ -7,17 +7,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.Button.ClickEvent;
 
 import de.escidoc.admintool.view.context.OrgUnitTree;
+import de.escidoc.admintool.view.orgunit.OrgUnitAddView;
 import de.escidoc.admintool.view.orgunit.PredecessorType;
 
 /**
@@ -31,8 +31,6 @@ public abstract class AbstractPredecessorEditor extends CustomComponent
 
     protected final Window modalWindow = new Window();
 
-    private final VerticalLayout fl = new VerticalLayout();
-
     protected HorizontalLayout footer = new HorizontalLayout();
 
     protected Button okButton = new Button("Ok");
@@ -45,17 +43,15 @@ public abstract class AbstractPredecessorEditor extends CustomComponent
 
     private ListSelect select;
 
-    private AbstractComponent predecessor;
+    protected HorizontalLayout predecessorLayout;
 
-    private HorizontalLayout predecessorLayout;
+    protected OrgUnitAddView orgUnitAddView;
 
     public AbstractPredecessorEditor() {
         modalWindow.setCaption(getLabel());
         modalWindow.addComponent(new Label(getEditorDescription()));
         modalWindow.addComponent(tree);
-
-        addFooter();
-        modalWindow.addComponent(footer);
+        modalWindow.addComponent(addFooter());
         addListener();
         setCompositionRoot(new VerticalLayout());
     }
@@ -73,7 +69,7 @@ public abstract class AbstractPredecessorEditor extends CustomComponent
 
             private static final long serialVersionUID = -7640719928940296001L;
 
-            public void buttonClick(ClickEvent event) {
+            public void buttonClick(final ClickEvent event) {
                 onOkClicked(event);
             }
         });
@@ -81,37 +77,57 @@ public abstract class AbstractPredecessorEditor extends CustomComponent
         cancelButton.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = -965029855181433407L;
 
-            public void buttonClick(ClickEvent event) {
+            public void buttonClick(final ClickEvent event) {
                 onCancelClicked(event);
             }
         });
     }
 
-    public List<Object> getSelected() {
-        List<Object> returnVal = new ArrayList<Object>();
-        Object o = getOrgUnitTreeSelectedItems();
-        if (o instanceof Set) {
-            returnVal.addAll((Set) o); // More than one result...
+    protected void onOkClicked(final ClickEvent event) {
+        if (isValid(getSelected().size())) {
+            showAddedPredecessors();
+            closeWindow();
         }
-        else if (o instanceof Object) { // Just one selected.
-            returnVal.add(o);
+        else {
+            showErrorMessage();
         }
-        return returnVal;
     }
 
-    protected abstract void onOkClicked(ClickEvent event);
+    @SuppressWarnings("unchecked")
+    public List<Object> getSelected() {
+        final List<Object> selectedOrgUnits = new ArrayList<Object>();
+        final Object o = tree.getSelectedItems();
+        if (o instanceof Set) {
+            selectedOrgUnits.addAll((Set) o); // More than one result...
+        }
+        else if (o instanceof Object) { // Just one selected.
+            selectedOrgUnits.add(o);
+        }
+        return selectedOrgUnits;
+    }
 
-    protected void onCancelClicked(ClickEvent event) {
-        parent.removeWindow(modalWindow);
+    protected abstract void showErrorMessage();
+
+    protected abstract boolean isValid(int sizeOfSelectedOrgUnit);
+
+    protected abstract void showAddedPredecessors();
+
+    protected void onCancelClicked(final ClickEvent event) {
+        closeWindow();
         select.setValue(PredecessorType.BLANK);
     }
 
-    public void addFooter() {
-        footer.addComponent(okButton);
-        footer.addComponent(cancelButton);
+    private void closeWindow() {
+        parent.removeWindow(modalWindow);
     }
 
-    public void setParent(final Window parent) {
+    public HorizontalLayout addFooter() {
+        footer.addComponent(okButton);
+        footer.addComponent(cancelButton);
+        return footer;
+    }
+
+    public void setMainWindow(final Window parent) {
         this.parent = parent;
     }
 
@@ -119,40 +135,19 @@ public abstract class AbstractPredecessorEditor extends CustomComponent
         this.select = select;
     }
 
-    public Object getOrgUnitTreeSelectedItems() {
-        return tree.getSelectedItems();
-    }
-
-    public void setMultiSelect(boolean multiSelect) {
+    public void setMultiSelect(final boolean multiSelect) {
         tree.setMultiSelect(multiSelect);
     }
 
     /**
      * @return the parent
      */
-    public final Window getWidgetParent() {
+    public final Window getMainWindow() {
         return parent;
     }
 
-    public void setPredecessorResult(AbstractComponent predecessor) {
-        this.predecessor = predecessor;
-    }
-
-    /**
-     * @return the predecessor
-     */
-    public final AbstractComponent getPredecessor() {
-        return predecessor;
-    }
-
-    public void setPredecessorLayout(HorizontalLayout predecessorLayout) {
-        this.predecessorLayout = predecessorLayout;
-    }
-
-    public void replacePredecessorView(AbstractComponent newPredecessor) {
-        this.predecessorLayout.replaceComponent(this.predecessor,
-            newPredecessor);
-        this.predecessor = newPredecessor;
+    public void setOrgUnitAddView(final OrgUnitAddView orgUnitAddView) {
+        this.orgUnitAddView = orgUnitAddView;
     }
 
 }

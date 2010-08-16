@@ -5,10 +5,10 @@ package de.escidoc.admintool.view.orgunit.editor;
 
 import java.util.List;
 
-import com.vaadin.ui.AbstractComponent;
-import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.Window;
+
+import de.escidoc.admintool.view.orgunit.OrgUnitAddView;
 
 /**
  * @author ASP
@@ -17,16 +17,12 @@ import com.vaadin.ui.Window;
 public interface IPredecessorEditor {
     public Window getWidget();
 
-    public void setParent(final Window parent);
+    public void setMainWindow(final Window parent);
 
     public void setList(final ListSelect select);
 
     public List<Object> getSelected();
 
-    public void setPredecessorResult(AbstractComponent predecessor);
-
-    public void setPredecessorLayout(HorizontalLayout predecessorLayout);
-
-    public void replacePredecessorView(AbstractComponent predecessor);
+    public void setOrgUnitAddView(OrgUnitAddView orgUnitAddView);
 
 }

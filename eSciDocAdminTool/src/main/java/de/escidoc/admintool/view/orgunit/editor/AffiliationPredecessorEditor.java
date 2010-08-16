@@ -1,9 +1,5 @@
 package de.escidoc.admintool.view.orgunit.editor;
 
-import java.util.List;
-
-import com.vaadin.ui.Button.ClickEvent;
-
 import de.escidoc.admintool.view.orgunit.predecessor.AffiliationPredecessorView;
 import de.escidoc.vaadin.dialog.ErrorDialog;
 
@@ -16,18 +12,7 @@ public class AffiliationPredecessorEditor extends AbstractPredecessorEditor {
     private static final String LABEL = "Set Predecessor Affiliation";
 
     public AffiliationPredecessorEditor() {
-        super.setMultiSelect(false);
-    }
-
-    @Override
-    protected void onOkClicked(ClickEvent event) {
-        List<Object> ret = super.getSelected();
-        if (ret.size() != 1) {
-            new ErrorDialog(super.getWidgetParent(), "Grave Error",
-                "Select exact one item, please.");
-        }
-        super.replacePredecessorView(new AffiliationPredecessorView());
-        super.getWidgetParent().removeWindow(modalWindow);
+        setMultiSelect(false);
     }
 
     @Override
@@ -38,5 +23,22 @@ public class AffiliationPredecessorEditor extends AbstractPredecessorEditor {
     @Override
     protected String getEditorDescription() {
         return EDITOR_DESCRIPTION;
+    }
+
+    @Override
+    protected boolean isValid(final int sizeOfSelectedOrgUnit) {
+        return sizeOfSelectedOrgUnit == 1;
+    }
+
+    @Override
+    protected void showAddedPredecessors() {
+        orgUnitAddView.showAddedPredecessors(new AffiliationPredecessorView());
+    }
+
+    @Override
+    protected void showErrorMessage() {
+        super.getMainWindow().addWindow(
+            new ErrorDialog(super.getMainWindow(), "Grave Error",
+                "Select at least two items, please."));
     }
 }

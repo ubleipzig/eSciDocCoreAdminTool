@@ -1,24 +1,16 @@
 package de.escidoc.admintool.view.orgunit;
 
-import static de.escidoc.admintool.view.ViewConstants.VISIBLE_PARENTS;
-
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.vaadin.data.Property;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
@@ -26,6 +18,8 @@ import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 
 import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.service.OrgUnitService;
@@ -44,8 +38,9 @@ import de.escidoc.vaadin.utilities.LayoutHelper;
 @SuppressWarnings("serial")
 public class OrgUnitAddView extends CustomComponent
     implements ClickListener, Serializable {
-    private static final Logger log = LoggerFactory
-        .getLogger(OrgUnitAddView.class);
+
+    private static final Logger log =
+        LoggerFactory.getLogger(OrgUnitAddView.class);
 
     private final Button save = new Button("Save", this);
 
@@ -58,8 +53,6 @@ public class OrgUnitAddView extends CustomComponent
     private final Collection<OrganizationalUnit> allOrgUnits;
 
     private final OrgUnitList orgUnitList;
-
-    private Button addPredecessorLink;
 
     private Button removePredecessor;
 
@@ -85,28 +78,23 @@ public class OrgUnitAddView extends CustomComponent
 
     private final ListSelect orgUnitListSelect = new ListSelect();
 
-    private final ListSelect predecessorsListSelect = new ListSelect();
-
     private final Button addOrgUnitButton = new Button(ViewConstants.ADD_LABEL);
 
-    private final Button removeOrgUnitButton = new Button(
-        ViewConstants.REMOVE_LABEL);
+    private final Button removeOrgUnitButton =
+        new Button(ViewConstants.REMOVE_LABEL);
 
-    private final Button addPredecessorButton = new Button(
-        ViewConstants.ADD_LABEL);
+    private final Button addPredecessorButton =
+        new Button(ViewConstants.ADD_LABEL);
 
-    private final Button removePredecessorButton = new Button(
-        ViewConstants.REMOVE_LABEL);
-
-    private AbstractComponent predecessor;
+    private AbstractComponent predecessorResult;
 
     private HorizontalLayout predecessorLayout;
 
-    private final ListSelect select = new ListSelect("",
-        Arrays.asList(new PredecessorType[] { PredecessorType.BLANK,
-            PredecessorType.SPLITTING, PredecessorType.FUSION,
-            PredecessorType.SPIN_OFF, PredecessorType.AFFILIATION,
-            PredecessorType.REPLACEMENT }));
+    private final ListSelect predecessorTypeSelect =
+        new ListSelect("", Arrays.asList(new PredecessorType[] {
+            PredecessorType.BLANK, PredecessorType.SPLITTING,
+            PredecessorType.FUSION, PredecessorType.SPIN_OFF,
+            PredecessorType.AFFILIATION, PredecessorType.REPLACEMENT }));
 
     public OrgUnitAddView(final AdminToolApplication app,
         final OrgUnitService service,
@@ -123,7 +111,7 @@ public class OrgUnitAddView extends CustomComponent
         setCompositionRoot(panel);
         panel.setCaption("Add " + ViewConstants.ORGANIZATION_UNITS_LABEL);
         panel.setContent(form);
-        int labelWidth = 140;
+        final int labelWidth = 140;
 
         // Title
         titleField.setWidth("400px");
@@ -179,18 +167,6 @@ public class OrgUnitAddView extends CustomComponent
                 addOrgUnitButton, removeOrgUnitButton), labelWidth, 100, false,
             new Button[] { addOrgUnitButton, removeOrgUnitButton }));
 
-        // predecessor
-        predecessorsListSelect.setRows(VISIBLE_PARENTS);
-        predecessorsListSelect.setMultiSelect(true);
-        predecessorsListSelect.setVisible(true);
-        predecessorsListSelect.setNullSelectionAllowed(true);
-        predecessorsListSelect.setRows(5);
-        predecessorsListSelect.setWidth("400px");
-        predecessorsListSelect.setImmediate(true);
-        // Type
-
-        select.setRows(1);
-        select.setImmediate(true);
         // select.addListener(new Property.ValueChangeListener() {
         // public void valueChange(ValueChangeEvent event) {
         // String itemId = (String) event.getProperty().getValue();
@@ -219,167 +195,72 @@ public class OrgUnitAddView extends CustomComponent
         // }
         // });
 
-        HorizontalLayout hl = new HorizontalLayout();
-        hl.addComponent(select);
-        select.setNullSelectionAllowed(false);
-        hl.setComponentAlignment(select, Alignment.TOP_RIGHT);
+        // Predecessor Type
+        predecessorTypeSelect.setRows(1);
+        predecessorTypeSelect.setImmediate(true);
+        predecessorTypeSelect.setNullSelectionAllowed(false);
+
+        final HorizontalLayout hl = new HorizontalLayout();
+        hl.addComponent(predecessorTypeSelect);
+        hl.setComponentAlignment(predecessorTypeSelect, Alignment.TOP_RIGHT);
         hl.addComponent(addPredecessorButton);
-        addPredecessorButton.addListener(new Button.ClickListener() {
-            public void buttonClick(ClickEvent event) {
-
-                try {
-                    Object selectObject = select.getValue();
-                    if (selectObject == null) {
-                        selectObject = PredecessorType.BLANK;
-                    }
-                    Class<?> c =
-                        Class.forName(((PredecessorType) selectObject)
-                            .getExecutionClass());
-                    IPredecessorEditor editor =
-                        (IPredecessorEditor) c.newInstance();
-                    Window window = editor.getWidget();
-                    window.setModal(true);
-                    editor.setParent(app.getMainWindow());
-                    editor.setList(select);
-                    editor.setPredecessorLayout(predecessorLayout);
-                    editor.setPredecessorResult(predecessor);
-                    app.getMainWindow().addWindow(window);
-                }
-                catch (ClassNotFoundException e) {
-                    log.error(
-                        "An unexpected error occured! See log for details.", e);
-                    e.printStackTrace();
-                }
-                catch (InstantiationException e) {
-                    log.error(
-                        "An unexpected error occured! See log for details.", e);
-                    e.printStackTrace();
-
-                }
-                catch (IllegalAccessException e) {
-                    log.error(
-                        "An unexpected error occured! See log for details.", e);
-                    e.printStackTrace();
-
-                }
-            }
-        });
         hl.setComponentAlignment(addPredecessorButton, Alignment.MIDDLE_LEFT);
-        select.setWidth("400px");
+        predecessorTypeSelect.setWidth("400px");
 
         form.addComponent(LayoutHelper.create("Predessor Type", hl, labelWidth,
             40, false));
-        predecessor = new BlankPredecessorView();
+        predecessorResult = new BlankPredecessorView();
         predecessorLayout =
-            LayoutHelper.create(ViewConstants.PREDECESSORS_LABEL, predecessor,
-                labelWidth, 100, false);
+            LayoutHelper.create(ViewConstants.PREDECESSORS_LABEL,
+                predecessorResult, labelWidth, 100, false);
         form.addComponent(predecessorLayout);
+
+        addPredecessorButton.addListener(new Button.ClickListener() {
+            public void buttonClick(final ClickEvent event) {
+                onAddPredecessorClicked();
+            }
+        });
         addFooter();
     }
 
-    private OrgUnitAddView addParentsListSelect() {
-        // TODO move it to a data source class.
-        final List<String> objIds = new ArrayList<String>();
-        objIds.add("");
-        for (final OrganizationalUnit ou : allOrgUnits) {
-            objIds.add(ou.getObjid());
-        }
-        final ListSelect parentListSelect = new ListSelect("Parents", objIds);
-
-        parentListSelect.setRows(VISIBLE_PARENTS);
-        parentListSelect.setNullSelectionAllowed(true);
-        parentListSelect.setMultiSelect(true);
-        parentListSelect.setWidth("200px");
-        // addField(PARENTS_ID, parentListSelect);
-
-        return this;
-    }
-
-    private OrgUnitAddView predessorAddButton() {
-        addPredecessorLink = new Button("Add Predecessor");
-        addPredecessorLink.setStyleName(Button.STYLE_LINK);
-        // addField(ViewConstants.PREDECESSORS_TYPE_ID, addPredecessorLink);
-        addPredecessorLink.addListener(new AddPredecessorListener());
-        return this;
-    }
-
-    private ComboBox predecessorTypeComboBox;
-
-    private OrgUnitAddView predecessorTypeComboBox() {
-        predecessorTypeComboBox =
-            new ComboBox(ViewConstants.PREDECESSORS_TYPE_LABEL,
-                Arrays.asList(PredecessorForm.values()));
-        // OrgUnitAddForm.this.addField(ViewConstants.PREDECESSORS_TYPE_ID,
-        // predecessorTypeComboBox);
-        predecessorTypeComboBox.setImmediate(true);
-        predecessorTypeComboBox.setVisible(false);
-        predecessorTypeComboBox
-            .addListener(new PredecessorTypeComboBoxListener());
-        return this;
-    }
-
-    private List<String> objIds;
-
-    private boolean addPredecessor = false;
-
-    private OrgUnitAddView removeAddPredecessor() {
-        removePredecessor = new Button("Remove");
-        removePredecessor.setStyleName(Button.STYLE_LINK);
-        // OrgUnitAddForm.this.addField("removeAddPredecessor",
-        // removePredecessor);
-        removePredecessor.addListener(new RemoveAddPredecessorListener());
-        removePredecessor.setVisible(false);
-        addPredecessor = false;
-        return this;
-    }
-
-    private class RemoveAddPredecessorListener implements ClickListener {
-
-        public void buttonClick(final ClickEvent event) {
-            System.out.println("discard all changes.");
-            predecessorTypeComboBox.discard();
-            predecessorTypeComboBox.setVisible(false);
-
-            predecessorsListSelect.discard();
-            predecessorsListSelect.setVisible(false);
-
-            removePredecessor.setVisible(false);
-
-            addPredecessorLink.addListener(new AddPredecessorListener());
-        }
-    }
-
-    private class PredecessorTypeComboBoxListener
-        implements Property.ValueChangeListener {
-
-        public void valueChange(
-            final com.vaadin.data.Property.ValueChangeEvent event) {
-
-            final PredecessorForm selected =
-                (PredecessorForm) event.getProperty().getValue();
-
-            if (selected.equals(PredecessorForm.FUSION)) {
-                showMultipleSelection();
+    private void onAddPredecessorClicked() {
+        try {
+            Object selectObject = predecessorTypeSelect.getValue();
+            if (selectObject == null) {
+                selectObject = PredecessorType.BLANK;
             }
-            else {
-                showMultipleSelection();
-            }
+            final Class<?> c =
+                Class.forName(((PredecessorType) selectObject)
+                    .getExecutionClass());
+            final IPredecessorEditor editor =
+                (IPredecessorEditor) c.newInstance();
+            final Window window = editor.getWidget();
+            window.setModal(true);
+            editor.setMainWindow(app.getMainWindow());
+            editor.setList(predecessorTypeSelect);
+            editor.setOrgUnitAddView(this);
+            app.getMainWindow().addWindow(window);
         }
+        catch (final ClassNotFoundException e) {
+            log.error("An unexpected error occured! See log for details.", e);
+            e.printStackTrace();
+        }
+        catch (final InstantiationException e) {
+            log.error("An unexpected error occured! See log for details.", e);
+            e.printStackTrace();
 
-        private void showMultipleSelection() {
-            predecessorsListSelect.setVisible(true);
+        }
+        catch (final IllegalAccessException e) {
+            log.error("An unexpected error occured! See log for details.", e);
+            e.printStackTrace();
         }
     }
 
-    private class AddPredecessorListener implements ClickListener {
-
-        public void buttonClick(final ClickEvent event) {
-            predecessorTypeComboBox.setVisible(true);
-            removePredecessor.setVisible(true);
-            addPredecessorLink.removeListener(this);
-            addPredecessor = true;
-        }
-
+    public void showAddedPredecessors(
+        final AbstractComponent addedPredecessorView) {
+        predecessorLayout.replaceComponent(predecessorResult,
+            addedPredecessorView);
+        predecessorResult = addedPredecessorView;
     }
 
     private OrgUnitAddView addFooter() {
@@ -387,7 +268,6 @@ public class OrgUnitAddView extends CustomComponent
         footer.setSpacing(true);
         footer.addComponent(save);
         footer.addComponent(cancel);
-        // setFooter(footer);
         return this;
     }
 
@@ -440,9 +320,10 @@ public class OrgUnitAddView extends CustomComponent
         // final Set<String> parents =
         // (Set<String>) getField(PARENTS_ID).getValue();
 
-        Set<String> predecessors = null;
-        PredecessorForm predecessorType = null;
+        final Set<String> predecessors = null;
+        final PredecessorForm predecessorType = null;
 
+        final boolean addPredecessor = false;
         // TODO fix this! due possible bug in Vaadin.
         if (addPredecessor) {
             System.out.println("adding");
@@ -528,4 +409,5 @@ public class OrgUnitAddView extends CustomComponent
         save.setVisible(!readOnly);
         cancel.setVisible(!readOnly);
     }
+
 }
