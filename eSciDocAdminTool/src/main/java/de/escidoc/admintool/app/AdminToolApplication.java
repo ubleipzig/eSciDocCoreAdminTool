@@ -15,12 +15,12 @@ import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.service.ApplicationContext;
 import com.vaadin.terminal.ThemeResource;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.SplitPanel;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 
 import de.escidoc.admintool.service.ContextService;
 import de.escidoc.admintool.service.OrgUnitService;
@@ -57,8 +57,8 @@ import de.escidoc.vaadin.dialog.ErrorDialog;
 public class AdminToolApplication extends Application
     implements ApplicationContext.TransactionListener, ClickListener,
     ValueChangeListener, ItemClickListener {
-    private final Logger log = LoggerFactory
-        .getLogger(AdminToolApplication.class);
+    private final Logger log =
+        LoggerFactory.getLogger(AdminToolApplication.class);
 
     @Override
     public void init() {
@@ -214,8 +214,8 @@ public class AdminToolApplication extends Application
 
     private final NavigationTree tree = new NavigationTree(this);
 
-    private final SplitPanel horizontalSplit = new SplitPanel(
-        SplitPanel.ORIENTATION_HORIZONTAL);
+    private final SplitPanel horizontalSplit =
+        new SplitPanel(SplitPanel.ORIENTATION_HORIZONTAL);
 
     private void buildMainLayout() {
         final Window window = new Window("Admin Tool Prototype");
@@ -351,7 +351,7 @@ public class AdminToolApplication extends Application
                     e);
                 e.printStackTrace();
             }
-            catch (Exception e) {
+            catch (final Exception e) {
                 new ErrorDialog(getMainWindow(), "Error", e.getMessage());
             }
             orgUnitView =
@@ -424,8 +424,8 @@ public class AdminToolApplication extends Application
     // TODO fix this, why do we have to create the add form every time?
     private OrgUnitAddView getOrganizationalUnitAddForm() {
         orgUnitAddForm =
-            new OrgUnitAddView(this, orgUnitService,
-                orgUnitList.getAllOrgUnits(), orgUnitList);
+            new OrgUnitAddView(this, orgUnitService, orgUnitList
+                .getAllOrgUnits(), orgUnitList);
         return orgUnitAddForm;
     }
 
@@ -437,6 +437,7 @@ public class AdminToolApplication extends Application
 
             if (item != orgUnitEditForm.getItemDataSource()) {
                 orgUnitEditForm.setItemDataSource(item);
+                orgUnitView.showEditView(item);
             }
         }
         else if (property == contextList) {
@@ -527,7 +528,7 @@ public class AdminToolApplication extends Application
 
     public Component newOrgUnitAddView() throws EscidocException,
         InternalClientException, TransportException {
-        return new OrgUnitAddView(this, orgUnitService,
-            orgUnitService.getOrganizationalUnits(), orgUnitList);
+        return new OrgUnitAddView(this, orgUnitService, orgUnitService
+            .getOrganizationalUnits(), orgUnitList);
     }
 }

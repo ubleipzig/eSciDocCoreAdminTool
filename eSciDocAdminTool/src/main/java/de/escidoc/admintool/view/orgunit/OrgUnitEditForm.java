@@ -2,12 +2,10 @@ package de.escidoc.admintool.view.orgunit;
 
 import static de.escidoc.admintool.view.ViewConstants.CITY_ID;
 import static de.escidoc.admintool.view.ViewConstants.COUNTRY_ID;
-import static de.escidoc.admintool.view.ViewConstants.CREATED_ON_ID;
 import static de.escidoc.admintool.view.ViewConstants.ORG_TYPE_ID;
 import static de.escidoc.admintool.view.ViewConstants.PARENTS_ID;
 
 import java.io.IOException;
-import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
@@ -18,17 +16,15 @@ import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
 import com.vaadin.data.Item;
+import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.Component;
-import com.vaadin.ui.DefaultFieldFactory;
-import com.vaadin.ui.Field;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.ListSelect;
-import com.vaadin.ui.PopupDateField;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.TextField;
 import com.vaadin.ui.TwinColSelect;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 
 import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.domain.OrgUnitFactory;
@@ -38,17 +34,34 @@ import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
 import de.escidoc.core.resources.oum.OrganizationalUnit;
+import de.escidoc.vaadin.utilities.Converter;
 
 @SuppressWarnings("serial")
 public class OrgUnitEditForm extends Form implements ClickListener {
-    private static final Logger log = LoggerFactory
-        .getLogger(OrgUnitEditForm.class);
+    private static final Logger log =
+        LoggerFactory.getLogger(OrgUnitEditForm.class);
 
     private final Button save = new Button("Save", (ClickListener) this);
 
     private final Button cancel = new Button("Cancel", (ClickListener) this);
 
     private final Button edit = new Button("Edit", (ClickListener) this);
+
+    private final HorizontalLayout footer = new HorizontalLayout();
+
+    private final AbstractField nameField = new TextField();
+
+    private final Label objIdField = new Label("OBJ");
+
+    private final Label modifiedOn = new Label();
+
+    private final Label modifiedBy = new Label();
+
+    private final Label createdOn = new Label();
+
+    private final Label createdBy = new Label();
+
+    private Item item;
 
     private final AdminToolApplication app;
 
@@ -64,14 +77,13 @@ public class OrgUnitEditForm extends Form implements ClickListener {
         final OrgUnitService service) throws EscidocException,
         InternalClientException, TransportException,
         UnsupportedOperationException {
-
         assert service != null : "Service must not be null.";
         assert app != null : "Aervice must not be null.";
 
         this.app = app;
         this.service = service;
-        buildUI();
 
+        buildUI();
         setWriteThrough(false);
 
         orgUnitById = service.getOrgUnitById();
@@ -85,68 +97,18 @@ public class OrgUnitEditForm extends Form implements ClickListener {
     // TODO duplicate, create an abstract class
     private void buildUI() {
         addFooter();
-        buildCustomFields();
 
-        setWriteThrough(false);
-        setInvalidCommitted(false);
-        // TODO test if it works.
-        setImmediate(true);
-        setValidationVisible(true);
-
+        // setWriteThrough(false);
+        // setInvalidCommitted(false);
+        // // TODO test if it works.
+        // setImmediate(true);
+        // setValidationVisible(true);
     }
 
-    private final TwinColSelect parents = new TwinColSelect(
-        ViewConstants.PARENTS_LABEL);
-
-    private void buildCustomFields() {
-        setFormFieldFactory(new DefaultFieldFactory() {
-
-            @Override
-            public Field createField(
-                final Item item, final Object propertyId,
-                final Component uiContext) {
-
-                final Field field =
-                    super.createField(item, propertyId, uiContext);
-                if (propertyId.equals(ViewConstants.PARENTS_ID)) {
-                    return parents;
-                }
-
-                else if (propertyId.equals(ViewConstants.PREDECESSORS_ID)) {
-                    final ListSelect predecessors =
-                        new ListSelect(ViewConstants.PREDECESSORS_LABEL);
-                    predecessors.setRows(3);
-                    predecessors.setWidth("200px");
-
-                    final OrganizationalUnit organizationalUnit =
-                        orgUnitById.get(OrgUnitEditForm.this
-                            .getSelectedOrgUnitId());
-
-                    final Collection<String> predecessorsObjectId =
-                        service.getPredecessorsObjectId(organizationalUnit);
-                    for (final String predecessorId : predecessorsObjectId) {
-                        predecessors.addItem(predecessorId);
-                    }
-                    return predecessors;
-                }
-
-                if (propertyId.equals(ViewConstants.CREATED_ON_ID)
-                    || propertyId.equals(ViewConstants.MODIFIED_ON_ID)) {
-                    final PopupDateField popUpDateField =
-                        new PopupDateField(ViewConstants.MODIFIED_ON_LABEL);
-                    popUpDateField.setResolution(PopupDateField.RESOLUTION_DAY);
-
-                    return popUpDateField;
-                }
-
-                field.setWidth("400px");
-                return field;
-            }
-        });
-    }
+    private final TwinColSelect parents =
+        new TwinColSelect(ViewConstants.PARENTS_LABEL);
 
     private void addFooter() {
-        final HorizontalLayout footer = new HorizontalLayout();
         footer.setSpacing(true);
         footer.addComponent(save);
         footer.addComponent(cancel);
@@ -247,10 +209,8 @@ public class OrgUnitEditForm extends Form implements ClickListener {
                     (String) getField(ViewConstants.ALTERNATIVE_ID).getValue())
                 .identifier(
                     (String) getField(ViewConstants.IDENTIFIER_ID).getValue())
-                .orgType((String) getField(ORG_TYPE_ID).getValue())
-                .country(country)
-                .city(city)
-                .coordinates(
+                .orgType((String) getField(ORG_TYPE_ID).getValue()).country(
+                    country).city(city).coordinates(
                     (String) getField(ViewConstants.COORDINATES_ID).getValue())
                 .parents(parents).build();
 
@@ -264,32 +224,51 @@ public class OrgUnitEditForm extends Form implements ClickListener {
         return objid;
     }
 
-    @Override
-    public void setItemDataSource(final Item newDataSource) {
-        newContactMode = false;
-        if (newDataSource != null) {
-            super.setItemDataSource(newDataSource);
-
-            setReadOnly(true);
-            getFooter().setVisible(true);
-        }
-        else {
-            super.setItemDataSource(null);
-            getFooter().setVisible(false);
-        }
-    }
+    // @Override
+    // public void setItemDataSource(final Item newDataSource) {
+    // newContactMode = false;
+    // if (newDataSource != null) {
+    // super.setItemDataSource(newDataSource);
+    //
+    // setReadOnly(true);
+    // getFooter().setVisible(true);
+    // }
+    // else {
+    // super.setItemDataSource(null);
+    // getFooter().setVisible(false);
+    // }
+    // }
 
     @Override
     public void setReadOnly(final boolean readOnly) {
         super.setReadOnly(readOnly);
-        getField(ViewConstants.OBJECT_ID).setReadOnly(true);
-        getField(CREATED_ON_ID).setReadOnly(true);
-        getField(ViewConstants.CREATED_BY_ID).setReadOnly(true);
-        getField(ViewConstants.MODIFIED_ON_ID).setReadOnly(true);
-        getField(ViewConstants.MODIFIED_BY_ID).setReadOnly(true);
+        // getField(ViewConstants.OBJECT_ID).setReadOnly(true);
+        // getField(CREATED_ON_ID).setReadOnly(true);
+        // getField(ViewConstants.CREATED_BY_ID).setReadOnly(true);
+        // getField(ViewConstants.MODIFIED_ON_ID).setReadOnly(true);
+        // getField(ViewConstants.MODIFIED_BY_ID).setReadOnly(true);
 
         save.setVisible(!readOnly);
         cancel.setVisible(!readOnly);
         edit.setVisible(readOnly);
+    }
+
+    public void setSelected(final Item item) {
+        this.item = item;
+        if (item != null) {
+            nameField.setPropertyDataSource(item
+                .getItemProperty(ViewConstants.NAME_ID));
+            objIdField.setPropertyDataSource(item.getItemProperty("objid"));
+            modifiedOn.setCaption(Converter
+                .dateTimeToString((org.joda.time.DateTime) item
+                    .getItemProperty("lastModificationDate").getValue()));
+            modifiedBy.setPropertyDataSource(item
+                .getItemProperty("properties.modifiedBy.objid"));
+            createdOn.setCaption(Converter
+                .dateTimeToString((org.joda.time.DateTime) item
+                    .getItemProperty("properties.creationDate").getValue()));
+            createdBy.setPropertyDataSource(item
+                .getItemProperty("properties.createdBy.objid"));
+        }
     }
 }
