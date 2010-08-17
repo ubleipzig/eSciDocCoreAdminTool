@@ -19,7 +19,7 @@ public class BlankPredecessorView extends CustomComponent {
     public BlankPredecessorView() {
         buildMainLayout();
         setCompositionRoot(mainLayout);
-        mainLayout.addComponent(new Label("BlankPredeccesorView"));
+        mainLayout.addComponent(new Label("&nbsp;", Label.CONTENT_XHTML));
     }
 
     private void buildMainLayout() {

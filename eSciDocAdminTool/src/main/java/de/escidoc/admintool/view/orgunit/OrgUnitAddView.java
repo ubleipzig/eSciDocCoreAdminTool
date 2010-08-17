@@ -11,6 +11,8 @@ import org.slf4j.LoggerFactory;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
@@ -18,8 +20,6 @@ import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 
 import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.service.OrgUnitService;
@@ -33,14 +33,15 @@ import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
 import de.escidoc.core.resources.oum.OrganizationalUnit;
 import de.escidoc.core.resources.oum.PredecessorForm;
+import de.escidoc.vaadin.dialog.ErrorDialog;
 import de.escidoc.vaadin.utilities.LayoutHelper;
 
 @SuppressWarnings("serial")
 public class OrgUnitAddView extends CustomComponent
     implements ClickListener, Serializable {
 
-    private static final Logger log =
-        LoggerFactory.getLogger(OrgUnitAddView.class);
+    private static final Logger log = LoggerFactory
+        .getLogger(OrgUnitAddView.class);
 
     private final Button save = new Button("Save", this);
 
@@ -53,8 +54,6 @@ public class OrgUnitAddView extends CustomComponent
     private final Collection<OrganizationalUnit> allOrgUnits;
 
     private final OrgUnitList orgUnitList;
-
-    private Button removePredecessor;
 
     private final FormLayout form = new FormLayout();
 
@@ -80,21 +79,23 @@ public class OrgUnitAddView extends CustomComponent
 
     private final Button addOrgUnitButton = new Button(ViewConstants.ADD_LABEL);
 
-    private final Button removeOrgUnitButton =
-        new Button(ViewConstants.REMOVE_LABEL);
+    private final Button removeOrgUnitButton = new Button(
+        ViewConstants.REMOVE_LABEL);
 
-    private final Button addPredecessorButton =
-        new Button(ViewConstants.ADD_LABEL);
+    private final Button addPredecessorButton = new Button(
+        ViewConstants.ADD_LABEL);
 
     private AbstractComponent predecessorResult;
 
     private HorizontalLayout predecessorLayout;
 
-    private final ListSelect predecessorTypeSelect =
-        new ListSelect("", Arrays.asList(new PredecessorType[] {
-            PredecessorType.BLANK, PredecessorType.SPLITTING,
-            PredecessorType.FUSION, PredecessorType.SPIN_OFF,
-            PredecessorType.AFFILIATION, PredecessorType.REPLACEMENT }));
+    final HorizontalLayout footer = new HorizontalLayout();
+
+    private final ListSelect predecessorTypeSelect = new ListSelect("",
+        Arrays.asList(new PredecessorType[] { PredecessorType.BLANK,
+            PredecessorType.SPLITTING, PredecessorType.FUSION,
+            PredecessorType.SPIN_OFF, PredecessorType.AFFILIATION,
+            PredecessorType.REPLACEMENT }));
 
     public OrgUnitAddView(final AdminToolApplication app,
         final OrgUnitService service,
@@ -111,12 +112,14 @@ public class OrgUnitAddView extends CustomComponent
         setCompositionRoot(panel);
         panel.setCaption("Add " + ViewConstants.ORGANIZATION_UNITS_LABEL);
         panel.setContent(form);
+        panel.setSizeUndefined();
         final int labelWidth = 140;
 
         // Title
         titleField.setWidth("400px");
         form.addComponent(LayoutHelper.create(ViewConstants.TITLE_LABEL,
             titleField, labelWidth, true));
+        titleField.focus();
         // titleProperty = mapBinding("", titleField);
 
         // Description
@@ -167,34 +170,6 @@ public class OrgUnitAddView extends CustomComponent
                 addOrgUnitButton, removeOrgUnitButton), labelWidth, 100, false,
             new Button[] { addOrgUnitButton, removeOrgUnitButton }));
 
-        // select.addListener(new Property.ValueChangeListener() {
-        // public void valueChange(ValueChangeEvent event) {
-        // String itemId = (String) event.getProperty().getValue();
-        // if (itemId.equals("splitting")) {
-        // predecessorLayout.replaceComponent(predecessor,
-        // predecessor = new SplittingPredeccesorView());
-        //
-        // }
-        // else if (itemId.equals("fusion")) {
-        // predecessorLayout.replaceComponent(predecessor,
-        // predecessor = new FusionPredeccesorView());
-        // }
-        // else if (itemId.equals("spin-off")) {
-        // predecessorLayout.replaceComponent(predecessor,
-        // predecessor = new SpinOffPredessorView());
-        // }
-        // else if (itemId.equals("affiliation")) {
-        // // predecessor
-        // }
-        // else if (itemId.equals("replacement")) {
-        // //
-        // }
-        // else {
-        // predecessor = new BlankPredessorView();
-        // }
-        // }
-        // });
-
         // Predecessor Type
         predecessorTypeSelect.setRows(1);
         predecessorTypeSelect.setImmediate(true);
@@ -213,6 +188,7 @@ public class OrgUnitAddView extends CustomComponent
         predecessorLayout =
             LayoutHelper.create(ViewConstants.PREDECESSORS_LABEL,
                 predecessorResult, labelWidth, 100, false);
+        predecessorLayout.setSizeFull();
         form.addComponent(predecessorLayout);
 
         addPredecessorButton.addListener(new Button.ClickListener() {
@@ -220,26 +196,36 @@ public class OrgUnitAddView extends CustomComponent
                 onAddPredecessorClicked();
             }
         });
-        addFooter();
+        form.addComponent(addFooter());
     }
 
     private void onAddPredecessorClicked() {
         try {
-            Object selectObject = predecessorTypeSelect.getValue();
-            if (selectObject == null) {
-                selectObject = PredecessorType.BLANK;
+            if (titleField.getValue() != null
+                && (!((String) titleField.getValue()).isEmpty())) {
+                Object selectObject = predecessorTypeSelect.getValue();
+                if (selectObject == null) {
+                    selectObject = PredecessorType.BLANK;
+                }
+                final Class<?> c =
+                    Class.forName(((PredecessorType) selectObject)
+                        .getExecutionClass());
+                final IPredecessorEditor editor =
+                    (IPredecessorEditor) c.newInstance();
+                editor.setNewOrgUnit((String) titleField.getValue());
+                final Window window = editor.getWidget();
+                window.setModal(true);
+                editor.setMainWindow(app.getMainWindow());
+                editor.setList(predecessorTypeSelect);
+                editor.setOrgUnitAddView(this);
+                app.getMainWindow().addWindow(window);
             }
-            final Class<?> c =
-                Class.forName(((PredecessorType) selectObject)
-                    .getExecutionClass());
-            final IPredecessorEditor editor =
-                (IPredecessorEditor) c.newInstance();
-            final Window window = editor.getWidget();
-            window.setModal(true);
-            editor.setMainWindow(app.getMainWindow());
-            editor.setList(predecessorTypeSelect);
-            editor.setOrgUnitAddView(this);
-            app.getMainWindow().addWindow(window);
+            else {
+                app.getMainWindow().addWindow(
+                    new ErrorDialog(app.getMainWindow(), "Error",
+                        "Enter a title first, please."));
+
+            }
         }
         catch (final ClassNotFoundException e) {
             log.error("An unexpected error occured! See log for details.", e);
@@ -263,12 +249,11 @@ public class OrgUnitAddView extends CustomComponent
         predecessorResult = addedPredecessorView;
     }
 
-    private OrgUnitAddView addFooter() {
-        final HorizontalLayout footer = new HorizontalLayout();
+    private HorizontalLayout addFooter() {
         footer.setSpacing(true);
         footer.addComponent(save);
         footer.addComponent(cancel);
-        return this;
+        return footer;
     }
 
     public void buttonClick(final ClickEvent event) {

@@ -8,13 +8,13 @@ import java.util.List;
 import java.util.Set;
 
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
-import com.vaadin.ui.Button.ClickEvent;
 
 import de.escidoc.admintool.view.context.OrgUnitTree;
 import de.escidoc.admintool.view.orgunit.OrgUnitAddView;
@@ -47,10 +47,13 @@ public abstract class AbstractPredecessorEditor extends CustomComponent
 
     protected OrgUnitAddView orgUnitAddView;
 
+    private String orgUnitName;
+
     public AbstractPredecessorEditor() {
         modalWindow.setCaption(getLabel());
         modalWindow.addComponent(new Label(getEditorDescription()));
         modalWindow.addComponent(tree);
+
         modalWindow.addComponent(addFooter());
         addListener();
         setCompositionRoot(new VerticalLayout());
@@ -148,6 +151,17 @@ public abstract class AbstractPredecessorEditor extends CustomComponent
 
     public void setOrgUnitAddView(final OrgUnitAddView orgUnitAddView) {
         this.orgUnitAddView = orgUnitAddView;
+    }
+
+    public void setNewOrgUnit(final String orgUnitName) {
+        this.orgUnitName = orgUnitName;
+    }
+
+    /**
+     * @return the orgUnitName
+     */
+    public final String getOrgUnitName() {
+        return orgUnitName;
     }
 
 }

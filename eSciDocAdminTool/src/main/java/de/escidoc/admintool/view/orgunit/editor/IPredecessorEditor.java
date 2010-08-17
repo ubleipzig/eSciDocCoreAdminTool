@@ -25,4 +25,5 @@ public interface IPredecessorEditor {
 
     public void setOrgUnitAddView(OrgUnitAddView orgUnitAddView);
 
+    public void setNewOrgUnit(String orgUnitName);
 }

@@ -24,7 +24,10 @@ public class FusionPredecessorEditor extends AbstractPredecessorEditor {
 
     @Override
     protected void showAddedPredecessors() {
-        orgUnitAddView.showAddedPredecessors(new FusionPredecessorView());
+        FusionPredecessorView addedPredecessorView =
+            new FusionPredecessorView(super.getSelected(),
+                super.getOrgUnitName());
+        orgUnitAddView.showAddedPredecessors(addedPredecessorView);
     }
 
     @Override

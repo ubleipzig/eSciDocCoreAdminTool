@@ -1,5 +1,8 @@
 package de.escidoc.admintool.view.orgunit.editor;
 
+import java.util.ArrayList;
+
+import de.escidoc.admintool.view.orgunit.predecessor.AbstractPredecessorView;
 import de.escidoc.admintool.view.orgunit.predecessor.SpinOffPredecessorView;
 import de.escidoc.vaadin.dialog.ErrorDialog;
 
@@ -35,7 +38,11 @@ public class SpinOffPPredecessorEditor extends AbstractPredecessorEditor
 
     @Override
     protected void showAddedPredecessors() {
-        orgUnitAddView.showAddedPredecessors(new SpinOffPredecessorView());
+        ArrayList<Object> l = (ArrayList<Object>) super.getSelected();
+        AbstractPredecessorView addedPredecessorView =
+            new SpinOffPredecessorView((String) l.get(0),
+                super.getOrgUnitName());
+        orgUnitAddView.showAddedPredecessors(addedPredecessorView);
     }
 
     @Override

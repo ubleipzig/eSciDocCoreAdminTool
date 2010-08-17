@@ -1,5 +1,8 @@
 package de.escidoc.admintool.view.orgunit.editor;
 
+import java.util.ArrayList;
+
+import de.escidoc.admintool.view.orgunit.predecessor.AbstractPredecessorView;
 import de.escidoc.admintool.view.orgunit.predecessor.ReplacementPredecessorView;
 
 public class ReplacementPredecessorEditor extends AbstractPredecessorEditor {
@@ -32,7 +35,11 @@ public class ReplacementPredecessorEditor extends AbstractPredecessorEditor {
 
     @Override
     protected void showAddedPredecessors() {
-        orgUnitAddView.showAddedPredecessors(new ReplacementPredecessorView());
+        ArrayList<Object> l = (ArrayList<Object>) super.getSelected();
+        AbstractPredecessorView addedPredecessorView =
+            new ReplacementPredecessorView((String) l.get(0),
+                super.getOrgUnitName());
+        orgUnitAddView.showAddedPredecessors(addedPredecessorView);
     }
 
     @Override

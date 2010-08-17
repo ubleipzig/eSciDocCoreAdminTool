@@ -1,5 +1,6 @@
 package de.escidoc.admintool.view.orgunit.editor;
 
+import de.escidoc.admintool.view.orgunit.predecessor.AbstractPredecessorView;
 import de.escidoc.admintool.view.orgunit.predecessor.AffiliationPredecessorView;
 import de.escidoc.vaadin.dialog.ErrorDialog;
 
@@ -32,7 +33,10 @@ public class AffiliationPredecessorEditor extends AbstractPredecessorEditor {
 
     @Override
     protected void showAddedPredecessors() {
-        orgUnitAddView.showAddedPredecessors(new AffiliationPredecessorView());
+        AbstractPredecessorView addedPredecessorView =
+            new AffiliationPredecessorView((String) super.getSelected().get(0),
+                super.getOrgUnitName());
+        orgUnitAddView.showAddedPredecessors(addedPredecessorView);
     }
 
     @Override

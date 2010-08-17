@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
-import com.vaadin.ui.Button.ClickEvent;
 
 import de.escidoc.admintool.view.orgunit.OrgUnitAddView;
 
@@ -59,6 +59,11 @@ public class BlankPredecessorEditor extends CustomComponent
     }
 
     public void setOrgUnitAddView(final OrgUnitAddView orgUnitAddView) {
+
+    }
+
+    public void setNewOrgUnit(String orgUnitName) {
+        // TODO Auto-generated method stub
 
     }
 }
