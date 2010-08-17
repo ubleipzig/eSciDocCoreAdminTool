@@ -127,4 +127,10 @@ public class ViewConstants {
 
     public static final String CANCEL_LABEL = "Cancel";
 
+    public static final String RIGHT_ARROW = "&#8594;";
+
+    public static final String DOWN_ARROW = "&#8595;";
+
+    public static final String DOWN_RIGHT_ARROW = "&#8627;";
+
 }
