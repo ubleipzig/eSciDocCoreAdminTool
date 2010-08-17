@@ -5,8 +5,6 @@ import java.util.Collection;
 import com.vaadin.data.Item;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
@@ -15,6 +13,8 @@ import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 
 import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.service.ContextService;
@@ -22,6 +22,7 @@ import de.escidoc.admintool.service.OrgUnitService;
 import de.escidoc.admintool.view.OrgUnitEditor;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.core.resources.oum.OrganizationalUnit;
+import de.escidoc.vaadin.utilities.Converter;
 import de.escidoc.vaadin.utilities.LayoutHelper;
 
 @SuppressWarnings("serial")
@@ -68,8 +69,8 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
 
     private final Button addOrgUnitButton = new Button(ViewConstants.ADD_LABEL);
 
-    private final Button removeOrgUnitButton = new Button(
-        ViewConstants.REMOVE_LABEL);
+    private final Button removeOrgUnitButton =
+        new Button(ViewConstants.REMOVE_LABEL);
 
     public ContextEditForm(final AdminToolApplication adminToolApplication,
         final ContextService contextService, final OrgUnitService orgUnitService) {
@@ -82,8 +83,8 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
     private void init() {
         panel.addComponent(form);
         panel.setCaption(EDIT_USER_ACCOUNT);
-        int labelWidth = 170;
-        int height = 15;
+        final int labelWidth = 170;
+        final int height = 15;
 
         nameField.setWidth("400px");
         nameField.setWriteThrough(false);
@@ -133,7 +134,7 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
         final Button addButton = new Button("Add");
         final Button editButton = new Button("Edit");
         final Button delButton = new Button("Delete");
-        Window mainWindow = (Window) panel.getParent();
+        final Window mainWindow = (Window) panel.getParent();
         addButton.addListener(new NewAdminDescriptorListener(mainWindow,
             adminDescriptorAccordion));
         editButton.addListener(new EditAdminDescriptorListener(mainWindow,
@@ -160,7 +161,7 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
         return footer;
     }
 
-    public void buttonClick(ClickEvent event) {
+    public void buttonClick(final ClickEvent event) {
         final Button clickedButton = event.getButton();
         if (clickedButton == saveButton) {
             // save();
@@ -173,11 +174,23 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
         }
     }
 
-    public void setSelected(Item item) {
-        // if (item != getItemDataSource()) {
-        // this.setItemDataSource(item);
-        // }
-        // showFooter(isClosed(item));
+    public void setSelected(final Item item) {
+        this.item = item;
+        if (item != null) {
+            nameField.setPropertyDataSource(item
+                .getItemProperty(ViewConstants.NAME_ID));
+            // objIdField.setPropertyDataSource(item.getItemProperty("objid"));
+            modifiedOn.setCaption(Converter
+                .dateTimeToString((org.joda.time.DateTime) item
+                    .getItemProperty("lastModificationDate").getValue()));
+            modifiedBy.setPropertyDataSource(item
+                .getItemProperty("properties.modifiedBy.objid"));
+            createdOn.setCaption(Converter
+                .dateTimeToString((org.joda.time.DateTime) item
+                    .getItemProperty("properties.creationDate").getValue()));
+            createdBy.setPropertyDataSource(item
+                .getItemProperty("properties.createdBy.objid"));
+        }
     }
 
     // private AdminDescriptorsEditView adminDescriptorsEditView;
