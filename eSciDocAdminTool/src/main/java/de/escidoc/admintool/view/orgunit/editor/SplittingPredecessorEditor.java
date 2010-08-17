@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Set;
 
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
@@ -15,6 +14,7 @@ import com.vaadin.ui.SplitPanel;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.Button.ClickEvent;
 
 import de.escidoc.admintool.view.context.OrgUnitTree;
 import de.escidoc.admintool.view.orgunit.OrgUnitAddView;
@@ -25,9 +25,9 @@ import de.escidoc.vaadin.utilities.LayoutHelper;
 
 public class SplittingPredecessorEditor extends CustomComponent
     implements IPredecessorEditor {
-    private static final String HEIGHT = "600px";
+    private static final String WIDTH = "1200px";
 
-    private static final String WIDTH = "800px";
+    private static final String HEIGHT = "500px";
 
     private static final long serialVersionUID = 6885054493792037547L;
 
@@ -63,16 +63,16 @@ public class SplittingPredecessorEditor extends CustomComponent
 
     private final TextField nameTextField = new TextField();
 
-    private ListSelect ls;
+    private final ListSelect ls = new ListSelect();
+
+    private final SplitPanel pan = new SplitPanel();
 
     public void buildLayout() {
         tree.setMultiSelect(false);
         modalWindow.setWidth(WIDTH);
         modalWindow.setHeight(HEIGHT);
         modalWindow.setModal(true);
-
         modalWindow.setCaption(getLabel());
-        SplitPanel pan = new SplitPanel();
         pan.setOrientation(SplitPanel.ORIENTATION_HORIZONTAL);
 
         pan.setFirstComponent(createLeftSide());
@@ -84,22 +84,21 @@ public class SplittingPredecessorEditor extends CustomComponent
     }
 
     private FormLayout createLeftSide() {
-        FormLayout comp = new FormLayout();
+        final FormLayout comp = new FormLayout();
         comp.addComponent(new Label(getEditorDescription()));
         comp.addComponent(tree);
-
         return comp;
     }
 
     private FormLayout createRightSide() {
-        FormLayout comp = new FormLayout();
-        ls = new ListSelect();
+        final FormLayout comp = new FormLayout();
         ls.setNullSelectionAllowed(false);
         ls.addItem(orgUnitName);
         ls.setWidth("400px");
         comp.addComponent(LayoutHelper.create("", ls, 0, 100, false,
             new Button[] { addButton, editButton, removebutton }));
         addRightButtonsListener();
+        nameTextField.setWidth("400px");
         comp.addComponent(nameTextField);
         return comp;
     }
@@ -125,16 +124,17 @@ public class SplittingPredecessorEditor extends CustomComponent
 
     }
 
-    private void addRightClicked(ClickEvent event) {
+    private void addRightClicked(final ClickEvent event) {
         ls.addItem(nameTextField.getValue());
         nameTextField.setValue("");
     }
 
-    private void editRightClicked(ClickEvent event) {
-        // TODO Auto-generated method stub
+    private void editRightClicked(final ClickEvent event) {
+        final Object selectedOrgUnit = ls.getValue();
+        nameTextField.setValue(selectedOrgUnit);
     }
 
-    private void removeRightClicked(ClickEvent event) {
+    private void removeRightClicked(final ClickEvent event) {
         ls.removeItem(ls.getValue());
     }
 
@@ -216,9 +216,9 @@ public class SplittingPredecessorEditor extends CustomComponent
     }
 
     protected void showAddedPredecessors() {
-        Object o = ls.getValue();
+        final Object o = ls.getValue();
 
-        SplittingPredeccesorView view =
+        final SplittingPredeccesorView view =
             new SplittingPredeccesorView((String) tree.getSelectedItems(),
                 getNewOrgUnits());
         orgUnitAddView.showAddedPredecessors(view);
@@ -234,7 +234,7 @@ public class SplittingPredecessorEditor extends CustomComponent
         // newOrgUnits.add(o);
         // }
 
-        for (Object object : ls.getItemIds()) {
+        for (final Object object : ls.getItemIds()) {
             newOrgUnits.add(object);
         }
 
@@ -255,7 +255,7 @@ public class SplittingPredecessorEditor extends CustomComponent
         return modalWindow;
     }
 
-    public void setNewOrgUnit(String orgUnitName) {
+    public void setNewOrgUnit(final String orgUnitName) {
         this.orgUnitName = orgUnitName;
 
     }
