@@ -22,8 +22,9 @@ import de.escidoc.core.client.exceptions.TransportException;
 import de.escidoc.core.resources.aa.useraccount.UserAccount;
 import de.escidoc.vaadin.dialog.ErrorDialog;
 
-@SuppressWarnings("serial")
 public class UserAddForm extends Form implements ClickListener, Serializable {
+    private static final long serialVersionUID = -3156483580352730430L;
+
     private static final Logger log = LoggerFactory
         .getLogger(UserAddForm.class);
 
