@@ -12,7 +12,7 @@ public class ContextView extends SplitPanel {
 
     private final ContextListView contextList;
 
-    private final ContextEditViewWithToolbar editContextWithToolbarView;
+    private final ContextEditForm contextEditForm;
 
     private final ContextAddView contextAddView;
 
@@ -20,12 +20,12 @@ public class ContextView extends SplitPanel {
 
     public ContextView(final AdminToolApplication app,
         final ContextListView contextList,
-        final ContextEditViewWithToolbar editContextWithToolbarView,
+        final ContextEditForm editContextWithToolbarView,
         final ContextAddView contextAddView) {
         addStyleName("view");
         this.app = app;
         this.contextList = contextList;
-        this.editContextWithToolbarView = editContextWithToolbarView;
+        this.contextEditForm = editContextWithToolbarView;
         this.contextAddView = contextAddView;
 
         setFirstComponent(contextList);
@@ -44,8 +44,8 @@ public class ContextView extends SplitPanel {
     }
 
     public void showEditView(final Item item) {
-        setSecondComponent(editContextWithToolbarView);
-        editContextWithToolbarView.setSelected(item);
+        setSecondComponent(contextEditForm);
+        contextEditForm.setSelected(item);
     }
 
     public void remove() {
