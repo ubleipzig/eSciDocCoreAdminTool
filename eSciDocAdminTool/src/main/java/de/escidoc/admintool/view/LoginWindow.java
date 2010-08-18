@@ -20,18 +20,18 @@ import de.escidoc.core.client.exceptions.application.security.AuthenticationExce
 
 @SuppressWarnings("serial")
 public class LoginWindow extends Window implements Serializable {
-	private static final Logger log =
-        LoggerFactory.getLogger(LoginWindow.class);
-	private Resource mainResource;
-    
-	public Resource getMainResource() {
-		return mainResource;
-	}
+    private static final Logger log = LoggerFactory
+        .getLogger(LoginWindow.class);
 
-	public LoginWindow() {
+    private Resource mainResource;
+
+    public Resource getMainResource() {
+        return mainResource;
+    }
+
+    public LoginWindow() {
         final VerticalLayout layout = new VerticalLayout();
         setContent(layout);
-        
 
         final LoginForm login = new LoginForm();
         login.setWidth("100%");
@@ -44,11 +44,11 @@ public class LoginWindow extends Window implements Serializable {
                         event.getLoginParameter("username"),
                         event.getLoginParameter("password"));
 
-//                    mainResource = new ExternalResource(
-//                          AdminToolApplication.getInstance().getURL());
+                    // mainResource = new ExternalResource(
+                    // AdminToolApplication.getInstance().getURL());
                     LoginWindow.this.open(new ExternalResource(
                         AdminToolApplication.getInstance().getURL()));
-//                    getApplication().getMainWindow().removeWindow(LoginWindow.this);
+                    // getApplication().getMainWindow().removeWindow(LoginWindow.this);
                 }
                 catch (final AuthenticationException e) {
                     LoginWindow.this.showNotification(new Window.Notification(
@@ -56,24 +56,32 @@ public class LoginWindow extends Window implements Serializable {
                         "The username or password you entered is incorrect",
                         Window.Notification.TYPE_ERROR_MESSAGE));
                     e.printStackTrace();
+                    log
+                        .info(
+                            "The username or password you entered is incorrect.",
+                            e);
                 }
                 catch (final InternalClientException e) {
                     LoginWindow.this.showNotification(new Window.Notification(
                         "Internal Server Error", e.getMessage(),
                         Window.Notification.TYPE_ERROR_MESSAGE));
                     e.printStackTrace();
+                    log.error("Internal Server Error", e);
                 }
                 catch (final TransportException e) {
                     LoginWindow.this.showNotification(new Window.Notification(
                         "Internal Server Error", e.getMessage(),
                         Window.Notification.TYPE_ERROR_MESSAGE));
                     e.printStackTrace();
-                } catch (IOException e) {
+                    log.error("Internal Server Error", e);
+                }
+                catch (IOException e) {
                     LoginWindow.this.showNotification(new Window.Notification(
-                            "Internal Server Error", e.getMessage(),
-                            Window.Notification.TYPE_ERROR_MESSAGE));
-                        e.printStackTrace();
-                    }
+                        "Internal Server Error", e.getMessage(),
+                        Window.Notification.TYPE_ERROR_MESSAGE));
+                    e.printStackTrace();
+                    log.error("IOException", e);
+                }
             }
         });
         layout.addComponent(login);
