@@ -4,6 +4,7 @@ import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.ui.Tree;
 
 import de.escidoc.admintool.app.AdminToolApplication;
+import de.escidoc.admintool.messages.Messages;
 
 @SuppressWarnings("serial")
 public class NavigationTree extends Tree {
