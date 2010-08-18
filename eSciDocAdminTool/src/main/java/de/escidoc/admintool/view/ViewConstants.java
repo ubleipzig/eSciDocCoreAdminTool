@@ -1,136 +1,193 @@
 package de.escidoc.admintool.view;
 
+import de.escidoc.admintool.messages.Messages;
+
 public class ViewConstants {
 
-    // TODO move this to a property file to be configurable.
     public static final int VISIBLE_PARENTS = 7;
 
     public static final int SPLIT_POSITION_IN_PERCENT = 25;
 
-    public static final String IDENTIFIER_LABEL = "Identifier";
+    public static final String IDENTIFIER_LABEL = Messages
+        .getString("ViewConstants.0"); //$NON-NLS-1$
 
-    public static final String OBJECT_ID = "objid";
+    public static final String OBJECT_ID = Messages
+        .getString("ViewConstants.1"); //$NON-NLS-1$
 
-    public static final String OBJECT_ID_LABEL = "Object ID";
+    public static final String OBJECT_ID_LABEL = Messages
+        .getString("ViewConstants.2"); //$NON-NLS-1$
 
-    public static final String TITLE_ID = "title";
+    public static final String TITLE_ID = Messages.getString("ViewConstants.3"); //$NON-NLS-1$
 
-    public static final String NAME_ID = "properties.name";
+    public static final String NAME_ID = Messages.getString("ViewConstants.4"); //$NON-NLS-1$
 
-    public static final String DESCRIPTION_ID = "description";
+    public static final String DESCRIPTION_ID = Messages
+        .getString("ViewConstants.5"); //$NON-NLS-1$
 
-    public static final String ALTERNATIVE_ID = "alternative";
+    public static final String ALTERNATIVE_ID = Messages
+        .getString("ViewConstants.6"); //$NON-NLS-1$
 
-    public static final String CREATED_ON_ID = "createdOn";
+    public static final String CREATED_ON_ID = Messages
+        .getString("ViewConstants.7"); //$NON-NLS-1$
 
-    public static final String CREATED_BY_ID = "createdBy";
+    public static final String CREATED_BY_ID = Messages
+        .getString("ViewConstants.8"); //$NON-NLS-1$
 
-    public static final String PARENTS_ID = "parents";
+    public static final String PARENTS_ID = Messages
+        .getString("ViewConstants.9"); //$NON-NLS-1$
 
-    public static final String IDENTIFIER_ID = "identifier";
+    public static final String IDENTIFIER_ID = Messages
+        .getString("ViewConstants.10"); //$NON-NLS-1$
 
-    public static final String CITY_ID = "city";
+    public static final String CITY_ID = Messages.getString("ViewConstants.11"); //$NON-NLS-1$
 
-    public static final String COUNTRY_ID = "country";
+    public static final String COUNTRY_ID = Messages
+        .getString("ViewConstants.12"); //$NON-NLS-1$
 
-    public static final String ORG_TYPE_ID = "type";
+    public static final String ORG_TYPE_ID = Messages
+        .getString("ViewConstants.13"); //$NON-NLS-1$
 
-    public static final String ORGANIZATION_TYPE = "Organization Type";
+    public static final String ORGANIZATION_TYPE = Messages
+        .getString("ViewConstants.14"); //$NON-NLS-1$
 
-    public static final String LOGIN_NAME_ID = "login-name";
+    public static final String LOGIN_NAME_ID = Messages
+        .getString("ViewConstants.15"); //$NON-NLS-1$
 
-    public static final String NAME_LABEL = "Name";
+    public static final String NAME_LABEL = Messages
+        .getString("ViewConstants.16"); //$NON-NLS-1$
 
-    public static final String LOGIN_NAME_LABEL = "Login Name";
+    public static final String LOGIN_NAME_LABEL = Messages
+        .getString("ViewConstants.17"); //$NON-NLS-1$
 
-    public static final String IS_ACTIVE_ID = "active";
+    public static final String IS_ACTIVE_ID = Messages
+        .getString("ViewConstants.18"); //$NON-NLS-1$
 
-    public static final String MODIFIED_BY_ID = "modifiedBy";
+    public static final String MODIFIED_BY_ID = Messages
+        .getString("ViewConstants.19"); //$NON-NLS-1$
 
-    public static final Object MODIFIED_ON_ID = "modifiedOn";
+    public static final Object MODIFIED_ON_ID = Messages
+        .getString("ViewConstants.20"); //$NON-NLS-1$
 
-    public static final String IS_ACTIVE_LABEL = "Activated";
+    public static final String IS_ACTIVE_LABEL = Messages
+        .getString("ViewConstants.21"); //$NON-NLS-1$
 
-    public static final String CREATED_ON_LABEL = "Created On";
+    public static final String CREATED_ON_LABEL = Messages
+        .getString("ViewConstants.22"); //$NON-NLS-1$
 
-    public static final String CREATED_BY_LABEL = "Created By";
+    public static final String CREATED_BY_LABEL = Messages
+        .getString("ViewConstants.23"); //$NON-NLS-1$
 
-    public static final String MODIFIED_ON_LABEL = "Modified On";
+    public static final String MODIFIED_ON_LABEL = Messages
+        .getString("ViewConstants.24"); //$NON-NLS-1$
 
-    public static final String MODIFIED_BY_LABEL = "Modified By";
+    public static final String MODIFIED_BY_LABEL = Messages
+        .getString("ViewConstants.25"); //$NON-NLS-1$
 
-    public static final String TITLE_LABEL = "Title";
+    public static final String TITLE_LABEL = Messages
+        .getString("ViewConstants.26"); //$NON-NLS-1$
 
-    public static final String DESCRIPTION_LABEL = "Description";
+    public static final String DESCRIPTION_LABEL = Messages
+        .getString("ViewConstants.27"); //$NON-NLS-1$
 
-    public static final String ALTERNATIVE_LABEL = "Alternative Title";
+    public static final String ALTERNATIVE_LABEL = Messages
+        .getString("ViewConstants.28"); //$NON-NLS-1$
 
-    public static final String TYPE_ID = "type";
+    public static final String TYPE_ID = Messages.getString("ViewConstants.29"); //$NON-NLS-1$
 
-    public static final String TYPE_LABEL = "Type";
+    public static final String TYPE_LABEL = Messages
+        .getString("ViewConstants.30"); //$NON-NLS-1$
 
-    public static final String COUNTRY_LABEL = "Country";
+    public static final String COUNTRY_LABEL = Messages
+        .getString("ViewConstants.31"); //$NON-NLS-1$
 
-    public static final String CITY_LABEL = "City";
+    public static final String CITY_LABEL = Messages
+        .getString("ViewConstants.32"); //$NON-NLS-1$
 
-    public static final String COORDINATES_ID = "coordinates";
+    public static final String COORDINATES_ID = Messages
+        .getString("ViewConstants.33"); //$NON-NLS-1$
 
-    public static final String COORDINATES_LABEL = "Coordinates";
+    public static final String COORDINATES_LABEL = Messages
+        .getString("ViewConstants.34"); //$NON-NLS-1$
 
-    public static final String START_DATE_ID = "startDate";
+    public static final String START_DATE_ID = Messages
+        .getString("ViewConstants.35"); //$NON-NLS-1$
 
-    public static final String START_DATE_LABEL = "Start Date";
+    public static final String START_DATE_LABEL = Messages
+        .getString("ViewConstants.36"); //$NON-NLS-1$
 
-    public static final String END_DATE_ID = "endDate";
+    public static final String END_DATE_ID = Messages
+        .getString("ViewConstants.37"); //$NON-NLS-1$
 
-    public static final String END_DATE_LABEL = "End Date";
+    public static final String END_DATE_LABEL = Messages
+        .getString("ViewConstants.38"); //$NON-NLS-1$
 
-    public static final String PARENTS_LABEL = "Parents";
+    public static final String PARENTS_LABEL = Messages
+        .getString("ViewConstants.39"); //$NON-NLS-1$
 
-    public static final String PREDECESSORS_LABEL = "Predecessors";
+    public static final String PREDECESSORS_LABEL = Messages
+        .getString("ViewConstants.40"); //$NON-NLS-1$
 
-    public static final String PREDECESSORS_ID = "predecessors";
+    public static final String PREDECESSORS_ID = Messages
+        .getString("ViewConstants.41"); //$NON-NLS-1$
 
-    public static final String PREDECESSORS_TYPE_LABEL = "Predecessor Type";
+    public static final String PREDECESSORS_TYPE_LABEL = Messages
+        .getString("ViewConstants.42"); //$NON-NLS-1$
 
-    public static final String PREDECESSORS_TYPE_ID = "predecessorType";
+    public static final String PREDECESSORS_TYPE_ID = Messages
+        .getString("ViewConstants.43"); //$NON-NLS-1$
 
-    public static final String CONTEXTS_LABEL = "Contexts";
+    public static final String CONTEXTS_LABEL = Messages
+        .getString("ViewConstants.44"); //$NON-NLS-1$
 
-    public static final String ORGANIZATION_UNITS_ID = "organizationalUnits";
+    public static final String ORGANIZATION_UNITS_ID = Messages
+        .getString("ViewConstants.45"); //$NON-NLS-1$
 
-    public static final String ORGANIZATION_UNITS_LABEL =
-        "Organizational Units";
+    public static final String ORGANIZATION_UNITS_LABEL = Messages
+        .getString("ViewConstants.46"); //$NON-NLS-1$
 
-    public static final String ADMIN_DESRIPTORS_LABEL = "Admin Descriptors";
+    public static final String ADMIN_DESRIPTORS_LABEL = Messages
+        .getString("ViewConstants.47"); //$NON-NLS-1$
 
-    public static final String PUBLIC_STATUS_ID = "properties.publicStatus";
+    public static final String PUBLIC_STATUS_ID = Messages
+        .getString("ViewConstants.48"); //$NON-NLS-1$
 
-    public static final String PUBLIC_STATUS_LABEL = "Public Status";
+    public static final String PUBLIC_STATUS_LABEL = Messages
+        .getString("ViewConstants.49"); //$NON-NLS-1$
 
-    public static final String PUBLIC_STATUS_COMMENT_ID =
-        "public status comment";
+    public static final String PUBLIC_STATUS_COMMENT_ID = Messages
+        .getString("ViewConstants.50"); //$NON-NLS-1$
 
-    public static final String PUBLIC_STATUS_COMMENT_LABEL = "Comment";
+    public static final String PUBLIC_STATUS_COMMENT_LABEL = Messages
+        .getString("ViewConstants.51"); //$NON-NLS-1$
 
-    public static final String ADMIN_DESRIPTOR_NAME_ID = "adminDesciptorName";
+    public static final String ADMIN_DESRIPTOR_NAME_ID = Messages
+        .getString("ViewConstants.52"); //$NON-NLS-1$
 
-    public static final String ADMIN_DESRIPTOR_NAME_LABEL = "Admin Descriptor";
+    public static final String ADMIN_DESRIPTOR_NAME_LABEL = Messages
+        .getString("ViewConstants.53"); //$NON-NLS-1$
 
-    public static final Object ADMIN_DESRIPTORS_ID = "adminDescriptor";
+    public static final Object ADMIN_DESRIPTORS_ID = Messages
+        .getString("ViewConstants.54"); //$NON-NLS-1$
 
-    public static final String ADD_LABEL = "Add";
+    public static final String ADD_LABEL = Messages
+        .getString("ViewConstants.55"); //$NON-NLS-1$
 
-    public static final String REMOVE_LABEL = "Remove";
+    public static final String REMOVE_LABEL = Messages
+        .getString("ViewConstants.56"); //$NON-NLS-1$
 
-    public static final String OK_LABEL = "OK";
+    public static final String OK_LABEL = Messages
+        .getString("ViewConstants.57"); //$NON-NLS-1$
 
-    public static final String CANCEL_LABEL = "Cancel";
+    public static final String CANCEL_LABEL = Messages
+        .getString("ViewConstants.58"); //$NON-NLS-1$
 
-    public static final String RIGHT_ARROW = "&#8594;";
+    public static final String RIGHT_ARROW = Messages
+        .getString("ViewConstants.59"); //$NON-NLS-1$
 
-    public static final String DOWN_ARROW = "&#8595;";
+    public static final String DOWN_ARROW = Messages
+        .getString("ViewConstants.60"); //$NON-NLS-1$
 
-    public static final String DOWN_RIGHT_ARROW = "&#8627;";
+    public static final String DOWN_RIGHT_ARROW = Messages
+        .getString("ViewConstants.61"); //$NON-NLS-1$
 
 }
