@@ -28,8 +28,8 @@ public class FusionPredecessorView extends CustomComponent {
         for (Object predecessor : list) {
             verticalLayout.addComponent(new Label((String) predecessor));
         }
-        horizontalLayout.addComponent(new Label(ViewConstants.RIGHT_ARROW,
+        verticalLayout.addComponent(new Label(ViewConstants.DOWN_ARROW,
             Label.CONTENT_XHTML));
-        horizontalLayout.addComponent(new Label(newOrgUnitName));
+        verticalLayout.addComponent(new Label(newOrgUnitName));
     }
 }
