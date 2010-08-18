@@ -34,8 +34,9 @@ import de.escidoc.core.resources.om.context.Context;
 import de.escidoc.core.resources.om.context.OrganizationalUnitRefs;
 import de.escidoc.vaadin.utilities.LayoutHelper;
 
-@SuppressWarnings("serial")
 public class ContextAddView extends CustomComponent implements ClickListener {
+    private static final long serialVersionUID = 1100228979605484119L;
+
     private final Logger log = LoggerFactory.getLogger(ContextAddView.class);
 
     private final AdminToolApplication app;
@@ -75,6 +76,8 @@ public class ContextAddView extends CustomComponent implements ClickListener {
     private final Button removeOrgUnitButton = new Button(
         ViewConstants.REMOVE_LABEL);
 
+    private final int labelWidth = 140;
+
     public ContextAddView(final AdminToolApplication app,
         final ContextListView contextListView,
         final ContextService contextService, final OrgUnitService orgUnitService) {
@@ -94,7 +97,6 @@ public class ContextAddView extends CustomComponent implements ClickListener {
     private void init() {
         final Panel panel = new Panel();
         final FormLayout form = new FormLayout();
-        int labelWidth = 170;
         panel.setContent(form);
         form.setSpacing(false);
         panel.setCaption("Add a new Context");
