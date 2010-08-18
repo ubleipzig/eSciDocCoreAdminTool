@@ -36,6 +36,8 @@ public class OrgUnitList extends Table {
 
     private final OrgUnitService service;
 
+    private POJOContainer<OrganizationalUnit> dataSource;
+
     public OrgUnitList(final AdminToolApplication app,
         final OrgUnitService orgUnitService) {
         this.app = app;
@@ -74,11 +76,13 @@ public class OrgUnitList extends Table {
     private void bindDataSource() throws EscidocException,
         InternalClientException, TransportException {
         allOrgUnits = service.all();
-        setContainerDataSource(new POJOContainer<OrganizationalUnit>(
-            allOrgUnits, PropertyId.OBJECT_ID, PropertyId.NAME,
-            PropertyId.DESCRIPTION, PropertyId.CREATED_ON,
-            PropertyId.CREATED_BY, PropertyId.LAST_MODIFICATION_DATE,
-            PropertyId.MODIFIED_BY, PropertyId.PARENTS, PropertyId.PREDECESSORS));
+        dataSource =
+            new POJOContainer<OrganizationalUnit>(allOrgUnits,
+                PropertyId.OBJECT_ID, PropertyId.NAME, PropertyId.DESCRIPTION,
+                PropertyId.CREATED_ON, PropertyId.CREATED_BY,
+                PropertyId.LAST_MODIFICATION_DATE, PropertyId.MODIFIED_BY,
+                PropertyId.PARENTS, PropertyId.PREDECESSORS);
+        setContainerDataSource(dataSource);
         setVisibleColumns(new Object[] { PropertyId.NAME });
         sort(new Object[] { PropertyId.LAST_MODIFICATION_DATE },
             new boolean[] { false });
@@ -138,6 +142,7 @@ public class OrgUnitList extends Table {
         Collection<String> predecessorsObjectId = null;
 
         predecessorsObjectId = service.getPredecessorsObjectId(ou);
+        // TODO replace this.addItem with: dataSource.addItem(newOrgUnit);
         this.addItem(new Object[] { ou.getObjid(),
             ou.getProperties().getName(), description,
             ou.getProperties().getCreationDate().toDate(),
@@ -146,6 +151,7 @@ public class OrgUnitList extends Table {
             ou.getProperties().getModifiedBy().getObjid(), alternative,
             identifier, orgType, country, city, coordinate, startDate, endDate,
             getParentsObjectId(ou), predecessorsObjectId }, ou.getObjid());
+
     }
 
     private Collection<String> getParentsObjectId(final OrganizationalUnit ou) {
