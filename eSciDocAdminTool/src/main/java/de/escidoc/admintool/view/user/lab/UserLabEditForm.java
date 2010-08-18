@@ -46,7 +46,7 @@ public class UserLabEditForm extends CustomComponent implements ClickListener {
 
     private TextField loginNameField;
 
-    private TextField objIdField;
+    private final Label objIdField = new Label();
 
     private Label modifiedOn;
 
@@ -89,8 +89,6 @@ public class UserLabEditForm extends CustomComponent implements ClickListener {
         panel.addComponent(LayoutHelper.create(ViewConstants.LOGIN_NAME_LABEL,
             loginNameField, labelWidth, false));
 
-        objIdField = new TextField();
-        objIdField.setReadOnly(true);
         panel.addComponent(LayoutHelper.create(ViewConstants.OBJECT_ID_LABEL,
             objIdField, labelWidth, false));
 
