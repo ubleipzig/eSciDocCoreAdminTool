@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
@@ -14,7 +15,6 @@ import com.vaadin.ui.SplitPanel;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
-import com.vaadin.ui.Button.ClickEvent;
 
 import de.escidoc.admintool.view.context.OrgUnitTree;
 import de.escidoc.admintool.view.orgunit.OrgUnitAddView;
@@ -105,18 +105,24 @@ public class SplittingPredecessorEditor extends CustomComponent
 
     private void addRightButtonsListener() {
         addButton.addListener(new Button.ClickListener() {
+            private static final long serialVersionUID = -4295712465167241155L;
+
             public void buttonClick(final ClickEvent event) {
                 addRightClicked(event);
             }
         });
 
         editButton.addListener(new Button.ClickListener() {
+            private static final long serialVersionUID = -3499158386491222115L;
+
             public void buttonClick(final ClickEvent event) {
                 editRightClicked(event);
             }
         });
 
         removebutton.addListener(new Button.ClickListener() {
+            private static final long serialVersionUID = -940316991862977275L;
+
             public void buttonClick(final ClickEvent event) {
                 removeRightClicked(event);
             }
