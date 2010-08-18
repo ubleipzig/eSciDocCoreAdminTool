@@ -7,8 +7,8 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
-@SuppressWarnings("serial")
 public class OpenContextModalWindow extends VerticalLayout {
+    private static final long serialVersionUID = -6815586703714340558L;
 
     private Window subwindow;
 
