@@ -37,19 +37,16 @@ public class OrgUnitView extends SplitPanel {
             setSecondComponent(app.newOrgUnitAddView());
         }
         catch (final EscidocException e) {
-            // TODO Auto-generated catch block
             log.error("An unexpected error occured! See log for details.", e);
             e.printStackTrace();
 
         }
         catch (final InternalClientException e) {
-            // TODO Auto-generated catch block
             log.error("An unexpected error occured! See log for details.", e);
             e.printStackTrace();
 
         }
         catch (final TransportException e) {
-            // TODO Auto-generated catch block
             log.error("An unexpected error occured! See log for details.", e);
             e.printStackTrace();
 
