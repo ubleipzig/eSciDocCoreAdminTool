@@ -11,11 +11,13 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TextField;
 
 import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.service.UserService;
+import de.escidoc.admintool.view.OrgUnitEditor;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.admintool.view.validator.EmptyFieldValidator;
 import de.escidoc.core.client.exceptions.EscidocException;
@@ -48,6 +50,13 @@ public class UserLabAddView extends CustomComponent implements ClickListener {
 
     private ObjectProperty loginNameProperty;
 
+    private final ListSelect orgUnitList = new ListSelect();
+
+    private final Button addOrgUnitButton = new Button(ViewConstants.ADD_LABEL);
+
+    private final Button removeOrgUnitButton = new Button(
+        ViewConstants.REMOVE_LABEL);
+
     public UserLabAddView(final AdminToolApplication app,
         final UserLabListView userLabList, final UserService userService) {
         this.userLabList = userLabList;
@@ -74,6 +83,18 @@ public class UserLabAddView extends CustomComponent implements ClickListener {
         loginNameProperty = new ObjectProperty("", String.class);
         loginNameField.setPropertyDataSource(loginNameProperty);
         loginNameField.setWidth("400px");
+
+        orgUnitList.setRows(5);
+        orgUnitList.setWidth("400px");
+        orgUnitList.setNullSelectionAllowed(true);
+        orgUnitList.setMultiSelect(true);
+        orgUnitList.setImmediate(true);
+
+        form.addComponent(LayoutHelper.create(
+            ViewConstants.ORGANIZATION_UNITS_LABEL, new OrgUnitEditor(
+                ViewConstants.ORGANIZATION_UNITS_LABEL, orgUnitList,
+                addOrgUnitButton, removeOrgUnitButton), labelWidth, 140, false,
+            new Button[] { addOrgUnitButton, removeOrgUnitButton }));
 
         panel.addComponent(addFooter());
         setCompositionRoot(panel);
