@@ -57,6 +57,10 @@ public class UserLabAddView extends CustomComponent implements ClickListener {
     private final Button removeOrgUnitButton = new Button(
         ViewConstants.REMOVE_LABEL);
 
+    private TextField emailField;
+
+    private ObjectProperty emailProperty;
+
     public UserLabAddView(final AdminToolApplication app,
         final UserLabListView userLabList, final UserService userService) {
         this.userLabList = userLabList;
@@ -71,12 +75,14 @@ public class UserLabAddView extends CustomComponent implements ClickListener {
         panel.setContent(form);
         form.setSpacing(false);
         panel.setCaption("Add a new User Account");
+        // Name
         panel.addComponent(LayoutHelper.create(ViewConstants.NAME_LABEL,
             nameField = new TextField(), labelWidth, true));
         nameProperty = new ObjectProperty("", String.class);
         nameField.setPropertyDataSource(nameProperty);
         nameField.setWidth("400px");
 
+        // Login
         panel.addComponent(LayoutHelper.create(ViewConstants.LOGIN_NAME_LABEL,
             loginNameField = new TextField(), labelWidth, true));
 
@@ -84,6 +90,7 @@ public class UserLabAddView extends CustomComponent implements ClickListener {
         loginNameField.setPropertyDataSource(loginNameProperty);
         loginNameField.setWidth("400px");
 
+        // OrgUnit
         orgUnitList.setRows(5);
         orgUnitList.setWidth("400px");
         orgUnitList.setNullSelectionAllowed(true);
@@ -95,6 +102,13 @@ public class UserLabAddView extends CustomComponent implements ClickListener {
                 ViewConstants.ORGANIZATION_UNITS_LABEL, orgUnitList,
                 addOrgUnitButton, removeOrgUnitButton), labelWidth, 140, false,
             new Button[] { addOrgUnitButton, removeOrgUnitButton }));
+
+        // e-Mail
+        panel.addComponent(LayoutHelper.create("E-Mail", emailField =
+            new TextField(), labelWidth, true));
+        emailProperty = new ObjectProperty("", String.class);
+        emailField.setPropertyDataSource(emailProperty);
+        emailField.setWidth("400px");
 
         panel.addComponent(addFooter());
         setCompositionRoot(panel);
