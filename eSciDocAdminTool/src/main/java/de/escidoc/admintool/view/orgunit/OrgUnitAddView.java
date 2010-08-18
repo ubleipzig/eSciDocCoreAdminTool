@@ -36,9 +36,9 @@ import de.escidoc.core.resources.oum.PredecessorForm;
 import de.escidoc.vaadin.dialog.ErrorDialog;
 import de.escidoc.vaadin.utilities.LayoutHelper;
 
-@SuppressWarnings("serial")
 public class OrgUnitAddView extends CustomComponent
     implements ClickListener, Serializable {
+    private static final long serialVersionUID = 8351229526921020901L;
 
     private static final Logger log = LoggerFactory
         .getLogger(OrgUnitAddView.class);
@@ -288,6 +288,14 @@ public class OrgUnitAddView extends CustomComponent
 
     @SuppressWarnings("unchecked")
     private void saveUserInput() {
+
+        // TODO validation
+        // TODO save new org unit
+
+        // TODO if predecessor type is splitting && todoList is not empty
+        // TODO a. save the rest of new org unit with the user given name and
+        // auto generated description.
+        // TODO b. show org unit edit view for new org unit in todo.
 
         // TODO this is crazy. Data binding to the rescue for later.
         // final String title = (String) getField(TITLE_ID).getValue();
