@@ -54,6 +54,7 @@ public abstract class AbstractPredecessorEditor extends CustomComponent
 
     public AbstractPredecessorEditor(OrgUnitService service) {
         this.service = service;
+        this.tree = new OrgUnitTree(service);
         modalWindow.setCaption(getLabel());
         modalWindow.addComponent(new Label(getEditorDescription()));
         modalWindow.addComponent(tree);
@@ -61,7 +62,6 @@ public abstract class AbstractPredecessorEditor extends CustomComponent
         modalWindow.addComponent(addFooter());
         addListener();
         setCompositionRoot(new VerticalLayout());
-        this.tree = new OrgUnitTree(service);
     }
 
     protected abstract String getLabel();

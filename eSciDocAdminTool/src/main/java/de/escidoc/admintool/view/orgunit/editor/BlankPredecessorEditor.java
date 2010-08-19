@@ -11,6 +11,7 @@ import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
+import de.escidoc.admintool.service.OrgUnitService;
 import de.escidoc.admintool.view.orgunit.OrgUnitAddView;
 
 public class BlankPredecessorEditor extends CustomComponent
@@ -23,7 +24,7 @@ public class BlankPredecessorEditor extends CustomComponent
 
     private Window parent;
 
-    public BlankPredecessorEditor() {
+    public BlankPredecessorEditor(OrgUnitService service) {
         modalWindow.setCaption("Error");
         modalWindow.addComponent(new Label(
             "Select a valid Predecessor Type, please!"));
@@ -32,15 +33,18 @@ public class BlankPredecessorEditor extends CustomComponent
         setCompositionRoot(new VerticalLayout());
     }
 
+    @Override
     public Window getWidget() {
         return modalWindow;
     }
 
+    @Override
     public void setMainWindow(final Window parent) {
         this.parent = parent;
 
     }
 
+    @Override
     public void setList(final ListSelect select) {
     }
 
@@ -48,20 +52,24 @@ public class BlankPredecessorEditor extends CustomComponent
         okButton.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = -8695976921167275051L;
 
+            @Override
             public void buttonClick(final ClickEvent event) {
                 parent.removeWindow(modalWindow);
             }
         });
     }
 
+    @Override
     public List<Object> getSelected() {
         return new ArrayList<Object>();
     }
 
+    @Override
     public void setOrgUnitAddView(final OrgUnitAddView orgUnitAddView) {
 
     }
 
+    @Override
     public void setNewOrgUnit(String orgUnitName) {
         // TODO Auto-generated method stub
 
