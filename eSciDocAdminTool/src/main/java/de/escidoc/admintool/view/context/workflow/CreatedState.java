@@ -14,7 +14,6 @@ public class CreatedState implements AbstractState {
         this.deleteContextBtn = deleteContextBtn;
         this.openContextBtn = openContextBtn;
         this.closeContextBtn = closeContextBtn;
-
     }
 
     public void changeState() {

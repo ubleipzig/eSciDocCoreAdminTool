@@ -2,14 +2,14 @@ package de.escidoc.admintool.view.context.workflow;
 
 import com.vaadin.ui.Button;
 
-public class OpenState implements AbstractState {
+public class OpenedState implements AbstractState {
     private final Button deleteContextBtn;
 
     private final Button openContextBtn;
 
     private final Button closeContextBtn;
 
-    public OpenState(Button deleteContextBtn, Button openContextBtn,
+    public OpenedState(Button deleteContextBtn, Button openContextBtn,
         Button closeContextBtn) {
         this.deleteContextBtn = deleteContextBtn;
         this.openContextBtn = openContextBtn;
