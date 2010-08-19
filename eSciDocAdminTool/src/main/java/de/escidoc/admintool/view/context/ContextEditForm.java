@@ -112,6 +112,7 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
             false));
 
         // Type
+        typeField.setWidth("400px");
         form.addComponent(LayoutHelper.create("Type", typeField, labelWidth,
             false));
 
@@ -169,6 +170,7 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
         return footer;
     }
 
+    @Override
     public void buttonClick(final ClickEvent event) {
         final Button clickedButton = event.getButton();
         if (clickedButton == saveButton) {

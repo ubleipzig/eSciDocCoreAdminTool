@@ -32,6 +32,7 @@ import de.escidoc.core.client.exceptions.TransportException;
 import de.escidoc.core.resources.om.context.AdminDescriptors;
 import de.escidoc.core.resources.om.context.Context;
 import de.escidoc.core.resources.om.context.OrganizationalUnitRefs;
+import de.escidoc.vaadin.dialog.ErrorDialog;
 import de.escidoc.vaadin.utilities.LayoutHelper;
 
 public class ContextAddView extends CustomComponent implements ClickListener {
@@ -129,7 +130,7 @@ public class ContextAddView extends CustomComponent implements ClickListener {
         form.addComponent(LayoutHelper.create(
             ViewConstants.ORGANIZATION_UNITS_LABEL, new OrgUnitEditor(
                 ViewConstants.ORGANIZATION_UNITS_LABEL, orgUnitList,
-                addOrgUnitButton, removeOrgUnitButton), labelWidth, 140, false,
+                addOrgUnitButton, removeOrgUnitButton), labelWidth, 140, true,
             new Button[] { addOrgUnitButton, removeOrgUnitButton }));
 
         // AdminDescriptor
@@ -154,7 +155,7 @@ public class ContextAddView extends CustomComponent implements ClickListener {
             adminDescriptorAccordion));
 
         panel.addComponent(LayoutHelper.create("Admin Descriptors",
-            accordionPanel, labelWidth + 2, 300, true, new Button[] {
+            accordionPanel, labelWidth + 2, 300, false, new Button[] {
                 addButton, editButton, delButton }));
 
         // Footer
@@ -172,17 +173,19 @@ public class ContextAddView extends CustomComponent implements ClickListener {
         return footer;
     }
 
+    @Override
     public void buttonClick(final ClickEvent event) {
         final Button source = event.getButton();
         if (source == cancel) {
             nameField.setValue("");
+            nameField.setComponentError(null);
             descriptionField.setValue("");
+            descriptionField.setComponentError(null);
             typeField.setValue("");
-            // TODO: Do we need to clear the fields below?
-            // adminDescriptorAccordion.removeTab();
-            // adminDescriptorsAddView.clear();
-            // orgUnitList.removeAllItems();
-            // setComponentError(null);
+            typeField.setComponentError(null);
+            orgUnitList.removeAllItems();
+            orgUnitList.setComponentError(null);
+            adminDescriptorAccordion.removeAllComponents();
         }
         else if (source == save) {
             boolean valid = true;
@@ -196,12 +199,9 @@ public class ContextAddView extends CustomComponent implements ClickListener {
                 EmptyFieldValidator.isValid(typeField, ViewConstants.TYPE_LABEL
                     + " can not be empty.");
             valid &=
-                EmptyFieldValidator.isValid(orgUnitList, "TODO: fill me!!!!!"); // TODO:
-            // fill
-            // me!!!!!
-
-            // TODO: write a validator for the Accordion
-            valid &= false; // replace by the validator call.
+                EmptyFieldValidator.isValid(orgUnitList,
+                    ViewConstants.ORGANIZATION_UNITS_LABEL
+                        + " can not be empty");
 
             if (valid) {
                 try {
@@ -230,28 +230,35 @@ public class ContextAddView extends CustomComponent implements ClickListener {
                     log.error(
                         "root cause: " + ExceptionUtils.getRootCauseMessage(e),
                         e);
-                    setComponentError(new UserError(e.getMessage()));
-                    // TODO: Where to set the error?
+                    app.getMainWindow().addWindow(
+                        new ErrorDialog(app.getMainWindow(), "Error", e
+                            .getMessage()));
                     e.printStackTrace();
                 }
                 catch (final InternalClientException e) {
                     log.error(
                         "An unexpected error occured! See log for details.", e);
                     setComponentError(new UserError(e.getMessage()));
-                    // TODO: Where to set the error?
+                    app.getMainWindow().addWindow(
+                        new ErrorDialog(app.getMainWindow(), "Error", e
+                            .getMessage()));
                     e.printStackTrace();
                 }
                 catch (final TransportException e) {
                     log.error(
                         "An unexpected error occured! See log for details.", e);
-                    // TODO: Where to set the error?
+                    app.getMainWindow().addWindow(
+                        new ErrorDialog(app.getMainWindow(), "Error", e
+                            .getMessage()));
                     setComponentError(new UserError(e.getMessage()));
                     e.printStackTrace();
                 }
                 catch (final ParserConfigurationException e) {
                     log.error(
                         "An unexpected error occured! See log for details.", e);
-                    // TODO: Where to set the error?
+                    app.getMainWindow().addWindow(
+                        new ErrorDialog(app.getMainWindow(), "Error", e
+                            .getMessage()));
                     setComponentError(new SystemError(e.getMessage()));
                     e.printStackTrace();
                 }
@@ -267,5 +274,4 @@ public class ContextAddView extends CustomComponent implements ClickListener {
     private OrganizationalUnitRefs enteredOrgUnits() {
         return null;
     }
-
 }

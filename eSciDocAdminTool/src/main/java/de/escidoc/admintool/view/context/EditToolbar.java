@@ -62,15 +62,17 @@ public class EditToolbar extends CustomComponent {
 
     public void setSelected(final PublicStatus publicStatus) {
         final Class<?>[] buttonArgsClass =
-            new Class<?>[] { Button.class, Button.class, Button.class,
-                Button.class };
+            new Class<?>[] { Button.class, Button.class, Button.class };
         Object[] buttonArgs =
-            new Object[] { this.newContextBtn, this.deleteContextBtn,
-                this.openContextBtn, this.closeContextBtn };
+            new Object[] { this.deleteContextBtn, this.openContextBtn,
+                this.closeContextBtn };
         try {
-            final Class<?> c =
-                Class.forName(AbstractState.class.getPackage() + "."
-                    + publicStatus.toString() + "State");
+            String path =
+                "de.escidoc.admintool.view.context.workflow."
+                    + publicStatus.toString() + "State";
+            System.out.println(path);
+
+            final Class<?> c = Class.forName(path);
             Constructor<?> constructor = c.getConstructor(buttonArgsClass);
             Object object = constructor.newInstance(buttonArgs);
             final AbstractState workflowState = (AbstractState) object;
@@ -105,10 +107,10 @@ public class EditToolbar extends CustomComponent {
             e.printStackTrace();
 
         }
-
     }
 
     private class OpenContextListener implements Button.ClickListener {
+        @Override
         public void buttonClick(final ClickEvent event) {
             app.getMainWindow().addWindow(
                 new OpenContextModalWindow(parent).getSubWindow());
@@ -116,6 +118,7 @@ public class EditToolbar extends CustomComponent {
     }
 
     private class CloseContextListener implements Button.ClickListener {
+        @Override
         public void buttonClick(final ClickEvent event) {
             app.getMainWindow().addWindow(
                 new CloseContextModalWindow(parent).getSubWindow());
@@ -124,6 +127,7 @@ public class EditToolbar extends CustomComponent {
     }
 
     private class DeleteContextListener implements Button.ClickListener {
+        @Override
         public void buttonClick(final ClickEvent event) {
             // try {
             // // contextEditForm.deleteContext();
@@ -145,6 +149,7 @@ public class EditToolbar extends CustomComponent {
     }
 
     private class NewContextListener implements Button.ClickListener {
+        @Override
         public void buttonClick(final ClickEvent event) {
             try {
                 app.getContextView().showContextAddView();

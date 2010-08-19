@@ -21,8 +21,6 @@ public class AdminDescriptorAddView extends AdminDescriptorView {
 
     @Override
     protected void doSave() {
-        getApplication().getMainWindow().showNotification("Add");
-
         final String content = (String) adminDescContent.getValue();
         if (validate(content)) {
             adminDescriptorAccordion.addTab(new Label(content,
@@ -31,5 +29,4 @@ public class AdminDescriptorAddView extends AdminDescriptorView {
             closeWindow();
         }
     }
-
 }
