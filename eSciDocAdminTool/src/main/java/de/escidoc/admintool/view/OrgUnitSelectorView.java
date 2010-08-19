@@ -9,6 +9,7 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.Window;
 
+import de.escidoc.admintool.service.OrgUnitService;
 import de.escidoc.admintool.view.context.OrgUnitTree;
 import de.escidoc.vaadin.utilities.LayoutHelper;
 
@@ -23,16 +24,17 @@ public class OrgUnitSelectorView extends CustomComponent {
 
     private final ListSelect orgUnitList;
 
-    private final OrgUnitTree orgUnitTree = new OrgUnitTree();
+    private OrgUnitTree orgUnitTree;
 
-
-    public OrgUnitSelectorView(final String caption, ListSelect orgUnitList) {
+    public OrgUnitSelectorView(final String caption, ListSelect orgUnitList,
+        OrgUnitService service) {
         this.orgUnitList = orgUnitList;
         openTreeButtonWindow.setModal(true);
         openTreeButtonWindow.setCaption(caption);
         openTreeButtonWindow.setHeight("650px");
         openTreeButtonWindow.setWidth("550px");
-        openTreeButtonWindow.addComponent(orgUnitTree);
+        openTreeButtonWindow.addComponent(orgUnitTree =
+            new OrgUnitTree(service));
         addListeners();
         final HorizontalLayout hor =
             LayoutHelper.create("", "", okButton, cancelButton, 10, false);
@@ -43,6 +45,7 @@ public class OrgUnitSelectorView extends CustomComponent {
         okButton.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = 3557479016087679412L;
 
+            @Override
             public void buttonClick(final ClickEvent event) {
                 okButtonClicked(event);
             }
@@ -51,6 +54,7 @@ public class OrgUnitSelectorView extends CustomComponent {
         cancelButton.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = -779500960758708585L;
 
+            @Override
             public void buttonClick(final ClickEvent event) {
                 cancelButtonClick(event);
             }

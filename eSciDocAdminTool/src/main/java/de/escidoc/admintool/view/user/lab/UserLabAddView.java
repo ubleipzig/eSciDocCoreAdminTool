@@ -16,6 +16,7 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.TextField;
 
 import de.escidoc.admintool.app.AdminToolApplication;
+import de.escidoc.admintool.service.OrgUnitService;
 import de.escidoc.admintool.service.UserService;
 import de.escidoc.admintool.view.OrgUnitEditor;
 import de.escidoc.admintool.view.ViewConstants;
@@ -61,10 +62,14 @@ public class UserLabAddView extends CustomComponent implements ClickListener {
 
     private ObjectProperty emailProperty;
 
+    private final OrgUnitService service;
+
     public UserLabAddView(final AdminToolApplication app,
-        final UserLabListView userLabList, final UserService userService) {
+        final UserLabListView userLabList, final UserService userService,
+        final OrgUnitService service) {
         this.userLabList = userLabList;
         this.userService = userService;
+        this.service = service;
         init();
     }
 
@@ -97,11 +102,13 @@ public class UserLabAddView extends CustomComponent implements ClickListener {
         orgUnitList.setMultiSelect(true);
         orgUnitList.setImmediate(true);
 
-        form.addComponent(LayoutHelper.create(
-            ViewConstants.ORGANIZATION_UNITS_LABEL, new OrgUnitEditor(
-                ViewConstants.ORGANIZATION_UNITS_LABEL, orgUnitList,
-                addOrgUnitButton, removeOrgUnitButton), labelWidth, 140, false,
-            new Button[] { addOrgUnitButton, removeOrgUnitButton }));
+        form
+            .addComponent(LayoutHelper.create(
+                ViewConstants.ORGANIZATION_UNITS_LABEL, new OrgUnitEditor(
+                    ViewConstants.ORGANIZATION_UNITS_LABEL, orgUnitList,
+                    addOrgUnitButton, removeOrgUnitButton, service),
+                labelWidth, 140, false, new Button[] { addOrgUnitButton,
+                    removeOrgUnitButton }));
 
         // e-Mail
         panel.addComponent(LayoutHelper.create("E-Mail", emailField =
@@ -123,6 +130,7 @@ public class UserLabAddView extends CustomComponent implements ClickListener {
         return footer;
     }
 
+    @Override
     public void buttonClick(final ClickEvent event) {
         final Button source = event.getButton();
 

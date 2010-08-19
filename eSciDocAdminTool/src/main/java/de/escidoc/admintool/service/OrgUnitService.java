@@ -58,6 +58,10 @@ public class OrgUnitService {
         return orgUnitById.get(objectId);
     }
 
+    public String orgUnitTitleById(String objectId) {
+        return orgUnitById.get(objectId).getTitle();
+    }
+
     private Collection<OrganizationalUnit> organizationalUnits;
 
     public Collection<OrganizationalUnit> all() throws EscidocException,

@@ -2,6 +2,7 @@ package de.escidoc.admintool.view.orgunit.editor;
 
 import java.util.ArrayList;
 
+import de.escidoc.admintool.service.OrgUnitService;
 import de.escidoc.admintool.view.orgunit.predecessor.AbstractPredecessorView;
 import de.escidoc.admintool.view.orgunit.predecessor.SpinOffPredecessorView;
 import de.escidoc.vaadin.dialog.ErrorDialog;
@@ -17,7 +18,8 @@ public class SpinOffPPredecessorEditor extends AbstractPredecessorEditor
 
     private static final long serialVersionUID = 6885054493792037547L;
 
-    public SpinOffPPredecessorEditor() {
+    public SpinOffPPredecessorEditor(OrgUnitService service) {
+        super(service);
         setMultiSelect(false);
     }
 

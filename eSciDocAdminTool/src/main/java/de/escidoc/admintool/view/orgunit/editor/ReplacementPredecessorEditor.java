@@ -2,6 +2,7 @@ package de.escidoc.admintool.view.orgunit.editor;
 
 import java.util.ArrayList;
 
+import de.escidoc.admintool.service.OrgUnitService;
 import de.escidoc.admintool.view.orgunit.predecessor.AbstractPredecessorView;
 import de.escidoc.admintool.view.orgunit.predecessor.ReplacementPredecessorView;
 
@@ -14,7 +15,8 @@ public class ReplacementPredecessorEditor extends AbstractPredecessorEditor {
 
     private static final long serialVersionUID = 6885054493792037547L;
 
-    public ReplacementPredecessorEditor() {
+    public ReplacementPredecessorEditor(OrgUnitService service) {
+        super(service);
         setMultiSelect(false);
     }
 

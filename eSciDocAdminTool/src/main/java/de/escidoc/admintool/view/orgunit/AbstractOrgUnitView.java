@@ -157,10 +157,12 @@ public abstract class AbstractOrgUnitView extends CustomComponent
         orgUnitListSelect.setMultiSelect(true);
         orgUnitListSelect.setImmediate(true);
 
-        form.addComponent(LayoutHelper.create(ViewConstants.PARENTS_LABEL,
-            new OrgUnitEditor("Add Parents", orgUnitListSelect,
-                addOrgUnitButton, removeOrgUnitButton), labelWidth, 100, false,
-            new Button[] { addOrgUnitButton, removeOrgUnitButton }));
+        form
+            .addComponent(LayoutHelper.create(ViewConstants.PARENTS_LABEL,
+                new OrgUnitEditor("Add Parents", orgUnitListSelect,
+                    addOrgUnitButton, removeOrgUnitButton, service),
+                labelWidth, 100, false, new Button[] { addOrgUnitButton,
+                    removeOrgUnitButton }));
 
         // Predecessor Type
         predecessorTypeSelect.setRows(1);
@@ -184,6 +186,7 @@ public abstract class AbstractOrgUnitView extends CustomComponent
         form.addComponent(predecessorLayout);
 
         addPredecessorButton.addListener(new Button.ClickListener() {
+            @Override
             public void buttonClick(final ClickEvent event) {
                 onAddPredecessorClicked();
             }
@@ -200,6 +203,7 @@ public abstract class AbstractOrgUnitView extends CustomComponent
         return footer;
     }
 
+    @Override
     public void buttonClick(final ClickEvent event) {
         final Button source = event.getButton();
         if (source == save) {

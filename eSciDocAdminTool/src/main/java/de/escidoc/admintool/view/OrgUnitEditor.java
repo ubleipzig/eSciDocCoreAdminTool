@@ -8,6 +8,8 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.ListSelect;
 
+import de.escidoc.admintool.service.OrgUnitService;
+
 public class OrgUnitEditor extends CustomComponent implements Serializable {
     private static final long serialVersionUID = 2985333143579122542L;
 
@@ -19,12 +21,16 @@ public class OrgUnitEditor extends CustomComponent implements Serializable {
 
     private final String caption;
 
+    private final OrgUnitService service;
+
     public OrgUnitEditor(final String caption, final ListSelect orgUnitList,
-        Button addOrgUnitButton, Button removeOrgUnitButton) {
+        Button addOrgUnitButton, Button removeOrgUnitButton,
+        OrgUnitService service) {
         this.caption = caption;
         this.orgUnitList = orgUnitList;
         this.addOrgUnitButton = addOrgUnitButton;
         this.removeOrgUnitButton = removeOrgUnitButton;
+        this.service = service;
         addListeners();
         setCompositionRoot(orgUnitList);
     }
@@ -51,7 +57,7 @@ public class OrgUnitEditor extends CustomComponent implements Serializable {
 
     public void addButtonClicked(ClickEvent event) {
         getApplication().getMainWindow().addWindow(
-            new OrgUnitSelectorView(caption, orgUnitList).getWidget());
+            new OrgUnitSelectorView(caption, orgUnitList, service).getWidget());
     }
 
     public void removeButtonClicked(final ClickEvent event) {

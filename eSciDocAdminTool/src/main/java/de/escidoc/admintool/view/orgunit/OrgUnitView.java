@@ -12,8 +12,9 @@ import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
 
-@SuppressWarnings("serial")
 public class OrgUnitView extends SplitPanel {
+    private static final long serialVersionUID = -2179646235525092542L;
+
     private final Logger log = LoggerFactory.getLogger(OrgUnitView.class);
 
     private final AdminToolApplication app;

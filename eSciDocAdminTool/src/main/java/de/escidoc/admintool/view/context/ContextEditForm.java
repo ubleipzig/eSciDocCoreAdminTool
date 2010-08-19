@@ -128,8 +128,9 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
         form.addComponent(LayoutHelper.create(
             ViewConstants.ORGANIZATION_UNITS_LABEL, new OrgUnitEditor(
                 ViewConstants.ORGANIZATION_UNITS_LABEL, orgUnitList,
-                addOrgUnitButton, removeOrgUnitButton), labelWidth, 140, false,
-            new Button[] { addOrgUnitButton, removeOrgUnitButton }));
+                addOrgUnitButton, removeOrgUnitButton, orgUnitService),
+            labelWidth, 140, false, new Button[] { addOrgUnitButton,
+                removeOrgUnitButton }));
         // AdminDescriptor
         adminDescriptorAccordion = new Accordion();
         adminDescriptorAccordion.setWidth("400px");

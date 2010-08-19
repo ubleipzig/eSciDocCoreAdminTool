@@ -1,12 +1,14 @@
 package de.escidoc.admintool.view.orgunit.editor;
 
+import de.escidoc.admintool.service.OrgUnitService;
 import de.escidoc.admintool.view.orgunit.predecessor.FusionPredecessorView;
 import de.escidoc.vaadin.dialog.ErrorDialog;
 
 public class FusionPredecessorEditor extends AbstractPredecessorEditor {
     private static final long serialVersionUID = 6885054493792037547L;
 
-    public FusionPredecessorEditor() {
+    public FusionPredecessorEditor(OrgUnitService service) {
+        super(service);
         setMultiSelect(true);
     }
 

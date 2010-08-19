@@ -16,6 +16,7 @@ import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
+import de.escidoc.admintool.service.OrgUnitService;
 import de.escidoc.admintool.view.context.OrgUnitTree;
 import de.escidoc.admintool.view.orgunit.OrgUnitAddView;
 import de.escidoc.admintool.view.orgunit.PredecessorType;
@@ -37,7 +38,7 @@ public abstract class AbstractPredecessorEditor extends CustomComponent
 
     protected Button cancelButton = new Button("Cancel");
 
-    protected OrgUnitTree tree = new OrgUnitTree();
+    protected OrgUnitTree tree;
 
     private Window parent;
 
@@ -49,7 +50,10 @@ public abstract class AbstractPredecessorEditor extends CustomComponent
 
     private String orgUnitName;
 
-    public AbstractPredecessorEditor() {
+    private final OrgUnitService service;
+
+    public AbstractPredecessorEditor(OrgUnitService service) {
+        this.service = service;
         modalWindow.setCaption(getLabel());
         modalWindow.addComponent(new Label(getEditorDescription()));
         modalWindow.addComponent(tree);
@@ -57,12 +61,14 @@ public abstract class AbstractPredecessorEditor extends CustomComponent
         modalWindow.addComponent(addFooter());
         addListener();
         setCompositionRoot(new VerticalLayout());
+        this.tree = new OrgUnitTree(service);
     }
 
     protected abstract String getLabel();
 
     protected abstract String getEditorDescription();
 
+    @Override
     public Window getWidget() {
         return modalWindow;
     }
@@ -72,6 +78,7 @@ public abstract class AbstractPredecessorEditor extends CustomComponent
 
             private static final long serialVersionUID = -7640719928940296001L;
 
+            @Override
             public void buttonClick(final ClickEvent event) {
                 onOkClicked(event);
             }
@@ -80,6 +87,7 @@ public abstract class AbstractPredecessorEditor extends CustomComponent
         cancelButton.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = -965029855181433407L;
 
+            @Override
             public void buttonClick(final ClickEvent event) {
                 onCancelClicked(event);
             }
@@ -96,6 +104,7 @@ public abstract class AbstractPredecessorEditor extends CustomComponent
         }
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public List<Object> getSelected() {
         final List<Object> selectedOrgUnits = new ArrayList<Object>();
@@ -130,10 +139,12 @@ public abstract class AbstractPredecessorEditor extends CustomComponent
         return footer;
     }
 
+    @Override
     public void setMainWindow(final Window parent) {
         this.parent = parent;
     }
 
+    @Override
     public void setList(final ListSelect select) {
         this.select = select;
     }
@@ -149,10 +160,12 @@ public abstract class AbstractPredecessorEditor extends CustomComponent
         return parent;
     }
 
+    @Override
     public void setOrgUnitAddView(final OrgUnitAddView orgUnitAddView) {
         this.orgUnitAddView = orgUnitAddView;
     }
 
+    @Override
     public void setNewOrgUnit(final String orgUnitName) {
         this.orgUnitName = orgUnitName;
     }

@@ -16,6 +16,7 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
+import de.escidoc.admintool.service.OrgUnitService;
 import de.escidoc.admintool.view.context.OrgUnitTree;
 import de.escidoc.admintool.view.orgunit.OrgUnitAddView;
 import de.escidoc.admintool.view.orgunit.PredecessorType;
@@ -41,7 +42,7 @@ public class SplittingPredecessorEditor extends CustomComponent
 
     protected HorizontalLayout footer = new HorizontalLayout();
 
-    protected OrgUnitTree tree = new OrgUnitTree();
+    protected OrgUnitTree tree;
 
     protected Button okButton = new Button("Ok");
 
@@ -66,6 +67,13 @@ public class SplittingPredecessorEditor extends CustomComponent
     private final ListSelect ls = new ListSelect();
 
     private final SplitPanel pan = new SplitPanel();
+
+    private final OrgUnitService service;
+
+    public SplittingPredecessorEditor(OrgUnitService service) {
+        this.service = service;
+        tree = new OrgUnitTree(service);
+    }
 
     public void buildLayout() {
         tree.setMultiSelect(false);
@@ -107,6 +115,7 @@ public class SplittingPredecessorEditor extends CustomComponent
         addButton.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = -4295712465167241155L;
 
+            @Override
             public void buttonClick(final ClickEvent event) {
                 addRightClicked(event);
             }
@@ -115,6 +124,7 @@ public class SplittingPredecessorEditor extends CustomComponent
         editButton.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = -3499158386491222115L;
 
+            @Override
             public void buttonClick(final ClickEvent event) {
                 editRightClicked(event);
             }
@@ -123,6 +133,7 @@ public class SplittingPredecessorEditor extends CustomComponent
         removebutton.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = -940316991862977275L;
 
+            @Override
             public void buttonClick(final ClickEvent event) {
                 removeRightClicked(event);
             }
@@ -149,6 +160,7 @@ public class SplittingPredecessorEditor extends CustomComponent
 
             private static final long serialVersionUID = -7640719928940296001L;
 
+            @Override
             public void buttonClick(final ClickEvent event) {
                 onOkClicked(event);
             }
@@ -157,6 +169,7 @@ public class SplittingPredecessorEditor extends CustomComponent
         cancelButton.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = -965029855181433407L;
 
+            @Override
             public void buttonClick(final ClickEvent event) {
                 onCancelClicked(event);
             }
@@ -182,6 +195,7 @@ public class SplittingPredecessorEditor extends CustomComponent
         parent.removeWindow(modalWindow);
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public List<Object> getSelected() {
         final List<Object> selectedOrgUnits = new ArrayList<Object>();
@@ -201,10 +215,12 @@ public class SplittingPredecessorEditor extends CustomComponent
         return footer;
     }
 
+    @Override
     public void setMainWindow(final Window parent) {
         this.parent = parent;
     }
 
+    @Override
     public void setList(final ListSelect select) {
         this.select = select;
     }
@@ -252,15 +268,18 @@ public class SplittingPredecessorEditor extends CustomComponent
             "Select one organizational unit, please."));
     }
 
+    @Override
     public void setOrgUnitAddView(final OrgUnitAddView orgUnitAddView) {
         this.orgUnitAddView = orgUnitAddView;
         buildLayout();
     }
 
+    @Override
     public Window getWidget() {
         return modalWindow;
     }
 
+    @Override
     public void setNewOrgUnit(final String orgUnitName) {
         this.orgUnitName = orgUnitName;
 

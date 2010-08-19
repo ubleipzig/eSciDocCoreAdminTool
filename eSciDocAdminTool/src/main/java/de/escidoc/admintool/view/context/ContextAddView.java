@@ -130,8 +130,9 @@ public class ContextAddView extends CustomComponent implements ClickListener {
         form.addComponent(LayoutHelper.create(
             ViewConstants.ORGANIZATION_UNITS_LABEL, new OrgUnitEditor(
                 ViewConstants.ORGANIZATION_UNITS_LABEL, orgUnitList,
-                addOrgUnitButton, removeOrgUnitButton), labelWidth, 140, true,
-            new Button[] { addOrgUnitButton, removeOrgUnitButton }));
+                addOrgUnitButton, removeOrgUnitButton, orgUnitService),
+            labelWidth, 140, true, new Button[] { addOrgUnitButton,
+                removeOrgUnitButton }));
 
         // AdminDescriptor
         adminDescriptorAccordion = new Accordion();

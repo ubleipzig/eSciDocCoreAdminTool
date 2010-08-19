@@ -8,8 +8,8 @@ import de.escidoc.admintool.service.UserService;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.core.client.exceptions.EscidocClientException;
 
-@SuppressWarnings("serial")
 public class UserView extends SplitPanel {
+    private static final long serialVersionUID = -3544643662536040641L;
 
     private final UserList userList;
 

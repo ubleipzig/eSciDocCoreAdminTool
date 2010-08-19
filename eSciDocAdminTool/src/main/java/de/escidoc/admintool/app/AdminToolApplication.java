@@ -540,7 +540,8 @@ public class AdminToolApplication extends Application
     }
 
     public UserLabAddView newUserLabAddView() {
-        return new UserLabAddView(this, userLabView.getUserList(), userService);
+        return new UserLabAddView(this, userLabView.getUserList(), userService,
+            orgUnitService);
     }
 
     public Component newOrgUnitAddView() throws EscidocException,

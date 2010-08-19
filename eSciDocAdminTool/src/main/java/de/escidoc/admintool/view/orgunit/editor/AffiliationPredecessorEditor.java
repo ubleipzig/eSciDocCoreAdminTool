@@ -1,5 +1,6 @@
 package de.escidoc.admintool.view.orgunit.editor;
 
+import de.escidoc.admintool.service.OrgUnitService;
 import de.escidoc.admintool.view.orgunit.predecessor.AbstractPredecessorView;
 import de.escidoc.admintool.view.orgunit.predecessor.AffiliationPredecessorView;
 import de.escidoc.vaadin.dialog.ErrorDialog;
@@ -12,7 +13,8 @@ public class AffiliationPredecessorEditor extends AbstractPredecessorEditor {
 
     private static final String LABEL = "Set Predecessor Affiliation";
 
-    public AffiliationPredecessorEditor() {
+    public AffiliationPredecessorEditor(OrgUnitService service) {
+        super(service);
         setMultiSelect(false);
     }
 
