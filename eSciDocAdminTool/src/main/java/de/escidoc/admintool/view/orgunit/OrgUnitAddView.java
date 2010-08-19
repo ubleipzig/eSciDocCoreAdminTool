@@ -2,6 +2,8 @@ package de.escidoc.admintool.view.orgunit;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Set;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -104,11 +106,18 @@ public class OrgUnitAddView extends AbstractOrgUnitView
                 if (selectObject == null) {
                     selectObject = PredecessorType.BLANK;
                 }
+                final Class<?>[] argsClass =
+                    new Class<?>[] { OrgUnitService.class };
+                final Object[] args = new Object[] { this.service };
+
                 final Class<?> c =
                     Class.forName(((PredecessorType) selectObject)
                         .getExecutionClass());
-                final IPredecessorEditor editor =
-                    (IPredecessorEditor) c.newInstance();
+                Constructor<?> constructor = c.getConstructor(argsClass);
+
+                Object object = constructor.newInstance(args);
+
+                final IPredecessorEditor editor = (IPredecessorEditor) object;
                 editor.setNewOrgUnit((String) titleField.getValue());
                 final Window window = editor.getWidget();
                 window.setModal(true);
@@ -135,6 +144,26 @@ public class OrgUnitAddView extends AbstractOrgUnitView
         catch (final IllegalAccessException e) {
             log.error("An unexpected error occured! See log for details.", e);
             e.printStackTrace();
+        }
+        catch (SecurityException e) {
+            log.error("An unexpected error occured! See log for details.", e);
+            e.printStackTrace();
+
+        }
+        catch (NoSuchMethodException e) {
+            log.error("An unexpected error occured! See log for details.", e);
+            e.printStackTrace();
+
+        }
+        catch (IllegalArgumentException e) {
+            log.error("An unexpected error occured! See log for details.", e);
+            e.printStackTrace();
+
+        }
+        catch (InvocationTargetException e) {
+            log.error("An unexpected error occured! See log for details.", e);
+            e.printStackTrace();
+
         }
     }
 
