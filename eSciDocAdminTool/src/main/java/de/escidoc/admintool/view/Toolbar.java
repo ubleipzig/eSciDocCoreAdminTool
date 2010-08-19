@@ -3,10 +3,11 @@
  */
 package de.escidoc.admintool.view;
 
+import com.vaadin.terminal.ThemeResource;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Embedded;
 import com.vaadin.ui.GridLayout;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.Window;
 
 /**
@@ -20,6 +21,7 @@ public class Toolbar {
         // , final Button logoutButton) {
 
         GridLayout layout = new GridLayout(3, 1);
+        // layout.addComponent()
         layout.setDebugId("dashboard");
 
         StringBuilder sb = new StringBuilder();
@@ -44,11 +46,15 @@ public class Toolbar {
         // l.setWidth("10px");
         // layout.addComponent(l);
         // layout.setExpandRatio(l, 1);
-
+        ThemeResource imageResource =
+            new ThemeResource("images/SchriftLogo.jpg");
+        Embedded embedded = new Embedded("", imageResource);
+        layout.addComponent(embedded, 0, 0);
         for (Button button : buttons) {
-            layout.addComponent(new Label("&nbsp;", Label.CONTENT_XHTML), 0, 0);
-            layout.addComponent(button, 1, 0);
-            layout.setComponentAlignment(button, Alignment.MIDDLE_CENTER);
+            // layout.addComponent(new Label("&nbsp;", Label.CONTENT_XHTML), 0,
+            // 0);
+            layout.addComponent(button, 2, 0);
+            layout.setComponentAlignment(button, Alignment.MIDDLE_RIGHT);
         }
 
         layout.setMargin(true);
@@ -59,5 +65,4 @@ public class Toolbar {
         layout.setWidth("100%");
         return layout;
     }
-
 }
