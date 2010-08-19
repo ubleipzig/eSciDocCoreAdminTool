@@ -100,10 +100,10 @@ public class ContextService {
 
         final Context updatedContext =
             new ContextFactory()
-                .update(getSelected(objectId)).name(newName).description(
-                    newDescription).type(newType).orgUnits(
-                    organizationalUnitRefs).adminDescriptors(
-                    newAdminDescriptors).build();
+                .update(getSelected(objectId)).name(newName)
+                .description(newDescription).type(newType)
+                .orgUnits(organizationalUnitRefs)
+                .adminDescriptors(newAdminDescriptors).build();
 
         final Context fromRepository = client.update(updatedContext);
         assert fromRepository != null : "update fails and return Null Pointer";
@@ -205,13 +205,13 @@ public class ContextService {
         assert !(name == null || name.isEmpty()) : "name can not be null or empty";
         assert !(description == null || description.isEmpty()) : "description name can not be null or empty";
         assert !(contextType == null || contextType.isEmpty()) : "contextType name can not be null or empty";
-        assert adminDescriptors != null : "Admin Descriptor can not be null";
         assert (orgUnitRefs != null) : "orgUnitRefs can not be null";
         assert (orgUnitRefs.size() > 0) : "orgUnitRefs can not be empty";
 
         final Context backedContext =
-            new ContextFactory().create(name, description, contextType,
-                orgUnitRefs).adminDescriptors(adminDescriptors).build();
+            new ContextFactory()
+                .create(name, description, contextType, orgUnitRefs)
+                .adminDescriptors(adminDescriptors).build();
         final Context createdContext = client.create(backedContext);
         assert createdContext != null : "Got null reference from the server.";
         assert createdContext.getObjid() != null : "ObjectID can not be null.";
