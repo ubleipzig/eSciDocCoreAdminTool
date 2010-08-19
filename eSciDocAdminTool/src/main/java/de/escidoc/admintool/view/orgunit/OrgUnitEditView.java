@@ -16,6 +16,7 @@ import com.vaadin.ui.Label;
 
 import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.app.PropertyId;
+import de.escidoc.admintool.domain.MetadataExtractor;
 import de.escidoc.admintool.service.OrgUnitService;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.core.client.exceptions.EscidocException;
@@ -211,10 +212,6 @@ public class OrgUnitEditView extends AbstractOrgUnitView {
     public void setSelected(final Item item) {
         this.item = item;
         if (item != null) {
-            // PropertyId.OBJECT_ID, PropertyId.NAME, PropertyId.DESCRIPTION,
-            // PropertyId.CREATED_ON, PropertyId.CREATED_BY,
-            // PropertyId.LAST_MODIFICATION_DATE, PropertyId.MODIFIED_BY,
-            // PropertyId.PARENTS, PropertyId.PREDECESSORS
             titleField.setPropertyDataSource(item
                 .getItemProperty(PropertyId.NAME));
 
@@ -241,6 +238,28 @@ public class OrgUnitEditView extends AbstractOrgUnitView {
 
             orgUnitListSelect.setPropertyDataSource(item
                 .getItemProperty(PropertyId.PARENTS));
+            OrganizationalUnit orgUnit =
+                service.find((String) item
+                    .getItemProperty(PropertyId.OBJECT_ID).getValue());
+
+            final MetadataExtractor metadataExtractor =
+                new MetadataExtractor(orgUnit);
+            final String alternative =
+                metadataExtractor.get("dcterms:alternative");
+            final String identifier = metadataExtractor.get("dc:identifier");
+            final String orgType =
+                metadataExtractor.get("eterms:organization-type");
+            final String country = metadataExtractor.get("eterms:country");
+            final String city = metadataExtractor.get("eterms:city");
+            final String coordinate = metadataExtractor.get("kml:coordinates");
+            final String startDate = metadataExtractor.get("eterms:start-date");
+            final String endDate = metadataExtractor.get("eterms:end-date");
+            alternativeField.setValue(alternative);
+            identifierField.setValue(identifier);
+            orgTypeField.setValue(orgType);
+            countryField.setValue(country);
+            cityField.setValue(city);
+            coordinatesField.setValue(coordinate);
         }
     }
 

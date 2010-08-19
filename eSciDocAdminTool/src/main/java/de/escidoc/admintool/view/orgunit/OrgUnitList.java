@@ -139,18 +139,19 @@ public class OrgUnitList extends Table {
         if (description == null) {
             description = "";
         }
-        Collection<String> predecessorsObjectId = null;
-
-        predecessorsObjectId = service.getPredecessorsObjectId(ou);
-        // TODO replace this.addItem with: dataSource.addItem(newOrgUnit);
-        this.addItem(new Object[] { ou.getObjid(),
-            ou.getProperties().getName(), description,
-            ou.getProperties().getCreationDate().toDate(),
-            ou.getProperties().getCreatedBy().getObjid(),
-            ou.getLastModificationDate().toDate(),
-            ou.getProperties().getModifiedBy().getObjid(), alternative,
-            identifier, orgType, country, city, coordinate, startDate, endDate,
-            getParentsObjectId(ou), predecessorsObjectId }, ou.getObjid());
+        dataSource.addItem(ou);
+        // Collection<String> predecessorsObjectId = null;
+        //
+        // predecessorsObjectId = service.getPredecessorsObjectId(ou);
+        // // TODO replace this.addItem with: dataSource.addItem(newOrgUnit);
+        // this.addItem(new Object[] { ou.getObjid(),
+        // ou.getProperties().getName(), description,
+        // ou.getProperties().getCreationDate().toDate(),
+        // ou.getProperties().getCreatedBy().getObjid(),
+        // ou.getLastModificationDate().toDate(),
+        // ou.getProperties().getModifiedBy().getObjid(), alternative,
+        // identifier, orgType, country, city, coordinate, startDate, endDate,
+        // getParentsObjectId(ou), predecessorsObjectId }, ou.getObjid());
 
     }
 

@@ -1,21 +1,28 @@
 package de.escidoc.admintool.view.orgunit;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.Set;
 
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.xml.sax.SAXException;
 
+import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Window;
 
 import de.escidoc.admintool.app.AdminToolApplication;
+import de.escidoc.admintool.domain.OrgUnitFactory;
 import de.escidoc.admintool.service.OrgUnitService;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.admintool.view.orgunit.editor.IPredecessorEditor;
 import de.escidoc.admintool.view.validator.EmptyFieldValidator;
+import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
@@ -30,11 +37,23 @@ public class OrgUnitAddView extends AbstractOrgUnitView
     private static final Logger log = LoggerFactory
         .getLogger(OrgUnitAddView.class);
 
+    private final ObjectProperty titleProperty = new ObjectProperty("",
+        String.class);
+
+    private final ObjectProperty descProperty = new ObjectProperty("",
+        String.class);
+
     public OrgUnitAddView(final AdminToolApplication app,
         final OrgUnitService service) {
         super(app, service);
         super.postInit();
         super.orgUnitList = app.getOrgUnitTable();
+        mapObjectWithProperty();
+    }
+
+    private void mapObjectWithProperty() {
+        titleField.setPropertyDataSource(titleProperty);
+        descriptionField.setPropertyDataSource(descProperty);
     }
 
     public void showAddedPredecessors(
@@ -121,29 +140,91 @@ public class OrgUnitAddView extends AbstractOrgUnitView
 
     @Override
     protected void saveClicked(ClickEvent event) {
-        // TODO validation
-        // TODO save new org unit
+        if (validate()) {
+            titleField.setComponentError(null);
+            descriptionField.setComponentError(null);
 
-        // TODO if predecessor type is splitting && todoList is not empty
-        // TODO a. save the rest of new org unit with the user given name and
-        // auto generated description.
-        // TODO b. show org unit edit view for new org unit in todo.
+            // TODO this is crazy. Data binding to the rescue for later.
+            Set<String> parents = null;
+            Set<String> predecessors = null;
+            try {
+                PredecessorType predecessorType =
+                    (PredecessorType) predecessorTypeSelect.getValue();
+                PredecessorForm predecessorForm = null;
+                if (predecessorType != null) {
+                    predecessorForm =
+                        PredecessorForm.fromString(predecessorType
+                            .toString().toLowerCase());
+                }
 
-        // TODO this is crazy. Data binding to the rescue for later.
-        // final String title = (String) getField(TITLE_ID).getValue();
-        // final String description = (String)
-        // getField(DESCRIPTION_ID).getValue();
-        // final String identifier = (String)
-        // getField(IDENTIFIER_ID).getValue();
-        // final String alternative = (String)
-        // getField(ALTERNATIVE_ID).getValue();
-        // final String orgType = (String) getField(ORG_TYPE_ID).getValue();
-        // final String country = (String) getField(COUNTRY_ID).getValue();
-        // final String city = (String) getField(CITY_ID).getValue();
-        // final String coordinates =
-        // (String) getField(ViewConstants.COORDINATES_ID).getValue();
-        // final Set<String> parents =
-        // (Set<String>) getField(PARENTS_ID).getValue();
+                final OrganizationalUnit createdOrgUnit =
+                    storeInRepository(new OrgUnitFactory()
+                        .create((String) titleProperty.getValue(),
+                            (String) descProperty.getValue()).parents(parents)
+                        .predecessors(predecessors, predecessorForm)
+                        .identifier((String) identifierField.getValue())
+                        .alternative((String) alternativeField.getValue())
+                        .orgType((String) orgTypeField.getValue())
+                        .country((String) countryField.getValue())
+                        .city((String) cityField.getValue())
+                        .coordinates((String) coordinatesField.getValue())
+                        .build());
+                orgUnitList.addOrgUnit(createdOrgUnit);
+                orgUnitList.select(createdOrgUnit);
+            }
+            catch (EscidocException e) {
+                // TODO Auto-generated catch block
+                log.error("An unexpected error occured! See log for details.",
+                    e);
+                e.printStackTrace();
+
+            }
+            catch (InternalClientException e) {
+                // TODO Auto-generated catch block
+                log.error("An unexpected error occured! See log for details.",
+                    e);
+                e.printStackTrace();
+
+            }
+            catch (TransportException e) {
+                // TODO Auto-generated catch block
+                log.error("An unexpected error occured! See log for details.",
+                    e);
+                e.printStackTrace();
+
+            }
+            catch (ParserConfigurationException e) {
+                // TODO Auto-generated catch block
+                log.error("An unexpected error occured! See log for details.",
+                    e);
+                e.printStackTrace();
+
+            }
+            catch (SAXException e) {
+                // TODO Auto-generated catch block
+                log.error("An unexpected error occured! See log for details.",
+                    e);
+                e.printStackTrace();
+
+            }
+            catch (IOException e) {
+                // TODO Auto-generated catch block
+                log.error("An unexpected error occured! See log for details.",
+                    e);
+                e.printStackTrace();
+
+            }
+            catch (EscidocClientException e) {
+                // TODO Auto-generated catch block
+                log.error("An unexpected error occured! See log for details.",
+                    e);
+                e.printStackTrace();
+
+            }
+            // updateOrgUnitTableView(createdOrgUnit);
+            app.showOrganizationalUnitView();
+            // }
+        }
 
         final Set<String> predecessors = null;
         final PredecessorForm predecessorType = null;
