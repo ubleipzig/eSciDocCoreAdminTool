@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import de.escidoc.core.client.OrganizationalUnitHandlerClient;
 import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
@@ -20,6 +23,9 @@ import de.escidoc.core.resources.oum.Predecessor;
 public class OrgUnitService {
     private static final String ESCIDOC_SERVICE_ROOT_URI =
         "http://localhost:8080";
+
+    private static final Logger log = LoggerFactory
+        .getLogger(OrgUnitService.class);
 
     // TODO re-factor Ou- and ContextService: @See ContextService.java
     private final OrganizationalUnitHandlerClient client;
@@ -46,6 +52,10 @@ public class OrgUnitService {
 
     public Map<String, OrganizationalUnit> getOrgUnitById() {
         return orgUnitById;
+    }
+
+    public OrganizationalUnit find(String objectId) {
+        return orgUnitById.get(objectId);
     }
 
     private Collection<OrganizationalUnit> organizationalUnits;
@@ -88,9 +98,10 @@ public class OrgUnitService {
 
     public OrganizationalUnit create(final OrganizationalUnit ou)
         throws EscidocException, InternalClientException, TransportException {
+
         final OrganizationalUnit createdOrgUnit = client.create(ou);
-        System.out
-            .println("Succesfully stored a new Organizational Unit with the Object ID: "
+        log
+            .debug("Succesfully stored a new Organizational Unit with the Object ID: "
                 + createdOrgUnit.getObjid());
 
         assert createdOrgUnit != null : "Got null reference from the server.";
@@ -111,12 +122,17 @@ public class OrgUnitService {
 
     public void update(final OrganizationalUnit ou) throws EscidocException,
         InternalClientException, TransportException {
-        final OrganizationalUnit update = client.update(ou);
+        OrganizationalUnit old = ou;
+        final OrganizationalUnit updatedOrgUnit = client.update(ou);
+        orgUnitById.remove(old);
+        orgUnitById.put(updatedOrgUnit.getObjid(), updatedOrgUnit);
     }
 
     public void delete(final OrganizationalUnit ou) throws EscidocException,
         InternalClientException, TransportException {
+        OrganizationalUnit old = ou;
         client.delete(ou.getObjid());
+        orgUnitById.remove(old.getObjid());
     }
 
     public Collection<OrganizationalUnit> getOrganizationalUnits()
