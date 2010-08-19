@@ -11,8 +11,6 @@ import com.vaadin.ui.ListSelect;
 public class OrgUnitEditor extends CustomComponent implements Serializable {
     private static final long serialVersionUID = 2985333143579122542L;
 
-    // private final Panel panel = new Panel();
-
     private final ListSelect orgUnitList;
 
     private final Button addOrgUnitButton;
@@ -35,6 +33,7 @@ public class OrgUnitEditor extends CustomComponent implements Serializable {
         addOrgUnitButton.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = -266152738843712262L;
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 addButtonClicked(event);
             }
@@ -43,6 +42,7 @@ public class OrgUnitEditor extends CustomComponent implements Serializable {
         removeOrgUnitButton.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = -8884073931795851352L;
 
+            @Override
             public void buttonClick(final ClickEvent event) {
                 removeButtonClicked(event);
             }
