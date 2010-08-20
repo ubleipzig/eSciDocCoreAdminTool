@@ -3,6 +3,7 @@ package de.escidoc.admintool.service;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -24,8 +25,11 @@ public class OrgUnitService {
     private static final String ESCIDOC_SERVICE_ROOT_URI =
         "http://localhost:8080";
 
-    private static final Logger log = LoggerFactory
-        .getLogger(OrgUnitService.class);
+    private static final Logger log =
+        LoggerFactory.getLogger(OrgUnitService.class);
+
+    private final Map<String, String> objectIdByTitle =
+        new HashMap<String, String>();
 
     // TODO re-factor Ou- and ContextService: @See ContextService.java
     private final OrganizationalUnitHandlerClient client;
@@ -48,25 +52,28 @@ public class OrgUnitService {
     }
 
     private final Map<String, OrganizationalUnit> orgUnitById =
-        new ConcurrentHashMap<String, OrganizationalUnit>();
+        new HashMap<String, OrganizationalUnit>();
 
     public Map<String, OrganizationalUnit> getOrgUnitById() {
         return orgUnitById;
     }
 
-    public OrganizationalUnit find(String objectId) {
+    public OrganizationalUnit find(final String objectId) {
         return orgUnitById.get(objectId);
     }
 
-    public String orgUnitTitleById(String objectId) {
+    public String orgUnitTitleById(final String objectId) {
         return orgUnitById.get(objectId).getTitle();
+    }
+
+    public String getObjectIdByTitle(final Object title) {
+        return objectIdByTitle.get(title);
     }
 
     private Collection<OrganizationalUnit> organizationalUnits;
 
     public Collection<OrganizationalUnit> all() throws EscidocException,
         InternalClientException, TransportException {
-
         organizationalUnits =
             client
                 .retrieveOrganizationalUnits(emptyFilter())
@@ -126,7 +133,7 @@ public class OrgUnitService {
 
     public void update(final OrganizationalUnit ou) throws EscidocException,
         InternalClientException, TransportException {
-        OrganizationalUnit old = ou;
+        final OrganizationalUnit old = ou;
         final OrganizationalUnit updatedOrgUnit = client.update(ou);
         orgUnitById.remove(old);
         orgUnitById.put(updatedOrgUnit.getObjid(), updatedOrgUnit);
@@ -134,7 +141,7 @@ public class OrgUnitService {
 
     public void delete(final OrganizationalUnit ou) throws EscidocException,
         InternalClientException, TransportException {
-        OrganizationalUnit old = ou;
+        final OrganizationalUnit old = ou;
         client.delete(ou.getObjid());
         orgUnitById.remove(old.getObjid());
     }
@@ -144,7 +151,7 @@ public class OrgUnitService {
         if (organizationalUnits == null) {
             return all();
         }
-        return organizationalUnits;
+        return orgUnitById.values();
     }
 
     public Collection<String> getPredecessorsObjectId(

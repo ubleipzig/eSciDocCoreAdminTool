@@ -17,12 +17,12 @@ import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.service.ApplicationContext;
 import com.vaadin.terminal.ThemeResource;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.SplitPanel;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 
 import de.escidoc.admintool.messages.Messages;
 import de.escidoc.admintool.service.ContextService;
@@ -67,17 +67,16 @@ public class AdminToolApplication extends Application
     private static final String ESCIDOC_USER_HANDLE_URL =
         "http://localhost:8181/AdminTool?eSciDocUserHandle=";
 
-    private final Logger log = LoggerFactory
-        .getLogger(AdminToolApplication.class);
+    private final Logger log =
+        LoggerFactory.getLogger(AdminToolApplication.class);
 
     @Override
     public void init() {
         log.info("Starting application..."); //$NON-NLS-1$
         getContext().addTransactionListener(this);
-        String path = Messages.getString("AdminToolApplication.1");
+        final String path = Messages.getString("AdminToolApplication.1");
         logoutButton.setIcon(new ThemeResource(path)); //$NON-NLS-1$
         logoutButton.addListener(new Button.ClickListener() {
-            @Override
             public void buttonClick(final Button.ClickEvent event) {
                 AdminToolApplication.this.getMainWindow().showNotification(
                     Messages.getString("AdminToolApplication.2")); //$NON-NLS-1$
@@ -136,7 +135,6 @@ public class AdminToolApplication extends Application
     private static ThreadLocal<AdminToolApplication> currentApplication =
         new ThreadLocal<AdminToolApplication>();
 
-    @Override
     public void transactionStart(
         final Application application, final Object transactionData) {
         if (application == AdminToolApplication.this) {
@@ -144,7 +142,6 @@ public class AdminToolApplication extends Application
         }
     }
 
-    @Override
     public void transactionEnd(
         final Application application, final Object transactionData) {
         if (application == AdminToolApplication.this) {
@@ -188,7 +185,7 @@ public class AdminToolApplication extends Application
         throws EscidocException, InternalClientException, TransportException {
         buildMainLayout();
         initServices(authentication);
-        setMainComponent(getOrganizationalUnitView());
+        setMainComponent(getOrgUnitView());
     }
 
     private void initServices(final Authentication authentication)
@@ -228,8 +225,8 @@ public class AdminToolApplication extends Application
 
     private final NavigationTree tree = new NavigationTree(this);
 
-    private final SplitPanel horizontalSplit = new SplitPanel(
-        SplitPanel.ORIENTATION_HORIZONTAL);
+    private final SplitPanel horizontalSplit =
+        new SplitPanel(SplitPanel.ORIENTATION_HORIZONTAL);
 
     private void buildMainLayout() {
         final Window window =
@@ -253,11 +250,11 @@ public class AdminToolApplication extends Application
         getMainWindow().setContent(layout);
     }
 
-    private final Button logoutButton = new Button(
-        Messages.getString("AdminToolApplication.6")); //$NON-NLS-1$
+    private final Button logoutButton =
+        new Button(Messages.getString("AdminToolApplication.6")); //$NON-NLS-1$
 
-    private final Button newUserButton = new Button(
-        Messages.getString("AdminToolApplication.7")); //$NON-NLS-1$
+    private final Button newUserButton =
+        new Button(Messages.getString("AdminToolApplication.7")); //$NON-NLS-1$
 
     /*
      * private HorizontalLayout createToolbar() { final HorizontalLayout layout
@@ -286,7 +283,6 @@ public class AdminToolApplication extends Application
         horizontalSplit.setSecondComponent(c);
     }
 
-    @Override
     public void itemClick(final ItemClickEvent event) {
         if (event.getSource() == tree) {
             final Object itemId = event.getItemId();
@@ -320,8 +316,8 @@ public class AdminToolApplication extends Application
                     showUsersLabView();
                 }
                 else {
-                    throw new RuntimeException(
-                        Messages.getString("AdminToolApplication.10")); //$NON-NLS-1$
+                    throw new RuntimeException(Messages
+                        .getString("AdminToolApplication.10")); //$NON-NLS-1$
                 }
             }
         }
@@ -343,11 +339,15 @@ public class AdminToolApplication extends Application
      * View getters exist so we can lazily generate the views, resulting in
      * faster application startup time.
      */
-    private OrgUnitView getOrganizationalUnitView() {
+    public OrgUnitView getOrgUnitView() {
         if (orgUnitView == null) {
             orgUnitList = new OrgUnitList(this, orgUnitService);
             try {
                 orgUnitEditForm = new OrgUnitEditView(this, orgUnitService);
+                orgUnitEditForm.setOrgUnitList(orgUnitList);
+                orgUnitView =
+                    new OrgUnitView(this, orgUnitList, orgUnitEditForm,
+                        orgUnitAddForm);
             }
             catch (final EscidocException e) {
                 log.error(Messages.getString("AdminToolApplication.11"), //$NON-NLS-1$
@@ -370,13 +370,10 @@ public class AdminToolApplication extends Application
                 e.printStackTrace();
             }
             catch (final Exception e) {
-                new ErrorDialog(
-                    getMainWindow(),
-                    Messages.getString("AdminToolApplication.15"), e.getMessage()); //$NON-NLS-1$
+                new ErrorDialog(getMainWindow(), Messages
+                    .getString("AdminToolApplication.15"), e.getMessage()); //$NON-NLS-1$
             }
-            orgUnitView =
-                new OrgUnitView(this, orgUnitList, orgUnitEditForm,
-                    orgUnitAddForm);
+
         }
         orgUnitView.showOrganizationalUnitAddForm();
 
@@ -397,6 +394,7 @@ public class AdminToolApplication extends Application
                 new ContextListView(this, contextService, orgUnitService);
             contextForm =
                 new ContextEditForm(this, contextService, orgUnitService);
+            contextForm.setContextList(contextList);
             final ContextAddView contextAddView =
                 new ContextAddView(this, contextList, contextService,
                     orgUnitService);
@@ -425,7 +423,7 @@ public class AdminToolApplication extends Application
     }
 
     public void showOrganizationalUnitView() {
-        setMainComponent(getOrganizationalUnitView());
+        setMainComponent(getOrgUnitView());
     }
 
     private void showOrganizationalUnitAddForm() {
@@ -443,7 +441,6 @@ public class AdminToolApplication extends Application
         return orgUnitAddForm;
     }
 
-    @Override
     public void valueChange(final ValueChangeEvent event) {
         final Property property = event.getProperty();
         // TODO this is not OOP, redesign this part of code.
@@ -473,20 +470,19 @@ public class AdminToolApplication extends Application
             }
         }
         else {
-            throw new RuntimeException(
-                Messages.getString("AdminToolApplication.16")); //$NON-NLS-1$
+            throw new RuntimeException(Messages
+                .getString("AdminToolApplication.16")); //$NON-NLS-1$
         }
     }
 
-    @Override
     public void buttonClick(final ClickEvent event) {
         final Button source = event.getButton();
         if (source == newUserButton) {
             showUserAddForm();
         }
         else {
-            throw new RuntimeException(
-                Messages.getString("AdminToolApplication.17") + source); //$NON-NLS-1$
+            throw new RuntimeException(Messages
+                .getString("AdminToolApplication.17") + source); //$NON-NLS-1$
         }
     }
 

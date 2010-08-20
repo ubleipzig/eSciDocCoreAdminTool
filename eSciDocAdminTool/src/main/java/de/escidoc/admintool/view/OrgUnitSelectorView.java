@@ -3,11 +3,11 @@ package de.escidoc.admintool.view;
 import java.util.Set;
 
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.Button.ClickEvent;
 
 import de.escidoc.admintool.service.OrgUnitService;
 import de.escidoc.admintool.view.context.OrgUnitTree;
@@ -26,8 +26,8 @@ public class OrgUnitSelectorView extends CustomComponent {
 
     private OrgUnitTree orgUnitTree;
 
-    public OrgUnitSelectorView(final String caption, ListSelect orgUnitList,
-        OrgUnitService service) {
+    public OrgUnitSelectorView(final String caption,
+        final ListSelect orgUnitList, final OrgUnitService service) {
         this.orgUnitList = orgUnitList;
         openTreeButtonWindow.setModal(true);
         openTreeButtonWindow.setCaption(caption);
@@ -45,7 +45,6 @@ public class OrgUnitSelectorView extends CustomComponent {
         okButton.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = 3557479016087679412L;
 
-            @Override
             public void buttonClick(final ClickEvent event) {
                 okButtonClicked(event);
             }
@@ -54,7 +53,6 @@ public class OrgUnitSelectorView extends CustomComponent {
         cancelButton.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = -779500960758708585L;
 
-            @Override
             public void buttonClick(final ClickEvent event) {
                 cancelButtonClick(event);
             }
@@ -65,21 +63,19 @@ public class OrgUnitSelectorView extends CustomComponent {
         return openTreeButtonWindow;
     }
 
+    @SuppressWarnings("unchecked")
     public void okButtonClicked(final ClickEvent event) {
-        final Object o = this.orgUnitTree.getSelectedItems();
+        final Object o = orgUnitTree.getSelectedItems();
 
         if (o instanceof Set) {
-            @SuppressWarnings("unchecked")
-            final Set<String> set = (Set<String>) o;
-            for (final String str : set) {
+            final Set<ResourceRefDisplay> set = (Set<ResourceRefDisplay>) o;
+            for (final ResourceRefDisplay str : set) {
                 orgUnitList.addItem(str);
             }
         }
         else if (o instanceof Object) {
             orgUnitList.addItem(o);
         }
-
-        // predessorType.setCaption((String) select.getValue());
         closeWindow();
     }
 

@@ -4,7 +4,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.vaadin.data.util.POJOContainer;
+import com.vaadin.data.util.POJOItem;
 import com.vaadin.ui.Table;
 
 import de.escidoc.admintool.app.AdminToolApplication;
@@ -22,11 +26,15 @@ import de.escidoc.core.resources.oum.OrganizationalUnit;
 @SuppressWarnings("serial")
 public class ContextListView extends Table {
 
+    private final Logger log = LoggerFactory.getLogger(ContextListView.class);
+
     private final AdminToolApplication app;
 
     private final ContextService contextService;
 
     private final OrgUnitService orgUnitService;
+
+    private POJOContainer<Context> contextContainer;
 
     public ContextListView(final AdminToolApplication app,
         final ContextService service, final OrgUnitService orgUnitService)
@@ -51,7 +59,7 @@ public class ContextListView extends Table {
 
     private void bindDataSource() throws EscidocException,
         InternalClientException, TransportException {
-        final POJOContainer<Context> contextContainer =
+        contextContainer =
             new POJOContainer<Context>(contextService.all(),
                 PropertyId.OBJECT_ID, PropertyId.NAME,
                 PropertyId.PUBLIC_STATUS, PropertyId.PUBLIC_STATUS_COMMENT,
@@ -66,24 +74,8 @@ public class ContextListView extends Table {
 
     void addContext(final Context context) {
         assert context != null : "context must not be null.";
-        debug(context);
-
-        final Object itemId =
-            addItem(new Object[] {
-                context.getProperties().getName(),
-                context.getProperties().getDescription(),
-                context.getObjid(),
-                context.getProperties().getCreationDate().toDate(),
-                context.getProperties().getCreatedBy().getObjid(),
-                context.getLastModificationDate().toDate(),
-                context.getProperties().getModifiedBy().getObjid(),
-                context.getProperties().getPublicStatus(),
-                context.getProperties().getPublicStatusComment(),
-                context.getProperties().getType(),
-                getOrgUnitsByResourceRef(context
-                    .getProperties().getOrganizationalUnitRefs()),
-                context.getAdminDescriptors() }, context.getObjid());
-        assert itemId != null : "Adding context to the list failed.";
+        final POJOItem<Context> addedItem = contextContainer.addItem(context);
+        assert addedItem != null : "Adding context to the list failed.";
     }
 
     private Collection<OrganizationalUnit> getOrgUnitsByResourceRef(
@@ -103,18 +95,19 @@ public class ContextListView extends Table {
             new boolean[] { false });
     }
 
-    public void removeContext(final String objectId) {
-        assert objectId != null : "context must not be null.";
-        assert containsId(objectId) : "Context not in the list view";
+    public void removeContext(final Context selected) {
+        assert selected != null : "context must not be null.";
+        // assert contextContainer.containsId(selected) :
+        // "Context not in the list view";
 
-        final Object itemId = removeItem(objectId);
+        final Object itemId = contextContainer.removeItem(selected);
 
         assert itemId != null : "Removing context to the list failed.";
     }
 
     public void updateContext(final String objectId) {
         final Context selected = contextService.getSelected(objectId);
-        removeContext(selected.getObjid());
+        removeContext(selected);
         addContext(selected);
         sort(new Object[] { ViewConstants.MODIFIED_ON_ID },
             new boolean[] { false });
@@ -122,8 +115,8 @@ public class ContextListView extends Table {
     }
 
     private void debug(final Context context) {
-        System.out.println(context.getProperties().getName()
-            + context.getObjid() + context.getProperties().getCreationDate()
+        log.info(context.getProperties().getName() + context.getObjid()
+            + context.getProperties().getCreationDate()
             + context.getProperties().getCreatedBy().getObjid()
             + context.getLastModificationDate()
             + context.getProperties().getModifiedBy().getObjid());

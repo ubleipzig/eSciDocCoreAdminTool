@@ -1,11 +1,5 @@
 package de.escidoc.admintool.view.orgunit;
 
-import static de.escidoc.admintool.view.ViewConstants.ALTERNATIVE_ID;
-import static de.escidoc.admintool.view.ViewConstants.CITY_ID;
-import static de.escidoc.admintool.view.ViewConstants.COUNTRY_ID;
-import static de.escidoc.admintool.view.ViewConstants.IDENTIFIER_ID;
-import static de.escidoc.admintool.view.ViewConstants.ORG_TYPE_ID;
-
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
@@ -81,44 +75,13 @@ public class OrgUnitList extends Table {
                 PropertyId.OBJECT_ID, PropertyId.NAME, PropertyId.DESCRIPTION,
                 PropertyId.CREATED_ON, PropertyId.CREATED_BY,
                 PropertyId.LAST_MODIFICATION_DATE, PropertyId.MODIFIED_BY,
+                PropertyId.PUBLIC_STATUS, PropertyId.PUBLIC_STATUS_COMMENT,
                 PropertyId.PARENTS, PropertyId.PREDECESSORS);
         setContainerDataSource(dataSource);
         setVisibleColumns(new Object[] { PropertyId.NAME });
         sort(new Object[] { PropertyId.LAST_MODIFICATION_DATE },
             new boolean[] { false });
         setColumnHeader(PropertyId.NAME, ViewConstants.TITLE_LABEL);
-    }
-
-    // TODO create a delegate for OrgUnit.java to for fetching and storing MPDL
-    // Metadata
-    private void addColumnsHeader() {
-        this.addContainerProperty(ALTERNATIVE_ID, String.class, "");
-        this.addContainerProperty(IDENTIFIER_ID, String.class, "");
-        this.addContainerProperty(ORG_TYPE_ID, String.class, "");
-        this.addContainerProperty(COUNTRY_ID, String.class, "");
-        this.addContainerProperty(CITY_ID, String.class, "");
-        this.addContainerProperty(ViewConstants.COORDINATES_ID, String.class,
-            "");
-        this.addContainerProperty(ViewConstants.START_DATE_ID, String.class,
-            null);
-        this.addContainerProperty(ViewConstants.END_DATE_ID, String.class, "");
-        this.addContainerProperty(ViewConstants.PARENTS_ID, Collection.class,
-            "");
-        this.addContainerProperty(ViewConstants.PREDECESSORS_ID,
-            Collection.class, "");
-    }
-
-    private void setColumnHeaders() {
-        setColumnHeader(PropertyId.NAME, ViewConstants.TITLE_LABEL);
-        // this.setColumnHeaders(new String[] { ViewConstants.OBJECT_ID_LABEL,
-        // ViewConstants.TITLE_LABEL, ViewConstants.DESCRIPTION_LABEL,
-        // ViewConstants.CREATED_ON_LABEL, ViewConstants.CREATED_BY_LABEL,
-        // ViewConstants.MODIFIED_ON_LABEL, ViewConstants.MODIFIED_BY_LABEL,
-        // ViewConstants.ALTERNATIVE_LABEL, ViewConstants.IDENTIFIER_LABEL,
-        // ViewConstants.TYPE_LABEL, ViewConstants.COUNTRY_LABEL,
-        // ViewConstants.CITY_LABEL, ViewConstants.COORDINATES_LABEL,
-        // ViewConstants.START_DATE_LABEL, ViewConstants.END_DATE_LABEL,
-        // ViewConstants.PARENTS_LABEL, ViewConstants.PREDECESSORS_LABEL });
     }
 
     // TODO Bad design
@@ -136,23 +99,11 @@ public class OrgUnitList extends Table {
         final String endDate = metadataExtractor.get("eterms:end-date");
 
         String description = ou.getProperties().getDescription();
+
         if (description == null) {
             description = "";
         }
         dataSource.addItem(ou);
-        // Collection<String> predecessorsObjectId = null;
-        //
-        // predecessorsObjectId = service.getPredecessorsObjectId(ou);
-        // // TODO replace this.addItem with: dataSource.addItem(newOrgUnit);
-        // this.addItem(new Object[] { ou.getObjid(),
-        // ou.getProperties().getName(), description,
-        // ou.getProperties().getCreationDate().toDate(),
-        // ou.getProperties().getCreatedBy().getObjid(),
-        // ou.getLastModificationDate().toDate(),
-        // ou.getProperties().getModifiedBy().getObjid(), alternative,
-        // identifier, orgType, country, city, coordinate, startDate, endDate,
-        // getParentsObjectId(ou), predecessorsObjectId }, ou.getObjid());
-
     }
 
     private Collection<String> getParentsObjectId(final OrganizationalUnit ou) {
@@ -186,5 +137,22 @@ public class OrgUnitList extends Table {
 
     public Collection<OrganizationalUnit> getAllOrgUnits() {
         return allOrgUnits;
+    }
+
+    public void removeOrgUnit(final OrganizationalUnit selected) {
+        assert selected != null : "orgUnit must not be null.";
+
+        final boolean succesful = dataSource.removeItem(selected);
+
+        // assert succesful == true : "Removing context to the list failed.";
+    }
+
+    public void updateContext(final String objectId) {
+        final OrganizationalUnit selected = service.find(objectId);
+        removeOrgUnit(selected);
+        addOrgUnit(selected);
+        sort(new Object[] { ViewConstants.MODIFIED_ON_ID },
+            new boolean[] { false });
+        setValue(objectId);
     }
 }

@@ -1,6 +1,9 @@
 package de.escidoc.admintool.view.orgunit;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -10,14 +13,17 @@ import org.xml.sax.SAXException;
 
 import com.vaadin.data.Item;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Button.ClickEvent;
 
 import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.app.PropertyId;
 import de.escidoc.admintool.domain.MetadataExtractor;
+import de.escidoc.admintool.domain.OrgUnitFactory;
 import de.escidoc.admintool.service.OrgUnitService;
+import de.escidoc.admintool.view.ResourceRefDisplay;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
@@ -29,8 +35,8 @@ import de.escidoc.vaadin.utilities.LayoutHelper;
 public class OrgUnitEditView extends AbstractOrgUnitView {
     private static final long serialVersionUID = -1488130998058019932L;
 
-    private static final Logger log = LoggerFactory
-        .getLogger(OrgUnitEditView.class);
+    private static final Logger log =
+        LoggerFactory.getLogger(OrgUnitEditView.class);
 
     private final Button save = new Button("Save", this);
 
@@ -50,11 +56,13 @@ public class OrgUnitEditView extends AbstractOrgUnitView {
 
     private final Label createdBy = new Label();
 
+    private final Label publicStatus = new Label();
+
+    private final Label publicStatusComment = new Label();
+
     private Item item;
 
     private final AdminToolApplication app;
-
-    private final OrganizationalUnit newOrganizationalUnit = null;
 
     private OrgUnitService service = null;
 
@@ -71,16 +79,8 @@ public class OrgUnitEditView extends AbstractOrgUnitView {
         this.app = app;
         this.service = service;
         middleInit();
-        super.postInit();
+        postInit();
 
-        // addFooter();
-        //
-        // orgUnitById = service.getOrgUnitById();
-        //
-        // for (final OrganizationalUnit orgUnit : service
-        // .getOrganizationalUnits()) {
-        // parents.addItem(orgUnit.getObjid());
-        // }
     }
 
     private void middleInit() {
@@ -92,120 +92,92 @@ public class OrgUnitEditView extends AbstractOrgUnitView {
 
         form.addComponent(LayoutHelper.create("Created", "by", createdOn,
             createdBy, labelWidth, HEIGHT, false));
-    }
+        form.addComponent(LayoutHelper.create("Status", publicStatus,
+            labelWidth, false));
 
-    @Override
-    public void buttonClick(final ClickEvent event) {
-        final Button source = event.getButton();
-
-        if (source == save) {
-            /* If the given input is not valid there is no point in continuing */
-            // if (!isValid()) {
-            // return;
-            // }
-
-            // update new data to the repository
-            // TODO the GUI is blocked if update takes too long.
-            try {
-                final OrganizationalUnit updatedOU = update();
-                service.update(updatedOU);
-                // commit();
-            }
-            catch (final EscidocException e) {
-                log.error("An unexpected error occured! See log for details.",
-                    e);
-                e.printStackTrace();
-            }
-            catch (final InternalClientException e) {
-                log.error("An unexpected error occured! See log for details.",
-                    e);
-                e.printStackTrace();
-            }
-            catch (final TransportException e) {
-                log.error("An unexpected error occured! See log for details.",
-                    e);
-                e.printStackTrace();
-            }
-            catch (final ParserConfigurationException e) {
-                log.error("An unexpected error occured! See log for details.",
-                    e);
-                e.printStackTrace();
-            }
-            catch (final SAXException e) {
-                log.error("An unexpected error occured! See log for details.",
-                    e);
-                e.printStackTrace();
-            }
-            catch (final IOException e) {
-                log.error("An unexpected error occured! See log for details.",
-                    e);
-                e.printStackTrace();
-            }
-            setReadOnly(true);
-        }
-        else if (source == cancel) {
-            /* Clear the form and make it invisible */
-            // this.setItemDataSource(null);
-            // }
-            // else {
-            // // discard();
-            // }
-            setReadOnly(true);
-        }
-        else if (source == edit) {
-
-            setReadOnly(false);
-
+        if (!publicStatusComment.getValue().equals("")) {
+            form.addComponent(LayoutHelper.create("Status Comment",
+                publicStatusComment, labelWidth, false));
         }
     }
 
-    private OrganizationalUnit update() throws ParserConfigurationException,
-        SAXException, IOException, EscidocException, InternalClientException,
-        TransportException {
-        // TODO slow operation, refactor this. We already have collection of org
-        // units
-        final OrganizationalUnit toBeUpdate =
-            service.retrieve(getSelectedOrgUnitId());
+    private OrganizationalUnit update() {
+        titleField.setComponentError(null);
+        descriptionField.setComponentError(null);
 
-        // TODO code duplication @see OrgUnitAddForm.java
-        // final String country = (String) getField(COUNTRY_ID).getValue();
-        // final String city = (String) getField(CITY_ID).getValue();
-        // // final Set<String> parents =
-        // // (Set<String>) this.getField(PARENTS_ID).getValue();
-        //
-        // final TwinColSelect twinColSelect =
-        // (TwinColSelect) getField(PARENTS_ID);
-        // final Set<String> parents = (Set<String>) twinColSelect.getValue();
-        //
-        // System.out.println("Update parents to: ");
-        // for (final String parent : parents) {
-        // System.out.println(parent);
-        // }
-        //
-        // final OrganizationalUnit updatedOrgUnit =
-        // new OrgUnitFactory()
-        // .update(toBeUpdate,
-        // (String) getField(ViewConstants.TITLE_ID).getValue(),
-        // (String) getField(ViewConstants.DESCRIPTION_ID).getValue())
-        // .alternative(
-        // (String) getField(ViewConstants.ALTERNATIVE_ID).getValue())
-        // .identifier(
-        // (String) getField(ViewConstants.IDENTIFIER_ID).getValue())
-        // .orgType((String) getField(ORG_TYPE_ID).getValue())
-        // .country(country)
-        // .city(city)
-        // .coordinates(
-        // (String) getField(ViewConstants.COORDINATES_ID).getValue())
-        // .parents(parents).build();
-
+        final Set<String> parents = getSelectedParents();
+        final Set<String> predecessors = null;
         OrganizationalUnit updatedOrgUnit = null;
+        try {
+            final OrganizationalUnit toBeUpdate =
+                service.find((String) objIdField.getValue());
+            updatedOrgUnit =
+                new OrgUnitFactory()
+                    .update(toBeUpdate, (String) titleField.getValue(),
+                        (String) descriptionField.getValue()).alternative(
+                        (String) alternativeField.getValue()).identifier(
+                        (String) identifierField.getValue()).orgType(
+                        (String) orgTypeField.getValue()).country(
+                        (String) countryField.getValue()).city(
+                        (String) cityField.getValue()).coordinates(
+                        (String) coordinatesField.getValue()).parents(parents)
+                    .build();
+            service.update(updatedOrgUnit);
+            // commit();
+        }
+        catch (final ParserConfigurationException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        catch (final SAXException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        catch (final IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        catch (final EscidocException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        catch (final InternalClientException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        catch (final TransportException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
         return updatedOrgUnit;
     }
 
+    private Set<String> getSelectedParents() {
+        if (parentList.getContainerDataSource() == null
+            || parentList.getContainerDataSource().getItemIds() == null
+            || parentList.getContainerDataSource().getItemIds().size() == 0
+            || !parentList
+                .getContainerDataSource().getItemIds().iterator().hasNext()) {
+            return Collections.emptySet();
+        }
+
+        final ResourceRefDisplay parentRef =
+            (ResourceRefDisplay) parentList
+                .getContainerDataSource().getItemIds().iterator().next();
+        final Set<String> parents = new HashSet<String>() {
+
+            {
+                add(parentRef.getObjectId());
+            }
+        };
+
+        return parents;
+    }
+
     private String getSelectedOrgUnitId() {
-        final String objid = null;
-        // (String) getItemDataSource().getItemProperty(
-        // ViewConstants.OBJECT_ID).getValue();
+        final String objid =
+            (String) item.getItemProperty(PropertyId.OBJECT_ID).getValue();
         return objid;
     }
 
@@ -236,9 +208,15 @@ public class OrgUnitEditView extends AbstractOrgUnitView {
             createdBy.setPropertyDataSource(item
                 .getItemProperty(PropertyId.CREATED_BY));
 
-            orgUnitListSelect.setPropertyDataSource(item
+            publicStatus.setPropertyDataSource(item
+                .getItemProperty(PropertyId.PUBLIC_STATUS));
+
+            publicStatusComment.setPropertyDataSource(item
+                .getItemProperty(PropertyId.PUBLIC_STATUS_COMMENT));
+
+            parentList.setPropertyDataSource(item
                 .getItemProperty(PropertyId.PARENTS));
-            OrganizationalUnit orgUnit =
+            final OrganizationalUnit orgUnit =
                 service.find((String) item
                     .getItemProperty(PropertyId.OBJECT_ID).getValue());
 
@@ -275,14 +253,74 @@ public class OrgUnitEditView extends AbstractOrgUnitView {
     }
 
     @Override
-    protected void saveClicked(ClickEvent event) {
-        // TODO Auto-generated method stub
+    protected void saveClicked(final ClickEvent event) {
+        update();
+    }
 
+    // TODO: discard changes
+    @Override
+    protected void cancelClicked(final ClickEvent event) {
+        super.app.showOrganizationalUnitView();
     }
 
     @Override
-    protected void cancelClicked(ClickEvent event) {
-        // TODO Auto-generated method stub
+    protected Component addToolbar() {
+        final OrgUnitToolbar toolbar = new OrgUnitToolbar(app, this);
+        return toolbar;
+    }
+
+    public void deleteOrgUnit() {
+        final OrganizationalUnit selected =
+            service.find(getSelectedOrgUnitId());
+        try {
+            service.delete(selected);
+            orgUnitList.removeOrgUnit(selected);
+            app.showOrganizationalUnitView();
+        }
+        catch (final EscidocException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        catch (final InternalClientException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        catch (final TransportException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 
     }
+
 }
+
+// TODO code duplication @see OrgUnitAddForm.java
+// final String country = (String) getField(COUNTRY_ID).getValue();
+// final String city = (String) getField(CITY_ID).getValue();
+// // final Set<String> parents =
+// // (Set<String>) this.getField(PARENTS_ID).getValue();
+//
+// final TwinColSelect twinColSelect =
+// (TwinColSelect) getField(PARENTS_ID);
+// final Set<String> parents = (Set<String>) twinColSelect.getValue();
+//
+// System.out.println("Update parents to: ");
+// for (final String parent : parents) {
+// System.out.println(parent);
+// }
+//
+// final OrganizationalUnit updatedOrgUnit =
+// new OrgUnitFactory()
+// .update(toBeUpdate,
+// (String) getField(ViewConstants.TITLE_ID).getValue(),
+// (String) getField(ViewConstants.DESCRIPTION_ID).getValue())
+// .alternative(
+// (String) getField(ViewConstants.ALTERNATIVE_ID).getValue())
+// .identifier(
+// (String) getField(ViewConstants.IDENTIFIER_ID).getValue())
+// .orgType((String) getField(ORG_TYPE_ID).getValue())
+// .country(country)
+// .city(city)
+// .coordinates(
+// (String) getField(ViewConstants.COORDINATES_ID).getValue())
+// .parents(parents).build();

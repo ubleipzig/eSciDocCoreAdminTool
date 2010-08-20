@@ -24,7 +24,7 @@ public class EmptyFieldValidator {
      * @return true if the field is filled, otherwise false.
      */
     public static synchronized boolean isValid(
-        TextField textField, String message) {
+        final TextField textField, final String message) {
         if (!(textField.getValue() != null && ((String) textField.getValue())
             .trim().length() > 0)) {
             textField.setComponentError(null);
@@ -45,14 +45,16 @@ public class EmptyFieldValidator {
      *            is bad.
      * @return true if the field is filled, otherwise false.
      */
-    public static synchronized boolean isValid(ListSelect list, String message) {
-        if (list.getItemIds() == null || list.getItemIds().size() == 0) {
+    public static synchronized boolean isValid(
+        final ListSelect list, final String message) {
+        if (list.getItemIds() != null && list.getItemIds().size() > 0) {
             list.setComponentError(null);
-            list.setComponentError(new UserError(message));
-            return false;
+            return true;
         }
+
         list.setComponentError(null);
-        return true;
+        list.setComponentError(new UserError(message));
+        return false;
     }
 
 }

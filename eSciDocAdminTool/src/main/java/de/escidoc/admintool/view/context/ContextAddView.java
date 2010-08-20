@@ -1,5 +1,9 @@
 package de.escidoc.admintool.view.context;
 
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
@@ -11,24 +15,26 @@ import com.vaadin.terminal.SystemError;
 import com.vaadin.terminal.UserError;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 
 import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.service.ContextService;
 import de.escidoc.admintool.service.OrgUnitService;
 import de.escidoc.admintool.view.OrgUnitEditor;
+import de.escidoc.admintool.view.ResourceRefDisplay;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.admintool.view.validator.EmptyFieldValidator;
 import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
+import de.escidoc.core.resources.ResourceRef;
 import de.escidoc.core.resources.om.context.AdminDescriptors;
 import de.escidoc.core.resources.om.context.Context;
 import de.escidoc.core.resources.om.context.OrganizationalUnitRefs;
@@ -74,8 +80,8 @@ public class ContextAddView extends CustomComponent implements ClickListener {
 
     private final Button addOrgUnitButton = new Button(ViewConstants.ADD_LABEL);
 
-    private final Button removeOrgUnitButton = new Button(
-        ViewConstants.REMOVE_LABEL);
+    private final Button removeOrgUnitButton =
+        new Button(ViewConstants.REMOVE_LABEL);
 
     private final int labelWidth = 140;
 
@@ -215,7 +221,7 @@ public class ContextAddView extends CustomComponent implements ClickListener {
                     final AdminDescriptors adminDescriptors =
                         enteredAdminDescriptors();
                     final OrganizationalUnitRefs selectedOrgUnitRefs =
-                        enteredOrgUnits();
+                        getEnteredOrgUnitRefs();
 
                     final Context newContext =
                         contextService.create((String) nameField.getValue(),
@@ -228,9 +234,8 @@ public class ContextAddView extends CustomComponent implements ClickListener {
                     contextListView.select(newContext.getObjid());
                 }
                 catch (final EscidocException e) {
-                    log.error(
-                        "root cause: " + ExceptionUtils.getRootCauseMessage(e),
-                        e);
+                    log.error("root cause: "
+                        + ExceptionUtils.getRootCauseMessage(e), e);
                     app.getMainWindow().addWindow(
                         new ErrorDialog(app.getMainWindow(), "Error", e
                             .getMessage()));
@@ -272,7 +277,37 @@ public class ContextAddView extends CustomComponent implements ClickListener {
         return null;
     }
 
-    private OrganizationalUnitRefs enteredOrgUnits() {
-        return null;
+    private Set<String> getEnteredOrgUnits() {
+        if (orgUnitList.getContainerDataSource() == null
+            || orgUnitList.getContainerDataSource().getItemIds() == null
+            || orgUnitList.getContainerDataSource().getItemIds().size() == 0
+            || !orgUnitList
+                .getContainerDataSource().getItemIds().iterator().hasNext()) {
+            return Collections.emptySet();
+        }
+
+        final ResourceRefDisplay orgUnit =
+            (ResourceRefDisplay) orgUnitList
+                .getContainerDataSource().getItemIds().iterator().next();
+        final Set<String> orgUnits = new HashSet<String>() {
+
+            {
+                add(orgUnit.getObjectId());
+            }
+        };
+
+        return orgUnits;
+
+    }
+
+    private OrganizationalUnitRefs getEnteredOrgUnitRefs() {
+        final OrganizationalUnitRefs organizationalUnitRefs =
+            new OrganizationalUnitRefs();
+
+        for (final String objectId : getEnteredOrgUnits()) {
+            organizationalUnitRefs.add(new ResourceRef(objectId));
+        }
+
+        return organizationalUnitRefs;
     }
 }

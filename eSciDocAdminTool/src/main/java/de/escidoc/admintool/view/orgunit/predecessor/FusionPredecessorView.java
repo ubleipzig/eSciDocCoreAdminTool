@@ -20,12 +20,13 @@ public class FusionPredecessorView extends CustomComponent {
 
     protected final VerticalLayout verticalLayout = new VerticalLayout();
 
-    public FusionPredecessorView(List<Object> list, String newOrgUnitName) {
+    public FusionPredecessorView(final List<Object> list,
+        final String newOrgUnitName) {
         setCompositionRoot(mainLayout);
         mainLayout.setSizeUndefined();
         mainLayout.addComponent(horizontalLayout);
         horizontalLayout.addComponent(verticalLayout);
-        for (Object predecessor : list) {
+        for (final Object predecessor : list) {
             verticalLayout.addComponent(new Label((String) predecessor));
         }
         verticalLayout.addComponent(new Label(ViewConstants.DOWN_ARROW,

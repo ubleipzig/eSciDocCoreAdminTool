@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -14,13 +16,16 @@ import org.xml.sax.SAXException;
 
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.ui.AbstractComponent;
+import com.vaadin.ui.Component;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.Window;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.Window;
 
 import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.domain.OrgUnitFactory;
 import de.escidoc.admintool.service.OrgUnitService;
+import de.escidoc.admintool.view.ResourceRefDisplay;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.admintool.view.orgunit.editor.IPredecessorEditor;
 import de.escidoc.admintool.view.validator.EmptyFieldValidator;
@@ -36,14 +41,14 @@ public class OrgUnitAddView extends AbstractOrgUnitView
     implements ClickListener, Serializable {
     private static final long serialVersionUID = 8351229526921020901L;
 
-    private static final Logger log = LoggerFactory
-        .getLogger(OrgUnitAddView.class);
+    private static final Logger log =
+        LoggerFactory.getLogger(OrgUnitAddView.class);
 
-    private final ObjectProperty titleProperty = new ObjectProperty("",
-        String.class);
+    private final ObjectProperty titleProperty =
+        new ObjectProperty("", String.class);
 
-    private final ObjectProperty descProperty = new ObjectProperty("",
-        String.class);
+    private final ObjectProperty descProperty =
+        new ObjectProperty("", String.class);
 
     public OrgUnitAddView(final AdminToolApplication app,
         final OrgUnitService service) {
@@ -108,14 +113,14 @@ public class OrgUnitAddView extends AbstractOrgUnitView
                 }
                 final Class<?>[] argsClass =
                     new Class<?>[] { OrgUnitService.class };
-                final Object[] args = new Object[] { this.service };
+                final Object[] args = new Object[] { service };
 
                 final Class<?> c =
                     Class.forName(((PredecessorType) selectObject)
                         .getExecutionClass());
-                Constructor<?> constructor = c.getConstructor(argsClass);
+                final Constructor<?> constructor = c.getConstructor(argsClass);
 
-                Object object = constructor.newInstance(args);
+                final Object object = constructor.newInstance(args);
 
                 final IPredecessorEditor editor = (IPredecessorEditor) object;
                 editor.setNewOrgUnit((String) titleField.getValue());
@@ -145,39 +150,40 @@ public class OrgUnitAddView extends AbstractOrgUnitView
             log.error("An unexpected error occured! See log for details.", e);
             e.printStackTrace();
         }
-        catch (SecurityException e) {
+        catch (final SecurityException e) {
             log.error("An unexpected error occured! See log for details.", e);
             e.printStackTrace();
 
         }
-        catch (NoSuchMethodException e) {
+        catch (final NoSuchMethodException e) {
             log.error("An unexpected error occured! See log for details.", e);
             e.printStackTrace();
 
         }
-        catch (IllegalArgumentException e) {
+        catch (final IllegalArgumentException e) {
             log.error("An unexpected error occured! See log for details.", e);
             e.printStackTrace();
 
         }
-        catch (InvocationTargetException e) {
+        catch (final InvocationTargetException e) {
             log.error("An unexpected error occured! See log for details.", e);
             e.printStackTrace();
 
         }
     }
 
+    // TODO this is crazy. Data binding to the rescue for later.
     @Override
-    protected void saveClicked(ClickEvent event) {
+    protected void saveClicked(final ClickEvent event) {
         if (validate()) {
             titleField.setComponentError(null);
             descriptionField.setComponentError(null);
 
-            // TODO this is crazy. Data binding to the rescue for later.
-            Set<String> parents = null;
-            Set<String> predecessors = null;
+            final Set<String> parents = getSelectedParents();
+            final Set<String> predecessors = null;
+
             try {
-                PredecessorType predecessorType =
+                final PredecessorType predecessorType =
                     (PredecessorType) predecessorTypeSelect.getValue();
                 PredecessorForm predecessorForm = null;
                 if (predecessorType != null) {
@@ -193,66 +199,56 @@ public class OrgUnitAddView extends AbstractOrgUnitView
                         .predecessors(predecessors, predecessorForm)
                         .identifier((String) identifierField.getValue())
                         .alternative((String) alternativeField.getValue())
-                        .orgType((String) orgTypeField.getValue())
-                        .country((String) countryField.getValue())
-                        .city((String) cityField.getValue())
-                        .coordinates((String) coordinatesField.getValue())
-                        .build());
+                        .orgType((String) orgTypeField.getValue()).country(
+                            (String) countryField.getValue()).city(
+                            (String) cityField.getValue()).coordinates(
+                            (String) coordinatesField.getValue()).build());
                 orgUnitList.addOrgUnit(createdOrgUnit);
                 orgUnitList.select(createdOrgUnit);
             }
-            catch (EscidocException e) {
-                // TODO Auto-generated catch block
+            catch (final EscidocException e) {
                 log.error("An unexpected error occured! See log for details.",
                     e);
                 e.printStackTrace();
 
             }
-            catch (InternalClientException e) {
-                // TODO Auto-generated catch block
+            catch (final InternalClientException e) {
                 log.error("An unexpected error occured! See log for details.",
                     e);
                 e.printStackTrace();
 
             }
-            catch (TransportException e) {
-                // TODO Auto-generated catch block
+            catch (final TransportException e) {
                 log.error("An unexpected error occured! See log for details.",
                     e);
                 e.printStackTrace();
 
             }
-            catch (ParserConfigurationException e) {
-                // TODO Auto-generated catch block
+            catch (final ParserConfigurationException e) {
                 log.error("An unexpected error occured! See log for details.",
                     e);
                 e.printStackTrace();
 
             }
-            catch (SAXException e) {
-                // TODO Auto-generated catch block
+            catch (final SAXException e) {
                 log.error("An unexpected error occured! See log for details.",
                     e);
                 e.printStackTrace();
 
             }
-            catch (IOException e) {
-                // TODO Auto-generated catch block
+            catch (final IOException e) {
                 log.error("An unexpected error occured! See log for details.",
                     e);
                 e.printStackTrace();
 
             }
-            catch (EscidocClientException e) {
-                // TODO Auto-generated catch block
+            catch (final EscidocClientException e) {
                 log.error("An unexpected error occured! See log for details.",
                     e);
                 e.printStackTrace();
 
             }
-            // updateOrgUnitTableView(createdOrgUnit);
             app.showOrganizationalUnitView();
-            // }
         }
 
         final Set<String> predecessors = null;
@@ -269,61 +265,42 @@ public class OrgUnitAddView extends AbstractOrgUnitView
             // (PredecessorForm) getField(ViewConstants.PREDECESSORS_TYPE_ID)
             // .getValue();
 
-            System.out.println("type: " + predecessorType);
-
             for (final String predecessor : predecessors) {
                 System.out.println("pre: " + predecessor);
             }
         }
-        // try {
-        // if (isValid()) {
-        // final OrganizationalUnit createdOrgUnit =
-        // storeInRepository(new OrgUnitFactory()
-        // .create(title, description).parents(parents)
-        // .predecessors(predecessors, predecessorType)
-        // .identifier(identifier).alternative(alternative)
-        // .orgType(orgType).country(country).city(city)
-        // .coordinates(coordinates).build());
-        // commit();
-        // updateOrgUnitTableView(createdOrgUnit);
-        // app.showOrganizationalUnitView();
-        // }
-        // }
-        // TODO refactor exception handling
-        // catch (final EscidocException e) {
-        // if (e instanceof
-        // de.escidoc.core.client.exceptions.application.invalid.InvalidStatusException)
-        // {
-        // ((ListSelect) getField(ViewConstants.PREDECESSORS_ID))
-        // .setComponentError(new UserError(e.getHttpStatusMsg()));
-        // System.out.println(e.getHttpStatusMsg());
-        // }
-        // e.printStackTrace();
-        // }
-        // catch (final InternalClientException e) {
-        // // TODO Auto-generated catch block
-        // e.printStackTrace();
-        // }
-        // catch (final TransportException e) {
-        // // TODO Auto-generated catch block
-        // e.printStackTrace();
-        // }
-        // catch (final ParserConfigurationException e) {
-        // // TODO Auto-generated catch block
-        // e.printStackTrace();
-        // }
-        // catch (final SAXException e) {
-        // // TODO Auto-generated catch block
-        // e.printStackTrace();
-        // }
-        // catch (final IOException e) {
-        // // TODO Auto-generated catch block
-        // e.printStackTrace();
-        // }
+    }
+
+    private Set<String> getSelectedParents() {
+        if (parentList.getContainerDataSource() == null
+            || parentList.getContainerDataSource().getItemIds() == null
+            || parentList.getContainerDataSource().getItemIds().size() == 0
+            || !parentList
+                .getContainerDataSource().getItemIds().iterator().hasNext()) {
+            return Collections.emptySet();
+        }
+
+        final ResourceRefDisplay parentRef =
+            (ResourceRefDisplay) parentList
+                .getContainerDataSource().getItemIds().iterator().next();
+        final Set<String> parents = new HashSet<String>() {
+
+            {
+                add(parentRef.getObjectId());
+            }
+        };
+
+        return parents;
+    }
+
+    // TODO: discard changes
+    @Override
+    protected void cancelClicked(final ClickEvent event) {
+        super.app.showOrganizationalUnitView();
     }
 
     @Override
-    protected void cancelClicked(ClickEvent event) {
-        super.app.showOrganizationalUnitView();
+    protected Component addToolbar() {
+        return new Label();
     }
 }

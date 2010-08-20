@@ -25,7 +25,7 @@ public class ContextView extends SplitPanel {
         addStyleName("view");
         this.app = app;
         this.contextList = contextList;
-        this.contextEditForm = editContextWithToolbarView;
+        contextEditForm = editContextWithToolbarView;
         this.contextAddView = contextAddView;
 
         setFirstComponent(contextList);
@@ -52,7 +52,7 @@ public class ContextView extends SplitPanel {
         System.out.println("removing: "
             + (String) getSelectedItem().getItemProperty(
                 ViewConstants.OBJECT_ID).getValue());
-        contextList.removeContext(getSelectedItemId());
+        // contextList.removeContext(getSelectedItemId());
     }
 
     public Item getSelectedItem() {

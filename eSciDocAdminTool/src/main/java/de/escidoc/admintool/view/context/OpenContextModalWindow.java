@@ -1,11 +1,15 @@
 package de.escidoc.admintool.view.context;
 
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.Button.ClickEvent;
+
+import de.escidoc.core.client.exceptions.EscidocException;
+import de.escidoc.core.client.exceptions.InternalClientException;
+import de.escidoc.core.client.exceptions.TransportException;
 
 public class OpenContextModalWindow extends VerticalLayout {
     private static final long serialVersionUID = -6815586703714340558L;
@@ -14,16 +18,16 @@ public class OpenContextModalWindow extends VerticalLayout {
 
     private final ContextEditForm contextForm;
 
-    private final Button cancelBtn = new Button("Cancel",
-        new Button.ClickListener() {
+    private final Button cancelBtn =
+        new Button("Cancel", new Button.ClickListener() {
 
             public void buttonClick(final ClickEvent event) {
                 ((Window) subwindow.getParent()).removeWindow(subwindow);
             }
         });
 
-    final Button submitBtn = new Button("Open Context",
-        new SubmitOpenContextClickListener());
+    final Button submitBtn =
+        new Button("Open Context", new SubmitOpenContextClickListener());
 
     private TextField commentField;
 
@@ -42,24 +46,24 @@ public class OpenContextModalWindow extends VerticalLayout {
         implements Button.ClickListener {
 
         public void buttonClick(final ClickEvent event) {
-            // try {
-            // final String enteredComment = (String) commentField.getValue();
-            // assert enteredComment != null;
-            // // contextForm.openContext(enteredComment);
-            // ((Window) subwindow.getParent()).removeWindow(subwindow);
-            // }
-            // catch (final EscidocException e) {
-            // // TODO Auto-generated catch block
-            // e.printStackTrace();
-            // }
-            // catch (final InternalClientException e) {
-            // // TODO Auto-generated catch block
-            // e.printStackTrace();
-            // }
-            // catch (final TransportException e) {
-            // // TODO Auto-generated catch block
-            // e.printStackTrace();
-            // }
+            try {
+                final String enteredComment = (String) commentField.getValue();
+                assert enteredComment != null;
+                contextForm.openContext(enteredComment);
+                ((Window) subwindow.getParent()).removeWindow(subwindow);
+            }
+            catch (final EscidocException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            catch (final InternalClientException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            catch (final TransportException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
         }
     }
 

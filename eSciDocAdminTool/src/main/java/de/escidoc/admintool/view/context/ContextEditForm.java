@@ -5,8 +5,6 @@ import java.util.Collection;
 import com.vaadin.data.Item;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
@@ -15,6 +13,8 @@ import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 
 import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.app.PropertyId;
@@ -22,6 +22,10 @@ import de.escidoc.admintool.service.ContextService;
 import de.escidoc.admintool.service.OrgUnitService;
 import de.escidoc.admintool.view.OrgUnitEditor;
 import de.escidoc.admintool.view.ViewConstants;
+import de.escidoc.core.client.exceptions.EscidocException;
+import de.escidoc.core.client.exceptions.InternalClientException;
+import de.escidoc.core.client.exceptions.TransportException;
+import de.escidoc.core.resources.om.context.Context;
 import de.escidoc.core.resources.oum.OrganizationalUnit;
 import de.escidoc.vaadin.utilities.Converter;
 import de.escidoc.vaadin.utilities.LayoutHelper;
@@ -66,18 +70,26 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
 
     private final Button cancelButton = new Button("Cancel", this);
 
+    private final Button addAdminDescButton = new Button("Add");
+
+    private final Button editAdminDescButton = new Button("Edit");
+
+    private final Button delAdminDescButton = new Button("Delete");
+
     private HorizontalLayout footer;
 
     private Accordion adminDescriptorAccordion;
 
     private final Button addOrgUnitButton = new Button(ViewConstants.ADD_LABEL);
 
-    private final Button removeOrgUnitButton = new Button(
-        ViewConstants.REMOVE_LABEL);
+    private final Button removeOrgUnitButton =
+        new Button(ViewConstants.REMOVE_LABEL);
 
     private final int labelWidth = 140;
 
     private EditToolbar editToolbar;
+
+    private ContextListView contextList;
 
     public ContextEditForm(final AdminToolApplication adminToolApplication,
         final ContextService contextService, final OrgUnitService orgUnitService) {
@@ -88,7 +100,7 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
     }
 
     private void init() {
-        panel.addComponent(form);
+        panel.setContent(form);
         panel.setCaption(EDIT_USER_ACCOUNT);
         final int height = 15;
         editToolbar = new EditToolbar(this, app);
@@ -96,8 +108,12 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
 
         nameField.setWidth("400px");
         nameField.setWriteThrough(false);
-        form.addComponent(LayoutHelper.create(ViewConstants.LOGIN_NAME_LABEL,
+        form.addComponent(LayoutHelper.create(ViewConstants.NAME_LABEL,
             nameField, labelWidth, false));
+
+        // objectid
+        form.addComponent(LayoutHelper.create(ViewConstants.OBJECT_ID_LABEL,
+            objIdField, labelWidth, false));
 
         // modified
         form.addComponent(LayoutHelper.create("Modified", "by", modifiedOn,
@@ -141,24 +157,20 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
         accordionPanel.setSizeFull();
         accordionPanel.setWidth("400px");
 
-        final Button addButton = new Button("Add");
-        final Button editButton = new Button("Edit");
-        final Button delButton = new Button("Delete");
         final Window mainWindow = (Window) panel.getParent();
-        addButton.addListener(new NewAdminDescriptorListener(mainWindow,
-            adminDescriptorAccordion));
-        editButton.addListener(new EditAdminDescriptorListener(mainWindow,
-            adminDescriptorAccordion));
-        delButton.addListener(new RemoveAdminDescriptorListener(
+        addAdminDescButton.addListener(new NewAdminDescriptorListener(
+            mainWindow, adminDescriptorAccordion));
+        editAdminDescButton.addListener(new EditAdminDescriptorListener(
+            mainWindow, adminDescriptorAccordion));
+        delAdminDescButton.addListener(new RemoveAdminDescriptorListener(
             adminDescriptorAccordion));
 
         panel.addComponent(LayoutHelper.create("Admin Descriptors",
-            accordionPanel, labelWidth, 300, true, new Button[] { addButton,
-                editButton, delButton }));
+            accordionPanel, labelWidth, 300, true, new Button[] {
+                addAdminDescButton, editAdminDescButton, delAdminDescButton }));
 
         // Footer
         panel.addComponent(addFooter());
-
         setCompositionRoot(panel);
     }
 
@@ -189,12 +201,25 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
         this.item = item;
         if (item != null) {
 
-            // new POJOContainer<Context>(contextService.all(),
-            // PropertyId.OBJECT_ID, PropertyId.NAME,
-            // PropertyId.PUBLIC_STATUS, PropertyId.PUBLIC_STATUS_COMMENT,
-            // PropertyId.CREATED_ON, PropertyId.CREATED_BY,
-            // PropertyId.LAST_MODIFICATION_DATE, PropertyId.MODIFIED_BY);
-
+            final PublicStatus publicStatus =
+                PublicStatus.valueOf(((String) item.getItemProperty(
+                    PropertyId.PUBLIC_STATUS).getValue()).toUpperCase());
+            switch (publicStatus) {
+                case CREATED: {
+                    setFormReadOnly(false);
+                    footer.setVisible(true);
+                    break;
+                }
+                case OPENED: {
+                    setFormReadOnly(false);
+                    break;
+                }
+                case CLOSED: {
+                    setFormReadOnly(true);
+                    footer.setVisible(false);
+                    break;
+                }
+            }
             nameField.setPropertyDataSource(item
                 .getItemProperty(ViewConstants.NAME_ID));
             objIdField.setPropertyDataSource(item
@@ -212,12 +237,70 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
             createdBy.setPropertyDataSource(item
                 .getItemProperty("properties.createdBy.objid"));
 
-            String publicStatus =
-                (String) item
-                    .getItemProperty(PropertyId.PUBLIC_STATUS).getValue();
-            PublicStatus valueOf =
-                PublicStatus.valueOf(publicStatus.toUpperCase());
-            editToolbar.setSelected(valueOf);
+            editToolbar.setSelected(publicStatus);
+        }
+    }
+
+    public Context openContext(final String comment) throws EscidocException,
+        InternalClientException, TransportException {
+        final Context openedContext =
+            contextService.open(getSelectedItemId(), comment);
+        contextList.updateContext(getSelectedItemId());
+        editToolbar.setSelected(PublicStatus.OPENED);
+        return openedContext;
+    }
+
+    public Context closeContext(final String comment) throws EscidocException,
+        InternalClientException, TransportException {
+        final Context closedContext =
+            contextService.close(getSelectedItemId(), comment);
+        footer.setVisible(false);
+        contextList.updateContext(getSelectedItemId());
+        editToolbar.setSelected(PublicStatus.CLOSED);
+        return closedContext;
+    }
+
+    private void setFormReadOnly(final boolean isReadOnly) {
+        nameField.setReadOnly(isReadOnly);
+        typeField.setReadOnly(isReadOnly);
+        orgUnitList.setReadOnly(isReadOnly);
+        adminDescriptorAccordion.setReadOnly(isReadOnly);
+
+        addOrgUnitButton.setVisible(!isReadOnly);
+        removeOrgUnitButton.setVisible(!isReadOnly);
+        addAdminDescButton.setVisible(!isReadOnly);
+        editAdminDescButton.setVisible(!isReadOnly);
+        delAdminDescButton.setVisible(!isReadOnly);
+    }
+
+    private String getSelectedItemId() {
+        return (String) item
+            .getItemProperty(ViewConstants.OBJECT_ID).getValue();
+    }
+
+    public void setContextList(final ContextListView contextList) {
+        this.contextList = contextList;
+    }
+
+    public void deleteContext() {
+        try {
+            final Context selected =
+                contextService.getSelected(getSelectedItemId());
+            contextService.delete(getSelectedItemId());
+            contextList.removeContext(selected);
+            app.showContextView();
+        }
+        catch (final EscidocException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        catch (final InternalClientException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        catch (final TransportException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
 
     }
@@ -438,17 +521,7 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
 // return adminDescriptorsEditView.getAdminDescriptors();
 // }
 //
-// public Context openContext(final String comment) throws EscidocException,
-// InternalClientException, TransportException {
-// final Context openedContext =
-// contextService.open(getSelectedItemId(), comment);
-// getField(ViewConstants.PUBLIC_STATUS_ID).setReadOnly(false);
-// getField(ViewConstants.PUBLIC_STATUS_ID).setValue("opened");
-// getField(ViewConstants.PUBLIC_STATUS_ID).setReadOnly(true);
-// ((ContextView) getParent().getParent()).updateList(getSelectedItemId());
-//
-// return openedContext;
-// }
+
 //
 // public Context closeContext() throws EscidocException,
 // InternalClientException, TransportException {

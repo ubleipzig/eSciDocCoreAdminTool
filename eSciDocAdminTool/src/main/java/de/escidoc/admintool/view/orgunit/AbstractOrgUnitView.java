@@ -9,14 +9,15 @@ import java.util.Arrays;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 
 import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.service.OrgUnitService;
@@ -65,15 +66,15 @@ public abstract class AbstractOrgUnitView extends CustomComponent
 
     protected final TextField coordinatesField = new TextField();
 
-    protected final ListSelect orgUnitListSelect = new ListSelect();
+    protected final ListSelect parentList = new ListSelect();
 
     private final Button addOrgUnitButton = new Button(ViewConstants.ADD_LABEL);
 
-    private final Button removeOrgUnitButton = new Button(
-        ViewConstants.REMOVE_LABEL);
+    private final Button removeOrgUnitButton =
+        new Button(ViewConstants.REMOVE_LABEL);
 
-    private final Button addPredecessorButton = new Button(
-        ViewConstants.ADD_LABEL);
+    private final Button addPredecessorButton =
+        new Button(ViewConstants.ADD_LABEL);
 
     protected AbstractComponent predecessorResult;
 
@@ -83,11 +84,11 @@ public abstract class AbstractOrgUnitView extends CustomComponent
 
     protected final int labelWidth = 140;;
 
-    protected final ListSelect predecessorTypeSelect = new ListSelect("",
-        Arrays.asList(new PredecessorType[] { PredecessorType.BLANK,
-            PredecessorType.SPLITTING, PredecessorType.FUSION,
-            PredecessorType.SPIN_OFF, PredecessorType.AFFILIATION,
-            PredecessorType.REPLACEMENT }));
+    protected final ListSelect predecessorTypeSelect =
+        new ListSelect("", Arrays.asList(new PredecessorType[] {
+            PredecessorType.BLANK, PredecessorType.SPLITTING,
+            PredecessorType.FUSION, PredecessorType.SPIN_OFF,
+            PredecessorType.AFFILIATION, PredecessorType.REPLACEMENT }));
 
     public AbstractOrgUnitView(final AdminToolApplication app,
         final OrgUnitService service) {
@@ -96,13 +97,21 @@ public abstract class AbstractOrgUnitView extends CustomComponent
         preInit();
     }
 
+    public void setOrgUnitList(final OrgUnitList orgUnitList) {
+        this.orgUnitList = orgUnitList;
+    }
+
     protected abstract String getViewCaption();
+
+    protected abstract Component addToolbar();
 
     private void preInit() {
         setCompositionRoot(panel);
         panel.setCaption(getViewCaption());
         panel.setContent(form);
         panel.setSizeUndefined();
+
+        form.addComponent(addToolbar());
 
         // Title
         titleField.setWidth("400px");
@@ -116,7 +125,6 @@ public abstract class AbstractOrgUnitView extends CustomComponent
         descriptionField.setRows(5);
         form.addComponent(LayoutHelper.create(ViewConstants.DESCRIPTION_LABEL,
             descriptionField, labelWidth, 100, true));
-
     }
 
     protected void postInit() {
@@ -151,18 +159,16 @@ public abstract class AbstractOrgUnitView extends CustomComponent
             coordinatesField, labelWidth, false));
 
         // Parent
-        orgUnitListSelect.setRows(5);
-        orgUnitListSelect.setWidth("400px");
-        orgUnitListSelect.setNullSelectionAllowed(true);
-        orgUnitListSelect.setMultiSelect(true);
-        orgUnitListSelect.setImmediate(true);
+        parentList.setRows(5);
+        parentList.setWidth("400px");
+        parentList.setNullSelectionAllowed(true);
+        parentList.setMultiSelect(true);
+        parentList.setImmediate(true);
 
-        form
-            .addComponent(LayoutHelper.create(ViewConstants.PARENTS_LABEL,
-                new OrgUnitEditor("Add Parents", orgUnitListSelect,
-                    addOrgUnitButton, removeOrgUnitButton, service),
-                labelWidth, 100, false, new Button[] { addOrgUnitButton,
-                    removeOrgUnitButton }));
+        form.addComponent(LayoutHelper.create(ViewConstants.PARENTS_LABEL,
+            new OrgUnitEditor("Add Parents", parentList, addOrgUnitButton,
+                removeOrgUnitButton, service), labelWidth, 100, false,
+            new Button[] { addOrgUnitButton, removeOrgUnitButton }));
 
         // Predecessor Type
         predecessorTypeSelect.setRows(1);

@@ -10,9 +10,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Button.ClickEvent;
 
 import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.view.context.workflow.AbstractState;
@@ -31,31 +31,32 @@ public class EditToolbar extends CustomComponent {
 
     private final HorizontalLayout header = new HorizontalLayout();
 
-    private final Button newContextBtn = new Button("New",
-        new NewContextListener());
+    private final Button newContextBtn =
+        new Button("New", new NewContextListener());
 
-    private final Button deleteContextBtn = new Button("Delete",
-        new DeleteContextListener());
+    private final Button deleteContextBtn =
+        new Button("Delete", new DeleteContextListener());
 
-    private final Button openContextBtn = new Button("Open",
-        new OpenContextListener());
+    private final Button openContextBtn =
+        new Button("Open", new OpenContextListener());
 
-    private final Button closeContextBtn = new Button("Close",
-        new CloseContextListener());
+    private final Button closeContextBtn =
+        new Button("Close", new CloseContextListener());
 
     private final ContextEditForm parent;
 
     private final AdminToolApplication app;
 
-    public EditToolbar(ContextEditForm parent, AdminToolApplication app) {
+    public EditToolbar(final ContextEditForm parent,
+        final AdminToolApplication app) {
         this.parent = parent;
         this.app = app;
         header.setMargin(true);
         header.setSpacing(true);
-        header.addComponent(this.newContextBtn);
-        header.addComponent(this.deleteContextBtn);
-        header.addComponent(this.openContextBtn);
-        header.addComponent(this.closeContextBtn);
+        header.addComponent(newContextBtn);
+        header.addComponent(openContextBtn);
+        header.addComponent(closeContextBtn);
+        header.addComponent(deleteContextBtn);
         header.setVisible(true);
         setCompositionRoot(header);
     }
@@ -63,46 +64,45 @@ public class EditToolbar extends CustomComponent {
     public void setSelected(final PublicStatus publicStatus) {
         final Class<?>[] buttonArgsClass =
             new Class<?>[] { Button.class, Button.class, Button.class };
-        Object[] buttonArgs =
-            new Object[] { this.deleteContextBtn, this.openContextBtn,
-                this.closeContextBtn };
+        final Object[] buttonArgs =
+            new Object[] { deleteContextBtn, openContextBtn, closeContextBtn };
         try {
-            String path =
+            final String path =
                 "de.escidoc.admintool.view.context.workflow."
                     + publicStatus.toString() + "State";
-            System.out.println(path);
 
             final Class<?> c = Class.forName(path);
-            Constructor<?> constructor = c.getConstructor(buttonArgsClass);
-            Object object = constructor.newInstance(buttonArgs);
+            final Constructor<?> constructor =
+                c.getConstructor(buttonArgsClass);
+            final Object object = constructor.newInstance(buttonArgs);
             final AbstractState workflowState = (AbstractState) object;
             workflowState.changeState();
         }
-        catch (InstantiationException e) {
+        catch (final InstantiationException e) {
             log.error("An unexpected error occured! See log for details.", e);
             e.printStackTrace();
         }
-        catch (IllegalAccessException e) {
+        catch (final IllegalAccessException e) {
             log.error("An unexpected error occured! See log for details.", e);
             e.printStackTrace();
         }
-        catch (IllegalArgumentException e) {
+        catch (final IllegalArgumentException e) {
             log.error("An unexpected error occured! See log for details.", e);
             e.printStackTrace();
         }
-        catch (InvocationTargetException e) {
+        catch (final InvocationTargetException e) {
             log.error("An unexpected error occured! See log for details.", e);
             e.printStackTrace();
         }
-        catch (ClassNotFoundException e) {
+        catch (final ClassNotFoundException e) {
             log.error("An unexpected error occured! See log for details.", e);
             e.printStackTrace();
         }
-        catch (SecurityException e) {
+        catch (final SecurityException e) {
             log.error("An unexpected error occured! See log for details.", e);
             e.printStackTrace();
         }
-        catch (NoSuchMethodException e) {
+        catch (final NoSuchMethodException e) {
             log.error("An unexpected error occured! See log for details.", e);
             e.printStackTrace();
 
@@ -129,22 +129,7 @@ public class EditToolbar extends CustomComponent {
     private class DeleteContextListener implements Button.ClickListener {
         @Override
         public void buttonClick(final ClickEvent event) {
-            // try {
-            // // contextEditForm.deleteContext();
-            // ((ContextView) getParent()).remove();
-            // }
-            // catch (final EscidocException e) {
-            // // TODO Auto-generated catch block
-            // e.printStackTrace();
-            // }
-            // catch (final InternalClientException e) {
-            // // TODO Auto-generated catch block
-            // e.printStackTrace();
-            // }
-            // catch (final TransportException e) {
-            // // TODO Auto-generated catch block
-            // e.printStackTrace();
-            // }
+            parent.deleteContext();
         }
     }
 
@@ -154,19 +139,19 @@ public class EditToolbar extends CustomComponent {
             try {
                 app.getContextView().showContextAddView();
             }
-            catch (EscidocException e) {
+            catch (final EscidocException e) {
                 log.error("An unexpected error occured! See log for details.",
                     e);
                 e.printStackTrace();
 
             }
-            catch (InternalClientException e) {
+            catch (final InternalClientException e) {
                 log.error("An unexpected error occured! See log for details.",
                     e);
                 e.printStackTrace();
 
             }
-            catch (TransportException e) {
+            catch (final TransportException e) {
                 log.error("An unexpected error occured! See log for details.",
                     e);
                 e.printStackTrace();
