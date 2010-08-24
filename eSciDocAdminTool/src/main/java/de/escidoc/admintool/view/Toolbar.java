@@ -57,8 +57,8 @@ public class Toolbar {
             layout.setComponentAlignment(button, Alignment.MIDDLE_RIGHT);
         }
 
-        layout.setMargin(true);
-        layout.setSpacing(true);
+        layout.setMargin(false);
+        layout.setSpacing(false);
 
         layout.setStyleName("toolbar");
 
