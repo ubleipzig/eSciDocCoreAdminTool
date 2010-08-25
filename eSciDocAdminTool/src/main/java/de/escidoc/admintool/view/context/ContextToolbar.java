@@ -24,10 +24,10 @@ import de.escidoc.core.client.exceptions.TransportException;
  * @author ASP
  * 
  */
-public class EditToolbar extends CustomComponent {
+public class ContextToolbar extends CustomComponent {
     private static final long serialVersionUID = -4522925443822439322L;
 
-    private final Logger log = LoggerFactory.getLogger(EditToolbar.class);
+    private final Logger log = LoggerFactory.getLogger(ContextToolbar.class);
 
     private final HorizontalLayout header = new HorizontalLayout();
 
@@ -47,7 +47,7 @@ public class EditToolbar extends CustomComponent {
 
     private final AdminToolApplication app;
 
-    public EditToolbar(final ContextEditForm parent,
+    public ContextToolbar(final ContextEditForm parent,
         final AdminToolApplication app) {
         this.parent = parent;
         this.app = app;
