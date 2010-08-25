@@ -61,10 +61,11 @@ public class ContextListView extends Table {
         InternalClientException, TransportException {
         contextContainer =
             new POJOContainer<Context>(contextService.all(),
-                PropertyId.OBJECT_ID, PropertyId.NAME,
+                PropertyId.OBJECT_ID, PropertyId.NAME, PropertyId.DESCRIPTION,
                 PropertyId.PUBLIC_STATUS, PropertyId.PUBLIC_STATUS_COMMENT,
-                PropertyId.CREATED_ON, PropertyId.CREATED_BY,
-                PropertyId.LAST_MODIFICATION_DATE, PropertyId.MODIFIED_BY);
+                PropertyId.TYPE, PropertyId.CREATED_ON, PropertyId.CREATED_BY,
+                PropertyId.LAST_MODIFICATION_DATE, PropertyId.MODIFIED_BY,
+                PropertyId.ORG_UNIT_REFS, PropertyId.ADMIN_DESCRIPTORS);
         setContainerDataSource(contextContainer);
         sort(new Object[] { PropertyId.LAST_MODIFICATION_DATE },
             new boolean[] { false });
@@ -76,6 +77,7 @@ public class ContextListView extends Table {
         assert context != null : "context must not be null.";
         final POJOItem<Context> addedItem = contextContainer.addItem(context);
         assert addedItem != null : "Adding context to the list failed.";
+        sort();
     }
 
     private Collection<OrganizationalUnit> getOrgUnitsByResourceRef(
@@ -97,21 +99,19 @@ public class ContextListView extends Table {
 
     public void removeContext(final Context selected) {
         assert selected != null : "context must not be null.";
-        // assert contextContainer.containsId(selected) :
-        // "Context not in the list view";
+        assert contextContainer.containsId(selected) : "Context not in the list view";
 
         final Object itemId = contextContainer.removeItem(selected);
 
         assert itemId != null : "Removing context to the list failed.";
     }
 
-    public void updateContext(final String objectId) {
-        final Context selected = contextService.getSelected(objectId);
-        removeContext(selected);
-        addContext(selected);
+    public void updateContext(final Context oldContext, final Context newContext) {
+        removeContext(oldContext);
+        addContext(newContext);
         sort(new Object[] { ViewConstants.MODIFIED_ON_ID },
             new boolean[] { false });
-        setValue(objectId);
+        setValue(newContext);
     }
 
     private void debug(final Context context) {

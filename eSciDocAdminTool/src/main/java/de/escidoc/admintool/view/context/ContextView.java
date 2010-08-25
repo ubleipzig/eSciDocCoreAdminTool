@@ -1,14 +1,21 @@
 package de.escidoc.admintool.view.context;
 
+import org.apache.commons.lang.exception.ExceptionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.vaadin.data.Item;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.SplitPanel;
 
 import de.escidoc.admintool.app.AdminToolApplication;
+import de.escidoc.admintool.exception.ResourceNotFoundException;
 import de.escidoc.admintool.view.ViewConstants;
+import de.escidoc.vaadin.dialog.ErrorDialog;
 
 @SuppressWarnings("serial")
 public class ContextView extends SplitPanel {
+    private final Logger log = LoggerFactory.getLogger(ContextView.class);
 
     private final ContextListView contextList;
 
@@ -45,7 +52,17 @@ public class ContextView extends SplitPanel {
 
     public void showEditView(final Item item) {
         setSecondComponent(contextEditForm);
-        contextEditForm.setSelected(item);
+        try {
+            contextEditForm.setSelected(item);
+        }
+        catch (final ResourceNotFoundException e) {
+            log
+                .error("root cause: " + ExceptionUtils.getRootCauseMessage(e),
+                    e);
+            app.getMainWindow().addWindow(
+                new ErrorDialog(app.getMainWindow(), "Error", e.getMessage()));
+            e.printStackTrace();
+        }
     }
 
     public void remove() {
@@ -62,9 +79,5 @@ public class ContextView extends SplitPanel {
     private String getSelectedItemId() {
         return (String) getSelectedItem().getItemProperty(
             ViewConstants.OBJECT_ID).getValue();
-    }
-
-    public void updateList(final String objectId) {
-        contextList.updateContext(objectId);
     }
 }
