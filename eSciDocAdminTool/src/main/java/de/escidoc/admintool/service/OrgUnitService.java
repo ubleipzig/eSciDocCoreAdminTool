@@ -9,9 +9,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.escidoc.admintool.exception.ResourceNotFoundException;
 import de.escidoc.core.client.OrganizationalUnitHandlerClient;
 import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
@@ -62,8 +64,17 @@ public class OrgUnitService {
         return orgUnitById.get(objectId);
     }
 
-    public String orgUnitTitleById(final String objectId) {
-        return orgUnitById.get(objectId).getTitle();
+    public String findOrgUnitTitleById(final String objectId)
+        throws EscidocException, InternalClientException, TransportException {
+        if (orgUnitById.size() == 0) {
+            all();
+        }
+        final OrganizationalUnit orgUnit = orgUnitById.get(objectId);
+        if (orgUnit == null) {
+            throw new ResourceNotFoundException(
+                "Can not find resource with object ID: " + objectId);
+        }
+        return orgUnit.getProperties().getName();
     }
 
     public String getObjectIdByTitle(final Object title) {
@@ -131,12 +142,13 @@ public class OrgUnitService {
         return client.retrieve(objid);
     }
 
-    public void update(final OrganizationalUnit ou) throws EscidocException,
-        InternalClientException, TransportException {
+    public OrganizationalUnit update(final OrganizationalUnit ou)
+        throws EscidocException, InternalClientException, TransportException {
         final OrganizationalUnit old = ou;
         final OrganizationalUnit updatedOrgUnit = client.update(ou);
         orgUnitById.remove(old);
         orgUnitById.put(updatedOrgUnit.getObjid(), updatedOrgUnit);
+        return updatedOrgUnit;
     }
 
     public void delete(final OrganizationalUnit ou) throws EscidocException,
@@ -191,5 +203,53 @@ public class OrgUnitService {
             collected.add(orgUnitById.get(objectId));
         }
         return collected;
+    }
+
+    public OrganizationalUnit open(final String objectId, final String comment)
+        throws EscidocException, InternalClientException, TransportException {
+        assert !(objectId == null || objectId.isEmpty()) : "objectId must not be null or empty";
+
+        final TaskParam taskParam = new TaskParam();
+        taskParam.setLastModificationDate(find(objectId)
+            .getLastModificationDate());
+
+        if (!comment.isEmpty()) {
+            taskParam.setComment(comment);
+        }
+
+        client.open(objectId, taskParam);
+        final OrganizationalUnit openedOrgUnit = client.retrieve(objectId);
+        updateMap(objectId, openedOrgUnit);
+        return openedOrgUnit;
+    }
+
+    private void updateMap(
+        final String objectId, final OrganizationalUnit updatedOrgUnit) {
+        orgUnitById.remove(objectId);
+        orgUnitById.put(objectId, updatedOrgUnit);
+    }
+
+    public OrganizationalUnit close(final String objectId, final String comment)
+        throws EscidocException, InternalClientException, TransportException {
+        assert !(objectId == null || objectId.isEmpty()) : "objectId must not be null or empty";
+
+        final TaskParam taskParam = new TaskParam();
+        taskParam.setLastModificationDate(find(objectId)
+            .getLastModificationDate());
+        taskParam.setComment(comment);
+
+        client.close(objectId, taskParam);
+
+        final OrganizationalUnit closedContext = client.retrieve(objectId);
+
+        updateMap(objectId, closedContext);
+
+        return closedContext;
+    }
+
+    private TaskParam lastModificationDate(final DateTime lastModificationDate) {
+        final TaskParam taskParam = new TaskParam();
+        taskParam.setLastModificationDate(lastModificationDate);
+        return taskParam;
     }
 }
