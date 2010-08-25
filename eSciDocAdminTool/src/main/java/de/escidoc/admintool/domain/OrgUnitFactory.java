@@ -7,6 +7,8 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -23,6 +25,9 @@ import de.escidoc.core.resources.oum.Predecessors;
 import de.escidoc.core.resources.oum.Properties;
 
 public class OrgUnitFactory {
+
+    private static final Logger log =
+        LoggerFactory.getLogger(OrgUnitFactory.class);
 
     private static final String ESCIDOC_METADATA_TERMS_NS =
         "http://purl.org/escidoc/metadata/terms/0.1/";
@@ -45,8 +50,7 @@ public class OrgUnitFactory {
         return this;
     }
 
-    public OrgUnitFactory create(
-        final String title, final String description)
+    public OrgUnitFactory create(final String title, final String description)
         throws ParserConfigurationException, SAXException, IOException {
         ou = new OrganizationalUnit();
 
@@ -214,7 +218,7 @@ public class OrgUnitFactory {
         final PredecessorForm predecessorType) {
 
         if (predecessorsObjectIds == null || predecessorsObjectIds.size() == 0) {
-            System.out.println("empty predecessor.");
+            log.info("empty predecessor.");
             return this;
         }
 
