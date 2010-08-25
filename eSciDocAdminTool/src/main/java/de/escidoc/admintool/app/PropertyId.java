@@ -25,4 +25,10 @@ public class PropertyId {
 
     public static final String PUBLIC_STATUS = "properties.publicStatus";
 
+    public static final String TYPE = "properties.type";
+
+    public static final String ORG_UNIT_REFS =
+        "properties.organizationalUnitRefs";
+
+    public static final String ADMIN_DESCRIPTORS = "adminDescriptors";
 }
