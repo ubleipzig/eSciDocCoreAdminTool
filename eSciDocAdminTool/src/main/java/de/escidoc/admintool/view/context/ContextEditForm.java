@@ -1,11 +1,31 @@
 package de.escidoc.admintool.view.context;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+
+import org.apache.commons.lang.exception.ExceptionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.xml.sax.SAXException;
 
 import com.vaadin.data.Item;
+import com.vaadin.data.Property;
+import com.vaadin.terminal.SystemError;
+import com.vaadin.terminal.UserError;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
+import com.vaadin.ui.Field;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
@@ -15,18 +35,27 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.TabSheet.Tab;
 
 import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.app.PropertyId;
+import de.escidoc.admintool.exception.ResourceNotFoundException;
 import de.escidoc.admintool.service.ContextService;
 import de.escidoc.admintool.service.OrgUnitService;
 import de.escidoc.admintool.view.OrgUnitEditor;
+import de.escidoc.admintool.view.ResourceRefDisplay;
 import de.escidoc.admintool.view.ViewConstants;
+import de.escidoc.admintool.view.validator.EmptyFieldValidator;
 import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
+import de.escidoc.core.resources.ResourceRef;
+import de.escidoc.core.resources.om.context.AdminDescriptor;
+import de.escidoc.core.resources.om.context.AdminDescriptors;
 import de.escidoc.core.resources.om.context.Context;
+import de.escidoc.core.resources.om.context.OrganizationalUnitRefs;
 import de.escidoc.core.resources.oum.OrganizationalUnit;
+import de.escidoc.vaadin.dialog.ErrorDialog;
 import de.escidoc.vaadin.utilities.Converter;
 import de.escidoc.vaadin.utilities.LayoutHelper;
 
@@ -34,11 +63,16 @@ import de.escidoc.vaadin.utilities.LayoutHelper;
 public class ContextEditForm extends CustomComponent implements ClickListener {
     private static final String EDIT_USER_ACCOUNT = "Edit Context";
 
+    private static final Logger log =
+        LoggerFactory.getLogger(ContextEditForm.class);
+
     private final AdminToolApplication app;
 
     private final ContextService contextService;
 
     private final OrgUnitService orgUnitService;
+
+    private final List<Field> fields = new ArrayList<Field>();
 
     private final Panel panel = new Panel();
 
@@ -47,6 +81,8 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
     private final TextField nameField = new TextField();
 
     private Item item;
+
+    private final TextField descriptionField = new TextField();
 
     private final Label objIdField = new Label();
 
@@ -87,7 +123,7 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
 
     private final int labelWidth = 140;
 
-    private EditToolbar editToolbar;
+    private ContextToolbar editToolbar;
 
     private ContextListView contextList;
 
@@ -103,13 +139,21 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
         panel.setContent(form);
         panel.setCaption(EDIT_USER_ACCOUNT);
         final int height = 15;
-        editToolbar = new EditToolbar(this, app);
+        editToolbar = new ContextToolbar(this, app);
         form.addComponent(editToolbar);
 
+        // name
         nameField.setWidth("400px");
+        // fields.add(nameField);
         nameField.setWriteThrough(false);
         form.addComponent(LayoutHelper.create(ViewConstants.NAME_LABEL,
-            nameField, labelWidth, false));
+            nameField, labelWidth, true));
+
+        // Desc
+        descriptionField.setWidth("400px");
+        fields.add(descriptionField);
+        panel.addComponent(LayoutHelper.create(ViewConstants.DESCRIPTION_LABEL,
+            descriptionField, labelWidth, true));
 
         // objectid
         form.addComponent(LayoutHelper.create(ViewConstants.OBJECT_ID_LABEL,
@@ -129,6 +173,7 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
 
         // Type
         typeField.setWidth("400px");
+        fields.add(typeField);
         form.addComponent(LayoutHelper.create("Type", typeField, labelWidth,
             false));
 
@@ -138,14 +183,12 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
         orgUnitList.setNullSelectionAllowed(true);
         orgUnitList.setMultiSelect(true);
         orgUnitList.setImmediate(true);
-        // form.addComponent(LayoutHelper.create(
-        // ViewConstants.ORGANIZATION_UNITS_LABEL, new OrgUnitEditor(
-        // orgUnitList), labelWidth, 140, false));
+
         form.addComponent(LayoutHelper.create(
             ViewConstants.ORGANIZATION_UNITS_LABEL, new OrgUnitEditor(
                 ViewConstants.ORGANIZATION_UNITS_LABEL, orgUnitList,
                 addOrgUnitButton, removeOrgUnitButton, orgUnitService),
-            labelWidth, 140, false, new Button[] { addOrgUnitButton,
+            labelWidth, 140, true, new Button[] { addOrgUnitButton,
                 removeOrgUnitButton }));
         // AdminDescriptor
         adminDescriptorAccordion = new Accordion();
@@ -157,7 +200,8 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
         accordionPanel.setSizeFull();
         accordionPanel.setWidth("400px");
 
-        final Window mainWindow = (Window) panel.getParent();
+        // final Window mainWindow = (Window) panel.getParent();
+        final Window mainWindow = app.getMainWindow();
         addAdminDescButton.addListener(new NewAdminDescriptorListener(
             mainWindow, adminDescriptorAccordion));
         editAdminDescButton.addListener(new EditAdminDescriptorListener(
@@ -166,12 +210,28 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
             adminDescriptorAccordion));
 
         panel.addComponent(LayoutHelper.create("Admin Descriptors",
-            accordionPanel, labelWidth, 300, true, new Button[] {
+            accordionPanel, labelWidth, 300, false, new Button[] {
                 addAdminDescButton, editAdminDescButton, delAdminDescButton }));
 
         // Footer
         panel.addComponent(addFooter());
         setCompositionRoot(panel);
+        setFieldsWriteThrough(false);
+
+    }
+
+    @Override
+    public void buttonClick(final ClickEvent event) {
+        final Button clickedButton = event.getButton();
+        if (clickedButton == saveButton) {
+            save();
+        }
+        else if (clickedButton == cancelButton) {
+            discard();
+        }
+        else {
+            throw new RuntimeException("Unknown Button " + clickedButton);
+        }
     }
 
     private HorizontalLayout addFooter() {
@@ -183,79 +243,349 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
         return footer;
     }
 
-    @Override
-    public void buttonClick(final ClickEvent event) {
-        final Button clickedButton = event.getButton();
-        if (clickedButton == saveButton) {
-            // save();
-        }
-        else if (clickedButton == cancelButton) {
-            // discard();
-        }
-        else {
-            throw new RuntimeException("Unknown Button " + clickedButton);
+    private void setFieldsWriteThrough(final boolean b) {
+        for (final Field field : fields) {
+            field.setWriteThrough(b);
         }
     }
 
+    private void save() {
+        boolean valid = true;
+        valid =
+            EmptyFieldValidator.isValid(nameField, "Name can not be empty.");
+        valid &=
+            EmptyFieldValidator.isValid(descriptionField,
+                "Description can not be empty.");
+        valid &=
+            EmptyFieldValidator.isValid(typeField, ViewConstants.TYPE_LABEL
+                + " can not be empty.");
+        valid &=
+            EmptyFieldValidator.isValid(orgUnitList,
+                ViewConstants.ORGANIZATION_UNITS_LABEL + " can not be empty");
+
+        if (valid) {
+            try {
+                final AdminDescriptors adminDescriptors =
+                    enteredAdminDescriptors();
+                final OrganizationalUnitRefs selectedOrgUnitRefs =
+                    getEnteredOrgUnitRefs();
+
+                // final String name =
+                // (String) item
+                // .getItemProperty(ViewConstants.NAME_ID).getValue();
+                // final String desc =
+                // (String) item
+                // .getItemProperty(PropertyId.DESCRIPTION).getValue();
+                // final String type =
+                // (String) item.getItemProperty(PropertyId.TYPE).getValue();
+                // final Context newContext =
+                // contextService.update((String) objIdField.getValue(), name,
+                // desc, type, selectedOrgUnitRefs, adminDescriptors);
+
+                final Context newContext =
+                    contextService.update((String) objIdField.getValue(),
+                        (String) nameField.getValue(),
+                        (String) descriptionField.getValue(),
+                        (String) typeField.getValue(),
+                        // TODO: Replace by real call.
+                        selectedOrgUnitRefs, adminDescriptors);
+
+                // commitFields();
+                nameField.commit();
+
+                // final Context newContext =
+                // contextService.update((String) objIdField.getValue(),
+                // (String) nameField.getValue(),
+                // (String) descriptionField.getValue(),
+                // (String) typeField.getValue(),
+                // // TODO: Replace by real call.
+                // selectedOrgUnitRefs, adminDescriptors);
+
+                nameField.setComponentError(null);
+                descriptionField.setComponentError(null);
+                typeField.setComponentError(null);
+                orgUnitList.setComponentError(null);
+                adminDescriptorAccordion.setComponentError(null);
+            }
+            catch (final EscidocException e) {
+                log.error("root cause: "
+                    + ExceptionUtils.getRootCauseMessage(e), e);
+                app.getMainWindow().addWindow(
+                    new ErrorDialog(app.getMainWindow(), "Error", e
+                        .getMessage()));
+                e.printStackTrace();
+            }
+            catch (final InternalClientException e) {
+                log.error("An unexpected error occured! See log for details.",
+                    e);
+                setComponentError(new UserError(e.getMessage()));
+                app.getMainWindow().addWindow(
+                    new ErrorDialog(app.getMainWindow(), "Error", e
+                        .getMessage()));
+                e.printStackTrace();
+            }
+            catch (final TransportException e) {
+                log.error("An unexpected error occured! See log for details.",
+                    e);
+                app.getMainWindow().addWindow(
+                    new ErrorDialog(app.getMainWindow(), "Error", e
+                        .getMessage()));
+                setComponentError(new UserError(e.getMessage()));
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void commitFields() {
+        for (final Field field : fields) {
+            field.commit();
+        }
+    }
+
+    private OrganizationalUnitRefs getEnteredOrgUnitRefs() {
+        final OrganizationalUnitRefs organizationalUnitRefs =
+            new OrganizationalUnitRefs();
+
+        for (final String objectId : getEnteredOrgUnits()) {
+            organizationalUnitRefs.add(new ResourceRef(objectId));
+        }
+
+        return organizationalUnitRefs;
+    }
+
+    private Set<String> getEnteredOrgUnits() {
+        if (orgUnitList.getContainerDataSource() == null
+            || orgUnitList.getContainerDataSource().getItemIds() == null
+            || orgUnitList.getContainerDataSource().getItemIds().size() == 0
+            || !orgUnitList
+                .getContainerDataSource().getItemIds().iterator().hasNext()) {
+            return Collections.emptySet();
+        }
+
+        final ResourceRefDisplay orgUnit =
+            (ResourceRefDisplay) orgUnitList
+                .getContainerDataSource().getItemIds().iterator().next();
+        final Set<String> orgUnits = new HashSet<String>() {
+
+            {
+                add(orgUnit.getObjectId());
+            }
+        };
+
+        return orgUnits;
+
+    }
+
+    private AdminDescriptors enteredAdminDescriptors() {
+        final AdminDescriptors adminDescriptors = new AdminDescriptors();
+        final Iterator<Component> it =
+            adminDescriptorAccordion.getComponentIterator();
+        while (it != null && it.hasNext()) {
+            final Component contentComp = it.next();
+            final Tab tab = adminDescriptorAccordion.getTab(contentComp);
+            final String adminDescName = tab.getCaption();
+            String adminDescContent = "";
+            if (contentComp instanceof Label) {
+                adminDescContent = ((String) ((Label) contentComp).getValue());
+            }
+            final AdminDescriptor adminDescriptor = new AdminDescriptor();
+            adminDescriptor.setName(adminDescName);
+            try {
+                adminDescriptor.setContent(adminDescContent);
+                adminDescriptors.add(adminDescriptor);
+                // TODO: move to appropriate class
+            }
+            catch (final ParserConfigurationException e) {
+                log.error("An unexpected error occured! See log for details.",
+                    e);
+                app.getMainWindow().addWindow(
+                    new ErrorDialog(app.getMainWindow(), "Error", e
+                        .getMessage()));
+                setComponentError(new SystemError(e.getMessage()));
+                e.printStackTrace();
+            }
+            catch (final SAXException e) {
+                log.error("An unexpected error occured! See log for details.",
+                    e);
+                app.getMainWindow().addWindow(
+                    new ErrorDialog(app.getMainWindow(), "Error", e
+                        .getMessage()));
+                setComponentError(new SystemError(e.getMessage()));
+                e.printStackTrace();
+            }
+            catch (final IOException e) {
+                log.error("An unexpected error occured! See log for details.",
+                    e);
+                app.getMainWindow().addWindow(
+                    new ErrorDialog(app.getMainWindow(), "Error", e
+                        .getMessage()));
+                setComponentError(new SystemError(e.getMessage()));
+                e.printStackTrace();
+            }
+        }
+
+        return adminDescriptors;
+    }
+
+    private void discard() {
+        nameField.setValue("");
+        nameField.setComponentError(null);
+        descriptionField.setValue("");
+        descriptionField.setComponentError(null);
+        typeField.setValue("");
+        typeField.setComponentError(null);
+        orgUnitList.removeAllItems();
+        orgUnitList.setComponentError(null);
+        adminDescriptorAccordion.removeAllComponents();
+    }
+
+    @SuppressWarnings("unchecked")
     public void setSelected(final Item item) {
         this.item = item;
-        if (item != null) {
-
-            final PublicStatus publicStatus =
-                PublicStatus.valueOf(((String) item.getItemProperty(
-                    PropertyId.PUBLIC_STATUS).getValue()).toUpperCase());
-            switch (publicStatus) {
-                case CREATED: {
-                    setFormReadOnly(false);
-                    footer.setVisible(true);
-                    break;
-                }
-                case OPENED: {
-                    setFormReadOnly(false);
-                    break;
-                }
-                case CLOSED: {
-                    setFormReadOnly(true);
-                    footer.setVisible(false);
-                    break;
-                }
-            }
-            nameField.setPropertyDataSource(item
-                .getItemProperty(ViewConstants.NAME_ID));
-            objIdField.setPropertyDataSource(item
-                .getItemProperty(PropertyId.OBJECT_ID));
-            status.setPropertyDataSource(item
-                .getItemProperty(PropertyId.PUBLIC_STATUS));
-            modifiedOn.setCaption(Converter
-                .dateTimeToString((org.joda.time.DateTime) item
-                    .getItemProperty("lastModificationDate").getValue()));
-            modifiedBy.setPropertyDataSource(item
-                .getItemProperty("properties.modifiedBy.objid"));
-            createdOn.setCaption(Converter
-                .dateTimeToString((org.joda.time.DateTime) item
-                    .getItemProperty("properties.creationDate").getValue()));
-            createdBy.setPropertyDataSource(item
-                .getItemProperty("properties.createdBy.objid"));
-
-            editToolbar.setSelected(publicStatus);
+        if (item == null) {
+            return;
         }
+        bindData();
+    }
+
+    @SuppressWarnings("unchecked")
+    private void bindData() {
+        final PublicStatus publicStatus =
+            PublicStatus.valueOf(((String) item.getItemProperty(
+                PropertyId.PUBLIC_STATUS).getValue()).toUpperCase());
+        switch (publicStatus) {
+            case CREATED: {
+                setFormReadOnly(false);
+                footer.setVisible(true);
+                break;
+            }
+            case OPENED: {
+                setFormReadOnly(false);
+                break;
+            }
+            case CLOSED: {
+                setFormReadOnly(true);
+                footer.setVisible(false);
+                break;
+            }
+        }
+        nameField.setPropertyDataSource(item
+            .getItemProperty(ViewConstants.NAME_ID));
+        final Property objectIdProperty =
+            item.getItemProperty(PropertyId.OBJECT_ID);
+        objIdField.setPropertyDataSource(objectIdProperty);
+        status.setPropertyDataSource(item
+            .getItemProperty(PropertyId.PUBLIC_STATUS));
+        modifiedOn.setCaption(Converter
+            .dateTimeToString((org.joda.time.DateTime) item.getItemProperty(
+                PropertyId.LAST_MODIFICATION_DATE).getValue()));
+        modifiedBy.setPropertyDataSource(item
+            .getItemProperty(PropertyId.MODIFIED_BY));
+        createdOn.setCaption(Converter
+            .dateTimeToString((org.joda.time.DateTime) item.getItemProperty(
+                PropertyId.CREATED_ON).getValue()));
+        createdBy.setPropertyDataSource(item
+            .getItemProperty(PropertyId.CREATED_BY));
+        typeField.setPropertyDataSource(item.getItemProperty(PropertyId.TYPE));
+        descriptionField.setPropertyDataSource(item
+            .getItemProperty(PropertyId.DESCRIPTION));
+        editToolbar.setSelected(publicStatus);
+
+        orgUnitList.removeAllItems();
+        final List<ResourceRef> refs =
+            (List<ResourceRef>) item
+                .getItemProperty(PropertyId.ORG_UNIT_REFS).getValue();
+
+        for (final ResourceRef resourceRef : refs) {
+            final String orgUnitTitle = findOrgUnitTitle(resourceRef);
+            final ResourceRefDisplay resourceRefDisplay =
+                new ResourceRefDisplay(resourceRef.getObjid(), orgUnitTitle);
+            orgUnitList.addItem(resourceRefDisplay);
+        }
+
+        adminDescriptorAccordion.removeAllComponents();
+
+        final List<AdminDescriptor> adminDescriptors =
+            (List<AdminDescriptor>) item.getItemProperty(
+                PropertyId.ADMIN_DESCRIPTORS).getValue();
+
+        for (final AdminDescriptor adminDescriptor : adminDescriptors) {
+            try {
+                adminDescriptorAccordion.addTab(new Label(adminDescriptor
+                    .getContentAsString(), Label.CONTENT_PREFORMATTED),
+                    adminDescriptor.getName(), null);
+            }
+            catch (final TransformerException e) {
+                log.error("An unexpected error occured! See log for details.",
+                    e);
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private String findOrgUnitTitle(final ResourceRef resourceRef) {
+        try {
+            return app.getOrgUnitService().findOrgUnitTitleById(
+                resourceRef.getObjid());
+        }
+        catch (final ResourceNotFoundException e) {
+            log
+                .error("root cause: " + ExceptionUtils.getRootCauseMessage(e),
+                    e);
+            app.getMainWindow().addWindow(
+                new ErrorDialog(app.getMainWindow(), "Error",
+                    "Organizational Unit does not exist anymore."
+                        + e.getMessage()));
+            e.printStackTrace();
+        }
+
+        catch (final EscidocException e) {
+            log
+                .error("root cause: " + ExceptionUtils.getRootCauseMessage(e),
+                    e);
+            app.getMainWindow().addWindow(
+                new ErrorDialog(app.getMainWindow(), "Error", e.getMessage()));
+            e.printStackTrace();
+        }
+        catch (final InternalClientException e) {
+            log
+                .error("root cause: " + ExceptionUtils.getRootCauseMessage(e),
+                    e);
+            app.getMainWindow().addWindow(
+                new ErrorDialog(app.getMainWindow(), "Error", e.getMessage()));
+            e.printStackTrace();
+        }
+        catch (final TransportException e) {
+            log
+                .error("root cause: " + ExceptionUtils.getRootCauseMessage(e),
+                    e);
+            app.getMainWindow().addWindow(
+                new ErrorDialog(app.getMainWindow(), "Error", e.getMessage()));
+            e.printStackTrace();
+        }
+        return "Organization does exist, please remove.";
     }
 
     public Context openContext(final String comment) throws EscidocException,
         InternalClientException, TransportException {
+        final Context oldContext =
+            contextService.getSelected(getSelectedItemId());
         final Context openedContext =
             contextService.open(getSelectedItemId(), comment);
-        contextList.updateContext(getSelectedItemId());
+        contextList.updateContext(oldContext, openedContext);
         editToolbar.setSelected(PublicStatus.OPENED);
         return openedContext;
     }
 
     public Context closeContext(final String comment) throws EscidocException,
         InternalClientException, TransportException {
+        final Context oldContext =
+            contextService.getSelected(getSelectedItemId());
         final Context closedContext =
             contextService.close(getSelectedItemId(), comment);
         footer.setVisible(false);
-        contextList.updateContext(getSelectedItemId());
+        contextList.updateContext(oldContext, closedContext);
+
         editToolbar.setSelected(PublicStatus.CLOSED);
         return closedContext;
     }
@@ -291,265 +621,17 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
             app.showContextView();
         }
         catch (final EscidocException e) {
-            // TODO Auto-generated catch block
+            log.error("An unexpected error occured! See log for details.", e);
             e.printStackTrace();
         }
         catch (final InternalClientException e) {
-            // TODO Auto-generated catch block
+            log.error("An unexpected error occured! See log for details.", e);
             e.printStackTrace();
         }
         catch (final TransportException e) {
-            // TODO Auto-generated catch block
+            log.error("An unexpected error occured! See log for details.", e);
             e.printStackTrace();
         }
 
     }
 }
-
-// private AdminDescriptorsEditView adminDescriptorsEditView;
-//
-// private class ContextFieldFactory extends DefaultFieldFactory {
-//
-// @Override
-// public Field createField(
-// final Item item, final Object propertyId, final Component uiContext) {
-// final boolean closed = isClosed(item);
-//
-// if (ViewConstants.ORGANIZATION_UNITS_ID.equals(propertyId)) {
-// return buildUiForOrgUnits(item, closed);
-// }
-//
-// final Field field = super.createField(item, propertyId, uiContext);
-//
-// if (ViewConstants.ADMIN_DESRIPTORS_ID.equals(propertyId)) {
-// adminDescriptorsEditView =
-// new AdminDescriptorsEditView(
-// item.getItemProperty(ViewConstants.ADMIN_DESRIPTORS_ID),
-// closed);
-//
-// return adminDescriptorsEditView;
-// }
-// if (closed) {
-// footer.setVisible(false);
-// }
-// if (ViewConstants.NAME_ID.equals(propertyId)) {
-// final TextField tf = (TextField) field;
-// tf.setWidth("400px");
-//
-// if (closed) {
-// tf.setReadOnly(true);
-// }
-// tf.setRequired(true);
-// tf.setRequiredError("Name is required");
-// tf.addValidator(new EmptyStringValidator("Name is required"));
-// }
-// else if (ViewConstants.DESCRIPTION_ID.equals(propertyId)) {
-// final TextField tf = (TextField) field;
-// tf.setWidth("400px");
-// tf.setRows(3);
-//
-// if (closed) {
-// tf.setReadOnly(true);
-// }
-//
-// tf.setRequired(true);
-// tf.setRequiredError("Description is required");
-//
-// tf.addValidator(new EmptyStringValidator(
-// "Description is required"));
-// }
-// else if (ViewConstants.OBJECT_ID.equals(propertyId)) {
-// final TextField tf = (TextField) field;
-// tf.setReadOnly(true);
-// }
-// else if (ViewConstants.CREATED_ON_ID.equals(propertyId)) {
-// field.setReadOnly(true);
-// field.setWidth("200px");
-// }
-// else if (ViewConstants.CREATED_BY_ID.equals(propertyId)) {
-// final TextField tf = (TextField) field;
-// tf.setReadOnly(true);
-// }
-// else if (ViewConstants.MODIFIED_ON_ID.equals(propertyId)) {
-// field.setReadOnly(true);
-// field.setWidth("200px");
-// }
-// else if (ViewConstants.MODIFIED_BY_ID.equals(propertyId)) {
-// final TextField tf = (TextField) field;
-// tf.setReadOnly(true);
-// }
-// else if (ViewConstants.PUBLIC_STATUS_ID.equals(propertyId)) {
-// final TextField tf = (TextField) field;
-// tf.setReadOnly(true);
-// }
-// else if (ViewConstants.PUBLIC_STATUS_COMMENT_ID.equals(propertyId)) {
-// final TextField tf = (TextField) field;
-// tf.setCaption(ViewConstants.PUBLIC_STATUS_COMMENT_LABEL);
-// field.setWidth("400px");
-// tf.setReadOnly(true);
-// }
-// else if (ViewConstants.TYPE_ID.equals(propertyId)) {
-// final TextField tf = (TextField) field;
-// tf.setWidth("400px");
-//
-// if (closed) {
-// tf.setReadOnly(true);
-// }
-//
-// tf.setRequired(true);
-// tf.setRequiredError("Type is required");
-// tf.setWidth("400px");
-// tf.addValidator(new EmptyStringValidator("Type is required"));
-// }
-//
-// return field;
-// }
-// }
-//
-// private TwinColSelect orgUnitSelectionView;
-//
-// private TwinColSelect buildUiForOrgUnits(
-// final Item item, final boolean closed) {
-//
-// orgUnitSelectionView =
-// new TwinColSelect("Organizations", pojoContainer);
-//
-// orgUnitSelectionView.setItemCaptionPropertyId("properties.name");
-// orgUnitSelectionView.setColumns(25);
-// orgUnitSelectionView.setMultiSelect(true);
-// orgUnitSelectionView.setRequired(true);
-// orgUnitSelectionView.setRequiredError("Organization is required");
-// if (closed) {
-// orgUnitSelectionView.setReadOnly(true);
-// }
-//
-// return orgUnitSelectionView;
-// }
-//
-// private boolean isClosed(final Item item) {
-// return "closed".equals(item.getItemProperty(
-// ViewConstants.PUBLIC_STATUS_ID).getValue());
-// }
-//
-// private HorizontalLayout footer;
-//
-// private final Button save = new Button("Save", this);
-//
-// private final Button cancel = new Button("Cancel", this);
-//
-// private void addFooter() {
-// footer = new HorizontalLayout();
-// footer.setSpacing(true);
-//
-// footer.addComponent(save);
-// footer.addComponent(cancel);
-// footer.setVisible(false);
-//
-// setFooter(footer);
-// }
-//
-//
-// public void showFooter(final boolean isClosed) {
-// footer.setVisible(!isClosed);
-// }
-//
-//
-// private void save() {
-// if (isValid()) {
-// try {
-// final AdminDescriptors adminDescriptors = getAdminDescriptors();
-//
-// for (final AdminDescriptor enteredAdminDesc : adminDescriptors) {
-//
-// System.out.println("name: " + enteredAdminDesc.getName());
-// System.out.println("content: "
-// + enteredAdminDesc.getContent());
-// }
-//
-// contextService.update(getSelectedItemId(),
-// (String) getField(ViewConstants.NAME_ID).getValue(),
-// (String) getField(ViewConstants.DESCRIPTION_ID).getValue(),
-// (String) getField(ViewConstants.TYPE_ID).getValue(),
-// getSelectedOrgUnitRefs(), getAdminDescriptors());
-//
-// commit();
-//
-// adminDescriptorsEditView.commitForm();
-//
-// setComponentError(null);
-//
-// app.getMainWindow().showNotification("Saved");
-// }
-// catch (final EscidocException e) {
-// setComponentError(new UserError(e.getMessage()));
-// e.printStackTrace();
-// }
-// catch (final InternalClientException e) {
-// // TODO Auto-generated catch block
-// e.printStackTrace();
-// }
-// catch (final TransportException e) {
-// // TODO Auto-generated catch block
-// e.printStackTrace();
-// }
-// catch (final ParserConfigurationException e) {
-// // TODO Auto-generated catch block
-// e.printStackTrace();
-// }
-// }
-// }
-//
-// private String getSelectedItemId() {
-// return (String) getItemDataSource().getItemProperty(
-// ViewConstants.OBJECT_ID).getValue();
-// }
-//
-// private OrganizationalUnitRefs getSelectedOrgUnitRefs() {
-//
-// final OrganizationalUnitRefs organizationalUnitRefs =
-// new OrganizationalUnitRefs();
-// for (final ResourceRef resourceRef : (Collection<ResourceRef>)
-// orgUnitSelectionView
-// .getValue()) {
-// organizationalUnitRefs.add(resourceRef);
-// }
-// return organizationalUnitRefs;
-// }
-//
-// private AdminDescriptors getAdminDescriptors()
-// throws ParserConfigurationException {
-// return adminDescriptorsEditView.getAdminDescriptors();
-// }
-//
-
-//
-// public Context closeContext() throws EscidocException,
-// InternalClientException, TransportException {
-// final Context closedContext = contextService.close(getSelectedItemId());
-// getField(ViewConstants.PUBLIC_STATUS_ID).setReadOnly(false);
-// getField(ViewConstants.PUBLIC_STATUS_ID).setValue("closed");
-// getField(ViewConstants.PUBLIC_STATUS_ID).setReadOnly(true);
-// footer.setVisible(false);
-// setReadOnly(true);
-// ((ContextView) getParent().getParent()).updateList(getSelectedItemId());
-// return closedContext;
-// }
-//
-// public void deleteContext() throws EscidocException,
-// InternalClientException, TransportException {
-// contextService.delete(getSelectedItemId());
-// }
-//
-// public Context closeContext(final String comment) throws
-// EscidocException,
-// InternalClientException, TransportException {
-// final Context closedContext =
-// contextService.close(getSelectedItemId(), comment);
-// getField(ViewConstants.PUBLIC_STATUS_ID).setReadOnly(false);
-// getField(ViewConstants.PUBLIC_STATUS_ID).setValue("closed");
-// getField(ViewConstants.PUBLIC_STATUS_ID).setReadOnly(true);
-// footer.setVisible(false);
-// setReadOnly(true);
-// ((ContextView) getParent().getParent()).updateList(getSelectedItemId());
-// return closedContext;
-// }

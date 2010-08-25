@@ -1,7 +1,9 @@
 package de.escidoc.admintool.view.context;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -9,20 +11,24 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.xml.sax.SAXException;
 
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.terminal.SystemError;
 import com.vaadin.terminal.UserError;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.TabSheet.Tab;
 
 import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.service.ContextService;
@@ -35,6 +41,7 @@ import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
 import de.escidoc.core.resources.ResourceRef;
+import de.escidoc.core.resources.om.context.AdminDescriptor;
 import de.escidoc.core.resources.om.context.AdminDescriptors;
 import de.escidoc.core.resources.om.context.Context;
 import de.escidoc.core.resources.om.context.OrganizationalUnitRefs;
@@ -231,7 +238,7 @@ public class ContextAddView extends CustomComponent implements ClickListener {
                             selectedOrgUnitRefs, adminDescriptors);
                     contextListView.addContext(newContext);
                     contextListView.sort();
-                    contextListView.select(newContext.getObjid());
+                    contextListView.select(newContext);
                 }
                 catch (final EscidocException e) {
                     log.error("root cause: "
@@ -272,9 +279,66 @@ public class ContextAddView extends CustomComponent implements ClickListener {
         }
     }
 
-    private AdminDescriptors enteredAdminDescriptors()
-        throws ParserConfigurationException {
-        return null;
+    private AdminDescriptors enteredAdminDescriptors() {
+        final AdminDescriptors adminDescriptors = new AdminDescriptors();
+        final Iterator<Component> it =
+            adminDescriptorAccordion.getComponentIterator();
+        while (it != null && it.hasNext()) {
+            final Component contentComp = it.next();
+            final Tab tab = adminDescriptorAccordion.getTab(contentComp);
+            final String adminDescName = tab.getCaption();
+            String adminDescContent = "";
+            if (contentComp instanceof Label) {
+                adminDescContent = ((String) ((Label) contentComp).getValue());
+            }
+            final AdminDescriptor adminDescriptor = new AdminDescriptor();
+            adminDescriptor.setName(adminDescName);
+            try {
+                adminDescriptor.setContent(adminDescContent);
+                adminDescriptors.add(adminDescriptor);
+                // TODO: move to appropriate class
+            }
+            catch (final ParserConfigurationException e) {
+                log.error("An unexpected error occured! See log for details.",
+                    e);
+                app.getMainWindow().addWindow(
+                    new ErrorDialog(app.getMainWindow(), "Error", e
+                        .getMessage()));
+                setComponentError(new SystemError(e.getMessage()));
+                e.printStackTrace();
+            }
+            catch (final SAXException e) {
+                log.error("An unexpected error occured! See log for details.",
+                    e);
+                app.getMainWindow().addWindow(
+                    new ErrorDialog(app.getMainWindow(), "Error", e
+                        .getMessage()));
+                setComponentError(new SystemError(e.getMessage()));
+                e.printStackTrace();
+            }
+            catch (final IOException e) {
+                log.error("An unexpected error occured! See log for details.",
+                    e);
+                app.getMainWindow().addWindow(
+                    new ErrorDialog(app.getMainWindow(), "Error", e
+                        .getMessage()));
+                setComponentError(new SystemError(e.getMessage()));
+                e.printStackTrace();
+            }
+        }
+
+        return adminDescriptors;
+    }
+
+    private OrganizationalUnitRefs getEnteredOrgUnitRefs() {
+        final OrganizationalUnitRefs organizationalUnitRefs =
+            new OrganizationalUnitRefs();
+
+        for (final String objectId : getEnteredOrgUnits()) {
+            organizationalUnitRefs.add(new ResourceRef(objectId));
+        }
+
+        return organizationalUnitRefs;
     }
 
     private Set<String> getEnteredOrgUnits() {
@@ -298,16 +362,5 @@ public class ContextAddView extends CustomComponent implements ClickListener {
 
         return orgUnits;
 
-    }
-
-    private OrganizationalUnitRefs getEnteredOrgUnitRefs() {
-        final OrganizationalUnitRefs organizationalUnitRefs =
-            new OrganizationalUnitRefs();
-
-        for (final String objectId : getEnteredOrgUnits()) {
-            organizationalUnitRefs.add(new ResourceRef(objectId));
-        }
-
-        return organizationalUnitRefs;
     }
 }

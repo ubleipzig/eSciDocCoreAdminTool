@@ -1,16 +1,30 @@
 package de.escidoc.admintool.view.context;
 
+import java.io.IOException;
+
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.xml.sax.SAXException;
+
+import com.vaadin.terminal.SystemError;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.Button.ClickEvent;
+
+import de.escidoc.core.resources.om.context.AdminDescriptor;
+import de.escidoc.vaadin.dialog.ErrorDialog;
 
 @SuppressWarnings("serial")
 public abstract class AdminDescriptorView extends Window {
+    private final Logger log =
+        LoggerFactory.getLogger(AdminDescriptorView.class);
 
     protected static final String EDIT_ADMIN_DESCRIPTOR =
         "Edit Admin Descriptor";
@@ -33,7 +47,11 @@ public abstract class AdminDescriptorView extends Window {
 
     protected String content;
 
-    public AdminDescriptorView(final Accordion adminDescriptorAccordion) {
+    private Window mainWindow;
+
+    public AdminDescriptorView(final Window mainWindow,
+        final Accordion adminDescriptorAccordion) {
+        this.mainWindow = mainWindow;
         this.adminDescriptorAccordion = adminDescriptorAccordion;
         buildMainLayout();
     }
@@ -107,8 +125,7 @@ public abstract class AdminDescriptorView extends Window {
     }
 
     protected boolean validate(final String value) {
-        // TODO: parse XML snippet and check if it is well-formed?
-        return true;
+        return enteredAdminDescriptors(value);
     }
 
     protected void closeWindow() {
@@ -117,5 +134,42 @@ public abstract class AdminDescriptorView extends Window {
 
     public Button getSaveButton() {
         return saveButton;
+    }
+
+    private boolean enteredAdminDescriptors(final String value) {
+        final AdminDescriptor adminDescriptor = new AdminDescriptor();
+        adminDescriptor.setName((String) adminDescName.getValue());
+        try {
+            adminDescriptor.setContent(value);
+            return true;
+        }
+        catch (final ParserConfigurationException e) {
+            log.error("An unexpected error occured! See log for details.", e);
+            mainWindow.addWindow(new ErrorDialog(mainWindow, "Error", e
+                .getMessage()));
+            setComponentError(new SystemError(e.getMessage()));
+            e.printStackTrace();
+            return false;
+        }
+        catch (final SAXException e) {
+            final ErrorDialog errorDialog =
+                new ErrorDialog(mainWindow, "Error", "XML is not well formed.");
+            errorDialog.setWidth("400px");
+            errorDialog.setWidth("300px");
+            mainWindow.addWindow(errorDialog);
+            log.error("An unexpected error occured! See log for details.", e);
+            setComponentError(new SystemError(e.getMessage()));
+            e.printStackTrace();
+            return false;
+
+        }
+        catch (final IOException e) {
+            log.error("An unexpected error occured! See log for details.", e);
+            mainWindow.addWindow(new ErrorDialog(mainWindow, "Error", e
+                .getMessage()));
+            setComponentError(new SystemError(e.getMessage()));
+            e.printStackTrace();
+            return false;
+        }
     }
 }

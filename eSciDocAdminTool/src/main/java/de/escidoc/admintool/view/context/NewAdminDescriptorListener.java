@@ -4,9 +4,9 @@
 package de.escidoc.admintool.view.context;
 
 import com.vaadin.ui.Accordion;
+import com.vaadin.ui.Window;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.Window;
 
 /**
  * @author ASP
@@ -31,8 +31,8 @@ public class NewAdminDescriptorListener implements ClickListener {
      * @see com.vaadin.ui.Button.ClickListener#buttonClick(com.vaadin.ui.Button.
      * ClickEvent)
      */
-    public void buttonClick(ClickEvent event) {
-        mainWindow.addWindow(new AdminDescriptorAddView(
+    public void buttonClick(final ClickEvent event) {
+        mainWindow.addWindow(new AdminDescriptorAddView(mainWindow,
             adminDescriptorAccordion));
     }
 }
