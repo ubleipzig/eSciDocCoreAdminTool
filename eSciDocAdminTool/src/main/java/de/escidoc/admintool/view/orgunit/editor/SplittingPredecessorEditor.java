@@ -2,10 +2,8 @@ package de.escidoc.admintool.view.orgunit.editor;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
@@ -15,9 +13,12 @@ import com.vaadin.ui.SplitPanel;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.Button.ClickEvent;
 
 import de.escidoc.admintool.service.OrgUnitService;
+import de.escidoc.admintool.view.ResourceRefDisplay;
 import de.escidoc.admintool.view.context.OrgUnitTree;
+import de.escidoc.admintool.view.orgunit.AbstractOrgUnitView;
 import de.escidoc.admintool.view.orgunit.OrgUnitAddView;
 import de.escidoc.admintool.view.orgunit.PredecessorType;
 import de.escidoc.admintool.view.orgunit.predecessor.SplittingPredeccesorView;
@@ -70,7 +71,9 @@ public class SplittingPredecessorEditor extends CustomComponent
 
     private final OrgUnitService service;
 
-    public SplittingPredecessorEditor(OrgUnitService service) {
+    private AbstractOrgUnitView orgUnitEditorView;
+
+    public SplittingPredecessorEditor(final OrgUnitService service) {
         this.service = service;
         tree = new OrgUnitTree(service);
     }
@@ -177,7 +180,7 @@ public class SplittingPredecessorEditor extends CustomComponent
     }
 
     protected void onOkClicked(final ClickEvent event) {
-        if (isValid(getSelected().size())) {
+        if (isValid(getSelectedPredecessors().size())) {
             showAddedPredecessors();
             closeWindow();
         }
@@ -193,20 +196,6 @@ public class SplittingPredecessorEditor extends CustomComponent
 
     private void closeWindow() {
         parent.removeWindow(modalWindow);
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public List<Object> getSelected() {
-        final List<Object> selectedOrgUnits = new ArrayList<Object>();
-        final Object o = tree.getSelectedItems();
-        if (o instanceof Set) {
-            selectedOrgUnits.addAll((Set) o); // More than one result...
-        }
-        else if (o instanceof Object) { // Just one selected.
-            selectedOrgUnits.add(o);
-        }
-        return selectedOrgUnits;
     }
 
     public HorizontalLayout addFooter() {
@@ -238,39 +227,27 @@ public class SplittingPredecessorEditor extends CustomComponent
     }
 
     protected void showAddedPredecessors() {
-        final Object o = ls.getValue();
-
         final SplittingPredeccesorView view =
             new SplittingPredeccesorView((String) tree.getSelectedItems(),
                 getNewOrgUnits());
-        orgUnitAddView.showAddedPredecessors(view);
+        orgUnitEditorView.showAddedPredecessors(view);
     }
 
     public List<Object> getNewOrgUnits() {
         final List<Object> newOrgUnits = new ArrayList<Object>();
-        // final Object o = ls.getItemIds();
-        // if (o instanceof Set) {
-        // newOrgUnits.addAll((Set) o); // More than one result...
-        // }
-        // else if (o instanceof Object) { // Just one selected.
-        // newOrgUnits.add(o);
-        // }
-
         for (final Object object : ls.getItemIds()) {
             newOrgUnits.add(object);
         }
-
         return newOrgUnits;
     }
 
     protected void showErrorMessage() {
-        parent.addWindow(new ErrorDialog(parent, "Grave Error",
+        parent.addWindow(new ErrorDialog(parent, "Error",
             "Select one organizational unit, please."));
     }
 
-    @Override
-    public void setOrgUnitAddView(final OrgUnitAddView orgUnitAddView) {
-        this.orgUnitAddView = orgUnitAddView;
+    public void setOrgUnitEditorView(final AbstractOrgUnitView orgUnitEditorView) {
+        this.orgUnitEditorView = orgUnitEditorView;
         buildLayout();
     }
 
@@ -283,5 +260,11 @@ public class SplittingPredecessorEditor extends CustomComponent
     public void setNewOrgUnit(final String orgUnitName) {
         this.orgUnitName = orgUnitName;
 
+    }
+
+    @Override
+    public List<ResourceRefDisplay> getSelectedPredecessors() {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

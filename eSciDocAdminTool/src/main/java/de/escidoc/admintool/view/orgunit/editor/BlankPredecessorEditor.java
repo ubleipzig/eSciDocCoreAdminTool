@@ -3,16 +3,19 @@ package de.escidoc.admintool.view.orgunit.editor;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.exolab.castor.types.OperationNotSupportedException;
+
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.Button.ClickEvent;
 
 import de.escidoc.admintool.service.OrgUnitService;
-import de.escidoc.admintool.view.orgunit.OrgUnitAddView;
+import de.escidoc.admintool.view.ResourceRefDisplay;
+import de.escidoc.admintool.view.orgunit.AbstractOrgUnitView;
 
 public class BlankPredecessorEditor extends CustomComponent
     implements IPredecessorEditor {
@@ -24,7 +27,7 @@ public class BlankPredecessorEditor extends CustomComponent
 
     private Window parent;
 
-    public BlankPredecessorEditor(OrgUnitService service) {
+    public BlankPredecessorEditor(final OrgUnitService service) {
         modalWindow.setCaption("Error");
         modalWindow.addComponent(new Label(
             "Select a valid Predecessor Type, please!"));
@@ -60,18 +63,19 @@ public class BlankPredecessorEditor extends CustomComponent
     }
 
     @Override
-    public List<Object> getSelected() {
-        return new ArrayList<Object>();
+    public List<ResourceRefDisplay> getSelectedPredecessors() {
+        return new ArrayList<ResourceRefDisplay>();
     }
 
     @Override
-    public void setOrgUnitAddView(final OrgUnitAddView orgUnitAddView) {
-
+    public void setNewOrgUnit(final String orgUnitName) {
+        throw new OperationNotSupportedException(
+            "setNewOrgUnit is not supported for BlankPredecessorEditor");
     }
 
     @Override
-    public void setNewOrgUnit(String orgUnitName) {
-        // TODO Auto-generated method stub
-
+    public void setOrgUnitEditorView(final AbstractOrgUnitView orgUnitEditorView) {
+        throw new OperationNotSupportedException(
+            "setOrgUnitEditorView is not supported for BlankPredecessorEditor");
     }
 }

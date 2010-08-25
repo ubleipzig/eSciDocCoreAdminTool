@@ -1,8 +1,12 @@
 package de.escidoc.admintool.view.orgunit.editor;
 
-import java.util.ArrayList;
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.escidoc.admintool.service.OrgUnitService;
+import de.escidoc.admintool.view.ResourceRefDisplay;
 import de.escidoc.admintool.view.orgunit.predecessor.AbstractPredecessorView;
 import de.escidoc.admintool.view.orgunit.predecessor.SpinOffPredecessorView;
 import de.escidoc.vaadin.dialog.ErrorDialog;
@@ -10,15 +14,18 @@ import de.escidoc.vaadin.dialog.ErrorDialog;
 public class SpinOffPPredecessorEditor extends AbstractPredecessorEditor
     implements IPredecessorEditor {
 
+    private static final Logger log =
+        LoggerFactory.getLogger(SpinOffPPredecessorEditor.class);
+
     private static final String EDITOR_DESCRIPTION =
-        "Select one organizational unit, please";
+        "Select one organizational unit to be replaced.";
 
     private static final String SET_PREDECESSOR_SPIN_OFF =
         "Set Predecessor SpinOff";
 
     private static final long serialVersionUID = 6885054493792037547L;
 
-    public SpinOffPPredecessorEditor(OrgUnitService service) {
+    public SpinOffPPredecessorEditor(final OrgUnitService service) {
         super(service);
         setMultiSelect(false);
     }
@@ -40,17 +47,28 @@ public class SpinOffPPredecessorEditor extends AbstractPredecessorEditor
 
     @Override
     protected void showAddedPredecessors() {
-        ArrayList<Object> l = (ArrayList<Object>) super.getSelected();
-        AbstractPredecessorView addedPredecessorView =
-            new SpinOffPredecessorView((String) l.get(0),
+        final AbstractPredecessorView addedPredecessorView =
+            createPredecessorView(super.getSelectedPredecessors());
+        orgUnitEditorView.showAddedPredecessors(addedPredecessorView);
+    }
+
+    // TODO move to a factory class.DRY
+    private AbstractPredecessorView createPredecessorView(
+        final List<ResourceRefDisplay> selectedPredecessors) {
+        for (final ResourceRefDisplay resourceRefDisplay : selectedPredecessors) {
+            log.info("selected: " + resourceRefDisplay);
+        }
+        final AbstractPredecessorView addedPredecessorView =
+            new SpinOffPredecessorView(selectedPredecessors.get(0).getTitle(),
                 super.getOrgUnitName());
-        orgUnitAddView.showAddedPredecessors(addedPredecessorView);
+        addedPredecessorView.setResourceRefDisplay(selectedPredecessors.get(0));
+        return addedPredecessorView;
     }
 
     @Override
     protected void showErrorMessage() {
         super.getMainWindow().addWindow(
-            new ErrorDialog(super.getMainWindow(), "Grave Error",
+            new ErrorDialog(super.getMainWindow(), "Error",
                 "Select at least two items, please."));
     }
 }

@@ -8,22 +8,26 @@ import java.util.List;
 import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.Window;
 
-import de.escidoc.admintool.view.orgunit.OrgUnitAddView;
+import de.escidoc.admintool.view.ResourceRefDisplay;
+import de.escidoc.admintool.view.orgunit.AbstractOrgUnitView;
 
 /**
  * @author ASP
  * 
  */
 public interface IPredecessorEditor {
-    public Window getWidget();
+    Window getWidget();
 
-    public void setMainWindow(final Window parent);
+    void setMainWindow(final Window parent);
 
-    public void setList(final ListSelect select);
+    void setList(final ListSelect select);
 
-    public List<Object> getSelected();
+    // TODO Remove after succesful refactoring
+    // public List<Object> getSelected();
 
-    public void setOrgUnitAddView(OrgUnitAddView orgUnitAddView);
+    List<ResourceRefDisplay> getSelectedPredecessors();
 
-    public void setNewOrgUnit(String orgUnitName);
+    void setOrgUnitEditorView(AbstractOrgUnitView orgUnitEditorView);
+
+    void setNewOrgUnit(String orgUnitName);
 }

@@ -4,21 +4,26 @@
 package de.escidoc.admintool.view.orgunit.editor;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.Button.ClickEvent;
 
 import de.escidoc.admintool.service.OrgUnitService;
+import de.escidoc.admintool.view.ResourceRefDisplay;
 import de.escidoc.admintool.view.context.OrgUnitTree;
-import de.escidoc.admintool.view.orgunit.OrgUnitAddView;
+import de.escidoc.admintool.view.orgunit.AbstractOrgUnitView;
 import de.escidoc.admintool.view.orgunit.PredecessorType;
 
 /**
@@ -27,6 +32,9 @@ import de.escidoc.admintool.view.orgunit.PredecessorType;
  */
 public abstract class AbstractPredecessorEditor extends CustomComponent
     implements IPredecessorEditor {
+
+    private static final Logger log =
+        LoggerFactory.getLogger(AbstractPredecessorEditor.class);
 
     private static final long serialVersionUID = -9122833046327977836L;
 
@@ -46,16 +54,19 @@ public abstract class AbstractPredecessorEditor extends CustomComponent
 
     protected HorizontalLayout predecessorLayout;
 
-    protected OrgUnitAddView orgUnitAddView;
+    // protected OrgUnitAddView orgUnitAddView;
 
     private String orgUnitName;
 
     private final OrgUnitService service;
 
-    public AbstractPredecessorEditor(OrgUnitService service) {
+    protected AbstractOrgUnitView orgUnitEditorView;
+
+    public AbstractPredecessorEditor(final OrgUnitService service) {
         this.service = service;
-        this.tree = new OrgUnitTree(service);
+        tree = new OrgUnitTree(service);
         modalWindow.setCaption(getLabel());
+        modalWindow.setWidth("800px");
         modalWindow.addComponent(new Label(getEditorDescription()));
         modalWindow.addComponent(tree);
 
@@ -95,7 +106,7 @@ public abstract class AbstractPredecessorEditor extends CustomComponent
     }
 
     protected void onOkClicked(final ClickEvent event) {
-        if (isValid(getSelected().size())) {
+        if (isValid(getSelectedPredecessors().size())) {
             showAddedPredecessors();
             closeWindow();
         }
@@ -105,15 +116,21 @@ public abstract class AbstractPredecessorEditor extends CustomComponent
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public List<Object> getSelected() {
-        final List<Object> selectedOrgUnits = new ArrayList<Object>();
-        final Object o = tree.getSelectedItems();
-        if (o instanceof Set) {
-            selectedOrgUnits.addAll((Set) o); // More than one result...
+    public List<ResourceRefDisplay> getSelectedPredecessors() {
+        final List<ResourceRefDisplay> selectedOrgUnits =
+            new ArrayList<ResourceRefDisplay>();
+
+        final Object selectedItems = tree.getSelectedItems();
+        if (selectedItems instanceof Set<?>) {
+            for (final Object item : (Set<?>) selectedItems) {
+                selectedOrgUnits.add((ResourceRefDisplay) item);
+            }
         }
-        else if (o instanceof Object) { // Just one selected.
-            selectedOrgUnits.add(o);
+        else if (selectedItems instanceof ResourceRefDisplay) {
+            selectedOrgUnits.add((ResourceRefDisplay) selectedItems);
+        }
+        else {
+            return Collections.emptyList();
         }
         return selectedOrgUnits;
     }
@@ -160,9 +177,8 @@ public abstract class AbstractPredecessorEditor extends CustomComponent
         return parent;
     }
 
-    @Override
-    public void setOrgUnitAddView(final OrgUnitAddView orgUnitAddView) {
-        this.orgUnitAddView = orgUnitAddView;
+    public void setOrgUnitEditorView(final AbstractOrgUnitView orgUnitEditorView) {
+        this.orgUnitEditorView = orgUnitEditorView;
     }
 
     @Override
