@@ -6,19 +6,18 @@ import org.slf4j.LoggerFactory;
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.terminal.UserError;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 
 import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.service.OrgUnitService;
 import de.escidoc.admintool.service.UserService;
-import de.escidoc.admintool.view.OrgUnitEditor;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.admintool.view.validator.EmptyFieldValidator;
 import de.escidoc.core.client.exceptions.EscidocException;
@@ -30,8 +29,8 @@ import de.escidoc.vaadin.utilities.LayoutHelper;
 public class UserLabAddView extends CustomComponent implements ClickListener {
     private static final long serialVersionUID = 3007285643463919742L;
 
-    private static final Logger log = LoggerFactory
-        .getLogger(UserLabAddView.class);
+    private static final Logger log =
+        LoggerFactory.getLogger(UserLabAddView.class);
 
     private final UserLabListView userLabList;
 
@@ -55,8 +54,8 @@ public class UserLabAddView extends CustomComponent implements ClickListener {
 
     private final Button addOrgUnitButton = new Button(ViewConstants.ADD_LABEL);
 
-    private final Button removeOrgUnitButton = new Button(
-        ViewConstants.REMOVE_LABEL);
+    private final Button removeOrgUnitButton =
+        new Button(ViewConstants.REMOVE_LABEL);
 
     private TextField emailField;
 
@@ -74,9 +73,9 @@ public class UserLabAddView extends CustomComponent implements ClickListener {
     }
 
     public void init() {
-        Panel panel = new Panel();
-        FormLayout form = new FormLayout();
-        int labelWidth = 100;
+        final Panel panel = new Panel();
+        final FormLayout form = new FormLayout();
+        final int labelWidth = 100;
         panel.setContent(form);
         form.setSpacing(false);
         panel.setCaption("Add a new User Account");
@@ -95,27 +94,28 @@ public class UserLabAddView extends CustomComponent implements ClickListener {
         loginNameField.setPropertyDataSource(loginNameProperty);
         loginNameField.setWidth("400px");
 
-        // OrgUnit
-        orgUnitList.setRows(5);
-        orgUnitList.setWidth("400px");
-        orgUnitList.setNullSelectionAllowed(true);
-        orgUnitList.setMultiSelect(true);
-        orgUnitList.setImmediate(true);
-
-        form
-            .addComponent(LayoutHelper.create(
-                ViewConstants.ORGANIZATION_UNITS_LABEL, new OrgUnitEditor(
-                    ViewConstants.ORGANIZATION_UNITS_LABEL, orgUnitList,
-                    addOrgUnitButton, removeOrgUnitButton, service),
-                labelWidth, 140, false, new Button[] { addOrgUnitButton,
-                    removeOrgUnitButton }));
-
-        // e-Mail
-        panel.addComponent(LayoutHelper.create("E-Mail", emailField =
-            new TextField(), labelWidth, true));
-        emailProperty = new ObjectProperty("", String.class);
-        emailField.setPropertyDataSource(emailProperty);
-        emailField.setWidth("400px");
+        // TODO implement the functionality for saving org unit and email
+        // // OrgUnit
+        // orgUnitList.setRows(5);
+        // orgUnitList.setWidth("400px");
+        // orgUnitList.setNullSelectionAllowed(true);
+        // orgUnitList.setMultiSelect(true);
+        // orgUnitList.setImmediate(true);
+        //
+        // form
+        // .addComponent(LayoutHelper.create(
+        // ViewConstants.ORGANIZATION_UNITS_LABEL, new OrgUnitEditor(
+        // ViewConstants.ORGANIZATION_UNITS_LABEL, orgUnitList,
+        // addOrgUnitButton, removeOrgUnitButton, service),
+        // labelWidth, 140, false, new Button[] { addOrgUnitButton,
+        // removeOrgUnitButton }));
+        //
+        // // e-Mail
+        // panel.addComponent(LayoutHelper.create("E-Mail", emailField =
+        // new TextField(), labelWidth, true));
+        // emailProperty = new ObjectProperty("", String.class);
+        // emailField.setPropertyDataSource(emailProperty);
+        // emailField.setWidth("400px");
 
         panel.addComponent(addFooter());
         setCompositionRoot(panel);
@@ -161,7 +161,7 @@ public class UserLabAddView extends CustomComponent implements ClickListener {
                     loginNameField.setValue("");
                 }
                 catch (final EscidocException e) {
-                    String error =
+                    final String error =
                         "A user with login name "
                             + (String) nameProperty.getValue()
                             + " already exist.";
