@@ -1,8 +1,8 @@
 package de.escidoc.admintool.view.orgunit;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.HashSet;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Set;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -12,23 +12,36 @@ import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
 import com.vaadin.data.Item;
-import com.vaadin.ui.Button;
+import com.vaadin.data.Property;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Window;
 import com.vaadin.ui.Button.ClickEvent;
 
 import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.app.PropertyId;
 import de.escidoc.admintool.domain.MetadataExtractor;
 import de.escidoc.admintool.domain.OrgUnitFactory;
+import de.escidoc.admintool.messages.Messages;
 import de.escidoc.admintool.service.OrgUnitService;
 import de.escidoc.admintool.view.ResourceRefDisplay;
 import de.escidoc.admintool.view.ViewConstants;
+import de.escidoc.admintool.view.context.PublicStatus;
+import de.escidoc.admintool.view.orgunit.editor.IPredecessorEditor;
+import de.escidoc.admintool.view.orgunit.predecessor.AbstractPredecessorView;
+import de.escidoc.admintool.view.orgunit.predecessor.AffiliationPredecessorView;
+import de.escidoc.admintool.view.orgunit.predecessor.BlankPredecessorView;
+import de.escidoc.admintool.view.orgunit.predecessor.SpinOffPredecessorView;
 import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
 import de.escidoc.core.resources.oum.OrganizationalUnit;
+import de.escidoc.core.resources.oum.Parent;
+import de.escidoc.core.resources.oum.Parents;
+import de.escidoc.core.resources.oum.Predecessor;
+import de.escidoc.core.resources.oum.PredecessorForm;
+import de.escidoc.core.resources.oum.Predecessors;
+import de.escidoc.vaadin.dialog.ErrorDialog;
 import de.escidoc.vaadin.utilities.Converter;
 import de.escidoc.vaadin.utilities.LayoutHelper;
 
@@ -37,14 +50,6 @@ public class OrgUnitEditView extends AbstractOrgUnitView {
 
     private static final Logger log =
         LoggerFactory.getLogger(OrgUnitEditView.class);
-
-    private final Button save = new Button("Save", this);
-
-    private final Button cancel = new Button("Cancel", this);
-
-    private final Button edit = new Button("Edit", this);
-
-    private final HorizontalLayout footer = new HorizontalLayout();
 
     private final Label objIdField = new Label();
 
@@ -60,28 +65,28 @@ public class OrgUnitEditView extends AbstractOrgUnitView {
 
     private final Label publicStatusComment = new Label();
 
+    private static final int HEIGHT = 15;
+
+    private OrgUnitToolbar toolbar;
+
     private Item item;
-
-    private final AdminToolApplication app;
-
-    private OrgUnitService service = null;
-
-    // private final Map<String, OrganizationalUnit> orgUnitById;
-    private final int HEIGHT = 15;
 
     public OrgUnitEditView(final AdminToolApplication app,
         final OrgUnitService service) throws EscidocException,
         InternalClientException, TransportException,
         UnsupportedOperationException {
         super(app, service);
-        assert service != null : "Service must not be null.";
-        assert app != null : "Aervice must not be null.";
-        this.app = app;
-        this.service = service;
         middleInit();
         postInit();
-
+        // setFieldsWriteThrough(false);
+        titleField.setWriteThrough(false);
     }
+
+    // private void setFieldsWriteThrough(final boolean b) {
+    // for (final Field field : attachedFields) {
+    // field.setWriteThrough(b);
+    // }
+    // }
 
     private void middleInit() {
         form.addComponent(LayoutHelper.create(ViewConstants.OBJECT_ID_LABEL,
@@ -106,14 +111,15 @@ public class OrgUnitEditView extends AbstractOrgUnitView {
         descriptionField.setComponentError(null);
 
         final Set<String> parents = getSelectedParents();
+        // TODO update Predecessors;
         final Set<String> predecessors = null;
-        OrganizationalUnit updatedOrgUnit = null;
+        OrganizationalUnit backedOrgUnit = null;
         try {
-            final OrganizationalUnit toBeUpdate =
+            final OrganizationalUnit oldOrgUnit =
                 service.find((String) objIdField.getValue());
-            updatedOrgUnit =
+            backedOrgUnit =
                 new OrgUnitFactory()
-                    .update(toBeUpdate, (String) titleField.getValue(),
+                    .update(oldOrgUnit, (String) titleField.getValue(),
                         (String) descriptionField.getValue()).alternative(
                         (String) alternativeField.getValue()).identifier(
                         (String) identifierField.getValue()).orgType(
@@ -122,58 +128,56 @@ public class OrgUnitEditView extends AbstractOrgUnitView {
                         (String) cityField.getValue()).coordinates(
                         (String) coordinatesField.getValue()).parents(parents)
                     .build();
-            service.update(updatedOrgUnit);
-            // commit();
+            final OrganizationalUnit updatedOrgUnit =
+                service.update(backedOrgUnit);
+            // final OrganizationalUnit updatedOrgUnit =
+            // service.find((String) objIdField.getValue());
+            // TODO
+            // sort the table
+            // FIXME
+            titleField.commit();
+            // descriptionField.commit();
+            // commitFields();
+
+            // FIXME hack for updating the list.
+            // orgUnitList.removeOrgUnit(toBeUpdate);
+            // orgUnitList.addOrgUnit(updatedOrgUnit);
+            // orgUnitList.updateOrgUnit(oldOrgUnit, updatedOrgUnit);
+
         }
         catch (final ParserConfigurationException e) {
-            // TODO Auto-generated catch block
+            log.error("An unexpected error occured! See log for details.", e);
             e.printStackTrace();
         }
         catch (final SAXException e) {
-            // TODO Auto-generated catch block
+            log.error("An unexpected error occured! See log for details.", e);
             e.printStackTrace();
         }
         catch (final IOException e) {
-            // TODO Auto-generated catch block
+            log.error("An unexpected error occured! See log for details.", e);
             e.printStackTrace();
         }
         catch (final EscidocException e) {
-            // TODO Auto-generated catch block
+            log.error("An unexpected error occured! See log for details.", e);
             e.printStackTrace();
         }
         catch (final InternalClientException e) {
-            // TODO Auto-generated catch block
+            log.error("An unexpected error occured! See log for details.", e);
             e.printStackTrace();
         }
         catch (final TransportException e) {
-            // TODO Auto-generated catch block
+            log.error("An unexpected error occured! See log for details.", e);
             e.printStackTrace();
         }
 
-        return updatedOrgUnit;
+        return backedOrgUnit;
     }
 
-    private Set<String> getSelectedParents() {
-        if (parentList.getContainerDataSource() == null
-            || parentList.getContainerDataSource().getItemIds() == null
-            || parentList.getContainerDataSource().getItemIds().size() == 0
-            || !parentList
-                .getContainerDataSource().getItemIds().iterator().hasNext()) {
-            return Collections.emptySet();
-        }
-
-        final ResourceRefDisplay parentRef =
-            (ResourceRefDisplay) parentList
-                .getContainerDataSource().getItemIds().iterator().next();
-        final Set<String> parents = new HashSet<String>() {
-
-            {
-                add(parentRef.getObjectId());
-            }
-        };
-
-        return parents;
-    }
+    // private void commitFields() {
+    // for (final Field field : attachedFields) {
+    // field.commit();
+    // }
+    // }
 
     private String getSelectedOrgUnitId() {
         final String objid =
@@ -184,6 +188,31 @@ public class OrgUnitEditView extends AbstractOrgUnitView {
     public void setSelected(final Item item) {
         this.item = item;
         if (item != null) {
+            final Property publicStatusProperty =
+                item.getItemProperty(PropertyId.PUBLIC_STATUS);
+            publicStatus.setPropertyDataSource(publicStatusProperty);
+            final String status = (String) publicStatusProperty.getValue();
+            final PublicStatus publicStatus =
+                PublicStatus.valueOf(status.toUpperCase());
+            switch (publicStatus) {
+                case CREATED: {
+                    setFormReadOnly(false);
+                    footer.setVisible(true);
+                    break;
+                }
+                case OPENED: {
+                    setFormReadOnly(false);
+                    break;
+                }
+                case CLOSED: {
+                    setFormReadOnly(true);
+                    footer.setVisible(false);
+                    break;
+                }
+                default: {
+                    throw new RuntimeException("unknown status");
+                }
+            }
             titleField.setPropertyDataSource(item
                 .getItemProperty(PropertyId.NAME));
 
@@ -192,6 +221,7 @@ public class OrgUnitEditView extends AbstractOrgUnitView {
 
             objIdField.setPropertyDataSource(item
                 .getItemProperty(PropertyId.OBJECT_ID));
+            objIdField.setValue(item.getItemProperty(PropertyId.OBJECT_ID));
 
             modifiedOn.setCaption(Converter
                 .dateTimeToString((org.joda.time.DateTime) item
@@ -208,37 +238,227 @@ public class OrgUnitEditView extends AbstractOrgUnitView {
             createdBy.setPropertyDataSource(item
                 .getItemProperty(PropertyId.CREATED_BY));
 
-            publicStatus.setPropertyDataSource(item
-                .getItemProperty(PropertyId.PUBLIC_STATUS));
-
             publicStatusComment.setPropertyDataSource(item
                 .getItemProperty(PropertyId.PUBLIC_STATUS_COMMENT));
 
-            parentList.setPropertyDataSource(item
-                .getItemProperty(PropertyId.PARENTS));
-            final OrganizationalUnit orgUnit =
-                service.find((String) item
-                    .getItemProperty(PropertyId.OBJECT_ID).getValue());
+            final Parents parents =
+                (Parents) item.getItemProperty(PropertyId.PARENTS).getValue();
 
-            final MetadataExtractor metadataExtractor =
-                new MetadataExtractor(orgUnit);
-            final String alternative =
-                metadataExtractor.get("dcterms:alternative");
-            final String identifier = metadataExtractor.get("dc:identifier");
-            final String orgType =
-                metadataExtractor.get("eterms:organization-type");
-            final String country = metadataExtractor.get("eterms:country");
-            final String city = metadataExtractor.get("eterms:city");
-            final String coordinate = metadataExtractor.get("kml:coordinates");
-            final String startDate = metadataExtractor.get("eterms:start-date");
-            final String endDate = metadataExtractor.get("eterms:end-date");
-            alternativeField.setValue(alternative);
-            identifierField.setValue(identifier);
-            orgTypeField.setValue(orgType);
-            countryField.setValue(country);
-            cityField.setValue(city);
-            coordinatesField.setValue(coordinate);
+            if (parents != null && parents.getParentRef() != null
+                && parents.getParentRef().iterator() != null
+                && parents.getParentRef().iterator().hasNext()) {
+                final Parent parent = parents.getParentRef().iterator().next();
+
+                final String parentName =
+                    service.find(parent.getObjid()).getProperties().getName();
+                parentList.addItem(new ResourceRefDisplay(parent.getObjid(),
+                    parentName));
+            }
+            else {
+                parentList.removeAllItems();
+            }
+
+            // Predecessor
+            bindPredecessor();
+
+            if (publicStatus != PublicStatus.CLOSED) {
+                final OrganizationalUnit orgUnit =
+                    service.find((String) item.getItemProperty(
+                        PropertyId.OBJECT_ID).getValue());
+                final MetadataExtractor metadataExtractor =
+                    new MetadataExtractor(orgUnit);
+                final String alternative =
+                    metadataExtractor.get("dcterms:alternative");
+                final String identifier =
+                    metadataExtractor.get("dc:identifier");
+                final String orgType =
+                    metadataExtractor.get("eterms:organization-type");
+                final String country = metadataExtractor.get("eterms:country");
+                final String city = metadataExtractor.get("eterms:city");
+                final String coordinate =
+                    metadataExtractor.get("kml:coordinates");
+                final String startDate =
+                    metadataExtractor.get("eterms:start-date");
+                final String endDate = metadataExtractor.get("eterms:end-date");
+
+                alternativeField.setValue(alternative);
+                identifierField.setValue(identifier);
+                orgTypeField.setValue(orgType);
+                countryField.setValue(country);
+                cityField.setValue(city);
+                coordinatesField.setValue(coordinate);
+            }
+            toolbar.changeState(PublicStatus.valueOf(status.toUpperCase()));
         }
+    }
+
+    private void bindPredecessor() {
+        final Predecessors predecessors =
+            (Predecessors) item
+                .getItemProperty(PropertyId.PREDECESSORS).getValue();
+        if (hasPredecessors()) {
+            for (final Predecessor predecessor : predecessors
+                .getPredecessorRef()) {
+
+                final String predecessorObjectId = predecessor.getObjid();
+                log.info("predecessor found: " + predecessorObjectId);
+
+                final String predecessorTitle = getTitle(predecessorObjectId);
+                log.info("predecessor found: " + predecessorTitle);
+
+                final PredecessorForm predecessorForm = predecessor.getForm();
+                log.info("predecessor found: " + predecessorForm);
+
+                showPredecessorView(predecessorForm, predecessorObjectId,
+                    predecessorTitle);
+            }
+        }
+        else {
+            log.info("no predecessor");
+            final BlankPredecessorView blankPredecessorView =
+                new BlankPredecessorView();
+            predecessorLayout.replaceComponent(predecessorResult,
+                blankPredecessorView);
+            predecessorResult = blankPredecessorView;
+        }
+    }
+
+    private String getTitle(final String predecessorObjectId) {
+        try {
+            return service.findOrgUnitTitleById(predecessorObjectId);
+        }
+        catch (final EscidocException e) {
+            app.getMainWindow().addWindow(
+                new ErrorDialog(app.getMainWindow(), Messages
+                    .getString("AdminToolApplication.15"), e.getMessage())); //$NON-NLS-1$
+        }
+        catch (final InternalClientException e) {
+            app.getMainWindow().addWindow(
+                new ErrorDialog(app.getMainWindow(), Messages
+                    .getString("AdminToolApplication.15"), e.getMessage())); //$NON-NLS-1$
+        }
+        catch (final TransportException e) {
+            app.getMainWindow().addWindow(
+                new ErrorDialog(app.getMainWindow(), Messages
+                    .getString("AdminToolApplication.15"), e.getMessage())); //$NON-NLS-1$
+        }
+        return new String();
+    }
+
+    private void showPredecessorView(
+        final PredecessorForm predecessorForm,
+        final String predecessorObjectId, final String predecessorTitle) {
+        // TODO replace with factory
+        final AbstractPredecessorView addedPredecessorView =
+            createPredecessorView(predecessorForm, predecessorTitle);
+
+        addedPredecessorView.setResourceRefDisplay(new ResourceRefDisplay(
+            predecessorObjectId, predecessorTitle));
+        predecessorLayout.replaceComponent(predecessorResult,
+            addedPredecessorView);
+        predecessorResult = addedPredecessorView;
+    }
+
+    // TODO replace with factory
+    private AbstractPredecessorView createPredecessorView(
+        final PredecessorForm predecessorForm, final String predecessorTitle) {
+        AbstractPredecessorView addedPredecessorView;
+        switch (predecessorForm) {
+            case SPINOFF: {
+                // select predecessor type in combo box.
+                predecessorTypeSelect.select(PredecessorType.SPIN_OFF);
+                // show spin-off view
+                addedPredecessorView =
+                    new SpinOffPredecessorView(predecessorTitle,
+                        (String) titleField.getValue());
+                // TODO remove "add" predecessor button
+                // TODO add "edit" predecessor button
+                // TODO add "remove" predecessor button
+                return addedPredecessorView;
+
+            }
+            case AFFILIATION: {
+                // select predecessor type in combo box.
+                predecessorTypeSelect.select(PredecessorType.AFFILIATION);
+                // show spin-off view
+                addedPredecessorView =
+                    new AffiliationPredecessorView(predecessorTitle,
+                        (String) titleField.getValue());
+                // TODO remove "add" predecessor button
+                // TODO add "edit" predecessor button
+                // TODO add "remove" predecessor button
+                return addedPredecessorView;
+
+            }
+                // TODO create appropriate view
+            case SPLITTING: {
+                // select predecessor type in combo box.
+                predecessorTypeSelect.select(PredecessorType.SPLITTING);
+                // show spin-off view
+                addedPredecessorView =
+                    new AffiliationPredecessorView(predecessorTitle,
+                        (String) titleField.getValue());
+                // TODO remove "add" predecessor button
+                // TODO add "edit" predecessor button
+                // TODO add "remove" predecessor button
+                return addedPredecessorView;
+            }
+                // TODO create appropriate view
+            case FUSION: {
+                // select predecessor type in combo box.
+                predecessorTypeSelect.select(PredecessorType.FUSION);
+                // show spin-off view
+                addedPredecessorView =
+                    new AffiliationPredecessorView(predecessorTitle,
+                        (String) titleField.getValue());
+                // TODO remove "add" predecessor button
+                // TODO add "edit" predecessor button
+                // TODO add "remove" predecessor button
+                return addedPredecessorView;
+
+            }
+            case REPLACEMENT: {
+                // select predecessor type in combo box.
+                predecessorTypeSelect.select(PredecessorType.REPLACEMENT);
+                // show spin-off view
+                addedPredecessorView =
+                    new AffiliationPredecessorView(predecessorTitle,
+                        (String) titleField.getValue());
+                // TODO remove "add" predecessor button
+                // TODO add "edit" predecessor button
+                // TODO add "remove" predecessor button
+                return addedPredecessorView;
+
+            }
+            default:
+                throw new RuntimeException("Unsupported predecessor form");
+
+        }
+    }
+
+    private boolean hasPredecessors() {
+        final Predecessors predecessors =
+            (Predecessors) item
+                .getItemProperty(PropertyId.PREDECESSORS).getValue();
+        return predecessors != null && predecessors.getPredecessorRef() != null
+            && predecessors.getPredecessorRef().size() > 0;
+    }
+
+    private void setFormReadOnly(final boolean isReadOnly) {
+        titleField.setReadOnly(isReadOnly);
+        descriptionField.setReadOnly(isReadOnly);
+        alternativeField.setReadOnly(isReadOnly);
+        identifierField.setReadOnly(isReadOnly);
+        orgTypeField.setReadOnly(isReadOnly);
+        cityField.setReadOnly(isReadOnly);
+        countryField.setReadOnly(isReadOnly);
+        coordinatesField.setReadOnly(isReadOnly);
+        parentList.setReadOnly(isReadOnly);
+        predecessorTypeSelect.setReadOnly(isReadOnly);
+
+        addOrgUnitButton.setVisible(!isReadOnly);
+        removeOrgUnitButton.setVisible(!isReadOnly);
+        addPredecessorButton.setVisible(!isReadOnly);
     }
 
     @Override
@@ -248,8 +468,72 @@ public class OrgUnitEditView extends AbstractOrgUnitView {
 
     @Override
     protected void onAddPredecessorClicked() {
-        // TODO Auto-generated method stub
+        try {
+            if (titleField.getValue() != null
+                && (!((String) titleField.getValue()).isEmpty())) {
+                Object selectObject = predecessorTypeSelect.getValue();
+                if (selectObject == null) {
+                    selectObject = PredecessorType.BLANK;
+                }
+                final Class<?>[] argsClass =
+                    new Class<?>[] { OrgUnitService.class };
+                final Object[] args = new Object[] { service };
 
+                final Class<?> c =
+                    Class.forName(((PredecessorType) selectObject)
+                        .getExecutionClass());
+                final Constructor<?> constructor = c.getConstructor(argsClass);
+
+                final Object object = constructor.newInstance(args);
+
+                final IPredecessorEditor editor = (IPredecessorEditor) object;
+                editor.setNewOrgUnit((String) titleField.getValue());
+                final Window window = editor.getWidget();
+                window.setModal(true);
+                editor.setMainWindow(app.getMainWindow());
+                editor.setList(predecessorTypeSelect);
+                editor.setOrgUnitEditorView(this);
+                app.getMainWindow().addWindow(window);
+            }
+            else {
+                app.getMainWindow().addWindow(
+                    new ErrorDialog(app.getMainWindow(), "Error",
+                        "Enter a title first, please."));
+            }
+        }
+        catch (final ClassNotFoundException e) {
+            log.error("An unexpected error occured! See log for details.", e);
+            e.printStackTrace();
+        }
+        catch (final InstantiationException e) {
+            log.error("An unexpected error occured! See log for details.", e);
+            e.printStackTrace();
+
+        }
+        catch (final IllegalAccessException e) {
+            log.error("An unexpected error occured! See log for details.", e);
+            e.printStackTrace();
+        }
+        catch (final SecurityException e) {
+            log.error("An unexpected error occured! See log for details.", e);
+            e.printStackTrace();
+
+        }
+        catch (final NoSuchMethodException e) {
+            log.error("An unexpected error occured! See log for details.", e);
+            e.printStackTrace();
+
+        }
+        catch (final IllegalArgumentException e) {
+            log.error("An unexpected error occured! See log for details.", e);
+            e.printStackTrace();
+
+        }
+        catch (final InvocationTargetException e) {
+            log.error("An unexpected error occured! See log for details.", e);
+            e.printStackTrace();
+
+        }
     }
 
     @Override
@@ -265,7 +549,7 @@ public class OrgUnitEditView extends AbstractOrgUnitView {
 
     @Override
     protected Component addToolbar() {
-        final OrgUnitToolbar toolbar = new OrgUnitToolbar(app, this);
+        toolbar = new OrgUnitToolbar(app, this);
         return toolbar;
     }
 
@@ -278,49 +562,39 @@ public class OrgUnitEditView extends AbstractOrgUnitView {
             app.showOrganizationalUnitView();
         }
         catch (final EscidocException e) {
-            // TODO Auto-generated catch block
+            log.error("An unexpected error occured! See log for details.", e);
             e.printStackTrace();
         }
         catch (final InternalClientException e) {
-            // TODO Auto-generated catch block
+            log.error("An unexpected error occured! See log for details.", e);
             e.printStackTrace();
         }
         catch (final TransportException e) {
-            // TODO Auto-generated catch block
+            log.error("An unexpected error occured! See log for details.", e);
             e.printStackTrace();
         }
 
     }
 
-}
+    public OrganizationalUnit open(final String comment)
+        throws EscidocException, InternalClientException, TransportException {
+        final OrganizationalUnit oldOrgUnit =
+            service.find(getSelectedOrgUnitId());
+        final OrganizationalUnit openedOrgUnit =
+            service.open(getSelectedOrgUnitId(), comment);
+        orgUnitList.updateOrgUnit(oldOrgUnit, openedOrgUnit);
+        return openedOrgUnit;
 
-// TODO code duplication @see OrgUnitAddForm.java
-// final String country = (String) getField(COUNTRY_ID).getValue();
-// final String city = (String) getField(CITY_ID).getValue();
-// // final Set<String> parents =
-// // (Set<String>) this.getField(PARENTS_ID).getValue();
-//
-// final TwinColSelect twinColSelect =
-// (TwinColSelect) getField(PARENTS_ID);
-// final Set<String> parents = (Set<String>) twinColSelect.getValue();
-//
-// System.out.println("Update parents to: ");
-// for (final String parent : parents) {
-// System.out.println(parent);
-// }
-//
-// final OrganizationalUnit updatedOrgUnit =
-// new OrgUnitFactory()
-// .update(toBeUpdate,
-// (String) getField(ViewConstants.TITLE_ID).getValue(),
-// (String) getField(ViewConstants.DESCRIPTION_ID).getValue())
-// .alternative(
-// (String) getField(ViewConstants.ALTERNATIVE_ID).getValue())
-// .identifier(
-// (String) getField(ViewConstants.IDENTIFIER_ID).getValue())
-// .orgType((String) getField(ORG_TYPE_ID).getValue())
-// .country(country)
-// .city(city)
-// .coordinates(
-// (String) getField(ViewConstants.COORDINATES_ID).getValue())
-// .parents(parents).build();
+    }
+
+    public OrganizationalUnit close(final String comment)
+        throws EscidocException, InternalClientException, TransportException {
+        final OrganizationalUnit oldOrgUnit =
+            service.find(getSelectedOrgUnitId());
+        final OrganizationalUnit closedOrgUnit =
+            service.close(getSelectedOrgUnitId(), comment);
+        orgUnitList.updateOrgUnit(oldOrgUnit, closedOrgUnit);
+        return closedOrgUnit;
+
+    }
+}

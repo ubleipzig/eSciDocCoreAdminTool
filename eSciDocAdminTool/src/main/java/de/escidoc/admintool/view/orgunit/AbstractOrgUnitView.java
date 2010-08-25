@@ -5,8 +5,10 @@ package de.escidoc.admintool.view.orgunit;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
-import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
@@ -22,7 +24,9 @@ import com.vaadin.ui.Button.ClickListener;
 import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.service.OrgUnitService;
 import de.escidoc.admintool.view.OrgUnitEditor;
+import de.escidoc.admintool.view.ResourceRefDisplay;
 import de.escidoc.admintool.view.ViewConstants;
+import de.escidoc.admintool.view.orgunit.predecessor.AbstractPredecessorView;
 import de.escidoc.admintool.view.orgunit.predecessor.BlankPredecessorView;
 import de.escidoc.admintool.view.validator.EmptyFieldValidator;
 import de.escidoc.vaadin.utilities.LayoutHelper;
@@ -36,15 +40,12 @@ public abstract class AbstractOrgUnitView extends CustomComponent
 
     private static final long serialVersionUID = 8351229526921020901L;
 
-    private final Button save = new Button("Save", this);
+    // protected final static List<Field> attachedFields = new
+    // ArrayList<Field>();
 
-    private final Button cancel = new Button("Cancel", this);
+    private final Button saveButton = new Button("Save", this);
 
-    protected final AdminToolApplication app;
-
-    protected final OrgUnitService service;
-
-    protected OrgUnitList orgUnitList;
+    private final Button cancelButton = new Button("Cancel", this);
 
     protected final FormLayout form = new FormLayout();
 
@@ -68,15 +69,22 @@ public abstract class AbstractOrgUnitView extends CustomComponent
 
     protected final ListSelect parentList = new ListSelect();
 
-    private final Button addOrgUnitButton = new Button(ViewConstants.ADD_LABEL);
+    protected final AdminToolApplication app;
 
-    private final Button removeOrgUnitButton =
-        new Button(ViewConstants.REMOVE_LABEL);
+    protected final OrgUnitService service;
 
-    private final Button addPredecessorButton =
+    protected OrgUnitList orgUnitList;
+
+    protected final Button addOrgUnitButton =
         new Button(ViewConstants.ADD_LABEL);
 
-    protected AbstractComponent predecessorResult;
+    protected final Button removeOrgUnitButton =
+        new Button(ViewConstants.REMOVE_LABEL);
+
+    protected final Button addPredecessorButton =
+        new Button(ViewConstants.ADD_LABEL);
+
+    protected AbstractPredecessorView predecessorResult;
 
     protected HorizontalLayout predecessorLayout;
 
@@ -92,6 +100,8 @@ public abstract class AbstractOrgUnitView extends CustomComponent
 
     public AbstractOrgUnitView(final AdminToolApplication app,
         final OrgUnitService service) {
+        assert service != null : "Service must not be null.";
+        assert app != null : "AdminToolApplication must not be null.";
         this.app = app;
         this.service = service;
         preInit();
@@ -115,14 +125,15 @@ public abstract class AbstractOrgUnitView extends CustomComponent
 
         // Title
         titleField.setWidth("400px");
+        // attachedFields.add(titleField);
         form.addComponent(LayoutHelper.create(ViewConstants.TITLE_LABEL,
             titleField, labelWidth, true));
         titleField.focus();
-        // titleProperty = mapBinding("", titleField);
 
         // Description
         descriptionField.setWidth("400px");
         descriptionField.setRows(5);
+        // attachedFields.add(descriptionField);
         form.addComponent(LayoutHelper.create(ViewConstants.DESCRIPTION_LABEL,
             descriptionField, labelWidth, 100, true));
     }
@@ -130,31 +141,37 @@ public abstract class AbstractOrgUnitView extends CustomComponent
     protected void postInit() {
         // Alternative Title
         alternativeField.setWidth("400px");
+        // attachedFields.add(alternativeField);
         form.addComponent(LayoutHelper.create(ViewConstants.ALTERNATIVE_LABEL,
             alternativeField, labelWidth, false));
 
         // identifier
         identifierField.setWidth("400px");
+        // attachedFields.add(identifierField);
         form.addComponent(LayoutHelper.create(ViewConstants.IDENTIFIER_LABEL,
             identifierField, labelWidth, false));
 
         // Org Type
         orgTypeField.setWidth("400px");
+        // attachedFields.add(orgTypeField);
         form.addComponent(LayoutHelper.create(ViewConstants.ORGANIZATION_TYPE,
             orgTypeField, labelWidth, false));
 
         // city
         cityField.setWidth("400px");
+        // attachedFields.add(cityField);
         form.addComponent(LayoutHelper.create("City", cityField, labelWidth,
             false));
 
         // Country
         countryField.setWidth("400px");
+        // attachedFields.add(countryField);
         form.addComponent(LayoutHelper.create("Country", countryField,
             labelWidth, false));
 
         // coordinates
         coordinatesField.setWidth("400px");
+        // attachedFields.add(coordinatesField);
         form.addComponent(LayoutHelper.create(ViewConstants.COORDINATES_LABEL,
             coordinatesField, labelWidth, false));
 
@@ -164,7 +181,7 @@ public abstract class AbstractOrgUnitView extends CustomComponent
         parentList.setNullSelectionAllowed(true);
         parentList.setMultiSelect(true);
         parentList.setImmediate(true);
-
+        // attachedFields.add(parentList);
         form.addComponent(LayoutHelper.create(ViewConstants.PARENTS_LABEL,
             new OrgUnitEditor("Add Parents", parentList, addOrgUnitButton,
                 removeOrgUnitButton, service), labelWidth, 100, false,
@@ -174,6 +191,7 @@ public abstract class AbstractOrgUnitView extends CustomComponent
         predecessorTypeSelect.setRows(1);
         predecessorTypeSelect.setImmediate(true);
         predecessorTypeSelect.setNullSelectionAllowed(false);
+        // attachedFields.add(predecessorTypeSelect);
 
         final HorizontalLayout hl = new HorizontalLayout();
         hl.addComponent(predecessorTypeSelect);
@@ -204,20 +222,20 @@ public abstract class AbstractOrgUnitView extends CustomComponent
 
     private HorizontalLayout addFooter() {
         footer.setSpacing(true);
-        footer.addComponent(save);
-        footer.addComponent(cancel);
+        footer.addComponent(saveButton);
+        footer.addComponent(cancelButton);
         return footer;
     }
 
     @Override
     public void buttonClick(final ClickEvent event) {
         final Button source = event.getButton();
-        if (source == save) {
+        if (source == saveButton) {
             if (validate()) {
                 saveClicked(event);
             }
         }
-        else if (source == cancel) {
+        else if (source == cancelButton) {
             cancelClicked(event);
         }
         else {
@@ -238,5 +256,36 @@ public abstract class AbstractOrgUnitView extends CustomComponent
             (EmptyFieldValidator.isValid(descriptionField, "Please enter a "
                 + ViewConstants.DESCRIPTION_ID));
         return valid;
+    }
+
+    // protected abstract void showAddedPredecessors(
+    // AbstractPredecessorView selectedPredecessorsView);
+    public void showAddedPredecessors(
+        final AbstractPredecessorView addedPredecessorView) {
+        predecessorLayout.replaceComponent(predecessorResult,
+            addedPredecessorView);
+        predecessorResult = addedPredecessorView;
+    }
+
+    protected Set<String> getSelectedParents() {
+        if (parentList.getContainerDataSource() == null
+            || parentList.getContainerDataSource().getItemIds() == null
+            || parentList.getContainerDataSource().getItemIds().size() == 0
+            || !parentList
+                .getContainerDataSource().getItemIds().iterator().hasNext()) {
+            return Collections.emptySet();
+        }
+
+        final ResourceRefDisplay parentRef =
+            (ResourceRefDisplay) parentList
+                .getContainerDataSource().getItemIds().iterator().next();
+        final Set<String> parents = new HashSet<String>() {
+
+            {
+                add(parentRef.getObjectId());
+            }
+        };
+
+        return parents;
     }
 }

@@ -104,6 +104,8 @@ public class OrgUnitList extends Table {
             description = "";
         }
         dataSource.addItem(ou);
+        sort(new Object[] { PropertyId.LAST_MODIFICATION_DATE },
+            new boolean[] { false });
     }
 
     private Collection<String> getParentsObjectId(final OrganizationalUnit ou) {
@@ -144,15 +146,15 @@ public class OrgUnitList extends Table {
 
         final boolean succesful = dataSource.removeItem(selected);
 
-        // assert succesful == true : "Removing context to the list failed.";
+        assert succesful == true : "Removing context to the list failed.";
     }
 
-    public void updateContext(final String objectId) {
-        final OrganizationalUnit selected = service.find(objectId);
-        removeOrgUnit(selected);
-        addOrgUnit(selected);
+    public void updateOrgUnit(
+        final OrganizationalUnit oldOrgUnit, final OrganizationalUnit newOrgUnit) {
+        removeOrgUnit(oldOrgUnit);
+        addOrgUnit(newOrgUnit);
         sort(new Object[] { ViewConstants.MODIFIED_ON_ID },
             new boolean[] { false });
-        setValue(objectId);
+        setValue(newOrgUnit);
     }
 }
