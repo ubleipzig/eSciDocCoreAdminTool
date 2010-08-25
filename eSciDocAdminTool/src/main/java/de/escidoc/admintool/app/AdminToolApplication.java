@@ -40,14 +40,12 @@ import de.escidoc.admintool.view.orgunit.OrgUnitAddView;
 import de.escidoc.admintool.view.orgunit.OrgUnitEditView;
 import de.escidoc.admintool.view.orgunit.OrgUnitList;
 import de.escidoc.admintool.view.orgunit.OrgUnitView;
-import de.escidoc.admintool.view.user.UserView;
 import de.escidoc.admintool.view.user.lab.UserLabAddView;
 import de.escidoc.admintool.view.user.lab.UserLabEditForm;
 import de.escidoc.admintool.view.user.lab.UserLabEditView;
 import de.escidoc.admintool.view.user.lab.UserLabListView;
 import de.escidoc.admintool.view.user.lab.UserLabView;
 import de.escidoc.core.client.Authentication;
-import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
@@ -341,39 +339,40 @@ public class AdminToolApplication extends Application
      */
     public OrgUnitView getOrgUnitView() {
         if (orgUnitView == null) {
-            orgUnitList = new OrgUnitList(this, orgUnitService);
             try {
+                orgUnitList = new OrgUnitList(this, orgUnitService);
                 orgUnitEditForm = new OrgUnitEditView(this, orgUnitService);
                 orgUnitEditForm.setOrgUnitList(orgUnitList);
                 orgUnitView =
                     new OrgUnitView(this, orgUnitList, orgUnitEditForm,
                         orgUnitAddForm);
             }
+
             catch (final EscidocException e) {
-                log.error(Messages.getString("AdminToolApplication.11"), //$NON-NLS-1$
-                    e);
-                e.printStackTrace();
+                getMainWindow().addWindow(
+                    new ErrorDialog(getMainWindow(), Messages
+                        .getString("AdminToolApplication.15"), e.getMessage())); //$NON-NLS-1$
             }
             catch (final InternalClientException e) {
-                log.error(Messages.getString("AdminToolApplication.12"), //$NON-NLS-1$
-                    e);
-                e.printStackTrace();
+                getMainWindow().addWindow(
+                    new ErrorDialog(getMainWindow(), Messages
+                        .getString("AdminToolApplication.15"), e.getMessage())); //$NON-NLS-1$
             }
             catch (final TransportException e) {
-                log.error(Messages.getString("AdminToolApplication.13"), //$NON-NLS-1$
-                    e);
-                e.printStackTrace();
+                getMainWindow().addWindow(
+                    new ErrorDialog(getMainWindow(), Messages
+                        .getString("AdminToolApplication.15"), e.getMessage())); //$NON-NLS-1$
             }
             catch (final UnsupportedOperationException e) {
-                log.error(Messages.getString("AdminToolApplication.14"), //$NON-NLS-1$
-                    e);
-                e.printStackTrace();
+                getMainWindow().addWindow(
+                    new ErrorDialog(getMainWindow(), Messages
+                        .getString("AdminToolApplication.15"), e.getMessage())); //$NON-NLS-1$
             }
             catch (final Exception e) {
-                new ErrorDialog(getMainWindow(), Messages
-                    .getString("AdminToolApplication.15"), e.getMessage()); //$NON-NLS-1$
+                getMainWindow().addWindow(
+                    new ErrorDialog(getMainWindow(), Messages
+                        .getString("AdminToolApplication.15"), e.getMessage())); //$NON-NLS-1$
             }
-
         }
         orgUnitView.showOrganizationalUnitAddForm();
 
@@ -417,10 +416,10 @@ public class AdminToolApplication extends Application
         return orgUnitList;
     }
 
-    private void showUserAddForm() {
-        showUsersView();
-        getUsersView().showUserAddForm();
-    }
+    // private void showUserAddForm() {
+    // showUsersView();
+    // getUsersView().showUserAddForm();
+    // }
 
     public void showOrganizationalUnitView() {
         setMainComponent(getOrgUnitView());
@@ -452,11 +451,12 @@ public class AdminToolApplication extends Application
             }
         }
         else if (property == contextList) {
-            if (contextView.getSelectedItem() == null) {
+            final Item item = contextView.getSelectedItem();
+            if (item == null) {
                 contextView.showContextAddView();
             }
             else {
-                contextView.showEditView(contextView.getSelectedItem());
+                contextView.showEditView(item);
             }
         }
         else if (property == userLabView.getUserList()) {
@@ -487,35 +487,23 @@ public class AdminToolApplication extends Application
     }
 
     public void showUsersView() {
-        setMainComponent(getUsersView());
+        setMainComponent(getUsersLabView());
     }
 
     private void showUsersLabView() {
         setMainComponent(getUsersLabView());
     }
 
-    private UserView userView;
-
-    private UserLabEditForm userLabEditForm;
-
-    private UserView getUsersView() {
-        if (userView == null) {
-            try {
-
-                userView = new UserView(this, getUserService());
-            }
-            catch (final EscidocClientException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        }
-        userView.showEditForm();
-        return userView;
+    private void showUserAddForm() {
+        showUsersLabView();
+        getUsersLabView();
     }
 
     private UserLabView userLabView;
 
     private UserLabListView userLabList;
+
+    private UserLabEditForm userLabEditForm;
 
     private UserLabView getUsersLabView() {
         if (userLabView == null) {
@@ -543,5 +531,9 @@ public class AdminToolApplication extends Application
     public Component newOrgUnitAddView() throws EscidocException,
         InternalClientException, TransportException {
         return new OrgUnitAddView(this, orgUnitService);
+    }
+
+    public OrgUnitService getOrgUnitService() {
+        return orgUnitService;
     }
 }
