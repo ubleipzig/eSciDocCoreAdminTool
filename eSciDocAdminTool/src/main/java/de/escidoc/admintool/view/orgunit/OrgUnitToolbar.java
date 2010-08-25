@@ -9,6 +9,7 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Button.ClickEvent;
 
 import de.escidoc.admintool.app.AdminToolApplication;
+import de.escidoc.admintool.view.context.PublicStatus;
 
 public class OrgUnitToolbar extends CustomComponent {
     private final Logger log = LoggerFactory.getLogger(OrgUnitToolbar.class);
@@ -35,6 +36,8 @@ public class OrgUnitToolbar extends CustomComponent {
 
     public OrgUnitToolbar(final AdminToolApplication app,
         final OrgUnitEditView orgUnitEditView) {
+        assert (app != null) : "AdminToolApplication can not be null.";
+        assert (orgUnitEditView != null) : "orgUnitEditView can not be null.";
         this.app = app;
         this.orgUnitEditView = orgUnitEditView;
         init();
@@ -55,7 +58,7 @@ public class OrgUnitToolbar extends CustomComponent {
 
         @Override
         public void buttonClick(final ClickEvent event) {
-            app.getOrgUnitView().showOrganizationalUnitAddForm();
+            app.getOrgUnitView();
         }
     }
 
@@ -65,6 +68,7 @@ public class OrgUnitToolbar extends CustomComponent {
         public void buttonClick(final ClickEvent event) {
             app.getMainWindow().addWindow(
                 new OpenOrgUnitModalWindow(orgUnitEditView).getSubWindow());
+            changeState(PublicStatus.OPENED);
         }
     }
 
@@ -74,6 +78,7 @@ public class OrgUnitToolbar extends CustomComponent {
         public void buttonClick(final ClickEvent event) {
             app.getMainWindow().addWindow(
                 new CloseOrgUnitModalWindow(orgUnitEditView).getSubWindow());
+            changeState(PublicStatus.CLOSED);
         }
     }
 
@@ -85,4 +90,27 @@ public class OrgUnitToolbar extends CustomComponent {
         }
     }
 
+    public void changeState(final PublicStatus status) {
+        switch (status) {
+            case CREATED: {
+                openOrgUnitButton.setVisible(true);
+                closeOrgUnitButton.setVisible(false);
+                deleteOrgUnitButton.setVisible(true);
+                break;
+            }
+            case OPENED: {
+                openOrgUnitButton.setVisible(false);
+                closeOrgUnitButton.setVisible(true);
+                deleteOrgUnitButton.setVisible(false);
+                break;
+            }
+            case CLOSED: {
+                openOrgUnitButton.setVisible(false);
+                closeOrgUnitButton.setVisible(false);
+                deleteOrgUnitButton.setVisible(false);
+                break;
+            }
+        }
+
+    }
 }
