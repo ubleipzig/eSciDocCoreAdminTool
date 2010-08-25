@@ -43,7 +43,7 @@ public class OrgUnitTreeFactory {
                     final Parent parent = parentRef.get(0);
                     if (parent != null) {
                         if (orgUnitTree.containsId(resourceRef2Display(parent))) {
-                            TreeHelper.addChildren2(orgUnitTree,
+                            TreeHelper.addChildrenNotExpand(orgUnitTree,
                                 resourceRef2Display(parent),
                                 resourceRef2Display(orgUnit), true);
                         }
@@ -51,7 +51,7 @@ public class OrgUnitTreeFactory {
                             TreeHelper.addRoot(orgUnitTree,
                                 resourceRef2Display(parent), true);
 
-                            TreeHelper.addChildren2(orgUnitTree,
+                            TreeHelper.addChildrenNotExpand(orgUnitTree,
                                 resourceRef2Display(parent),
                                 resourceRef2Display(orgUnit), true);
                         }
