@@ -6,6 +6,7 @@ import com.vaadin.data.util.POJOContainer;
 import com.vaadin.ui.Table;
 
 import de.escidoc.admintool.app.AdminToolApplication;
+import de.escidoc.admintool.app.PropertyId;
 import de.escidoc.admintool.service.UserService;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.core.client.exceptions.EscidocClientException;
@@ -93,5 +94,7 @@ public class UserLabListView extends Table {
 
     public void addUser(final UserAccount createdUserAccount) {
         pojoContainer.addItem(createdUserAccount);
+        sort(new Object[] { PropertyId.LAST_MODIFICATION_DATE },
+            new boolean[] { false });
     }
 }

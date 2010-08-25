@@ -65,6 +65,5 @@ public class UserLabView extends SplitPanel {
 
     public void debugDelete() {
         userLabList.debugDelete(getSelectedItemId());
-
     }
 }

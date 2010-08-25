@@ -5,8 +5,6 @@ import org.slf4j.LoggerFactory;
 
 import com.vaadin.data.Item;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.FormLayout;
@@ -14,6 +12,8 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 
 import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.service.UserService;
@@ -29,8 +29,8 @@ import de.escidoc.vaadin.utilities.LayoutHelper;
 
 @SuppressWarnings("serial")
 public class UserLabEditForm extends CustomComponent implements ClickListener {
-    private static final Logger log = LoggerFactory
-        .getLogger(UserLabEditForm.class);
+    private static final Logger log =
+        LoggerFactory.getLogger(UserLabEditForm.class);
 
     private final AdminToolApplication app;
 
@@ -69,8 +69,8 @@ public class UserLabEditForm extends CustomComponent implements ClickListener {
     }
 
     public void init() {
-        Panel panel = new Panel();
-        FormLayout form = new FormLayout();
+        final Panel panel = new Panel();
+        final FormLayout form = new FormLayout();
         panel.setContent(form);
         form.setSpacing(false);
 
@@ -78,8 +78,9 @@ public class UserLabEditForm extends CustomComponent implements ClickListener {
         nameField = new TextField();
         nameField.setWidth("400px");
         nameField.setWriteThrough(false);
-        int labelWidth = 100;
-        int height = 15;
+
+        final int labelWidth = 100;
+        final int height = 15;
         panel.addComponent(LayoutHelper.create(ViewConstants.NAME_LABEL,
             nameField, labelWidth, true));
         loginNameField = new TextField();
@@ -142,11 +143,12 @@ public class UserLabEditForm extends CustomComponent implements ClickListener {
                     if (state.isModified()) {
                         changeState();
                     }
+                    nameField.setComponentError(null);
+                    loginNameField.setComponentError(null);
+                    nameField.commit();
+                    loginNameField.commit();
                 }
-                nameField.setComponentError(null);
-                loginNameField.setComponentError(null);
-                nameField.commit();
-                loginNameField.commit();
+
             }
             catch (final EscidocException e) {
                 log.error("An unexpected error occured! See log for details.",
@@ -163,7 +165,7 @@ public class UserLabEditForm extends CustomComponent implements ClickListener {
                     e);
                 e.printStackTrace();
             }
-            catch (EscidocClientException e) {
+            catch (final EscidocClientException e) {
                 log.error("An unexpected error occured! See log for details.",
                     e);
                 e.printStackTrace();
@@ -195,8 +197,9 @@ public class UserLabEditForm extends CustomComponent implements ClickListener {
     }
 
     private String getSelectedItemId() {
-        if (item == null)
+        if (item == null) {
             return "";
+        }
         return (String) item.getItemProperty("objid").getValue();
     }
 
