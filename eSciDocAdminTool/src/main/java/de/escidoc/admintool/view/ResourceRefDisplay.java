@@ -7,9 +7,13 @@ public class ResourceRefDisplay {
     private final String title;
 
     public ResourceRefDisplay(final String objectId, final String title) {
-        super();
         this.objectId = objectId;
         this.title = title;
+    }
+
+    public ResourceRefDisplay() {
+        objectId = "";
+        title = "";
     }
 
     public String getObjectId() {
