@@ -8,6 +8,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.escidoc.admintool.domain.ContextFactory;
 import de.escidoc.core.client.Authentication;
@@ -22,6 +24,9 @@ import de.escidoc.core.resources.om.context.Context;
 import de.escidoc.core.resources.om.context.OrganizationalUnitRefs;
 
 public class ContextService {
+    private static final Logger log =
+        LoggerFactory.getLogger(ContextService.class);
+
     // TODO separate Model/Cache and Service
     // TODO use blackboard / Event Bus to publish AddContextEvent,
     // EditContextEvent,DeleteContextEvent. Let the View subscribe to these
@@ -51,6 +56,7 @@ public class ContextService {
     @SuppressWarnings("deprecation")
     public Collection<Context> all() throws EscidocException,
         InternalClientException, TransportException {
+        log.info("Retrieving Context from repository...");
         final Collection<Context> contexts =
             client.retrieveContexts(createdBySysAdmin()).getContexts();
         if (contexts == null || contexts.size() == 0) {
@@ -60,6 +66,9 @@ public class ContextService {
         for (final Context context : contexts) {
             contextById.put(context.getObjid(), context);
         }
+        log
+            .info("Retrieval is finished, got: " + contexts.size()
+                + " contexts");
         return contexts;
     }
 
@@ -100,10 +109,10 @@ public class ContextService {
 
         final Context updatedContext =
             new ContextFactory()
-                .update(getSelected(objectId)).name(newName)
-                .description(newDescription).type(newType)
-                .orgUnits(organizationalUnitRefs)
-                .adminDescriptors(newAdminDescriptors).build();
+                .update(getSelected(objectId)).name(newName).description(
+                    newDescription).type(newType).orgUnits(
+                    organizationalUnitRefs).adminDescriptors(
+                    newAdminDescriptors).build();
 
         final Context fromRepository = client.update(updatedContext);
         assert fromRepository != null : "update fails and return Null Pointer";
@@ -209,9 +218,8 @@ public class ContextService {
         assert (orgUnitRefs.size() > 0) : "orgUnitRefs can not be empty";
 
         final Context backedContext =
-            new ContextFactory()
-                .create(name, description, contextType, orgUnitRefs)
-                .adminDescriptors(adminDescriptors).build();
+            new ContextFactory().create(name, description, contextType,
+                orgUnitRefs).adminDescriptors(adminDescriptors).build();
         final Context createdContext = client.create(backedContext);
         assert createdContext != null : "Got null reference from the server.";
         assert createdContext.getObjid() != null : "ObjectID can not be null.";
