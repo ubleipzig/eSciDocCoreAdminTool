@@ -9,9 +9,9 @@ import org.slf4j.LoggerFactory;
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.terminal.Resource;
 import com.vaadin.ui.LoginForm;
-import com.vaadin.ui.LoginForm.LoginEvent;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.LoginForm.LoginEvent;
 
 import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.core.client.exceptions.InternalClientException;
