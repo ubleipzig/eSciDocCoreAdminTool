@@ -60,7 +60,7 @@ public class ContextListView extends Table {
     private void bindDataSource() throws EscidocException,
         InternalClientException, TransportException {
         contextContainer =
-            new POJOContainer<Context>(contextService.all(),
+            new POJOContainer<Context>(contextService.findAll(),
                 PropertyId.OBJECT_ID, PropertyId.NAME, PropertyId.DESCRIPTION,
                 PropertyId.PUBLIC_STATUS, PropertyId.PUBLIC_STATUS_COMMENT,
                 PropertyId.TYPE, PropertyId.CREATED_ON, PropertyId.CREATED_BY,

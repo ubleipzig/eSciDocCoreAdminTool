@@ -42,7 +42,7 @@ public class UserService {
         new ConcurrentHashMap<String, UserAccount>();
 
     @SuppressWarnings("deprecation")
-    public Collection<UserAccount> all() throws EscidocClientException {
+    public Collection<UserAccount> findAll() throws EscidocClientException {
         userAccounts =
             client.retrieveUserAccounts(emptyFilter()).getUserAccounts();
         for (final UserAccount user : userAccounts) {
