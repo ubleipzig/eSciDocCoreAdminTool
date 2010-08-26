@@ -50,7 +50,7 @@ public class UserLabListView extends Table {
     private void bindDataSource() {
         Collection<UserAccount> allUserAccounts;
         try {
-            allUserAccounts = userService.all();
+            allUserAccounts = userService.findAll();
             pojoContainer =
                 new POJOContainer<UserAccount>(allUserAccounts,
                     ViewConstants.NAME_ID, "properties.loginName", "objid",
