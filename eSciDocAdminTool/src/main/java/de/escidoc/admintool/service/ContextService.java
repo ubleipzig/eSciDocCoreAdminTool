@@ -11,6 +11,9 @@ import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
+
 import de.escidoc.admintool.domain.ContextFactory;
 import de.escidoc.core.client.Authentication;
 import de.escidoc.core.client.ContextHandlerClient;
@@ -40,6 +43,9 @@ public class ContextService {
     private final Map<String, Context> contextById =
         new ConcurrentHashMap<String, Context>();
 
+    private final Multimap<String, Context> contextByTitle =
+        HashMultimap.create();
+
     public ContextService(final Authentication authentication)
         throws EscidocException, TransportException, InternalClientException {
         client = initClient(authentication.getHandle());
@@ -54,22 +60,35 @@ public class ContextService {
     }
 
     @SuppressWarnings("deprecation")
-    public Collection<Context> all() throws EscidocException,
+    public Collection<Context> findAll() throws EscidocException,
         InternalClientException, TransportException {
         log.info("Retrieving Context from repository...");
+
         final Collection<Context> contexts =
             client.retrieveContexts(createdBySysAdmin()).getContexts();
+
         if (contexts == null || contexts.size() == 0) {
             return Collections.emptySet();
         }
 
         for (final Context context : contexts) {
+            // FIXME: create only one cache/Map for both
             contextById.put(context.getObjid(), context);
+            contextByTitle.put(context.getProperties().getName(), context);
         }
+
         log
             .info("Retrieval is finished, got: " + contexts.size()
                 + " contexts");
         return contexts;
+    }
+
+    public Collection<Context> findByTitle(final String ctxTitle)
+        throws EscidocException, InternalClientException, TransportException {
+        if (contextByTitle.size() == 0) {
+            findAll();
+        }
+        return contextByTitle.get(ctxTitle);
     }
 
     private TaskParam createdBySysAdmin() {
@@ -92,6 +111,14 @@ public class ContextService {
         filter.setValue(value);
         filter.setIds(ids);
         return filter;
+    }
+
+    public Collection<Context> getCache() throws EscidocException,
+        InternalClientException, TransportException {
+        if (contextById.values().size() == 0) {
+            findAll();
+        }
+        return Collections.unmodifiableCollection(contextById.values());
     }
 
     public Context update(
