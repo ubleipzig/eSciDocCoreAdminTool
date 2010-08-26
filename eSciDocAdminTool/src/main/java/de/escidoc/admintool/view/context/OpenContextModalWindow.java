@@ -18,6 +18,7 @@ public class OpenContextModalWindow extends VerticalLayout {
 
     private final ContextEditForm contextForm;
 
+    @SuppressWarnings("serial")
     private final Button cancelBtn =
         new Button("Cancel", new Button.ClickListener() {
 

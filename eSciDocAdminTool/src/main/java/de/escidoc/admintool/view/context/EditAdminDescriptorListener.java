@@ -5,11 +5,11 @@ package de.escidoc.admintool.view.context;
 
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.TabSheet.Tab;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.TabSheet.Tab;
 
 /**
  * @author ASP
