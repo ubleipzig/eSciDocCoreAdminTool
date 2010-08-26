@@ -40,6 +40,7 @@ import de.escidoc.admintool.view.orgunit.OrgUnitAddView;
 import de.escidoc.admintool.view.orgunit.OrgUnitEditView;
 import de.escidoc.admintool.view.orgunit.OrgUnitList;
 import de.escidoc.admintool.view.orgunit.OrgUnitView;
+import de.escidoc.admintool.view.role.RoleView;
 import de.escidoc.admintool.view.user.lab.UserLabAddView;
 import de.escidoc.admintool.view.user.lab.UserLabEditForm;
 import de.escidoc.admintool.view.user.lab.UserLabEditView;
@@ -284,7 +285,6 @@ public class AdminToolApplication extends Application
     public void itemClick(final ItemClickEvent event) {
         if (event.getSource() == tree) {
             final Object itemId = event.getItemId();
-
             if (itemId == null) {
                 return;
             }
@@ -312,6 +312,9 @@ public class AdminToolApplication extends Application
                 }
                 else if (NavigationTree.USERS_LAB.equals(itemId)) {
                     showUsersLabView();
+                }
+                else if (NavigationTree.ROLE.equals(itemId)) {
+                    showRoleView();
                 }
                 else {
                     throw new RuntimeException(Messages
@@ -505,6 +508,8 @@ public class AdminToolApplication extends Application
 
     private UserLabEditForm userLabEditForm;
 
+    private Component roleView;
+
     private UserLabView getUsersLabView() {
         if (userLabView == null) {
             userLabList = new UserLabListView(this, userService);
@@ -531,6 +536,18 @@ public class AdminToolApplication extends Application
     public Component newOrgUnitAddView() throws EscidocException,
         InternalClientException, TransportException {
         return new OrgUnitAddView(this, orgUnitService);
+    }
+
+    private void showRoleView() {
+        setMainComponent(getRoleView());
+    }
+
+    private Component getRoleView() {
+        if (roleView == null) {
+            roleView =
+                new RoleView(this, roleService, userService, contextService);
+        }
+        return roleView;
     }
 
     public OrgUnitService getOrgUnitService() {
