@@ -146,7 +146,7 @@ public class OrgUnitService {
         throws EscidocException, InternalClientException, TransportException {
         final OrganizationalUnit old = ou;
         final OrganizationalUnit updatedOrgUnit = client.update(ou);
-        orgUnitById.remove(old);
+        orgUnitById.remove(old.getObjid());
         orgUnitById.put(updatedOrgUnit.getObjid(), updatedOrgUnit);
         return updatedOrgUnit;
     }
