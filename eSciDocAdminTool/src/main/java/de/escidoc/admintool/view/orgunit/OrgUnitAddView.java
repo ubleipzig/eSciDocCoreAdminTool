@@ -221,8 +221,7 @@ public class OrgUnitAddView extends AbstractOrgUnitView
 
     private Set<String> getSelectedPredecessors() {
         final Set<String> predecessors = new HashSet<String>();
-        if (predecessorResult instanceof AbstractPredecessorView
-            && predecessorResult.isSelected()) {
+        if (predecessorResult.isSelected()) {
             final ResourceRefDisplay resourceRefDisplay =
                 predecessorResult.getResourceRefDisplay();
             if (resourceRefDisplay == null) {
