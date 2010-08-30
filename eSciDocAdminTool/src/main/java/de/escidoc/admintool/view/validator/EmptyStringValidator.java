@@ -5,7 +5,7 @@ import com.vaadin.data.validator.AbstractValidator;
 @SuppressWarnings("serial")
 public class EmptyStringValidator extends AbstractValidator {
 
-    private final boolean allowNull = false;
+    private static final boolean ALLOW_NULL = false;
 
     public EmptyStringValidator(final String errorMessage) {
         super(errorMessage);
@@ -13,14 +13,14 @@ public class EmptyStringValidator extends AbstractValidator {
 
     public boolean isValid(final Object value) {
         if (value == null) {
-            return allowNull;
+            return ALLOW_NULL;
         }
         final String s = value.toString();
         if (s == null) {
-            return allowNull;
+            return ALLOW_NULL;
         }
 
         return s.trim().length() != 0;
     }
-    
+
 }
