@@ -7,15 +7,13 @@ import com.vaadin.ui.Window;
 @SuppressWarnings("serial")
 public class AdminDescriptorAddView extends AdminDescriptorView {
 
+    private static final String ADD_A_NEW_ADMIN_DESCRIPTOR =
+        "Add a new Admin Descriptor";
+
     public AdminDescriptorAddView(final Window mainWindow,
         final Accordion adminDescriptorAccordion) {
         super(mainWindow, adminDescriptorAccordion);
     }
-
-    private static final String ADD_A_NEW_ADMIN_DESCRIPTOR =
-        "Add a new Admin Descriptor";
-
-    final String caption = ADD_A_NEW_ADMIN_DESCRIPTOR;
 
     @Override
     protected void setWindowCaption() {
