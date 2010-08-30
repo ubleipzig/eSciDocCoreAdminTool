@@ -46,6 +46,8 @@ import de.escidoc.vaadin.utilities.Converter;
 import de.escidoc.vaadin.utilities.LayoutHelper;
 
 public class OrgUnitEditView extends AbstractOrgUnitView {
+    private static final String EMPTY_STRING = "";
+
     private static final long serialVersionUID = -1488130998058019932L;
 
     private static final Logger log =
@@ -100,7 +102,7 @@ public class OrgUnitEditView extends AbstractOrgUnitView {
         form.addComponent(LayoutHelper.create("Status", publicStatus,
             labelWidth, false));
 
-        if (!publicStatusComment.getValue().equals("")) {
+        if (!publicStatusComment.getValue().equals(EMPTY_STRING)) {
             form.addComponent(LayoutHelper.create("Status Comment",
                 publicStatusComment, labelWidth, false));
         }
@@ -342,7 +344,7 @@ public class OrgUnitEditView extends AbstractOrgUnitView {
                 new ErrorDialog(app.getMainWindow(), Messages
                     .getString("AdminToolApplication.15"), e.getMessage())); //$NON-NLS-1$
         }
-        return new String();
+        return EMPTY_STRING;
     }
 
     private void showPredecessorView(
