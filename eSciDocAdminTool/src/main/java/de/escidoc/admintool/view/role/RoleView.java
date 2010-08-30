@@ -17,6 +17,7 @@ import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.POJOContainer;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CustomComponent;
@@ -76,12 +77,11 @@ public class RoleView extends CustomComponent {
 
     private final UserService userService;
 
-    private final ListSelect userComboBox = new ListSelect("User Name:");
+    private final ComboBox userComboBox = new ComboBox("User Name:");
 
-    private final ListSelect roleComboBox = new ListSelect("Role:");
+    private final ComboBox roleComboBox = new ComboBox("Role:");
 
-    private final ListSelect resourceTypeComboBox =
-        new ListSelect("Resouce Type:");
+    private final ComboBox resourceTypeComboBox = new ComboBox("Resouce Type:");
 
     // TODO move to another class.
     // private final OrgUnitTree orgUnitTree;
@@ -156,7 +156,6 @@ public class RoleView extends CustomComponent {
     }
 
     private void addUserField() {
-        userComboBox.setRows(ONE_ROW);
         userComboBox.setWidth(COMPONENT_WIDTH);
         userComboBox.setNullSelectionAllowed(false);
 
@@ -166,7 +165,6 @@ public class RoleView extends CustomComponent {
     }
 
     private void addRoleField() {
-        roleComboBox.setRows(ONE_ROW);
         roleComboBox.setWidth(COMPONENT_WIDTH);
         roleComboBox.setNullSelectionAllowed(false);
         roleComboBox.setImmediate(true);
@@ -176,7 +174,6 @@ public class RoleView extends CustomComponent {
 
     private void addResourceType() {
         resourceTypeComboBox.setEnabled(false);
-        resourceTypeComboBox.setRows(ONE_ROW);
         resourceTypeComboBox.setWidth(COMPONENT_WIDTH);
         resourceTypeComboBox.setImmediate(true);
         // resourceTypeComboBox.setNullSelectionAllowed(false);
@@ -188,6 +185,10 @@ public class RoleView extends CustomComponent {
             + "px");
         searchBox.setEnabled(false);
         searchButton.setEnabled(false);
+        // final HorizontalLayout hl = new HorizontalLayout();
+        // hl.addComponent(searchBox);
+        // hl.addComponent(searchButton);
+        // mainLayout.addComponent(hl);
         mainLayout.addComponent(searchBox);
         mainLayout.addComponent(searchButton);
     }
@@ -267,7 +268,7 @@ public class RoleView extends CustomComponent {
         return Collections.emptyList();
     }
 
-    private class SaveBtnListener implements Button.ClickListener {
+    private static class SaveBtnListener implements Button.ClickListener {
 
         @Override
         public void buttonClick(final ClickEvent event) {
@@ -279,7 +280,7 @@ public class RoleView extends CustomComponent {
         }
     }
 
-    private class CancelBtnListener implements Button.ClickListener {
+    private static class CancelBtnListener implements Button.ClickListener {
 
         @Override
         public void buttonClick(final ClickEvent event) {
