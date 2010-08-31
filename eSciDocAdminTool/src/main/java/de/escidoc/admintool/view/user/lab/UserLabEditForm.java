@@ -42,12 +42,12 @@ import de.escidoc.vaadin.utilities.LayoutHelper;
 @SuppressWarnings("serial")
 public class UserLabEditForm extends CustomComponent implements ClickListener {
 
-    private static final String SYSADMIN_OBJECT_ID = "escidoc:exuser1";
+    private static final String EDIT_USER_ACCOUNT = "Edit User Account";
 
     private static final Logger log =
         LoggerFactory.getLogger(UserLabEditForm.class);
 
-    private static final int ROLE_LIST_HEIGHT = 50;
+    private static final int ROLE_LIST_HEIGHT = 100;
 
     private static final String ROLE_LIST_WIDTH = "400px";
 
@@ -57,23 +57,29 @@ public class UserLabEditForm extends CustomComponent implements ClickListener {
 
     private static final int LABEL_WIDTH = 100;
 
-    private final AdminToolApplication app;
+    private final Panel panel = new Panel();
 
-    private final UserService userService;
+    private final FormLayout form = new FormLayout();
 
-    final Panel panel = new Panel();
-
-    private HorizontalLayout footer;
+    private final ListSelect roleList = new ListSelect();
 
     private final Button save = new Button("Save", this);
 
     private final Button cancel = new Button("Cancel", this);
 
+    private final Label objIdField = new Label();
+
+    private final AdminToolApplication app;
+
+    private final UserService userService;
+
+    private final RoleService roleService;
+
+    private HorizontalLayout footer;
+
     private TextField nameField;
 
     private TextField loginNameField;
-
-    private final Label objIdField = new Label();
 
     private Label modifiedOn;
 
@@ -85,30 +91,24 @@ public class UserLabEditForm extends CustomComponent implements ClickListener {
 
     private CheckBox state;
 
-    private final ListSelect roleList = new ListSelect();
-
     private Item item;
 
     private String userObjectId;
-
-    private final RoleService roleService;
 
     public UserLabEditForm(final AdminToolApplication app,
         final UserService userService, final RoleService roleService) {
         this.app = app;
         this.userService = userService;
         this.roleService = roleService;
-        setSizeFull();
         init();
-
     }
 
     public void init() {
-        final FormLayout form = new FormLayout();
         panel.setContent(form);
+        panel.setCaption(EDIT_USER_ACCOUNT);
+
         form.setSpacing(false);
 
-        panel.setCaption("Edit User Account");
         nameField = new TextField();
         nameField.setWidth(ROLE_LIST_WIDTH);
         nameField.setWriteThrough(false);

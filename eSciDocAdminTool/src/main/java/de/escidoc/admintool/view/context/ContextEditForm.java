@@ -138,6 +138,7 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
     private void init() {
         panel.setContent(form);
         panel.setCaption(EDIT_USER_ACCOUNT);
+
         final int height = 15;
         editToolbar = new ContextToolbar(this, app);
         form.addComponent(editToolbar);
@@ -152,7 +153,7 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
         // Desc
         descriptionField.setWidth("400px");
         fields.add(descriptionField);
-        panel.addComponent(LayoutHelper.create(ViewConstants.DESCRIPTION_LABEL,
+        form.addComponent(LayoutHelper.create(ViewConstants.DESCRIPTION_LABEL,
             descriptionField, labelWidth, true));
 
         // objectid
@@ -209,15 +210,14 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
         delAdminDescButton.addListener(new RemoveAdminDescriptorListener(
             adminDescriptorAccordion));
 
-        panel.addComponent(LayoutHelper.create("Admin Descriptors",
+        form.addComponent(LayoutHelper.create("Admin Descriptors",
             accordionPanel, labelWidth, 300, false, new Button[] {
                 addAdminDescButton, editAdminDescButton, delAdminDescButton }));
 
         // Footer
-        panel.addComponent(addFooter());
+        form.addComponent(addFooter());
         setCompositionRoot(panel);
         setFieldsWriteThrough(false);
-
     }
 
     @Override
