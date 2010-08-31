@@ -38,7 +38,7 @@ import de.escidoc.admintool.view.context.ContextListView;
 import de.escidoc.admintool.view.context.ContextView;
 import de.escidoc.admintool.view.orgunit.OrgUnitAddView;
 import de.escidoc.admintool.view.orgunit.OrgUnitEditView;
-import de.escidoc.admintool.view.orgunit.OrgUnitList;
+import de.escidoc.admintool.view.orgunit.OrgUnitListView;
 import de.escidoc.admintool.view.orgunit.OrgUnitView;
 import de.escidoc.admintool.view.role.RoleView;
 import de.escidoc.admintool.view.user.lab.UserLabAddView;
@@ -60,14 +60,14 @@ public class AdminToolApplication extends Application
     ValueChangeListener, ItemClickListener {
     private static final long serialVersionUID = -8811871788712427578L;
 
+    private static final Logger log =
+        LoggerFactory.getLogger(AdminToolApplication.class);
+
     private static final String LOGIN_URL =
         "http://localhost:8080/aa/login?target=http://localhost:8181/AdminTool";
 
     private static final String ESCIDOC_USER_HANDLE_URL =
         "http://localhost:8181/AdminTool?eSciDocUserHandle=";
-
-    private final Logger log =
-        LoggerFactory.getLogger(AdminToolApplication.class);
 
     @Override
     public void init() {
@@ -197,7 +197,8 @@ public class AdminToolApplication extends Application
 
     private RoleService roleService;
 
-    private void createRoleService(final Authentication authentication) {
+    private void createRoleService(final Authentication authentication)
+        throws EscidocException, InternalClientException, TransportException {
         roleService = new RoleService(authentication);
     }
 
@@ -327,7 +328,7 @@ public class AdminToolApplication extends Application
     private OrgUnitView orgUnitView;
 
     // TODO refactor to lazy init later.
-    private OrgUnitList orgUnitList;
+    private OrgUnitListView orgUnitList;
 
     private OrgUnitEditView orgUnitEditForm;
 
@@ -343,7 +344,7 @@ public class AdminToolApplication extends Application
     public OrgUnitView getOrgUnitView() {
         if (orgUnitView == null) {
             try {
-                orgUnitList = new OrgUnitList(this, orgUnitService);
+                orgUnitList = new OrgUnitListView(this, orgUnitService);
                 orgUnitEditForm = new OrgUnitEditView(this, orgUnitService);
                 orgUnitEditForm.setOrgUnitList(orgUnitList);
                 orgUnitView =
@@ -412,9 +413,9 @@ public class AdminToolApplication extends Application
             orgUnitService);
     }
 
-    public OrgUnitList getOrgUnitTable() {
+    public OrgUnitListView getOrgUnitTable() {
         if (orgUnitList == null) {
-            orgUnitList = new OrgUnitList(this, orgUnitService);
+            orgUnitList = new OrgUnitListView(this, orgUnitService);
         }
         return orgUnitList;
     }
@@ -513,7 +514,8 @@ public class AdminToolApplication extends Application
     private UserLabView getUsersLabView() {
         if (userLabView == null) {
             userLabList = new UserLabListView(this, userService);
-            userLabEditForm = new UserLabEditForm(this, userService);
+            userLabEditForm =
+                new UserLabEditForm(this, userService, getRoleService());
             final UserLabEditView userEditView =
                 new UserLabEditView(userLabEditForm);
             userLabView =
@@ -522,6 +524,10 @@ public class AdminToolApplication extends Application
         }
         userLabView.showAddView();
         return userLabView;
+    }
+
+    private RoleService getRoleService() {
+        return roleService;
     }
 
     private UserService getUserService() {

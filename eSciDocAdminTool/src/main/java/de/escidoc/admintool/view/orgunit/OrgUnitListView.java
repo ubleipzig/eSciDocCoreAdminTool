@@ -21,7 +21,7 @@ import de.escidoc.core.resources.oum.OrganizationalUnit;
 import de.escidoc.core.resources.oum.Parent;
 
 @SuppressWarnings("serial")
-public class OrgUnitList extends Table {
+public class OrgUnitListView extends Table {
 
     // TODO move this to another class
     private Collection<OrganizationalUnit> allOrgUnits;
@@ -32,7 +32,7 @@ public class OrgUnitList extends Table {
 
     private POJOContainer<OrganizationalUnit> dataSource;
 
-    public OrgUnitList(final AdminToolApplication app,
+    public OrgUnitListView(final AdminToolApplication app,
         final OrgUnitService orgUnitService) {
         this.app = app;
         service = orgUnitService;

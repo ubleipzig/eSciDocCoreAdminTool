@@ -2,6 +2,9 @@ package de.escidoc.admintool.view.user.lab;
 
 import java.util.Collection;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.vaadin.data.util.POJOContainer;
 import com.vaadin.ui.Table;
 
@@ -14,6 +17,9 @@ import de.escidoc.core.resources.aa.useraccount.UserAccount;
 
 @SuppressWarnings("serial")
 public class UserLabListView extends Table {
+
+    private static final Logger log =
+        LoggerFactory.getLogger(UserLabListView.class);
 
     private final AdminToolApplication app;
 
@@ -88,8 +94,7 @@ public class UserLabListView extends Table {
         final Collection<UserAccount> itemIds = pojoContainer.getItemIds();
         final UserAccount next = itemIds.iterator().next();
         final boolean removeItem = pojoContainer.removeItem(next);
-        // final boolean removeItem = pojoContainer.removeAllItems();
-        System.out.println("deleted: " + removeItem);
+        log.info("deleted: " + removeItem);
     }
 
     public void addUser(final UserAccount createdUserAccount) {

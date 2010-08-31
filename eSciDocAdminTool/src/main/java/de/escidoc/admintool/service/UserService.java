@@ -12,6 +12,7 @@ import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
+import de.escidoc.core.resources.aa.useraccount.Grant;
 import de.escidoc.core.resources.aa.useraccount.UserAccount;
 import de.escidoc.core.resources.common.Filter;
 import de.escidoc.core.resources.common.TaskParam;
@@ -180,5 +181,11 @@ public class UserService {
     public UserAccount getUserById(final String objectId) {
         userAccountById.containsKey(objectId);
         return userAccountById.get(objectId);
+    }
+
+    public Collection<Grant> retrieveCurrentGrants(final String objectId)
+        throws InternalClientException, TransportException,
+        EscidocClientException {
+        return client.retrieveCurrentGrants(objectId).getGrants();
     }
 }
