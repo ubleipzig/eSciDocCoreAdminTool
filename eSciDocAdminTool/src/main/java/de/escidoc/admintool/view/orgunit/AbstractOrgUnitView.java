@@ -40,9 +40,6 @@ public abstract class AbstractOrgUnitView extends CustomComponent
 
     private static final long serialVersionUID = 8351229526921020901L;
 
-    // protected final static List<Field> attachedFields = new
-    // ArrayList<Field>();
-
     private final Button saveButton = new Button("Save", this);
 
     private final Button cancelButton = new Button("Cancel", this);
@@ -73,7 +70,7 @@ public abstract class AbstractOrgUnitView extends CustomComponent
 
     protected final OrgUnitService service;
 
-    protected OrgUnitList orgUnitList;
+    protected OrgUnitListView orgUnitList;
 
     protected final Button addOrgUnitButton =
         new Button(ViewConstants.ADD_LABEL);
@@ -107,7 +104,7 @@ public abstract class AbstractOrgUnitView extends CustomComponent
         preInit();
     }
 
-    public void setOrgUnitList(final OrgUnitList orgUnitList) {
+    public void setOrgUnitList(final OrgUnitListView orgUnitList) {
         this.orgUnitList = orgUnitList;
     }
 
