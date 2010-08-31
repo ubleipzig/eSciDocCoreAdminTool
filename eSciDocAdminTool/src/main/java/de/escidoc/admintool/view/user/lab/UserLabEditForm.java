@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import com.vaadin.data.Item;
 import com.vaadin.data.util.POJOContainer;
+import com.vaadin.terminal.SystemError;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.CustomComponent;
@@ -63,6 +64,11 @@ public class UserLabEditForm extends CustomComponent implements ClickListener {
 
     private final ListSelect roleList = new ListSelect();
 
+    private final Button newUserBtn = new Button("New", new NewUserListener());
+
+    private final Button deleteUserBtn =
+        new Button("Delete", new DeleteUserListener());
+
     private final Button save = new Button("Save", this);
 
     private final Button cancel = new Button("Cancel", this);
@@ -109,6 +115,8 @@ public class UserLabEditForm extends CustomComponent implements ClickListener {
 
         form.setSpacing(false);
 
+        panel.addComponent(createHeader());
+
         nameField = new TextField();
         nameField.setWidth(ROLE_LIST_WIDTH);
         nameField.setWriteThrough(false);
@@ -145,6 +153,16 @@ public class UserLabEditForm extends CustomComponent implements ClickListener {
 
         panel.addComponent(addFooter());
         setCompositionRoot(panel);
+    }
+
+    private HorizontalLayout createHeader() {
+        final HorizontalLayout header = new HorizontalLayout();
+        header.setMargin(true);
+        header.setSpacing(true);
+        header.addComponent(newUserBtn);
+        header.addComponent(deleteUserBtn);
+        header.setVisible(true);
+        return header;
     }
 
     private void initRoleListSelect() {
@@ -348,6 +366,40 @@ public class UserLabEditForm extends CustomComponent implements ClickListener {
         }
         else {
             userService.deactivate(getSelectedItemId());
+        }
+    }
+
+    private class NewUserListener implements Button.ClickListener {
+        public void buttonClick(final ClickEvent event) {
+            ((UserLabView) getParent().getParent()).showAddView();
+        }
+    }
+
+    private class DeleteUserListener implements Button.ClickListener {
+        public void buttonClick(final ClickEvent event) {
+            try {
+                final UserAccount deletedUser = deleteUser();
+                ((UserLabView) getParent().getParent()).remove(deletedUser);
+
+            }
+            catch (final InternalClientException e) {
+                setComponentError(new SystemError(e.getMessage()));
+                log.error("An unexpected error occured! See log for details.",
+                    e);
+                e.printStackTrace();
+            }
+            catch (final TransportException e) {
+                setComponentError(new SystemError(e.getMessage()));
+                log.error("An unexpected error occured! See log for details.",
+                    e);
+                e.printStackTrace();
+            }
+            catch (final EscidocException e) {
+                log.error("An unexpected error occured! See log for details.",
+                    e);
+                e.printStackTrace();
+                setComponentError(new SystemError(e.getMessage()));
+            }
         }
     }
 }
