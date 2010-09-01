@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,10 +44,10 @@ import de.escidoc.vaadin.utilities.LayoutHelper;
 @SuppressWarnings("serial")
 public class UserLabEditForm extends CustomComponent implements ClickListener {
 
-    private static final String EDIT_USER_ACCOUNT = "Edit User Account";
-
     private static final Logger log =
         LoggerFactory.getLogger(UserLabEditForm.class);
+
+    private static final String EDIT_USER_ACCOUNT = "Edit User Account";
 
     private static final int ROLE_LIST_HEIGHT = 100;
 
@@ -101,6 +102,13 @@ public class UserLabEditForm extends CustomComponent implements ClickListener {
 
     private String userObjectId;
 
+    private final Button addRoleButton = new Button(ViewConstants.ADD_LABEL);
+
+    private final Button removeRoleButton =
+        new Button(ViewConstants.REMOVE_LABEL);
+
+    private POJOContainer<Role> roleContainer;
+
     public UserLabEditForm(final AdminToolApplication app,
         final UserService userService, final RoleService roleService) {
         this.app = app;
@@ -149,7 +157,7 @@ public class UserLabEditForm extends CustomComponent implements ClickListener {
         panel.addComponent(LayoutHelper.create("Active status", state,
             LABEL_WIDTH, false));
 
-        initRoleListSelect();
+        initRoleComponent();
 
         panel.addComponent(addFooter());
         setCompositionRoot(panel);
@@ -165,16 +173,53 @@ public class UserLabEditForm extends CustomComponent implements ClickListener {
         return header;
     }
 
-    private void initRoleListSelect() {
+    private void initRoleComponent() {
+        initRoleList();
+
+        addRoleButton.addListener(new AddRoleButtonListener());
+        removeRoleButton.addListener(new RemoveRoleButtonListener());
+
+        panel.addComponent(LayoutHelper.create(ROLES_LABEL, roleList,
+            LABEL_WIDTH, ROLE_LIST_HEIGHT, false, new Button[] { addRoleButton,
+                removeRoleButton }));
+    }
+
+    private void initRoleList() {
         roleList.setRows(NUMBER_OF_ROLE_TO_SHOW);
         roleList.setWidth(ROLE_LIST_WIDTH);
         roleList.setNullSelectionAllowed(true);
         roleList.setMultiSelect(true);
         roleList.setImmediate(true);
+    }
 
-        // TODO add, edit and remove buttons.
-        panel.addComponent(LayoutHelper.create(ROLES_LABEL, roleList,
-            LABEL_WIDTH, ROLE_LIST_HEIGHT, false, new Button[] {}));
+    private final class AddRoleButtonListener implements Button.ClickListener {
+
+        @Override
+        public void buttonClick(final ClickEvent event) {
+            // TODO show role view with selected user and its roles?
+            app.showRoleView();
+        }
+    }
+
+    private final class RemoveRoleButtonListener
+        implements Button.ClickListener {
+
+        @Override
+        public void buttonClick(final ClickEvent event) {
+            final Object selectedRoles = roleList.getValue();
+
+            if (selectedRoles instanceof Set) {
+                for (final Object role : ((Set) selectedRoles)) {
+                    if (role instanceof Role) {
+                        roleContainer.removeItem(role);
+                    }
+                }
+            }
+            else {
+                log.info("title: "
+                    + ((Role) selectedRoles).getProperties().getName());
+            }
+        }
     }
 
     private List<Role> getRoles() {
@@ -260,52 +305,68 @@ public class UserLabEditForm extends CustomComponent implements ClickListener {
     public void buttonClick(final ClickEvent event) {
         final Button source = event.getButton();
         if (source == cancel) {
-            nameField.setValue("");
-            loginNameField.setValue("");
+            discardFields();
+            removeAllError();
         }
         else if (source == save) {
-            try {
-                boolean valid = true;
-                valid =
-                    EmptyFieldValidator.isValid(nameField, "Please enter a "
-                        + ViewConstants.NAME_ID);
-                valid &=
-                    (EmptyFieldValidator.isValid(loginNameField,
-                        "Please enter a " + ViewConstants.LOGIN_NAME_ID));
-                if (valid) {
-                    userService.update(getSelectedItemId(), (String) item
-                        .getItemProperty(ViewConstants.NAME_ID).getValue());
-                    if (state.isModified()) {
-                        changeState();
-                    }
-                    nameField.setComponentError(null);
-                    loginNameField.setComponentError(null);
-                    nameField.commit();
-                    loginNameField.commit();
-                }
-
-            }
-            catch (final EscidocException e) {
-                log.error("An unexpected error occured! See log for details.",
-                    e);
-                e.printStackTrace();
-            }
-            catch (final InternalClientException e) {
-                log.error("An unexpected error occured! See log for details.",
-                    e);
-                e.printStackTrace();
-            }
-            catch (final TransportException e) {
-                log.error("An unexpected error occured! See log for details.",
-                    e);
-                e.printStackTrace();
-            }
-            catch (final EscidocClientException e) {
-                log.error("An unexpected error occured! See log for details.",
-                    e);
-                e.printStackTrace();
+            if (isValid()) {
+                updateUserAccount();
+                commitFields();
+                removeAllError();
             }
         }
+    }
+
+    private void discardFields() {
+        nameField.discard();
+        roleList.discard();
+    }
+
+    private void removeAllError() {
+        nameField.setComponentError(null);
+        loginNameField.setComponentError(null);
+    }
+
+    private void commitFields() {
+        nameField.commit();
+        loginNameField.commit();
+    }
+
+    private void updateUserAccount() {
+        try {
+            userService.update(getSelectedItemId(), (String) nameField
+                .getValue());
+            if (state.isModified()) {
+                changeState();
+            }
+        }
+        catch (final EscidocException e) {
+            log.error("An unexpected error occured! See log for details.", e);
+            e.printStackTrace();
+        }
+        catch (final InternalClientException e) {
+            log.error("An unexpected error occured! See log for details.", e);
+            e.printStackTrace();
+        }
+        catch (final TransportException e) {
+            log.error("An unexpected error occured! See log for details.", e);
+            e.printStackTrace();
+        }
+        catch (final EscidocClientException e) {
+            log.error("An unexpected error occured! See log for details.", e);
+            e.printStackTrace();
+        }
+    }
+
+    private boolean isValid() {
+        boolean valid = true;
+        valid =
+            EmptyFieldValidator.isValid(nameField, "Please enter a "
+                + ViewConstants.NAME_ID);
+        valid &=
+            (EmptyFieldValidator.isValid(loginNameField, "Please enter a "
+                + ViewConstants.LOGIN_NAME_ID));
+        return valid;
     }
 
     public void setSelected(final Item item) {
@@ -339,7 +400,7 @@ public class UserLabEditForm extends CustomComponent implements ClickListener {
     private void bindRolesWithView() {
         final List<Role> userRoles = getRoles();
         if (userRoles.size() > 0) {
-            final POJOContainer<Role> roleContainer =
+            roleContainer =
                 new POJOContainer<Role>(userRoles, PropertyId.OBJECT_ID,
                     PropertyId.NAME);
             roleList.setContainerDataSource(roleContainer);

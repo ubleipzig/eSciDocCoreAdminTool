@@ -544,7 +544,7 @@ public class AdminToolApplication extends Application
         return new OrgUnitAddView(this, orgUnitService);
     }
 
-    private void showRoleView() {
+    public void showRoleView() {
         setMainComponent(getRoleView());
     }
 
