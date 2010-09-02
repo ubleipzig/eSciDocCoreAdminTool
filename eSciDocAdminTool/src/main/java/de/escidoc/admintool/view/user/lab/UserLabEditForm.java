@@ -323,6 +323,7 @@ public class UserLabEditForm extends CustomComponent implements ClickListener {
     private void commitFields() {
         nameField.commit();
         loginNameField.commit();
+        state.commit();
     }
 
     private void updateUserAccount() {
