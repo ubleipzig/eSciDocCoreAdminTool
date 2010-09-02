@@ -26,7 +26,6 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.Tree;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Button.ClickEvent;
@@ -37,16 +36,20 @@ import de.escidoc.admintool.app.PropertyId;
 import de.escidoc.admintool.service.ContextService;
 import de.escidoc.admintool.service.RoleService;
 import de.escidoc.admintool.service.UserService;
+import de.escidoc.admintool.view.ResourceRefDisplay;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
+import de.escidoc.core.resources.aa.role.Role;
 import de.escidoc.core.resources.aa.useraccount.UserAccount;
 import de.escidoc.core.resources.om.context.Context;
 import de.escidoc.vaadin.dialog.ErrorDialog;
 
 public class RoleView extends CustomComponent {
+    private static final long serialVersionUID = -1590899235898433438L;
+
     private static final Logger log = LoggerFactory.getLogger(RoleView.class);
 
     private static final String SEARCH_LABEL = "Search";
@@ -71,21 +74,11 @@ public class RoleView extends CustomComponent {
 
     private final VerticalLayout verticalLayout = new VerticalLayout();
 
-    private final AdminToolApplication app;
-
-    private final RoleService roleService;
-
-    private final UserService userService;
-
     private final ComboBox userComboBox = new ComboBox("User Name:");
 
     private final ComboBox roleComboBox = new ComboBox("Role:");
 
     private final ComboBox resourceTypeComboBox = new ComboBox("Resouce Type:");
-
-    // TODO move to another class.
-    // private final OrgUnitTree orgUnitTree;
-    private final Tree orgUnitTree = new Tree();
 
     private final ListSelect resouceResult = new ListSelect();
 
@@ -116,6 +109,16 @@ public class RoleView extends CustomComponent {
 
     private POJOContainer<UserAccount> userContainer;
 
+    private final AdminToolApplication app;
+
+    private final RoleService roleService;
+
+    private final UserService userService;
+
+    private UserAccount selectedUser;
+
+    private Collection<ResourceRefDisplay> resourceRefDisplay;
+
     // TODO: add logged in user;
     public RoleView(final AdminToolApplication app,
         final RoleService roleService, final UserService userService,
@@ -127,6 +130,7 @@ public class RoleView extends CustomComponent {
         mainWindow = app.getMainWindow();
         init();
         bindData();
+
     }
 
     private void init() {
@@ -152,7 +156,6 @@ public class RoleView extends CustomComponent {
         userComboBox.setWidth(COMPONENT_WIDTH);
         userComboBox.setNullSelectionAllowed(false);
         userComboBox.setMultiSelect(false);
-
         mainLayout.addComponent(userComboBox);
     }
 
@@ -160,7 +163,6 @@ public class RoleView extends CustomComponent {
         roleComboBox.setWidth(COMPONENT_WIDTH);
         roleComboBox.setNullSelectionAllowed(false);
         roleComboBox.setImmediate(true);
-
         mainLayout.addComponent(roleComboBox);
     }
 
@@ -183,7 +185,6 @@ public class RoleView extends CustomComponent {
     private void addResourceSelection() {
         resouceResult.setSizeFull();
         resouceResult.setHeight(RESOURCE_SELECTION_HEIGHT);
-
         resourceContainer.setStyleName(Reindeer.PANEL_LIGHT);
         resourceContainer.setWidth(Integer
             .toString(3 / 2 * COMPONENT_WIDTH_IN_INTEGER)
@@ -206,10 +207,13 @@ public class RoleView extends CustomComponent {
         userComboBox.setItemCaptionPropertyId(PropertyId.NAME);
 
         // role
-        roleComboBox.setContainerDataSource(new BeanItemContainer<RoleType>(
-            getRolesAvailableFor(SYSADMIN_LOGIN_NAME)));
-        roleComboBox.addListener(new RoleSelectListener());
+        final POJOContainer<Role> roleContainer =
+            new POJOContainer<Role>(getAllRoles(), PropertyId.OBJECT_ID,
+                PropertyId.NAME);
+        roleComboBox.setContainerDataSource(roleContainer);
+        roleComboBox.setItemCaptionPropertyId(PropertyId.NAME);
 
+        roleComboBox.addListener(new RoleSelectListener());
         searchButton.addListener(new SearchBtnListener());
 
         // resouce type
@@ -239,8 +243,15 @@ public class RoleView extends CustomComponent {
         return Collections.emptyList();
     }
 
-    private List<RoleType> getRolesAvailableFor(final String sysadminLoginName) {
-        return Arrays.asList(RoleType.values());
+    private List<Role> getAllRoles() {
+        try {
+            return (List<Role>) roleService.findAll();
+        }
+        catch (final EscidocClientException e) {
+            mainWindow.addWindow(new ErrorDialog(mainWindow, "Error", e
+                .getMessage()));
+        }
+        return Collections.emptyList();
     }
 
     private Collection<UserAccount> getAllUserAccounts() {
@@ -255,10 +266,13 @@ public class RoleView extends CustomComponent {
     }
 
     public void selectUser(final UserAccount userAccount) {
+        selectedUser = userAccount;
         userComboBox.select(userAccount);
     }
 
     private class SaveBtnListener implements Button.ClickListener {
+
+        private static final long serialVersionUID = -7128599340989436927L;
 
         @Override
         public void buttonClick(final ClickEvent event) {
@@ -266,12 +280,58 @@ public class RoleView extends CustomComponent {
         }
 
         private void onSaveClick() {
-            mainWindow
-                .showNotification("Assign Grants to user account is not yet implemented.");
+            if (scopeNeeded()) {
+                mainWindow
+                    .showNotification("Assign Grants to user account is not yet implemented.");
+            }
+            else {
+                mainWindow.showNotification("Assign role: "
+                    + getSelectedRole().getProperties().getName()
+                    + " to user: "
+                    + getSelectedUser().getProperties().getName());
+
+                // RoleId: ...
+                // User ID? <= do not need it.
+                assignRole();
+            }
         }
+
+        private void assignRole() {
+            try {
+                userService.assign(getSelectedUser().getObjid(),
+                    getSelectedRole().getObjid());
+            }
+            catch (final EscidocClientException e) {
+                app.getMainWindow().addWindow(
+                    new ErrorDialog(app.getMainWindow(), "Error",
+                        "An unexpected error occured! See log for details."));
+                log.error("An unexpected error occured! See log for details.",
+                    e);
+                e.printStackTrace();
+            }
+        }
+
+        private UserAccount getSelectedUser() {
+            return selectedUser;
+        }
+
+        private boolean scopeNeeded() {
+            return false;
+        }
+
+        private Role getSelectedRole() {
+            final Object value = roleComboBox.getValue();
+            if (value instanceof Role) {
+                return (Role) value;
+            }
+            throw new RuntimeException("Unknown object tyep.");
+        }
+
     }
 
     private class CancelBtnListener implements Button.ClickListener {
+
+        private static final long serialVersionUID = -5938771331937438272L;
 
         @Override
         public void buttonClick(final ClickEvent event) {
@@ -293,20 +353,8 @@ public class RoleView extends CustomComponent {
 
         private void onSelectedRole(final ValueChangeEvent event) {
             final Object value = event.getProperty().getValue();
-            if (value instanceof RoleType) {
-                final RoleType type = (RoleType) value;
-                // mainWindow.showNotification(type.toString());
-                switch (type) {
-                    case COLLABOLATOR: {
-                        enableScoping(true);
-                        showResourceTypeFor(type);
-                    }
-                        break;
-                    default: {
-                        enableScoping(false);
-                    }
-                        break;
-                }
+            if (value instanceof Role) {
+                enableScoping(true);
             }
         }
 
@@ -315,22 +363,12 @@ public class RoleView extends CustomComponent {
             searchBox.setEnabled(isScopingEnabled);
             searchButton.setEnabled(isScopingEnabled);
         }
-
-        private void showResourceTypeFor(final RoleType type) {
-            switch (type) {
-                case COLLABOLATOR: {
-                    resourceTypeContainer.removeItem(ResourceType.ORG_UNIT);
-                }
-                    break;
-                default: {
-                    enableScoping(false);
-                }
-                    break;
-            }
-        }
     }
 
     private class SearchBtnListener implements Button.ClickListener {
+
+        private static final long serialVersionUID = -2520068834542312077L;
+
         @Override
         public void buttonClick(final ClickEvent event) {
             onSearchClick(event);
@@ -359,15 +397,27 @@ public class RoleView extends CustomComponent {
                 return contextService.findByTitle(userInput);
             }
             catch (final EscidocException e) {
-                // TODO Auto-generated catch block
+                app.getMainWindow().addWindow(
+                    new ErrorDialog(app.getMainWindow(), "Error",
+                        "An unexpected error occured! See log for details."));
+                log.error("An unexpected error occured! See log for details.",
+                    e);
                 e.printStackTrace();
             }
             catch (final InternalClientException e) {
-                // TODO Auto-generated catch block
+                app.getMainWindow().addWindow(
+                    new ErrorDialog(app.getMainWindow(), "Error",
+                        "An unexpected error occured! See log for details."));
+                log.error("An unexpected error occured! See log for details.",
+                    e);
                 e.printStackTrace();
             }
             catch (final TransportException e) {
-                // TODO Auto-generated catch block
+                app.getMainWindow().addWindow(
+                    new ErrorDialog(app.getMainWindow(), "Error",
+                        "An unexpected error occured! See log for details."));
+                log.error("An unexpected error occured! See log for details.",
+                    e);
                 e.printStackTrace();
             }
             return Collections.emptyList();
@@ -454,21 +504,29 @@ public class RoleView extends CustomComponent {
     }
 
     // TODO retrieve predefined roles from repository.
-    private enum RoleType {
-        SYSTEM_ADMINISTRATOR("System Administrator"), SYSTEM_INSPECTOR(
-            "System Inspector"), AUTHOR("Author"), ADMINISTRATOR(
-            "Administrator"), MD_EDITOR("MD-Editor"), Moderator("Moderator"), DEPOSITOR(
-            "Depositor"), INSPECTOR("Inspector"), COLLABOLATOR("Collaborator");
-
-        private String name;
-
-        RoleType(final String name) {
-            this.name = name;
-        }
-
-        @Override
-        public String toString() {
-            return name;
-        }
-    }
+    // private enum RoleType {
+    // SYSTEM_ADMINISTRATOR("System Administrator", false), SYSTEM_INSPECTOR(
+    // "System Inspector", false), AUTHOR("Author", true), ADMINISTRATOR(
+    // "Administrator", true), MD_EDITOR("MD-Editor", true), Moderator(
+    // "Moderator", true), DEPOSITOR("Depositor", true), INSPECTOR(
+    // "Inspector", true), COLLABOLATOR("Collaborator", true);
+    //
+    // private String name;
+    //
+    // private boolean canBeScoped;
+    //
+    // RoleType(final String name, final boolean canBeScoped) {
+    // this.name = name;
+    // this.canBeScoped = canBeScoped;
+    // }
+    //
+    // @Override
+    // public String toString() {
+    // return name;
+    // }
+    //
+    // public boolean canBeScoped() {
+    // return canBeScoped;
+    // }
+    // }
 }
