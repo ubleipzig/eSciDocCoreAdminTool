@@ -63,7 +63,8 @@ public class AbstractPredecessorView extends CustomComponent {
     }
 
     public boolean isSelected() {
-        return resourceRefDisplay != null || resourceRefList.size() > 0;
+        return resourceRefDisplay != null && resourceRefList != null
+            && resourceRefList.size() > 0;
     }
 
     public void setResourceRefDisplay(
