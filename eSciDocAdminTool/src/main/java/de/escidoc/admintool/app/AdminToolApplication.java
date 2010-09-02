@@ -51,6 +51,7 @@ import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
 import de.escidoc.core.client.exceptions.application.security.AuthenticationException;
+import de.escidoc.core.resources.aa.useraccount.UserAccount;
 import de.escidoc.core.resources.oum.OrganizationalUnit;
 import de.escidoc.core.test.client.EscidocClientTestBase;
 import de.escidoc.vaadin.dialog.ErrorDialog;
@@ -509,7 +510,7 @@ public class AdminToolApplication extends Application
 
     private UserLabEditForm userLabEditForm;
 
-    private Component roleView;
+    private RoleView roleView;
 
     private UserLabView getUsersLabView() {
         if (userLabView == null) {
@@ -548,7 +549,7 @@ public class AdminToolApplication extends Application
         setMainComponent(getRoleView());
     }
 
-    private Component getRoleView() {
+    private RoleView getRoleView() {
         if (roleView == null) {
             roleView =
                 new RoleView(this, roleService, userService, contextService);
@@ -558,5 +559,10 @@ public class AdminToolApplication extends Application
 
     public OrgUnitService getOrgUnitService() {
         return orgUnitService;
+    }
+
+    public void showRoleView(final UserAccount userAccount) {
+        roleView.selectUser(userAccount);
+        setMainComponent(roleView);
     }
 }
