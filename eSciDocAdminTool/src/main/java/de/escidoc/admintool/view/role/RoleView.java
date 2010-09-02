@@ -114,6 +114,8 @@ public class RoleView extends CustomComponent {
 
     private final ContextService contextService;
 
+    private POJOContainer<UserAccount> userContainer;
+
     // TODO: add logged in user;
     public RoleView(final AdminToolApplication app,
         final RoleService roleService, final UserService userService,
@@ -122,13 +124,10 @@ public class RoleView extends CustomComponent {
         this.roleService = roleService;
         this.userService = userService;
         this.contextService = contextService;
-        // orgUnitTree= new OrgUnitTree(service);
         mainWindow = app.getMainWindow();
         init();
         bindData();
     }
-
-    // final ComponentContainer cssLayout = new CssLayout();
 
     private void init() {
         setCompositionRoot(panel);
@@ -140,27 +139,20 @@ public class RoleView extends CustomComponent {
         verticalLayout.setSpacing(true);
         verticalLayout.setMargin(true, false, false, true);
         verticalLayout.addComponent(mainLayout);
-        // TODO experimenting with CSS Layout
-        // cssLayout.addStyleName("myLayout");
-        // panel.setContent(cssLayout);
-        // panel.setContent(mainLayout);
 
         addUserField();
         addRoleField();
         addResourceType();
         addResourceSearchBox();
         addResourceSelection();
-        // TODO depends on which resources are selected
-        // panel.addComponent(orgUnitTree);
         addFooter();
     }
 
     private void addUserField() {
         userComboBox.setWidth(COMPONENT_WIDTH);
         userComboBox.setNullSelectionAllowed(false);
+        userComboBox.setMultiSelect(false);
 
-        // TODO try css layout
-        // cssLayout.addComponent(userComboBox);
         mainLayout.addComponent(userComboBox);
     }
 
@@ -176,7 +168,6 @@ public class RoleView extends CustomComponent {
         resourceTypeComboBox.setEnabled(false);
         resourceTypeComboBox.setWidth(COMPONENT_WIDTH);
         resourceTypeComboBox.setImmediate(true);
-        // resourceTypeComboBox.setNullSelectionAllowed(false);
         mainLayout.addComponent(resourceTypeComboBox);
     }
 
@@ -185,10 +176,6 @@ public class RoleView extends CustomComponent {
             + "px");
         searchBox.setEnabled(false);
         searchButton.setEnabled(false);
-        // final HorizontalLayout hl = new HorizontalLayout();
-        // hl.addComponent(searchBox);
-        // hl.addComponent(searchButton);
-        // mainLayout.addComponent(hl);
         mainLayout.addComponent(searchBox);
         mainLayout.addComponent(searchButton);
     }
@@ -212,8 +199,7 @@ public class RoleView extends CustomComponent {
     }
 
     private void bindData() {
-        // User
-        final POJOContainer<UserAccount> userContainer =
+        userContainer =
             new POJOContainer<UserAccount>(getAllUserAccounts(),
                 PropertyId.NAME);
         userComboBox.setContainerDataSource(userContainer);
@@ -268,7 +254,11 @@ public class RoleView extends CustomComponent {
         return Collections.emptyList();
     }
 
-    private static class SaveBtnListener implements Button.ClickListener {
+    public void selectUser(final UserAccount userAccount) {
+        userComboBox.select(userAccount);
+    }
+
+    private class SaveBtnListener implements Button.ClickListener {
 
         @Override
         public void buttonClick(final ClickEvent event) {
@@ -276,11 +266,12 @@ public class RoleView extends CustomComponent {
         }
 
         private void onSaveClick() {
-            // TODO Auto-generated method stub
+            mainWindow
+                .showNotification("Assign Grants to user account is not yet implemented.");
         }
     }
 
-    private static class CancelBtnListener implements Button.ClickListener {
+    private class CancelBtnListener implements Button.ClickListener {
 
         @Override
         public void buttonClick(final ClickEvent event) {
@@ -288,8 +279,6 @@ public class RoleView extends CustomComponent {
         }
 
         private void onCancelClick() {
-            // TODO Auto-generated method stub
-
         }
     }
 
@@ -330,17 +319,7 @@ public class RoleView extends CustomComponent {
         private void showResourceTypeFor(final RoleType type) {
             switch (type) {
                 case COLLABOLATOR: {
-                    // final EnumSet<ResourceType> rts =
-                    // EnumSet.copyOf(Arrays.asList(ResourceType.values()));
-                    // // rts.complementOf(ResourceType.ORG_UNIT);
-                    // final EnumSet<ResourceType> range =
-                    // rts.range(ResourceType.CONTEXT, ResourceType.COMPONENT);
-                    //
-                    // for (final ResourceType rt : range) {
-                    // resourceTypeContainer.removeItem(rt);
-                    // }
                     resourceTypeContainer.removeItem(ResourceType.ORG_UNIT);
-
                 }
                     break;
                 default: {
