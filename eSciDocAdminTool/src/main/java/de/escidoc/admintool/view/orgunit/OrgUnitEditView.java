@@ -80,15 +80,8 @@ public class OrgUnitEditView extends AbstractOrgUnitView {
         super(app, service);
         middleInit();
         postInit();
-        // setFieldsWriteThrough(false);
         titleField.setWriteThrough(false);
     }
-
-    // private void setFieldsWriteThrough(final boolean b) {
-    // for (final Field field : attachedFields) {
-    // field.setWriteThrough(b);
-    // }
-    // }
 
     private void middleInit() {
         form.addComponent(LayoutHelper.create(ViewConstants.OBJECT_ID_LABEL,
@@ -108,10 +101,18 @@ public class OrgUnitEditView extends AbstractOrgUnitView {
         }
     }
 
-    private OrganizationalUnit update() {
-        titleField.setComponentError(null);
-        descriptionField.setComponentError(null);
+    @Override
+    protected void saveClicked(final ClickEvent event) {
+        updateOrgUnit();
+    }
 
+    // TODO: discard changes
+    @Override
+    protected void cancelClicked(final ClickEvent event) {
+        super.app.showOrganizationalUnitView();
+    }
+
+    private OrganizationalUnit updateOrgUnit() {
         final Set<String> parents = getSelectedParents();
         // TODO update Predecessors;
         final Set<String> predecessors = null;
@@ -137,15 +138,10 @@ public class OrgUnitEditView extends AbstractOrgUnitView {
             // TODO
             // sort the table
             // FIXME
+            titleField.setComponentError(null);
+            descriptionField.setComponentError(null);
             titleField.commit();
-            // descriptionField.commit();
-            // commitFields();
-
-            // FIXME hack for updating the list.
-            // orgUnitList.removeOrgUnit(toBeUpdate);
-            // orgUnitList.addOrgUnit(updatedOrgUnit);
-            // orgUnitList.updateOrgUnit(oldOrgUnit, updatedOrgUnit);
-
+            descriptionField.commit();
         }
         catch (final ParserConfigurationException e) {
             log.error("An unexpected error occured! See log for details.", e);
@@ -536,17 +532,6 @@ public class OrgUnitEditView extends AbstractOrgUnitView {
             e.printStackTrace();
 
         }
-    }
-
-    @Override
-    protected void saveClicked(final ClickEvent event) {
-        update();
-    }
-
-    // TODO: discard changes
-    @Override
-    protected void cancelClicked(final ClickEvent event) {
-        super.app.showOrganizationalUnitView();
     }
 
     @Override

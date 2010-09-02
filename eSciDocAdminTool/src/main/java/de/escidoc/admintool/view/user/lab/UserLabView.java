@@ -53,17 +53,9 @@ public class UserLabView extends SplitPanel {
         userLabEditView.setSelected(item);
     }
 
-    private String getSelectedItemId() {
-        return (String) getSelectedItem().getItemProperty(
-            ViewConstants.OBJECT_ID).getValue();
-    }
-
     public void remove(final UserAccount deletedUser) {
         userLabList.remove(deletedUser);
         showAddView();
     }
 
-    public void debugDelete() {
-        userLabList.debugDelete(getSelectedItemId());
-    }
 }

@@ -152,6 +152,7 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
 
         // Desc
         descriptionField.setWidth("400px");
+        descriptionField.setRows(3);
         fields.add(descriptionField);
         form.addComponent(LayoutHelper.create(ViewConstants.DESCRIPTION_LABEL,
             descriptionField, labelWidth, true));
@@ -183,7 +184,7 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
         orgUnitList.setWidth("400px");
         orgUnitList.setNullSelectionAllowed(true);
         orgUnitList.setMultiSelect(true);
-        orgUnitList.setImmediate(true);
+        orgUnitList.setWriteThrough(false);
 
         form.addComponent(LayoutHelper.create(
             ViewConstants.ORGANIZATION_UNITS_LABEL, new OrgUnitEditor(
@@ -270,18 +271,6 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
                 final OrganizationalUnitRefs selectedOrgUnitRefs =
                     getEnteredOrgUnitRefs();
 
-                // final String name =
-                // (String) item
-                // .getItemProperty(ViewConstants.NAME_ID).getValue();
-                // final String desc =
-                // (String) item
-                // .getItemProperty(PropertyId.DESCRIPTION).getValue();
-                // final String type =
-                // (String) item.getItemProperty(PropertyId.TYPE).getValue();
-                // final Context newContext =
-                // contextService.update((String) objIdField.getValue(), name,
-                // desc, type, selectedOrgUnitRefs, adminDescriptors);
-
                 final Context newContext =
                     contextService.update((String) objIdField.getValue(),
                         (String) nameField.getValue(),
@@ -290,16 +279,7 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
                         // TODO: Replace by real call.
                         selectedOrgUnitRefs, adminDescriptors);
 
-                // commitFields();
                 nameField.commit();
-
-                // final Context newContext =
-                // contextService.update((String) objIdField.getValue(),
-                // (String) nameField.getValue(),
-                // (String) descriptionField.getValue(),
-                // (String) typeField.getValue(),
-                // // TODO: Replace by real call.
-                // selectedOrgUnitRefs, adminDescriptors);
 
                 nameField.setComponentError(null);
                 descriptionField.setComponentError(null);
@@ -428,13 +408,13 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
     }
 
     private void discard() {
-        nameField.setValue("");
+        nameField.discard();
         nameField.setComponentError(null);
-        descriptionField.setValue("");
+        descriptionField.discard();
         descriptionField.setComponentError(null);
-        typeField.setValue("");
+        typeField.discard();
         typeField.setComponentError(null);
-        orgUnitList.removeAllItems();
+        orgUnitList.discard();
         orgUnitList.setComponentError(null);
         adminDescriptorAccordion.removeAllComponents();
     }

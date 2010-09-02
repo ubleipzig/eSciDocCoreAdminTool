@@ -1,8 +1,6 @@
 package de.escidoc.admintool.view.context;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,9 +17,8 @@ import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
-import de.escidoc.core.resources.ResourceRef;
 import de.escidoc.core.resources.om.context.Context;
-import de.escidoc.core.resources.oum.OrganizationalUnit;
+import de.escidoc.vaadin.dialog.ErrorDialog;
 
 @SuppressWarnings("serial")
 public class ContextListView extends Table {
@@ -37,12 +34,13 @@ public class ContextListView extends Table {
     private POJOContainer<Context> contextContainer;
 
     public ContextListView(final AdminToolApplication app,
-        final ContextService service, final OrgUnitService orgUnitService)
+        final ContextService contextService, final OrgUnitService orgUnitService)
         throws EscidocException, InternalClientException, TransportException {
         this.app = app;
-        contextService = service;
+        this.contextService = contextService;
         this.orgUnitService = orgUnitService;
         buildView();
+        findAllContexts();
         bindDataSource();
     }
 
@@ -57,11 +55,22 @@ public class ContextListView extends Table {
         setNullSelectionAllowed(false);
     }
 
-    private void bindDataSource() throws EscidocException,
-        InternalClientException, TransportException {
+    Collection<Context> allContexts;
+
+    private void bindDataSource() {
+        if (isContextExist()) {
+            initContextContainer();
+        }
+    }
+
+    private boolean isContextExist() {
+        return !allContexts.isEmpty();
+    }
+
+    private void initContextContainer() {
         contextContainer =
-            new POJOContainer<Context>(contextService.findAll(),
-                PropertyId.OBJECT_ID, PropertyId.NAME, PropertyId.DESCRIPTION,
+            new POJOContainer<Context>(allContexts, PropertyId.OBJECT_ID,
+                PropertyId.NAME, PropertyId.DESCRIPTION,
                 PropertyId.PUBLIC_STATUS, PropertyId.PUBLIC_STATUS_COMMENT,
                 PropertyId.TYPE, PropertyId.CREATED_ON, PropertyId.CREATED_BY,
                 PropertyId.LAST_MODIFICATION_DATE, PropertyId.MODIFIED_BY,
@@ -73,22 +82,43 @@ public class ContextListView extends Table {
         setColumnHeader(PropertyId.NAME, ViewConstants.TITLE_LABEL);
     }
 
-    void addContext(final Context context) {
+    private void findAllContexts() {
+        try {
+            allContexts = contextService.findAll();
+        }
+        catch (final EscidocException e) {
+            app.getMainWindow().addWindow(
+                new ErrorDialog(app.getMainWindow(), "Error",
+                    "An unexpected error occured! See log for details."));
+            log.error("An unexpected error occured! See log for details.", e);
+            e.printStackTrace();
+        }
+        catch (final InternalClientException e) {
+            app.getMainWindow().addWindow(
+                new ErrorDialog(app.getMainWindow(), "Error",
+                    "An unexpected error occured! See log for details."));
+            log.error("An unexpected error occured! See log for details.", e);
+            e.printStackTrace();
+        }
+        catch (final TransportException e) {
+            app.getMainWindow().addWindow(
+                new ErrorDialog(app.getMainWindow(), "Error",
+                    "An unexpected error occured! See log for details."));
+            log.error("An unexpected error occured! See log for details.", e);
+            e.printStackTrace();
+        }
+
+    }
+
+    public void addContext(final Context context) {
         assert context != null : "context must not be null.";
+        if (contextContainer == null) {
+            findAllContexts();
+            initContextContainer();
+        }
         final POJOItem<Context> addedItem = contextContainer.addItem(context);
         assert addedItem != null : "Adding context to the list failed.";
         sort();
-    }
-
-    private Collection<OrganizationalUnit> getOrgUnitsByResourceRef(
-        final Collection<ResourceRef> resourceRef) {
-        final List<String> objectIds = new ArrayList<String>();
-
-        for (final ResourceRef ref : resourceRef) {
-            objectIds.add(ref.getObjid());
-        }
-
-        return orgUnitService.getOrgUnitsByIds(objectIds);
     }
 
     @Override
@@ -112,13 +142,5 @@ public class ContextListView extends Table {
         sort(new Object[] { ViewConstants.MODIFIED_ON_ID },
             new boolean[] { false });
         setValue(newContext);
-    }
-
-    private void debug(final Context context) {
-        log.info(context.getProperties().getName() + context.getObjid()
-            + context.getProperties().getCreationDate()
-            + context.getProperties().getCreatedBy().getObjid()
-            + context.getLastModificationDate()
-            + context.getProperties().getModifiedBy().getObjid());
     }
 }
