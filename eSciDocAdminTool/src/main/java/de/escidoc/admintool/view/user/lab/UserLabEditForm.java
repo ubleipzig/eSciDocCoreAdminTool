@@ -41,13 +41,14 @@ import de.escidoc.vaadin.dialog.ErrorDialog;
 import de.escidoc.vaadin.utilities.Converter;
 import de.escidoc.vaadin.utilities.LayoutHelper;
 
-@SuppressWarnings("serial")
 public class UserLabEditForm extends CustomComponent implements ClickListener {
+
+    private static final long serialVersionUID = 3182336883168014436L;
 
     private static final Logger log =
         LoggerFactory.getLogger(UserLabEditForm.class);
 
-    private static final String EDIT_USER_ACCOUNT = "Edit User Account";
+    private static final String EDIT_USER_VIEW_CAPTION = "Edit User Account";
 
     private static final int ROLE_LIST_HEIGHT = 100;
 
@@ -59,16 +60,26 @@ public class UserLabEditForm extends CustomComponent implements ClickListener {
 
     private static final int LABEL_WIDTH = 100;
 
+    private static final int LABEL_HEIGHT = 15;
+
     private final Panel panel = new Panel();
 
     private final FormLayout form = new FormLayout();
 
     private final ListSelect roleList = new ListSelect();
 
+    private final HorizontalLayout footer = new HorizontalLayout();
+
     private final Button newUserBtn = new Button("New", new NewUserListener());
 
     private final Button deleteUserBtn =
         new Button("Delete", new DeleteUserListener());
+
+    private final Button addRoleButton =
+        new Button(ViewConstants.ADD_LABEL, new AddRoleButtonListener());
+
+    private final Button removeRoleButton =
+        new Button(ViewConstants.REMOVE_LABEL, new RemoveRoleButtonListener());
 
     private final Button save = new Button("Save", this);
 
@@ -82,15 +93,13 @@ public class UserLabEditForm extends CustomComponent implements ClickListener {
 
     private final RoleService roleService;
 
-    private HorizontalLayout footer;
-
     private TextField nameField;
 
     private TextField loginNameField;
 
-    private Label modifiedOn;
+    private final Label modifiedOn = new Label();
 
-    private Label modifiedBy;
+    private final Label modifiedBy = new Label();
 
     private Label createdOn;
 
@@ -101,11 +110,6 @@ public class UserLabEditForm extends CustomComponent implements ClickListener {
     private Item item;
 
     private String userObjectId;
-
-    private final Button addRoleButton = new Button(ViewConstants.ADD_LABEL);
-
-    private final Button removeRoleButton =
-        new Button(ViewConstants.REMOVE_LABEL);
 
     private POJOContainer<Role> roleContainer;
 
@@ -119,22 +123,18 @@ public class UserLabEditForm extends CustomComponent implements ClickListener {
 
     public void init() {
         panel.setContent(form);
-        panel.setCaption(EDIT_USER_ACCOUNT);
-
         form.setSpacing(false);
-
+        panel.setCaption(EDIT_USER_VIEW_CAPTION);
         panel.addComponent(createHeader());
 
         nameField = new TextField();
         nameField.setWidth(ROLE_LIST_WIDTH);
         nameField.setWriteThrough(false);
-
-        final int height = 15;
         panel.addComponent(LayoutHelper.create(ViewConstants.NAME_LABEL,
             nameField, LABEL_WIDTH, true));
+
         loginNameField = new TextField();
         loginNameField.setWidth(ROLE_LIST_WIDTH);
-        loginNameField.setWriteThrough(false);
         loginNameField.setReadOnly(true);
         panel.addComponent(LayoutHelper.create(ViewConstants.LOGIN_NAME_LABEL,
             loginNameField, LABEL_WIDTH, false));
@@ -142,15 +142,13 @@ public class UserLabEditForm extends CustomComponent implements ClickListener {
         panel.addComponent(LayoutHelper.create(ViewConstants.OBJECT_ID_LABEL,
             objIdField, LABEL_WIDTH, false));
 
-        modifiedOn = new Label();
-        modifiedBy = new Label();
         panel.addComponent(LayoutHelper.create("Modified", "by", modifiedOn,
-            modifiedBy, LABEL_WIDTH, height, false));
+            modifiedBy, LABEL_WIDTH, LABEL_HEIGHT, false));
 
         createdOn = new Label();
         createdBy = new Label();
         panel.addComponent(LayoutHelper.create("Created", "by", createdOn,
-            createdBy, LABEL_WIDTH, height, false));
+            createdBy, LABEL_WIDTH, LABEL_HEIGHT, false));
 
         state = new CheckBox();
         state.setWriteThrough(false);
@@ -176,9 +174,6 @@ public class UserLabEditForm extends CustomComponent implements ClickListener {
     private void initRoleComponent() {
         initRoleList();
 
-        addRoleButton.addListener(new AddRoleButtonListener());
-        removeRoleButton.addListener(new RemoveRoleButtonListener());
-
         panel.addComponent(LayoutHelper.create(ROLES_LABEL, roleList,
             LABEL_WIDTH, ROLE_LIST_HEIGHT, false, new Button[] { addRoleButton,
                 removeRoleButton }));
@@ -193,16 +188,19 @@ public class UserLabEditForm extends CustomComponent implements ClickListener {
     }
 
     private final class AddRoleButtonListener implements Button.ClickListener {
+        private static final long serialVersionUID = 2520625502594778921L;
 
         @Override
         public void buttonClick(final ClickEvent event) {
-            // TODO show role view with selected user and its roles?
             app.showRoleView();
+            app.showRoleView(userService.getUserById(userObjectId));
         }
     }
 
     private final class RemoveRoleButtonListener
         implements Button.ClickListener {
+
+        private static final long serialVersionUID = -605606788213049694L;
 
         @Override
         public void buttonClick(final ClickEvent event) {
@@ -214,10 +212,6 @@ public class UserLabEditForm extends CustomComponent implements ClickListener {
                         roleContainer.removeItem(role);
                     }
                 }
-            }
-            else {
-                log.info("title: "
-                    + ((Role) selectedRoles).getProperties().getName());
             }
         }
     }
@@ -294,7 +288,6 @@ public class UserLabEditForm extends CustomComponent implements ClickListener {
     }
 
     private HorizontalLayout addFooter() {
-        footer = new HorizontalLayout();
         footer.setSpacing(true);
 
         footer.addComponent(save);
@@ -405,6 +398,11 @@ public class UserLabEditForm extends CustomComponent implements ClickListener {
                     PropertyId.NAME);
             roleList.setContainerDataSource(roleContainer);
             roleList.setItemCaptionPropertyId(PropertyId.NAME);
+        }
+        else {
+            if (roleContainer != null) {
+                roleContainer.removeAllItems();
+            }
         }
     }
 

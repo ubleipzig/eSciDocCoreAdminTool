@@ -9,7 +9,6 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Button.ClickEvent;
@@ -27,20 +26,34 @@ import de.escidoc.core.resources.aa.useraccount.UserAccount;
 import de.escidoc.vaadin.utilities.LayoutHelper;
 
 public class UserLabAddView extends CustomComponent implements ClickListener {
+
     private static final long serialVersionUID = 3007285643463919742L;
 
     private static final Logger log =
         LoggerFactory.getLogger(UserLabAddView.class);
 
-    private final UserLabListView userLabList;
+    private static final String USER_ADD_VIEW_CAPTION =
+        "Add a new User Account";
 
-    private final UserService userService;
+    private static final String FIELD_WIDTH = "400px";
 
-    private HorizontalLayout footer;
+    private static final int LABEL_WIDTH = 100;
+
+    private final Panel panel = new Panel();
+
+    private final FormLayout form = new FormLayout();
+
+    private final HorizontalLayout footer = new HorizontalLayout();
 
     private final Button save = new Button("Save", this);
 
     private final Button cancel = new Button("Cancel", this);
+
+    private final UserLabListView userListView;
+
+    private final UserService userService;
+
+    private final OrgUnitService orgUnitService;
 
     private TextField nameField;
 
@@ -50,49 +63,33 @@ public class UserLabAddView extends CustomComponent implements ClickListener {
 
     private ObjectProperty loginNameProperty;
 
-    private final ListSelect orgUnitList = new ListSelect();
-
-    private final Button addOrgUnitButton = new Button(ViewConstants.ADD_LABEL);
-
-    private final Button removeOrgUnitButton =
-        new Button(ViewConstants.REMOVE_LABEL);
-
-    private TextField emailField;
-
-    private ObjectProperty emailProperty;
-
-    private final OrgUnitService service;
-
     public UserLabAddView(final AdminToolApplication app,
-        final UserLabListView userLabList, final UserService userService,
-        final OrgUnitService service) {
-        this.userLabList = userLabList;
+        final UserLabListView userListView, final UserService userService,
+        final OrgUnitService orgUnitService) {
+        this.userListView = userListView;
         this.userService = userService;
-        this.service = service;
+        this.orgUnitService = orgUnitService;
         init();
     }
 
     public void init() {
-        final Panel panel = new Panel();
-        final FormLayout form = new FormLayout();
-        final int labelWidth = 100;
         panel.setContent(form);
         form.setSpacing(false);
-        panel.setCaption("Add a new User Account");
+        panel.setCaption(USER_ADD_VIEW_CAPTION);
+
         // Name
         panel.addComponent(LayoutHelper.create(ViewConstants.NAME_LABEL,
-            nameField = new TextField(), labelWidth, true));
+            nameField = new TextField(), LABEL_WIDTH, true));
         nameProperty = new ObjectProperty("", String.class);
         nameField.setPropertyDataSource(nameProperty);
-        nameField.setWidth("400px");
+        nameField.setWidth(FIELD_WIDTH);
 
         // Login
         panel.addComponent(LayoutHelper.create(ViewConstants.LOGIN_NAME_LABEL,
-            loginNameField = new TextField(), labelWidth, true));
-
+            loginNameField = new TextField(), LABEL_WIDTH, true));
         loginNameProperty = new ObjectProperty("", String.class);
         loginNameField.setPropertyDataSource(loginNameProperty);
-        loginNameField.setWidth("400px");
+        loginNameField.setWidth(FIELD_WIDTH);
 
         // TODO implement the functionality for saving org unit and email
         // // OrgUnit
@@ -122,7 +119,6 @@ public class UserLabAddView extends CustomComponent implements ClickListener {
     }
 
     private HorizontalLayout addFooter() {
-        footer = new HorizontalLayout();
         footer.setSpacing(true);
         footer.addComponent(LayoutHelper.create(save));
         footer.addComponent(LayoutHelper.create(cancel));
@@ -133,10 +129,8 @@ public class UserLabAddView extends CustomComponent implements ClickListener {
     @Override
     public void buttonClick(final ClickEvent event) {
         final Button source = event.getButton();
-
         if (source == cancel) {
-            nameField.setValue("");
-            loginNameField.setValue("");
+            resetFields();
         }
         else if (source == save) {
             boolean valid = true;
@@ -148,24 +142,21 @@ public class UserLabAddView extends CustomComponent implements ClickListener {
                     + ViewConstants.LOGIN_NAME_ID));
 
             if (valid) {
-                nameField.setComponentError(null);
-                loginNameField.setComponentError(null);
-
                 try {
                     final UserAccount createdUserAccount =
                         userService.create((String) nameProperty.getValue(),
                             (String) loginNameProperty.getValue());
-                    userLabList.addUser(createdUserAccount);
-                    userLabList.select(createdUserAccount);
-                    nameField.setValue("");
-                    loginNameField.setValue("");
+
+                    userListView.addUser(createdUserAccount);
+                    userListView.select(createdUserAccount);
+
+                    resetFields();
                 }
                 catch (final EscidocException e) {
                     final String error =
                         "A user with login name "
                             + (String) nameProperty.getValue()
                             + " already exist.";
-
                     loginNameField.setComponentError(new UserError(error));
                     e.printStackTrace();
                     log.error(error, e);
@@ -182,5 +173,12 @@ public class UserLabAddView extends CustomComponent implements ClickListener {
                 }
             }
         }
+    }
+
+    private void resetFields() {
+        nameField.setComponentError(null);
+        loginNameField.setComponentError(null);
+        nameField.setValue("");
+        loginNameField.setValue("");
     }
 }
