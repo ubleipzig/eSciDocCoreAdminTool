@@ -67,7 +67,7 @@ public class OrgUnitService {
     public String findOrgUnitTitleById(final String objectId)
         throws EscidocException, InternalClientException, TransportException {
         if (orgUnitById.size() == 0) {
-            all();
+            findAll();
         }
         final OrganizationalUnit orgUnit = orgUnitById.get(objectId);
         if (orgUnit == null) {
@@ -83,7 +83,7 @@ public class OrgUnitService {
 
     private Collection<OrganizationalUnit> organizationalUnits;
 
-    public Collection<OrganizationalUnit> all() throws EscidocException,
+    public Collection<OrganizationalUnit> findAll() throws EscidocException,
         InternalClientException, TransportException {
         organizationalUnits =
             client
@@ -161,7 +161,7 @@ public class OrgUnitService {
     public Collection<OrganizationalUnit> getOrganizationalUnits()
         throws EscidocException, InternalClientException, TransportException {
         if (organizationalUnits == null) {
-            return all();
+            return findAll();
         }
         return orgUnitById.values();
     }
