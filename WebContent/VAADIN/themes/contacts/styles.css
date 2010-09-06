@@ -1,5 +1,14 @@
 @import url(../runo/styles.css);
 
+/* ASP beginn*/
+.asptoolbar {
+	background: transparent;
+	background-image: url("images/escidoc-logo.jpg");
+	background-repeat: repeat-x;
+	
+}
+
+/* ASP end */
 /* Using the old default theme (runo) as the basis for now */
 	/* Add some padding to the tree */
 .v-tree {
