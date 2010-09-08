@@ -1,8 +1,6 @@
 package de.escidoc.admintool.app;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +21,7 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.Window.Notification;
 
 import de.escidoc.admintool.messages.Messages;
 import de.escidoc.admintool.service.ContextService;
@@ -52,7 +51,6 @@ import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
 import de.escidoc.core.client.exceptions.application.security.AuthenticationException;
 import de.escidoc.core.resources.aa.useraccount.UserAccount;
-import de.escidoc.core.resources.oum.OrganizationalUnit;
 import de.escidoc.core.test.client.EscidocClientTestBase;
 import de.escidoc.vaadin.dialog.ErrorDialog;
 
@@ -87,47 +85,8 @@ public class AdminToolApplication extends Application
         showLoginWindow();
     }
 
-    // TODO: FIXME Login does not work!!!!
     private void showLoginWindow() {
         setMainWindow(new LoginWindow());
-        /*
-         * final Window window = new Window("Login");// final TextField
-         * loginNameTextField; final TextField passwordTextField;
-         * window.setModal(true);
-         * 
-         * window.setHeight("230px"); //$NON-NLS-1$ window.setWidth("400px");
-         * //$NON-NLS-1$
-         * 
-         * FormLayout layout = new FormLayout(); loginNameTextField = new
-         * TextField(); layout.addComponent(LayoutHelper.create("Login Name:",
-         * loginNameTextField, "100px", true)); passwordTextField = new
-         * TextField(); passwordTextField.setSecret(true);
-         * layout.addComponent(LayoutHelper.create("Password:",
-         * passwordTextField, "100px", true)); final Button okButton = new
-         * Button("Login"); okButton.addListener(new Button.ClickListener() {
-         * public void buttonClick(ClickEvent event) { try{
-         * currentApplication.set(AdminToolApplication.this); String login =
-         * (String) loginNameTextField.getValue(); String pwd = (String)
-         * passwordTextField.getValue(); //
-         * AdminToolApplication.getInstance().authenticate(login, pwd);
-         * authenticate(login, pwd); getMainWindow().removeWindow(window); }
-         * catch(Exception e){ e.printStackTrace(); } } });
-         * layout.addComponent(LayoutHelper.create(okButton));
-         * 
-         * window.setContent(layout);
-         * 
-         * 
-         * //setMainWindow(new LoginWindow());
-         * getMainWindow().addWindow(window); window.addListener(new
-         * Window.CloseListener() { public void windowClose(CloseEvent e) {
-         * Resource r = new
-         * ExternalResource(AdminToolApplication.getInstance().getURL());
-         * getMainWindow().open(r); } });
-         * currentApplication.set(AdminToolApplication.this); String login =
-         * "sysadmin"; String pwd = "escidoc"; try{ authenticate(login, pwd); }
-         * catch(Exception e){ e.printStackTrace(); }
-         */
-
     }
 
     // === Authentification related methods ===
@@ -172,8 +131,10 @@ public class AdminToolApplication extends Application
             loadProtectedResources(authentication);
         }
         catch (final EscidocException e) {
+            getMainWindow().showNotification(
+                new Notification("Server Internal Error", e.getMessage(),
+                    Notification.TYPE_ERROR_MESSAGE));
             log.error(Messages.getString("AdminToolApplication.3"), e); //$NON-NLS-1$
-            e.printStackTrace();
         }
     }
 
@@ -328,15 +289,11 @@ public class AdminToolApplication extends Application
 
     private OrgUnitView orgUnitView;
 
-    // TODO refactor to lazy init later.
     private OrgUnitListView orgUnitList;
 
     private OrgUnitEditView orgUnitEditForm;
 
     private OrgUnitAddView orgUnitAddForm;
-
-    private final List<OrganizationalUnit> todoList =
-        new ArrayList<OrganizationalUnit>();
 
     /*
      * View getters exist so we can lazily generate the views, resulting in
@@ -464,14 +421,14 @@ public class AdminToolApplication extends Application
                 contextView.showEditView(item);
             }
         }
-        else if (property == userLabView.getUserList()) {
-            final Item item = userLabView.getSelectedItem();
+        else if (property == userView.getUserList()) {
+            final Item item = userView.getSelectedItem();
 
             if (item == null) {
-                userLabView.showAddView();
+                userView.showAddView();
             }
             else {
-                userLabView.showEditView(item);
+                userView.showEditView(item);
             }
         }
         else {
@@ -504,27 +461,25 @@ public class AdminToolApplication extends Application
         getUsersLabView();
     }
 
-    private UserLabView userLabView;
+    private UserLabView userView;
 
-    private UserLabListView userLabList;
+    private UserLabListView userListView;
 
-    private UserLabEditForm userLabEditForm;
+    private UserLabEditForm userEditForm;
 
     private RoleView roleView;
 
     private UserLabView getUsersLabView() {
-        if (userLabView == null) {
-            userLabList = new UserLabListView(this, userService);
-            userLabEditForm =
+        if (userView == null) {
+            userListView = new UserLabListView(this, userService);
+            userEditForm =
                 new UserLabEditForm(this, userService, getRoleService());
             final UserLabEditView userEditView =
-                new UserLabEditView(userLabEditForm);
-            userLabView =
-                new UserLabView(this, getUserService(), userLabList,
-                    userEditView);
+                new UserLabEditView(userEditForm);
+            userView = new UserLabView(this, userListView, userEditView);
         }
-        userLabView.showAddView();
-        return userLabView;
+        userView.showAddView();
+        return userView;
     }
 
     private RoleService getRoleService() {
@@ -536,8 +491,13 @@ public class AdminToolApplication extends Application
     }
 
     public UserLabAddView newUserLabAddView() {
-        return new UserLabAddView(this, userLabView.getUserList(), userService,
+        return new UserLabAddView(this, userView.getUserList(), userService,
             orgUnitService);
+    }
+
+    public void showUserInEditView(final UserAccount user) {
+        getUsersLabView();
+        userListView.select(user);
     }
 
     public Component newOrgUnitAddView() throws EscidocException,
