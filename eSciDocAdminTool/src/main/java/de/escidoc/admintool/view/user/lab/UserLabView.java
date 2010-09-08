@@ -4,7 +4,6 @@ import com.vaadin.data.Item;
 import com.vaadin.ui.SplitPanel;
 
 import de.escidoc.admintool.app.AdminToolApplication;
-import de.escidoc.admintool.service.UserService;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.core.resources.aa.useraccount.UserAccount;
 
@@ -13,17 +12,13 @@ public class UserLabView extends SplitPanel {
 
     private final AdminToolApplication app;
 
-    private final UserService userService;
-
     private final UserLabListView userLabList;
 
     private final UserLabEditView userLabEditView;
 
     public UserLabView(final AdminToolApplication app,
-        final UserService userService, final UserLabListView userLabList,
-        final UserLabEditView userLabEditView) {
+        final UserLabListView userLabList, final UserLabEditView userLabEditView) {
         this.app = app;
-        this.userService = userService;
         this.userLabList = userLabList;
         this.userLabEditView = userLabEditView;
         buildUI();

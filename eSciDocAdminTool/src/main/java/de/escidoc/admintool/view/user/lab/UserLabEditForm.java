@@ -18,8 +18,8 @@ import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -29,11 +29,15 @@ import de.escidoc.admintool.app.PropertyId;
 import de.escidoc.admintool.service.RoleService;
 import de.escidoc.admintool.service.UserService;
 import de.escidoc.admintool.view.ViewConstants;
+import de.escidoc.admintool.view.role.Command;
+import de.escidoc.admintool.view.role.RevokeGrantCommand;
+import de.escidoc.admintool.view.role.RevokeGrantWindow;
 import de.escidoc.admintool.view.validator.EmptyFieldValidator;
 import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
+import de.escidoc.core.resources.ResourceRef;
 import de.escidoc.core.resources.aa.role.Role;
 import de.escidoc.core.resources.aa.useraccount.Grant;
 import de.escidoc.core.resources.aa.useraccount.UserAccount;
@@ -42,6 +46,17 @@ import de.escidoc.vaadin.utilities.Converter;
 import de.escidoc.vaadin.utilities.LayoutHelper;
 
 public class UserLabEditForm extends CustomComponent implements ClickListener {
+
+    private static final String GRANT_PROPERTIES_ASSIGNED_ON_OBJECT_ID =
+        "grantProperties.assignedOn.objid";
+
+    private static final String GRANT_PROPERTIES_ROLE_OBJECT_ID =
+        "grantProperties.role.objid";
+
+    private static final String GRANT_XLINK_TITLE = "xLinkTitle";
+
+    private static final String[] ROLE_COLUMN_HEADERS =
+        new String[] { "Title", "Role", "Asssigned On" };
 
     private static final long serialVersionUID = 3182336883168014436L;
 
@@ -66,7 +81,8 @@ public class UserLabEditForm extends CustomComponent implements ClickListener {
 
     private final FormLayout form = new FormLayout();
 
-    private final ListSelect roleList = new ListSelect();
+    // private final ListSelect roleList = new ListSelect();
+    private final Table roleTable = new Table();
 
     private final HorizontalLayout footer = new HorizontalLayout();
 
@@ -111,7 +127,7 @@ public class UserLabEditForm extends CustomComponent implements ClickListener {
 
     private String userObjectId;
 
-    private POJOContainer<Role> roleContainer;
+    private POJOContainer<Grant> grantContainer;
 
     public UserLabEditForm(final AdminToolApplication app,
         final UserService userService, final RoleService roleService) {
@@ -122,6 +138,7 @@ public class UserLabEditForm extends CustomComponent implements ClickListener {
     }
 
     public void init() {
+        setCompositionRoot(panel);
         panel.setContent(form);
         form.setSpacing(false);
         panel.setCaption(EDIT_USER_VIEW_CAPTION);
@@ -156,9 +173,7 @@ public class UserLabEditForm extends CustomComponent implements ClickListener {
             LABEL_WIDTH, false));
 
         initRoleComponent();
-
         panel.addComponent(addFooter());
-        setCompositionRoot(panel);
     }
 
     private HorizontalLayout createHeader() {
@@ -172,19 +187,19 @@ public class UserLabEditForm extends CustomComponent implements ClickListener {
     }
 
     private void initRoleComponent() {
-        initRoleList();
+        initRoleTable();
 
-        panel.addComponent(LayoutHelper.create(ROLES_LABEL, roleList,
+        panel.addComponent(LayoutHelper.create(ROLES_LABEL, roleTable,
             LABEL_WIDTH, ROLE_LIST_HEIGHT, false, new Button[] { addRoleButton,
                 removeRoleButton }));
     }
 
-    private void initRoleList() {
-        roleList.setRows(NUMBER_OF_ROLE_TO_SHOW);
-        roleList.setWidth(ROLE_LIST_WIDTH);
-        roleList.setNullSelectionAllowed(true);
-        roleList.setMultiSelect(true);
-        roleList.setImmediate(true);
+    private void initRoleTable() {
+        roleTable.setWidth(ROLE_LIST_WIDTH);
+        roleTable.setSelectable(true);
+        roleTable.setNullSelectionAllowed(true);
+        roleTable.setMultiSelect(true);
+        roleTable.setImmediate(true);
     }
 
     private final class AddRoleButtonListener implements Button.ClickListener {
@@ -204,44 +219,30 @@ public class UserLabEditForm extends CustomComponent implements ClickListener {
 
         @Override
         public void buttonClick(final ClickEvent event) {
-            final Object selectedRoles = roleList.getValue();
+            final Object selectedGrants = roleTable.getValue();
 
-            if (selectedRoles instanceof Set) {
-                for (final Object role : ((Set) selectedRoles)) {
-                    if (role instanceof Role) {
-                        roleContainer.removeItem(role);
+            if (selectedGrants instanceof Set<?>) {
+                for (final Object grant : ((Set<?>) selectedGrants)) {
+                    if (grant instanceof Grant) {
+                        app.getMainWindow().addWindow(
+                            createModalWindow((Grant) grant).getModalWindow());
                     }
                 }
             }
         }
+
+        private RevokeGrantWindow createModalWindow(final Grant grant) {
+            return new RevokeGrantWindow(createRevokeGrantCommand(grant),
+                grant, grantContainer);
+        }
+
+        private Command createRevokeGrantCommand(final Grant grant) {
+            return new RevokeGrantCommand(userService, userObjectId, grant);
+        }
     }
 
-    private List<Role> getRoles() {
-        try {
-            return getRolesFor(retrieveGrantsFor(userObjectId));
-        }
-        catch (final EscidocException e) {
-            app.getMainWindow().addWindow(
-                new ErrorDialog(app.getMainWindow(), "Error",
-                    "An unexpected error occured! See log for details."));
-            log.error("An unexpected error occured! See log for details.", e);
-            e.printStackTrace();
-        }
-        catch (final InternalClientException e) {
-            app.getMainWindow().addWindow(
-                new ErrorDialog(app.getMainWindow(), "Error",
-                    "An unexpected error occured! See log for details."));
-            log.error("An unexpected error occured! See log for details.", e);
-            e.printStackTrace();
-        }
-        catch (final TransportException e) {
-            app.getMainWindow().addWindow(
-                new ErrorDialog(app.getMainWindow(), "Error",
-                    "An unexpected error occured! See log for details."));
-            log.error("An unexpected error occured! See log for details.", e);
-            e.printStackTrace();
-        }
-        return Collections.emptyList();
+    private Collection<Grant> getGrants() {
+        return retrieveGrantsFor(userObjectId);
     }
 
     private List<Role> getRolesFor(final Collection<Grant> userGrants)
@@ -312,7 +313,7 @@ public class UserLabEditForm extends CustomComponent implements ClickListener {
 
     private void discardFields() {
         nameField.discard();
-        roleList.discard();
+        roleTable.discard();
     }
 
     private void removeAllError() {
@@ -392,17 +393,32 @@ public class UserLabEditForm extends CustomComponent implements ClickListener {
     }
 
     private void bindRolesWithView() {
-        final List<Role> userRoles = getRoles();
-        if (userRoles.size() > 0) {
-            roleContainer =
-                new POJOContainer<Role>(userRoles, PropertyId.OBJECT_ID,
-                    PropertyId.NAME);
-            roleList.setContainerDataSource(roleContainer);
-            roleList.setItemCaptionPropertyId(PropertyId.NAME);
+        final List<Grant> userGrants = (List<Grant>) getGrants();
+        if (userGrants.size() > 0) {
+            grantContainer =
+                new POJOContainer<Grant>(Grant.class, GRANT_XLINK_TITLE,
+                    PropertyId.OBJECT_ID, GRANT_PROPERTIES_ROLE_OBJECT_ID,
+                    GRANT_PROPERTIES_ASSIGNED_ON_OBJECT_ID);
+            roleTable.setContainerDataSource(grantContainer);
+            roleTable.setVisibleColumns(new String[] { GRANT_XLINK_TITLE,
+                GRANT_PROPERTIES_ROLE_OBJECT_ID,
+                GRANT_PROPERTIES_ASSIGNED_ON_OBJECT_ID });
+            roleTable.setColumnHeaders(ROLE_COLUMN_HEADERS);
+
+            for (final Grant grant : userGrants) {
+                final ResourceRef assignedOn =
+                    grant.getGrantProperties().getAssignedOn();
+                if (assignedOn == null) {
+                    grant.getGrantProperties().setAssignedOn(
+                        new ResourceRef("", ""));
+                }
+                grantContainer.addPOJO(grant);
+            }
+
         }
         else {
-            if (roleContainer != null) {
-                roleContainer.removeAllItems();
+            if (grantContainer != null) {
+                grantContainer.removeAllItems();
             }
         }
     }
