@@ -12,7 +12,6 @@ import de.escidoc.admintool.view.context.OrgUnitTree;
 import de.escidoc.core.resources.ResourceRef;
 import de.escidoc.core.resources.oum.OrganizationalUnit;
 import de.escidoc.core.resources.oum.Parent;
-import de.escidoc.core.resources.oum.Parents;
 import de.escidoc.vaadin.utilities.TreeHelper;
 
 public class OrgUnitTreeFactory {
@@ -35,135 +34,84 @@ public class OrgUnitTreeFactory {
 
     public Tree create() {
         for (final OrganizationalUnit orgUnit : allOrgUnits) {
-            final Parents parents = orgUnit.getParents();
-            if (parents != null) {
-                final List<Parent> parentRef =
-                    (List<Parent>) parents.getParentRef();
-                if (parentRef != null && parentRef.size() > 0) {
-                    final Parent parent = parentRef.get(0);
-                    if (parent != null) {
-                        if (orgUnitTree.containsId(resourceRef2Display(parent))) {
-                            TreeHelper.addChildrenNotExpand(orgUnitTree,
-                                resourceRef2Display(parent),
-                                resourceRef2Display(orgUnit), true);
-                        }
-                        else {
-                            TreeHelper.addRoot(orgUnitTree,
-                                resourceRef2Display(parent), true);
-
-                            TreeHelper.addChildrenNotExpand(orgUnitTree,
-                                resourceRef2Display(parent),
-                                resourceRef2Display(orgUnit), true);
-                        }
-                    }
-                    else {
-                        TreeHelper.addRoot(orgUnitTree,
-                            resourceRef2Display(orgUnit), true);
-                    }
-                }
-                else {
-                    TreeHelper.addRoot(orgUnitTree,
-                        resourceRef2Display(orgUnit), true);
-                }
+            if (isRoot(orgUnit)) {
+                createRoot(orgUnit);
             }
             else {
-                TreeHelper.addRoot(orgUnitTree, resourceRef2Display(orgUnit),
-                    true);
+                if (parentExistInTree(orgUnit)) {
+                    setParent(orgUnit, getParent(orgUnit));
+                }
+                else {
+                    createRoot(getParent(orgUnit));
+                    setParent(orgUnit, getParent(orgUnit));
+                }
             }
-
         }
-
         return orgUnitTree;
     }
 
-    // Item item = null;
-    //
-    // int itemId = 0; // Increasing numbering for itemId:s
-
-    // // Create new container
-    // HierarchicalContainer hwContainer = new HierarchicalContainer();
-    // // Create containerproperty for name
-    // hwContainer.addContainerProperty(hw_PROPERTY_NAME, String.class, null);
-    // // Create containerproperty for icon
-    // hwContainer.addContainerProperty(hw_PROPERTY_ICON, ThemeResource.class,
-    // new ThemeResource("../runo/icons/16/document.png"));
-    // for (int i = 0; i < hardware.length; i++) {
-    // // Add new item
-    // item = hwContainer.addItem(itemId);
-    // // Add name property for item
-    // item.getItemProperty(hw_PROPERTY_NAME).setValue(hardware[i][0]);
-    // // Allow children
-    // hwContainer.setChildrenAllowed(itemId, true);
-    // itemId++;
-    // for (int j = 1; j < hardware[i].length; j++) {
-    // if (j == 1) {
-    // item.getItemProperty(hw_PROPERTY_ICON).setValue(
-    // new ThemeResource("../runo/icons/16/folder.png"));
-    // }
-    // // Add child items
-    // item = hwContainer.addItem(itemId);
-    // item.getItemProperty(hw_PROPERTY_NAME).setValue(hardware[i][j]);
-    // hwContainer.setParent(itemId, itemId - j);
-    // hwContainer.setChildrenAllowed(itemId, false);
-    //
-    // itemId++;
-    // }
-    // }
-    // return hwContainer;
-    // }
-    // public Tree create() {
-    // for (final OrganizationalUnit orgUnit : allOrgUnits) {
-    //
-    // if (orgUnit.getParents() != null
-    // && orgUnit.getParents().getParentRef() != null
-    // && orgUnit.getParents().getParentRef().size() > 0) {
-    //
-    // final Parent parent =
-    // ((List<Parent>) orgUnit.getParents().getParentRef()).get(0);
-    // if (parent != null) {
-    // if (orgUnitTree.containsId(resourceRef2Title(parent))) {
-    // TreeHelper.addChildren(orgUnitTree,
-    // resourceRef2Title(parent),
-    // resourceRef2Title(orgUnit), true);
-    // }
-    // else {
-    // TreeHelper.addChildren(orgUnitTree,
-    // resourceRef2Title(parent), true);
-    // TreeHelper.addChildren(orgUnitTree,
-    // resourceRef2Title(parent),
-    // resourceRef2Title(orgUnit), true);
-    // }
-    // }
-    // else {
-    // TreeHelper.addChildren(orgUnitTree,
-    // resourceRef2Title(orgUnit), true);
-    // }
-    // }
-    // else {
-    // TreeHelper.addChildren(orgUnitTree, resourceRef2Title(orgUnit),
-    // true);
-    // }
-    // }
-    // return orgUnitTree;
-    // }
-
-    // TODO put the converter in appropriate class
-    // private static String resourceRef2Title(final Parent parent) {
-    // return parent.getObjid();
-    // }
-
-    private static String orgUnit2ObjectId(final OrganizationalUnit orgUnit) {
-        return orgUnit.getObjid();
+    private boolean isRoot(final OrganizationalUnit orgUnit) {
+        return orgUnit.getParents() == null || !hasParent(orgUnit);
     }
 
-    private String resourceRef2Title(final ResourceRef resourceRef) {
-        return orgUnitsByObjectId
-            .get(resourceRef.getObjid()).getProperties().getName();
+    private void createRoot(final ResourceRef orgUnit) {
+        if (hasChildren(orgUnit)) {
+            TreeHelper.addRoot(orgUnitTree, resourceRef2Display(orgUnit), true);
+        }
+        else {
+            TreeHelper
+                .addRoot(orgUnitTree, resourceRef2Display(orgUnit), false);
+        }
+    }
+
+    private void setParent(final OrganizationalUnit orgUnit, final Parent parent) {
+        if (hasChildren(orgUnit)) {
+            TreeHelper
+                .addChildrenNotExpand(orgUnitTree, resourceRef2Display(parent),
+                    resourceRef2Display(orgUnit), true);
+        }
+        else {
+            TreeHelper.addChildrenNotExpand(orgUnitTree,
+                resourceRef2Display(parent), resourceRef2Display(orgUnit),
+                false);
+        }
+    }
+
+    private boolean hasParent(final OrganizationalUnit orgUnit) {
+        return isNotEmpty(orgUnit) && getParentRef(orgUnit) != null;
+    }
+
+    private boolean parentExistInTree(final OrganizationalUnit orgUnit) {
+        return orgUnitTree.containsId(resourceRef2Display(getParent(orgUnit)));
+    }
+
+    private boolean isNotEmpty(final OrganizationalUnit orgUnit) {
+        return getParentRef(orgUnit) != null
+            && getParentRef(orgUnit).size() > 0;
+    }
+
+    private Parent getParent(final OrganizationalUnit orgUnit) {
+        final Parent parent = getParentRef(orgUnit).get(0);
+        return parent;
+    }
+
+    private List<Parent> getParentRef(final OrganizationalUnit orgUnit) {
+        final List<Parent> parentRef =
+            (List<Parent>) orgUnit.getParents().getParentRef();
+        return parentRef;
+    }
+
+    private boolean hasChildren(final ResourceRef resourceRef) {
+        final OrganizationalUnit cachedOrgUnit =
+            orgUnitsByObjectId.get(resourceRef.getObjid());
+        return cachedOrgUnit.getProperties().getHasChildren();
     }
 
     private ResourceRefDisplay resourceRef2Display(final ResourceRef resourceRef) {
+
         final OrganizationalUnit cachedOrgUnit =
             orgUnitsByObjectId.get(resourceRef.getObjid());
+
         final ResourceRefDisplay resourceRefDisplay =
             new ResourceRefDisplay(resourceRef.getObjid(), cachedOrgUnit
                 .getProperties().getName());
