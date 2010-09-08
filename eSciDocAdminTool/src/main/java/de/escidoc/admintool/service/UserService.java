@@ -2,17 +2,20 @@ package de.escidoc.admintool.service;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.joda.time.DateTime;
 
 import de.escidoc.admintool.domain.UserAccountFactory;
+import de.escidoc.core.client.TransportProtocol;
 import de.escidoc.core.client.UserAccountHandlerClient;
 import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
 import de.escidoc.core.resources.ResourceRef;
+import de.escidoc.core.resources.aa.role.Role;
 import de.escidoc.core.resources.aa.useraccount.Grant;
 import de.escidoc.core.resources.aa.useraccount.GrantProperties;
 import de.escidoc.core.resources.aa.useraccount.UserAccount;
@@ -47,11 +50,17 @@ public class UserService {
     @SuppressWarnings("deprecation")
     public Collection<UserAccount> findAll() throws EscidocClientException {
         userAccounts =
-            client.retrieveUserAccounts(emptyFilter()).getUserAccounts();
+            getSoapClient()
+                .retrieveUserAccounts(emptyFilter()).getUserAccounts();
         for (final UserAccount user : userAccounts) {
             userAccountById.put(user.getObjid(), user);
         }
         return userAccounts;
+    }
+
+    private UserAccountHandlerClient getSoapClient() {
+        client.setTransport(TransportProtocol.SOAP);
+        return client;
     }
 
     private TaskParam emptyFilter() {
@@ -78,7 +87,7 @@ public class UserService {
 
     public UserAccount retrieve(final String userObjectId)
         throws EscidocException, InternalClientException, TransportException {
-        return client.retrieve(userObjectId);
+        return getSoapClient().retrieve(userObjectId);
     }
 
     public void update(final String objid, final String newName)
@@ -90,7 +99,7 @@ public class UserService {
             new UserAccountFactory().update(getSelectedUser(objid)).name(
                 newName).build();
 
-        client.update(updatedUserAccount);
+        getSoapClient().update(updatedUserAccount);
     }
 
     // TODO ask Matthias, if we need one click button to activate OR deactivate
@@ -120,7 +129,7 @@ public class UserService {
         final UserAccount userAccount = getSelectedUser(selectedItemId);
         assert userAccount.getProperties().isActive() == false : "User account is already active.";
 
-        client.activate(userAccount.getObjid(),
+        getSoapClient().activate(userAccount.getObjid(),
             lastModificationDate(userAccount));
     }
 
@@ -132,7 +141,7 @@ public class UserService {
         final UserAccount userAccount = getSelectedUser(selectedItemId);
         assert userAccount.getProperties().isActive() == true : "User account is not active.";
 
-        client.deactivate(userAccount.getObjid(),
+        getSoapClient().deactivate(userAccount.getObjid(),
             lastModificationDate(userAccount));
     }
 
@@ -163,7 +172,8 @@ public class UserService {
         final UserAccount backedUserAccount =
             new UserAccountFactory().create(name, loginName).build();
 
-        final UserAccount createdUserAccount = client.create(backedUserAccount);
+        final UserAccount createdUserAccount =
+            getSoapClient().create(backedUserAccount);
         assert createdUserAccount != null : "Got null reference from the server.";
         assert createdUserAccount.getObjid() != null : "ObjectID can not be null.";
         assert userAccountById != null : "userAccountById is null";
@@ -176,7 +186,7 @@ public class UserService {
 
     public UserAccount delete(final String objectId) throws EscidocException,
         InternalClientException, TransportException {
-        client.delete(objectId);
+        getSoapClient().delete(objectId);
         return userAccountById.remove(objectId);
     }
 
@@ -188,7 +198,12 @@ public class UserService {
     public Collection<Grant> retrieveCurrentGrants(final String objectId)
         throws InternalClientException, TransportException,
         EscidocClientException {
-        return client.retrieveCurrentGrants(objectId).getGrants();
+        return getRestClient().retrieveCurrentGrants(objectId).getGrants();
+    }
+
+    private UserAccountHandlerClient getRestClient() {
+        client.setTransport(TransportProtocol.REST);
+        return client;
     }
 
     public void assign(final String userId, final String roleId)
@@ -197,7 +212,53 @@ public class UserService {
         final GrantProperties gProp = new GrantProperties();
         gProp.setRole(new ResourceRef(roleId));
         grant.setGrantProperties(gProp);
+        getSoapClient().createGrant(userId, grant);
+    }
 
-        final Grant createdGrant = client.createGrant(userId, grant);
+    private UserAccount user;
+
+    private GrantProperties grantProps;
+
+    public UserService assign(final UserAccount user) {
+        if (user == null) {
+            throw new IllegalArgumentException("UserAccount can not be null.");
+        }
+        this.user = user;
+        return this;
+    }
+
+    public UserService withRole(final Role selectedRole) {
+        if (selectedRole == null) {
+            throw new IllegalArgumentException("Role can not be null.");
+        }
+        if (user == null) {
+            throw new IllegalArgumentException(
+                "You must sign a role to a user.");
+        }
+        grantProps = new GrantProperties();
+        grantProps.setRole(new ResourceRef(selectedRole.getObjid()));
+        return this;
+    }
+
+    public UserService onResources(final Set<ResourceRef> selectedResources) {
+        for (final ResourceRef resourceRef : selectedResources) {
+            grantProps.setAssignedOn(resourceRef);
+        }
+        return this;
+    }
+
+    public void execute() throws EscidocClientException {
+        final Grant grant = new Grant();
+        grant.setGrantProperties(grantProps);
+        getSoapClient().createGrant(user.getObjid(), grant);
+    }
+
+    public void revokeGrant(
+        final String userId, final Grant grant, final String comment)
+        throws EscidocClientException {
+        final TaskParam tp = new TaskParam();
+        tp.setLastModificationDate(grant.getLastModificationDate());
+        tp.setComment(comment);
+        getSoapClient().revokeGrant(userId, grant.getObjid(), tp);
     }
 }
