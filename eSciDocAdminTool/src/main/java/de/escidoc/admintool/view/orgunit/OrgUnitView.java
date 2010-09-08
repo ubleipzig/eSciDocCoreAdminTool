@@ -19,17 +19,19 @@ public class OrgUnitView extends SplitPanel {
 
     private final AdminToolApplication app;
 
-    private final OrgUnitEditView orgUnitEditForm;
+    private final OrgUnitEditView orgUnitEditView;
 
     public OrgUnitView(final AdminToolApplication app,
-        final OrgUnitListView orgUnitTable, final OrgUnitEditView orgUnitEditView,
+        final OrgUnitListView orgUnitTable,
+        final OrgUnitEditView orgUnitEditView,
         final OrgUnitAddView orgUnitAddForm) {
         this.app = app;
-        this.orgUnitEditForm = orgUnitEditView;
+        this.orgUnitEditView = orgUnitEditView;
+
         addStyleName("view");
         setFirstComponent(orgUnitTable);
         setSecondComponent(orgUnitEditView);
-        this.setSplitPosition(ViewConstants.SPLIT_POSITION_IN_PERCENT);
+        setSplitPosition(ViewConstants.SPLIT_POSITION_IN_PERCENT);
         setOrientation(ORIENTATION_HORIZONTAL);
     }
 
@@ -56,7 +58,7 @@ public class OrgUnitView extends SplitPanel {
     }
 
     public void showEditView(final Item item) {
-        setSecondComponent(orgUnitEditForm);
-        orgUnitEditForm.setSelected(item);
+        setSecondComponent(orgUnitEditView);
+        orgUnitEditView.setSelected(item);
     }
 }

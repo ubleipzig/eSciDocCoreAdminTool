@@ -38,6 +38,8 @@ import de.escidoc.vaadin.utilities.LayoutHelper;
 public abstract class AbstractOrgUnitView extends CustomComponent
     implements ClickListener, Serializable {
 
+    private static final String ADD_PARENT_LABEL = "Add Parent";
+
     private static final long serialVersionUID = 8351229526921020901L;
 
     private final Button saveButton = new Button("Save", this);
@@ -180,7 +182,7 @@ public abstract class AbstractOrgUnitView extends CustomComponent
         parentList.setImmediate(true);
         // attachedFields.add(parentList);
         form.addComponent(LayoutHelper.create(ViewConstants.PARENTS_LABEL,
-            new OrgUnitEditor("Add Parents", parentList, addOrgUnitButton,
+            new OrgUnitEditor(ADD_PARENT_LABEL, parentList, addOrgUnitButton,
                 removeOrgUnitButton, service), labelWidth, 100, false,
             new Button[] { addOrgUnitButton, removeOrgUnitButton }));
 

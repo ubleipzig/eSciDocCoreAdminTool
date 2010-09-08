@@ -190,4 +190,6 @@ public class ViewConstants {
     public static final String DOWN_RIGHT_ARROW = Messages
         .getString("ViewConstants.61"); //$NON-NLS-1$
 
+    public static final String ERROR_DIALOG_CAPTION = "Error";
+
 }
