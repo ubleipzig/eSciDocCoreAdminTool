@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 140
+/prototype/!svn/ver/37062/branches/eSciDocAdminTool/eSciDocAdmin-mavenize/eSciDocAdminTool/src/main/java/de/escidoc/admintool/view/validator
+END
+EmptyFieldValidator.java
+K 25
+svn:wc:ra_dav:version-url
+V 165
+/prototype/!svn/ver/37074/branches/eSciDocAdminTool/eSciDocAdmin-mavenize/eSciDocAdminTool/src/main/java/de/escidoc/admintool/view/validator/EmptyFieldValidator.java
+END
+EmptyStringValidator.java
+K 25
+svn:wc:ra_dav:version-url
+V 166
+/prototype/!svn/ver/37197/branches/eSciDocAdminTool/eSciDocAdmin-mavenize/eSciDocAdminTool/src/main/java/de/escidoc/admintool/view/validator/EmptyStringValidator.java
+END

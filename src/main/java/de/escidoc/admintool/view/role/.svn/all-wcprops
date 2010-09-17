@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 135
+/prototype/!svn/ver/37162/branches/eSciDocAdminTool/eSciDocAdmin-mavenize/eSciDocAdminTool/src/main/java/de/escidoc/admintool/view/role
+END
+RevokeGrantWindow.java
+K 25
+svn:wc:ra_dav:version-url
+V 158
+/prototype/!svn/ver/37324/branches/eSciDocAdminTool/eSciDocAdmin-mavenize/eSciDocAdminTool/src/main/java/de/escidoc/admintool/view/role/RevokeGrantWindow.java
+END
+Notificator.java
+K 25
+svn:wc:ra_dav:version-url
+V 152
+/prototype/!svn/ver/37324/branches/eSciDocAdminTool/eSciDocAdmin-mavenize/eSciDocAdminTool/src/main/java/de/escidoc/admintool/view/role/Notificator.java
+END
+RoleType.java
+K 25
+svn:wc:ra_dav:version-url
+V 149
+/prototype/!svn/ver/37324/branches/eSciDocAdminTool/eSciDocAdmin-mavenize/eSciDocAdminTool/src/main/java/de/escidoc/admintool/view/role/RoleType.java
+END
+RevokeGrantCommand.java
+K 25
+svn:wc:ra_dav:version-url
+V 159
+/prototype/!svn/ver/37324/branches/eSciDocAdminTool/eSciDocAdmin-mavenize/eSciDocAdminTool/src/main/java/de/escidoc/admintool/view/role/RevokeGrantCommand.java
+END
+SaveBtnListener.java
+K 25
+svn:wc:ra_dav:version-url
+V 156
+/prototype/!svn/ver/37324/branches/eSciDocAdminTool/eSciDocAdmin-mavenize/eSciDocAdminTool/src/main/java/de/escidoc/admintool/view/role/SaveBtnListener.java
+END
+RoleView.java
+K 25
+svn:wc:ra_dav:version-url
+V 149
+/prototype/!svn/ver/37324/branches/eSciDocAdminTool/eSciDocAdmin-mavenize/eSciDocAdminTool/src/main/java/de/escidoc/admintool/view/role/RoleView.java
+END
+Command.java
+K 25
+svn:wc:ra_dav:version-url
+V 148
+/prototype/!svn/ver/37324/branches/eSciDocAdminTool/eSciDocAdmin-mavenize/eSciDocAdminTool/src/main/java/de/escidoc/admintool/view/role/Command.java
+END

@@ -1,0 +1,65 @@
+K 25
+svn:wc:ra_dav:version-url
+V 138
+/prototype/!svn/ver/37069/branches/eSciDocAdminTool/eSciDocAdmin-mavenize/eSciDocAdminTool/src/main/java/de/escidoc/admintool/view/orgunit
+END
+PredecessorType.java
+K 25
+svn:wc:ra_dav:version-url
+V 159
+/prototype/!svn/ver/36949/branches/eSciDocAdminTool/eSciDocAdmin-mavenize/eSciDocAdminTool/src/main/java/de/escidoc/admintool/view/orgunit/PredecessorType.java
+END
+OrgUnitView.java
+K 25
+svn:wc:ra_dav:version-url
+V 155
+/prototype/!svn/ver/37326/branches/eSciDocAdminTool/eSciDocAdmin-mavenize/eSciDocAdminTool/src/main/java/de/escidoc/admintool/view/orgunit/OrgUnitView.java
+END
+CloseOrgUnitModalWindow.java
+K 25
+svn:wc:ra_dav:version-url
+V 167
+/prototype/!svn/ver/37112/branches/eSciDocAdminTool/eSciDocAdmin-mavenize/eSciDocAdminTool/src/main/java/de/escidoc/admintool/view/orgunit/CloseOrgUnitModalWindow.java
+END
+AbstractOrgUnitView.java
+K 25
+svn:wc:ra_dav:version-url
+V 163
+/prototype/!svn/ver/37326/branches/eSciDocAdminTool/eSciDocAdmin-mavenize/eSciDocAdminTool/src/main/java/de/escidoc/admintool/view/orgunit/AbstractOrgUnitView.java
+END
+AbstractStatusDialog.java
+K 25
+svn:wc:ra_dav:version-url
+V 164
+/prototype/!svn/ver/37113/branches/eSciDocAdminTool/eSciDocAdmin-mavenize/eSciDocAdminTool/src/main/java/de/escidoc/admintool/view/orgunit/AbstractStatusDialog.java
+END
+OrgUnitEditView.java
+K 25
+svn:wc:ra_dav:version-url
+V 159
+/prototype/!svn/ver/37222/branches/eSciDocAdminTool/eSciDocAdmin-mavenize/eSciDocAdminTool/src/main/java/de/escidoc/admintool/view/orgunit/OrgUnitEditView.java
+END
+OrgUnitToolbar.java
+K 25
+svn:wc:ra_dav:version-url
+V 158
+/prototype/!svn/ver/37112/branches/eSciDocAdminTool/eSciDocAdmin-mavenize/eSciDocAdminTool/src/main/java/de/escidoc/admintool/view/orgunit/OrgUnitToolbar.java
+END
+OrgUnitAddView.java
+K 25
+svn:wc:ra_dav:version-url
+V 158
+/prototype/!svn/ver/37193/branches/eSciDocAdminTool/eSciDocAdmin-mavenize/eSciDocAdminTool/src/main/java/de/escidoc/admintool/view/orgunit/OrgUnitAddView.java
+END
+OpenOrgUnitModalWindow.java
+K 25
+svn:wc:ra_dav:version-url
+V 166
+/prototype/!svn/ver/37112/branches/eSciDocAdminTool/eSciDocAdmin-mavenize/eSciDocAdminTool/src/main/java/de/escidoc/admintool/view/orgunit/OpenOrgUnitModalWindow.java
+END
+OrgUnitListView.java
+K 25
+svn:wc:ra_dav:version-url
+V 159
+/prototype/!svn/ver/37222/branches/eSciDocAdminTool/eSciDocAdmin-mavenize/eSciDocAdminTool/src/main/java/de/escidoc/admintool/view/orgunit/OrgUnitListView.java
+END

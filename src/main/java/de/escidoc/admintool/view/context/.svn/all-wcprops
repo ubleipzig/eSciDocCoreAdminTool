@@ -1,0 +1,119 @@
+K 25
+svn:wc:ra_dav:version-url
+V 138
+/prototype/!svn/ver/37063/branches/eSciDocAdminTool/eSciDocAdmin-mavenize/eSciDocAdminTool/src/main/java/de/escidoc/admintool/view/context
+END
+EditAdminDescriptorListener.java
+K 25
+svn:wc:ra_dav:version-url
+V 171
+/prototype/!svn/ver/37158/branches/eSciDocAdminTool/eSciDocAdmin-mavenize/eSciDocAdminTool/src/main/java/de/escidoc/admintool/view/context/EditAdminDescriptorListener.java
+END
+ContextEditViewCustomComponent.java
+K 25
+svn:wc:ra_dav:version-url
+V 174
+/prototype/!svn/ver/36927/branches/eSciDocAdminTool/eSciDocAdmin-mavenize/eSciDocAdminTool/src/main/java/de/escidoc/admintool/view/context/ContextEditViewCustomComponent.java
+END
+NewAdminDescriptorListener.java
+K 25
+svn:wc:ra_dav:version-url
+V 170
+/prototype/!svn/ver/37114/branches/eSciDocAdminTool/eSciDocAdmin-mavenize/eSciDocAdminTool/src/main/java/de/escidoc/admintool/view/context/NewAdminDescriptorListener.java
+END
+OrgUnitTree.java
+K 25
+svn:wc:ra_dav:version-url
+V 155
+/prototype/!svn/ver/37074/branches/eSciDocAdminTool/eSciDocAdmin-mavenize/eSciDocAdminTool/src/main/java/de/escidoc/admintool/view/context/OrgUnitTree.java
+END
+ContextToolbar.java
+K 25
+svn:wc:ra_dav:version-url
+V 158
+/prototype/!svn/ver/37111/branches/eSciDocAdminTool/eSciDocAdmin-mavenize/eSciDocAdminTool/src/main/java/de/escidoc/admintool/view/context/ContextToolbar.java
+END
+ContextForm.java
+K 25
+svn:wc:ra_dav:version-url
+V 155
+/prototype/!svn/ver/36927/branches/eSciDocAdminTool/eSciDocAdmin-mavenize/eSciDocAdminTool/src/main/java/de/escidoc/admintool/view/context/ContextForm.java
+END
+CustomContextList.java
+K 25
+svn:wc:ra_dav:version-url
+V 161
+/prototype/!svn/ver/36927/branches/eSciDocAdminTool/eSciDocAdmin-mavenize/eSciDocAdminTool/src/main/java/de/escidoc/admintool/view/context/CustomContextList.java
+END
+ContextReadView.java
+K 25
+svn:wc:ra_dav:version-url
+V 159
+/prototype/!svn/ver/37155/branches/eSciDocAdminTool/eSciDocAdmin-mavenize/eSciDocAdminTool/src/main/java/de/escidoc/admintool/view/context/ContextReadView.java
+END
+ContextListView.java
+K 25
+svn:wc:ra_dav:version-url
+V 159
+/prototype/!svn/ver/37222/branches/eSciDocAdminTool/eSciDocAdmin-mavenize/eSciDocAdminTool/src/main/java/de/escidoc/admintool/view/context/ContextListView.java
+END
+OpenContextModalWindow.java
+K 25
+svn:wc:ra_dav:version-url
+V 166
+/prototype/!svn/ver/37158/branches/eSciDocAdminTool/eSciDocAdmin-mavenize/eSciDocAdminTool/src/main/java/de/escidoc/admintool/view/context/OpenContextModalWindow.java
+END
+RemoveAdminDescriptorListener.java
+K 25
+svn:wc:ra_dav:version-url
+V 173
+/prototype/!svn/ver/36927/branches/eSciDocAdminTool/eSciDocAdmin-mavenize/eSciDocAdminTool/src/main/java/de/escidoc/admintool/view/context/RemoveAdminDescriptorListener.java
+END
+ContextEditForm.java
+K 25
+svn:wc:ra_dav:version-url
+V 159
+/prototype/!svn/ver/37222/branches/eSciDocAdminTool/eSciDocAdmin-mavenize/eSciDocAdminTool/src/main/java/de/escidoc/admintool/view/context/ContextEditForm.java
+END
+ContextView.java
+K 25
+svn:wc:ra_dav:version-url
+V 155
+/prototype/!svn/ver/37115/branches/eSciDocAdminTool/eSciDocAdmin-mavenize/eSciDocAdminTool/src/main/java/de/escidoc/admintool/view/context/ContextView.java
+END
+CloseContextModalWindow.java
+K 25
+svn:wc:ra_dav:version-url
+V 167
+/prototype/!svn/ver/37074/branches/eSciDocAdminTool/eSciDocAdmin-mavenize/eSciDocAdminTool/src/main/java/de/escidoc/admintool/view/context/CloseContextModalWindow.java
+END
+AdminDescriptorView.java
+K 25
+svn:wc:ra_dav:version-url
+V 163
+/prototype/!svn/ver/37114/branches/eSciDocAdminTool/eSciDocAdmin-mavenize/eSciDocAdminTool/src/main/java/de/escidoc/admintool/view/context/AdminDescriptorView.java
+END
+PublicStatus.java
+K 25
+svn:wc:ra_dav:version-url
+V 156
+/prototype/!svn/ver/37116/branches/eSciDocAdminTool/eSciDocAdmin-mavenize/eSciDocAdminTool/src/main/java/de/escidoc/admintool/view/context/PublicStatus.java
+END
+ContextAddView.java
+K 25
+svn:wc:ra_dav:version-url
+V 158
+/prototype/!svn/ver/37114/branches/eSciDocAdminTool/eSciDocAdmin-mavenize/eSciDocAdminTool/src/main/java/de/escidoc/admintool/view/context/ContextAddView.java
+END
+AdminDescriptorEditView.java
+K 25
+svn:wc:ra_dav:version-url
+V 167
+/prototype/!svn/ver/36927/branches/eSciDocAdminTool/eSciDocAdmin-mavenize/eSciDocAdminTool/src/main/java/de/escidoc/admintool/view/context/AdminDescriptorEditView.java
+END
+AdminDescriptorAddView.java
+K 25
+svn:wc:ra_dav:version-url
+V 166
+/prototype/!svn/ver/37194/branches/eSciDocAdminTool/eSciDocAdmin-mavenize/eSciDocAdminTool/src/main/java/de/escidoc/admintool/view/context/AdminDescriptorAddView.java
+END

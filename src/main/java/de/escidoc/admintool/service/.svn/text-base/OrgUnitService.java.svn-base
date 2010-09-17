@@ -1,0 +1,255 @@
+package de.escidoc.admintool.service;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import de.escidoc.admintool.exception.ResourceNotFoundException;
+import de.escidoc.core.client.OrganizationalUnitHandlerClient;
+import de.escidoc.core.client.exceptions.EscidocException;
+import de.escidoc.core.client.exceptions.InternalClientException;
+import de.escidoc.core.client.exceptions.TransportException;
+import de.escidoc.core.resources.common.Filter;
+import de.escidoc.core.resources.common.TaskParam;
+import de.escidoc.core.resources.oum.OrganizationalUnit;
+import de.escidoc.core.resources.oum.Predecessor;
+
+public class OrgUnitService {
+    private static final String ESCIDOC_SERVICE_ROOT_URI =
+        "http://localhost:8080";
+
+    private static final Logger log =
+        LoggerFactory.getLogger(OrgUnitService.class);
+
+    private final Map<String, String> objectIdByTitle =
+        new HashMap<String, String>();
+
+    // TODO re-factor Ou- and ContextService: @See ContextService.java
+    private final OrganizationalUnitHandlerClient client;
+
+    public OrgUnitService(final OrganizationalUnitHandlerClient client) {
+        this.client = client;
+    }
+
+    public OrgUnitService(final String handle) throws InternalClientException {
+        client = createOuClient(handle);
+    }
+
+    private OrganizationalUnitHandlerClient createOuClient(final String handle)
+        throws InternalClientException {
+        final OrganizationalUnitHandlerClient client =
+            new OrganizationalUnitHandlerClient();
+        client.setHandle(handle);
+        client.setServiceAddress(ESCIDOC_SERVICE_ROOT_URI);
+        return client;
+    }
+
+    private final Map<String, OrganizationalUnit> orgUnitById =
+        new HashMap<String, OrganizationalUnit>();
+
+    public Map<String, OrganizationalUnit> getOrgUnitById() {
+        return orgUnitById;
+    }
+
+    public OrganizationalUnit find(final String objectId) {
+        return orgUnitById.get(objectId);
+    }
+
+    public String findOrgUnitTitleById(final String objectId)
+        throws EscidocException, InternalClientException, TransportException {
+        if (orgUnitById.size() == 0) {
+            findAll();
+        }
+        final OrganizationalUnit orgUnit = orgUnitById.get(objectId);
+        if (orgUnit == null) {
+            throw new ResourceNotFoundException(
+                "Can not find resource with object ID: " + objectId);
+        }
+        return orgUnit.getProperties().getName();
+    }
+
+    public String getObjectIdByTitle(final Object title) {
+        return objectIdByTitle.get(title);
+    }
+
+    private Collection<OrganizationalUnit> organizationalUnits;
+
+    public Collection<OrganizationalUnit> findAll() throws EscidocException,
+        InternalClientException, TransportException {
+        organizationalUnits =
+            client
+                .retrieveOrganizationalUnits(emptyFilter())
+                .getOrganizationalUnits();
+
+        for (final OrganizationalUnit orgUnit : organizationalUnits) {
+            orgUnitById.put(orgUnit.getObjid(), orgUnit);
+        }
+
+        return organizationalUnits;
+    }
+
+    // FIXME duplicate method in ContextService
+    private TaskParam emptyFilter() {
+        final Collection<Filter> filters = TaskParam.filtersFactory();
+        filters.add(getFilter("", "", null));
+
+        final TaskParam filterParam = new TaskParam();
+        filterParam.setFilters(filters);
+        return filterParam;
+    }
+
+    // FIXME duplicate method in ContextService
+    private Filter getFilter(
+        final String name, final String value, final Collection<String> ids) {
+
+        final Filter filter = new Filter();
+        filter.setName(name);
+        filter.setValue(value);
+        filter.setIds(ids);
+        return filter;
+    }
+
+    public OrganizationalUnit create(final OrganizationalUnit ou)
+        throws EscidocException, InternalClientException, TransportException {
+
+        final OrganizationalUnit createdOrgUnit = client.create(ou);
+        log
+            .debug("Succesfully stored a new Organizational Unit with the Object ID: "
+                + createdOrgUnit.getObjid());
+
+        assert createdOrgUnit != null : "Got null reference from the server.";
+        assert createdOrgUnit.getObjid() != null : "ObjectID can not be null.";
+        assert orgUnitById != null : "orgUnitById is null";
+        final int sizeBefore = orgUnitById.size();
+        orgUnitById.put(createdOrgUnit.getObjid(), createdOrgUnit);
+        final int sizeAfter = orgUnitById.size();
+        assert sizeAfter > sizeBefore : "user account is not added to map.";
+
+        return createdOrgUnit;
+    }
+
+    public OrganizationalUnit retrieve(final String objid)
+        throws EscidocException, InternalClientException, TransportException {
+        return client.retrieve(objid);
+    }
+
+    public OrganizationalUnit update(final OrganizationalUnit ou)
+        throws EscidocException, InternalClientException, TransportException {
+        final OrganizationalUnit old = ou;
+        final OrganizationalUnit updatedOrgUnit = client.update(ou);
+        orgUnitById.remove(old.getObjid());
+        orgUnitById.put(updatedOrgUnit.getObjid(), updatedOrgUnit);
+        return updatedOrgUnit;
+    }
+
+    public void delete(final OrganizationalUnit ou) throws EscidocException,
+        InternalClientException, TransportException {
+        final OrganizationalUnit old = ou;
+        client.delete(ou.getObjid());
+        orgUnitById.remove(old.getObjid());
+    }
+
+    public Collection<OrganizationalUnit> getOrganizationalUnits()
+        throws EscidocException, InternalClientException, TransportException {
+        if (organizationalUnits == null) {
+            return findAll();
+        }
+        return orgUnitById.values();
+    }
+
+    public Collection<String> getPredecessorsObjectId(
+        final OrganizationalUnit ou) {
+        assert ou != null : "Org Unit can not be null";
+        if (ou.getPredecessors() == null) {
+            return Collections.emptyList();
+        }
+        return getPredecessorsByObjectId(ou).keySet();
+    }
+
+    public Map<String, Predecessor> getPredecessorsByObjectId(
+        final OrganizationalUnit ou) {
+
+        final Map<String, Predecessor> predecessorByObjectId =
+            new ConcurrentHashMap<String, Predecessor>();
+
+        final Iterator<Predecessor> iterator = ou.getPredecessors().iterator();
+
+        assert iterator != null : "iterator can not be null.";
+        while (iterator.hasNext()) {
+            final Predecessor predecessor = iterator.next();
+            predecessorByObjectId.put(predecessor.getObjid(), predecessor);
+        }
+        return predecessorByObjectId;
+    }
+
+    public Collection<OrganizationalUnit> getOrgUnitsByIds(
+        final List<String> objectIds) {
+        if (objectIds == null || objectIds.size() == 0) {
+            return Collections.emptyList();
+        }
+
+        final List<OrganizationalUnit> collected =
+            new ArrayList<OrganizationalUnit>(objectIds.size());
+        for (final String objectId : objectIds) {
+            collected.add(orgUnitById.get(objectId));
+        }
+        return collected;
+    }
+
+    public OrganizationalUnit open(final String objectId, final String comment)
+        throws EscidocException, InternalClientException, TransportException {
+        assert !(objectId == null || objectId.isEmpty()) : "objectId must not be null or empty";
+
+        final TaskParam taskParam = new TaskParam();
+        taskParam.setLastModificationDate(find(objectId)
+            .getLastModificationDate());
+
+        if (!comment.isEmpty()) {
+            taskParam.setComment(comment);
+        }
+
+        client.open(objectId, taskParam);
+        final OrganizationalUnit openedOrgUnit = client.retrieve(objectId);
+        updateMap(objectId, openedOrgUnit);
+        return openedOrgUnit;
+    }
+
+    private void updateMap(
+        final String objectId, final OrganizationalUnit updatedOrgUnit) {
+        orgUnitById.remove(objectId);
+        orgUnitById.put(objectId, updatedOrgUnit);
+    }
+
+    public OrganizationalUnit close(final String objectId, final String comment)
+        throws EscidocException, InternalClientException, TransportException {
+        assert !(objectId == null || objectId.isEmpty()) : "objectId must not be null or empty";
+
+        final TaskParam taskParam = new TaskParam();
+        taskParam.setLastModificationDate(find(objectId)
+            .getLastModificationDate());
+        taskParam.setComment(comment);
+
+        client.close(objectId, taskParam);
+
+        final OrganizationalUnit closedContext = client.retrieve(objectId);
+
+        updateMap(objectId, closedContext);
+
+        return closedContext;
+    }
+
+    private TaskParam lastModificationDate(final DateTime lastModificationDate) {
+        final TaskParam taskParam = new TaskParam();
+        taskParam.setLastModificationDate(lastModificationDate);
+        return taskParam;
+    }
+}

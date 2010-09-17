@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 145
+/prototype/!svn/ver/37068/branches/eSciDocAdminTool/eSciDocAdmin-mavenize/eSciDocAdminTool/src/main/java/de/escidoc/admintool/view/orgunit/editor
+END
+SplittingPredecessorEditor.java
+K 25
+svn:wc:ra_dav:version-url
+V 177
+/prototype/!svn/ver/37110/branches/eSciDocAdminTool/eSciDocAdmin-mavenize/eSciDocAdminTool/src/main/java/de/escidoc/admintool/view/orgunit/editor/SplittingPredecessorEditor.java
+END
+ReplacementPredecessorEditor.java
+K 25
+svn:wc:ra_dav:version-url
+V 179
+/prototype/!svn/ver/37110/branches/eSciDocAdminTool/eSciDocAdmin-mavenize/eSciDocAdminTool/src/main/java/de/escidoc/admintool/view/orgunit/editor/ReplacementPredecessorEditor.java
+END
+AbstractPredecessorEditor.java
+K 25
+svn:wc:ra_dav:version-url
+V 176
+/prototype/!svn/ver/37110/branches/eSciDocAdminTool/eSciDocAdmin-mavenize/eSciDocAdminTool/src/main/java/de/escidoc/admintool/view/orgunit/editor/AbstractPredecessorEditor.java
+END
+FusionPredecessorEditor.java
+K 25
+svn:wc:ra_dav:version-url
+V 174
+/prototype/!svn/ver/37110/branches/eSciDocAdminTool/eSciDocAdmin-mavenize/eSciDocAdminTool/src/main/java/de/escidoc/admintool/view/orgunit/editor/FusionPredecessorEditor.java
+END
+SpinOffPPredecessorEditor.java
+K 25
+svn:wc:ra_dav:version-url
+V 176
+/prototype/!svn/ver/37110/branches/eSciDocAdminTool/eSciDocAdmin-mavenize/eSciDocAdminTool/src/main/java/de/escidoc/admintool/view/orgunit/editor/SpinOffPPredecessorEditor.java
+END
+AffiliationPredecessorEditor.java
+K 25
+svn:wc:ra_dav:version-url
+V 179
+/prototype/!svn/ver/37110/branches/eSciDocAdminTool/eSciDocAdmin-mavenize/eSciDocAdminTool/src/main/java/de/escidoc/admintool/view/orgunit/editor/AffiliationPredecessorEditor.java
+END
+BlankPredecessorEditor.java
+K 25
+svn:wc:ra_dav:version-url
+V 173
+/prototype/!svn/ver/37110/branches/eSciDocAdminTool/eSciDocAdmin-mavenize/eSciDocAdminTool/src/main/java/de/escidoc/admintool/view/orgunit/editor/BlankPredecessorEditor.java
+END
+IPredecessorEditor.java
+K 25
+svn:wc:ra_dav:version-url
+V 169
+/prototype/!svn/ver/37110/branches/eSciDocAdminTool/eSciDocAdmin-mavenize/eSciDocAdminTool/src/main/java/de/escidoc/admintool/view/orgunit/editor/IPredecessorEditor.java
+END
