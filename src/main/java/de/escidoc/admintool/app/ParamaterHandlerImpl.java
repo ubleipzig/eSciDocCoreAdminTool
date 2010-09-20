@@ -79,7 +79,8 @@ public class ParamaterHandlerImpl implements ParameterHandler {
         if (parameters.containsKey(AdminToolContants.ESCIDOC_USER_HANDLE)) {
             final String parameter =
                 parameters.get(AdminToolContants.ESCIDOC_USER_HANDLE)[0];
-            return Base64Coder.decodeString(parameter); // NOPMD by CHH on 9/17/10 10:20 AM
+            return Base64Coder.decodeString(parameter); // NOPMD by CHH on
+                                                        // 9/17/10 10:20 AM
         }
         return "";
     }

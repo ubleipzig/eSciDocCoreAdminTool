@@ -186,15 +186,12 @@ public class AdminToolApplication extends Application
 
     public void buttonClick(final ClickEvent event) {
         final Button source = event.getButton();
-        // if (source == newUserButton) {
-        // showUserAddForm();
-        // }
         if (source.equals(newUserButton)) {
             showUserAddForm();
         }
         else {
-            throw new RuntimeException(
-                Messages.getString("AdminToolApplication.17") + source); //$NON-NLS-1$
+            throw new IllegalArgumentException(
+                Messages.getString("AdminToolApplication.17") + source);
         }
     }
 
@@ -311,44 +308,32 @@ public class AdminToolApplication extends Application
     }
 
     public void itemClick(final ItemClickEvent event) {
-        if (event.getSource() == tree) {
+        if (isFromTree(event)) {
             final Object itemId = event.getItemId();
             if (itemId == null) {
                 return;
             }
+            else if (NavigationTree.ORGANIZATIONAL_UNIT.equals(itemId)) {
+                showOrganizationalUnitView();
+            }
+            else if (NavigationTree.CONTEXT.equals(itemId)) {
+                showContextView();
+            }
+            else if (NavigationTree.USERS_LAB.equals(itemId)) {
+                showUsersLabView();
+            }
+            else if (NavigationTree.ROLE.equals(itemId)) {
+                showRoleView();
+            }
             else {
-                if (NavigationTree.ORGANIZATIONAL_UNIT.equals(itemId)) {
-                    showOrganizationalUnitView();
-                }
-                else if (NavigationTree.CONTEXT.equals(itemId)) {
-                    try {
-                        showContextView();
-                    }
-                    catch (final EscidocException e) {
-                        log.error(Messages.getString("AdminToolApplication.8"), //$NON-NLS-1$
-                            e);
-                    }
-                    catch (final InternalClientException e) {
-                        log.error(Messages.getString("AdminToolApplication.8"), //$NON-NLS-1$
-                            e);
-                    }
-                    catch (final TransportException e) {
-                        log.error(Messages.getString("AdminToolApplication.9"), //$NON-NLS-1$
-                            e);
-                    }
-                }
-                else if (NavigationTree.USERS_LAB.equals(itemId)) {
-                    showUsersLabView();
-                }
-                else if (NavigationTree.ROLE.equals(itemId)) {
-                    showRoleView();
-                }
-                else {
-                    throw new RuntimeException(
-                        Messages.getString("AdminToolApplication.10")); //$NON-NLS-1$
-                }
+                throw new IllegalArgumentException(
+                    Messages.getString("AdminToolApplication.10"));
             }
         }
+    }
+
+    private boolean isFromTree(final ItemClickEvent event) {
+        return event.getSource() == tree;
     }
 
     private void loadProtectedResources(final String token)
@@ -377,9 +362,21 @@ public class AdminToolApplication extends Application
         horizontalSplit.setSecondComponent(component);
     }
 
-    public void showContextView() throws EscidocException,
-        InternalClientException, TransportException {
-        setMainComponent(getContextView());
+    public void showContextView() {
+        ContextView contextView;
+        try {
+            contextView = getContextView();
+            setMainComponent(contextView);
+        }
+        catch (final EscidocException e) {
+            log.error(Messages.getString("AdminToolApplication.8"), e);
+        }
+        catch (final InternalClientException e) {
+            log.error(Messages.getString("AdminToolApplication.8"), e);
+        }
+        catch (final TransportException e) {
+            log.error(Messages.getString("AdminToolApplication.9"), e);
+        }
     }
 
     public void showOrganizationalUnitView() {
@@ -443,8 +440,8 @@ public class AdminToolApplication extends Application
             }
         }
         else {
-            throw new RuntimeException(
-                Messages.getString("AdminToolApplication.16")); //$NON-NLS-1$
+            throw new IllegalArgumentException(
+                Messages.getString("AdminToolApplication.16"));
         }
     }
 }
