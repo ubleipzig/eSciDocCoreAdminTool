@@ -1,0 +1,2210 @@
+Found a 76 line (398 tokens) duplication in the following files: 
+Starting at line 468 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/orgunit/OrgUnitEditView.java
+Starting at line 91 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/orgunit/OrgUnitAddView.java
+
+        return "Add " + ViewConstants.ORGANIZATION_UNITS_LABEL;
+    }
+
+    @Override
+    protected void onAddPredecessorClicked() {
+        try {
+            if (titleField.getValue() != null
+                && (!((String) titleField.getValue()).isEmpty())) {
+                Object selectObject = predecessorTypeSelect.getValue();
+                if (selectObject == null) {
+                    selectObject = PredecessorType.BLANK;
+                }
+                final Class<?>[] argsClass =
+                    new Class<?>[] { OrgUnitService.class };
+                final Object[] args = new Object[] { service };
+
+                final Class<?> c =
+                    Class.forName(((PredecessorType) selectObject)
+                        .getExecutionClass());
+                final Constructor<?> constructor = c.getConstructor(argsClass);
+
+                final Object object = constructor.newInstance(args);
+
+                final IPredecessorEditor editor = (IPredecessorEditor) object;
+                editor.setNewOrgUnit((String) titleField.getValue());
+                final Window window = editor.getWidget();
+                window.setModal(true);
+                editor.setMainWindow(app.getMainWindow());
+                editor.setList(predecessorTypeSelect);
+                editor.setOrgUnitEditorView(this);
+                app.getMainWindow().addWindow(window);
+            }
+            else {
+                app.getMainWindow().addWindow(
+                    new ErrorDialog(app.getMainWindow(), "Error",
+                        "Enter a title first, please."));
+            }
+        }
+        catch (final ClassNotFoundException e) {
+            log.error("An unexpected error occured! See log for details.", e);
+            e.printStackTrace();
+        }
+        catch (final InstantiationException e) {
+            log.error("An unexpected error occured! See log for details.", e);
+            e.printStackTrace();
+
+        }
+        catch (final IllegalAccessException e) {
+            log.error("An unexpected error occured! See log for details.", e);
+            e.printStackTrace();
+        }
+        catch (final SecurityException e) {
+            log.error("An unexpected error occured! See log for details.", e);
+            e.printStackTrace();
+
+        }
+        catch (final NoSuchMethodException e) {
+            log.error("An unexpected error occured! See log for details.", e);
+            e.printStackTrace();
+
+        }
+        catch (final IllegalArgumentException e) {
+            log.error("An unexpected error occured! See log for details.", e);
+            e.printStackTrace();
+
+        }
+        catch (final InvocationTargetException e) {
+            log.error("An unexpected error occured! See log for details.", e);
+            e.printStackTrace();
+
+        }
+    }
+
+    // TODO this is crazy. Data binding to the rescue for later.
+    @Override
+    protected void saveClicked(final ClickEvent event) {
+=====================================================================
+Found a 54 line (308 tokens) duplication in the following files: 
+Starting at line 377 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/ContextEditForm.java
+Starting at line 280 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/ContextAddView.java
+
+    }
+
+    private AdminDescriptors enteredAdminDescriptors() {
+        final AdminDescriptors adminDescriptors = new AdminDescriptors();
+        final Iterator<Component> it =
+            adminDescriptorAccordion.getComponentIterator();
+        while (it != null && it.hasNext()) {
+            final Component contentComp = it.next();
+            final Tab tab = adminDescriptorAccordion.getTab(contentComp);
+            final String adminDescName = tab.getCaption();
+            String adminDescContent = "";
+            if (contentComp instanceof Label) {
+                adminDescContent = ((String) ((Label) contentComp).getValue());
+            }
+            final AdminDescriptor adminDescriptor = new AdminDescriptor();
+            adminDescriptor.setName(adminDescName);
+            try {
+                adminDescriptor.setContent(adminDescContent);
+                adminDescriptors.add(adminDescriptor);
+                // TODO: move to appropriate class
+            }
+            catch (final ParserConfigurationException e) {
+                log.error("An unexpected error occured! See log for details.",
+                    e);
+                app.getMainWindow().addWindow(
+                    new ErrorDialog(app.getMainWindow(), "Error", e
+                        .getMessage()));
+                setComponentError(new SystemError(e.getMessage()));
+                e.printStackTrace();
+            }
+            catch (final SAXException e) {
+                log.error("An unexpected error occured! See log for details.",
+                    e);
+                app.getMainWindow().addWindow(
+                    new ErrorDialog(app.getMainWindow(), "Error", e
+                        .getMessage()));
+                setComponentError(new SystemError(e.getMessage()));
+                e.printStackTrace();
+            }
+            catch (final IOException e) {
+                log.error("An unexpected error occured! See log for details.",
+                    e);
+                app.getMainWindow().addWindow(
+                    new ErrorDialog(app.getMainWindow(), "Error", e
+                        .getMessage()));
+                setComponentError(new SystemError(e.getMessage()));
+                e.printStackTrace();
+            }
+        }
+
+        return adminDescriptors;
+    }
+
+    private OrganizationalUnitRefs getEnteredOrgUnitRefs() {
+=====================================================================
+Found a 28 line (174 tokens) duplication in the following files: 
+Starting at line 308 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/ContextEditForm.java
+Starting at line 241 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/ContextAddView.java
+
+                    contextListView.select(newContext);
+                }
+                catch (final EscidocException e) {
+                    log.error("root cause: "
+                        + ExceptionUtils.getRootCauseMessage(e), e);
+                    app.getMainWindow().addWindow(
+                        new ErrorDialog(app.getMainWindow(), "Error", e
+                            .getMessage()));
+                    e.printStackTrace();
+                }
+                catch (final InternalClientException e) {
+                    log.error(
+                        "An unexpected error occured! See log for details.", e);
+                    setComponentError(new UserError(e.getMessage()));
+                    app.getMainWindow().addWindow(
+                        new ErrorDialog(app.getMainWindow(), "Error", e
+                            .getMessage()));
+                    e.printStackTrace();
+                }
+                catch (final TransportException e) {
+                    log.error(
+                        "An unexpected error occured! See log for details.", e);
+                    app.getMainWindow().addWindow(
+                        new ErrorDialog(app.getMainWindow(), "Error", e
+                            .getMessage()));
+                    setComponentError(new UserError(e.getMessage()));
+                    e.printStackTrace();
+                }
+=====================================================================
+Found a 25 line (119 tokens) duplication in the following files: 
+Starting at line 178 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/ContextEditForm.java
+Starting at line 136 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/ContextAddView.java
+
+        orgUnitList = new ListSelect();
+        orgUnitList.setRows(5);
+        orgUnitList.setWidth("400px");
+        orgUnitList.setNullSelectionAllowed(true);
+        orgUnitList.setMultiSelect(true);
+        orgUnitList.setImmediate(true);
+
+        form.addComponent(LayoutHelper.create(
+            ViewConstants.ORGANIZATION_UNITS_LABEL, new OrgUnitEditor(
+                ViewConstants.ORGANIZATION_UNITS_LABEL, orgUnitList,
+                addOrgUnitButton, removeOrgUnitButton, orgUnitService),
+            labelWidth, 140, true, new Button[] { addOrgUnitButton,
+                removeOrgUnitButton }));
+
+        // AdminDescriptor
+        adminDescriptorAccordion = new Accordion();
+        adminDescriptorAccordion.setWidth("400px");
+        adminDescriptorAccordion.setSizeFull();
+
+        final Panel accordionPanel = new Panel();
+        accordionPanel.setContent(adminDescriptorAccordion);
+        accordionPanel.setSizeFull();
+        accordionPanel.setWidth("400px");
+
+        final Button addButton = new Button("Add");
+=====================================================================
+Found a 32 line (119 tokens) duplication in the following files: 
+Starting at line 159 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/orgunit/editor/SplittingPredecessorEditor.java
+Starting at line 85 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/orgunit/editor/AbstractPredecessorEditor.java
+
+    }
+
+    private void addListener() {
+        okButton.addListener(new Button.ClickListener() {
+
+            private static final long serialVersionUID = -7640719928940296001L;
+
+            @Override
+            public void buttonClick(final ClickEvent event) {
+                onOkClicked(event);
+            }
+        });
+
+        cancelButton.addListener(new Button.ClickListener() {
+            private static final long serialVersionUID = -965029855181433407L;
+
+            @Override
+            public void buttonClick(final ClickEvent event) {
+                onCancelClicked(event);
+            }
+        });
+    }
+
+    protected void onOkClicked(final ClickEvent event) {
+        if (isValid(getSelectedPredecessors().size())) {
+            showAddedPredecessors();
+            closeWindow();
+        }
+        else {
+            showErrorMessage();
+        }
+    }
+=====================================================================
+Found a 35 line (115 tokens) duplication in the following files: 
+Starting at line 26 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/orgunit/editor/ReplacementPredecessorEditor.java
+Starting at line 26 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/orgunit/editor/AffiliationPredecessorEditor.java
+
+    public AffiliationPredecessorEditor(final OrgUnitService service) {
+        super(service);
+        setMultiSelect(false);
+    }
+
+    @Override
+    protected String getLabel() {
+        return LABEL;
+    }
+
+    @Override
+    protected String getEditorDescription() {
+        return EDITOR_DESCRIPTION;
+    }
+
+    @Override
+    protected boolean isValid(final int sizeOfSelectedOrgUnit) {
+        return sizeOfSelectedOrgUnit == 1;
+    }
+
+    @Override
+    protected void showAddedPredecessors() {
+        final AbstractPredecessorView addedPredecessorView =
+            createPredecessorView(super.getSelectedPredecessors());
+        orgUnitEditorView.showAddedPredecessors(addedPredecessorView);
+    }
+
+    // TODO move to a factory class.DRY
+    private AbstractPredecessorView createPredecessorView(
+        final List<ResourceRefDisplay> selectedPredecessors) {
+        for (final ResourceRefDisplay resourceRefDisplay : selectedPredecessors) {
+            log.info("selected: " + resourceRefDisplay);
+        }
+        final AbstractPredecessorView addedPredecessorView =
+            new AffiliationPredecessorView(selectedPredecessors
+=====================================================================
+Found a 23 line (95 tokens) duplication in the following files: 
+Starting at line 55 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/service/UserService.java
+Starting at line 94 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/service/ContextService.java
+
+    private TaskParam createdBySysAdmin() {
+        final Collection<Filter> filters = TaskParam.filtersFactory();
+        filters.add(getFilter(
+            "http://escidoc.de/core/01/structural-relations/created-by",
+            "escidoc:exuser1", null));
+
+        final TaskParam filterParam = new TaskParam();
+        filterParam.setFilters(filters);
+        return filterParam;
+    }
+
+    // FIXME duplicate method in ContextService
+    private Filter getFilter(
+        final String name, final String value, final Collection<String> ids) {
+
+        final Filter filter = new Filter();
+        filter.setName(name);
+        filter.setValue(value);
+        filter.setIds(ids);
+        return filter;
+    }
+
+    public Collection<Context> getCache() throws EscidocException,
+=====================================================================
+Found a 11 line (90 tokens) duplication in the following files: 
+Starting at line 226 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/orgunit/OrgUnitEditView.java
+Starting at line 478 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/ContextEditForm.java
+
+            .getItemProperty(PropertyId.PUBLIC_STATUS));
+        modifiedOn.setCaption(Converter
+            .dateTimeToString((org.joda.time.DateTime) item.getItemProperty(
+                PropertyId.LAST_MODIFICATION_DATE).getValue()));
+        modifiedBy.setPropertyDataSource(item
+            .getItemProperty(PropertyId.MODIFIED_BY));
+        createdOn.setCaption(Converter
+            .dateTimeToString((org.joda.time.DateTime) item.getItemProperty(
+                PropertyId.CREATED_ON).getValue()));
+        createdBy.setPropertyDataSource(item
+            .getItemProperty(PropertyId.CREATED_BY));
+=====================================================================
+Found a 27 line (90 tokens) duplication in the following files: 
+Starting at line 36 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/orgunit/editor/SpinOffPPredecessorEditor.java
+Starting at line 34 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/orgunit/editor/ReplacementPredecessorEditor.java
+
+    }
+
+    @Override
+    protected String getEditorDescription() {
+        return EDITOR_DESCRIPTION;
+    }
+
+    @Override
+    protected boolean isValid(final int sizeOfSelectedOrgUnit) {
+        return sizeOfSelectedOrgUnit == 1;
+    }
+
+    @Override
+    protected void showAddedPredecessors() {
+        final AbstractPredecessorView addedPredecessorView =
+            createPredecessorView(super.getSelectedPredecessors());
+        orgUnitEditorView.showAddedPredecessors(addedPredecessorView);
+    }
+
+    // TODO move to a factory class.DRY
+    private AbstractPredecessorView createPredecessorView(
+        final List<ResourceRefDisplay> selectedPredecessors) {
+        for (final ResourceRefDisplay resourceRefDisplay : selectedPredecessors) {
+            log.info("selected: " + resourceRefDisplay);
+        }
+        final AbstractPredecessorView addedPredecessorView =
+            new ReplacementPredecessorView(selectedPredecessors
+=====================================================================
+Found a 24 line (89 tokens) duplication in the following files: 
+Starting at line 192 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/orgunit/editor/SplittingPredecessorEditor.java
+Starting at line 144 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/orgunit/editor/AbstractPredecessorEditor.java
+
+    protected void onCancelClicked(final ClickEvent event) {
+        closeWindow();
+        select.setValue(PredecessorType.BLANK);
+    }
+
+    private void closeWindow() {
+        parent.removeWindow(modalWindow);
+    }
+
+    public HorizontalLayout addFooter() {
+        footer.addComponent(okButton);
+        footer.addComponent(cancelButton);
+        return footer;
+    }
+
+    @Override
+    public void setMainWindow(final Window parent) {
+        this.parent = parent;
+    }
+
+    @Override
+    public void setList(final ListSelect select) {
+        this.select = select;
+    }
+=====================================================================
+Found a 16 line (88 tokens) duplication in the following files: 
+Starting at line 171 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/user/lab/UserLabEditForm.java
+Starting at line 207 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/user/lab/UserLabEditForm.java
+
+            return userService.retrieveCurrentGrants(userObjectId);
+        }
+        catch (final InternalClientException e) {
+            app.getMainWindow().addWindow(
+                new ErrorDialog(app.getMainWindow(), "Error",
+                    "An unexpected error occured! See log for details."));
+            log.error("An unexpected error occured! See log for details.", e);
+            e.printStackTrace();
+        }
+        catch (final TransportException e) {
+            app.getMainWindow().addWindow(
+                new ErrorDialog(app.getMainWindow(), "Error",
+                    "An unexpected error occured! See log for details."));
+            log.error("An unexpected error occured! See log for details.", e);
+            e.printStackTrace();
+        }
+=====================================================================
+Found a 14 line (81 tokens) duplication in the following files: 
+Starting at line 90 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/orgunit/OrgUnitListView.java
+Starting at line 271 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/orgunit/OrgUnitEditView.java
+
+                    new MetadataExtractor(orgUnit);
+                final String alternative =
+                    metadataExtractor.get("dcterms:alternative");
+                final String identifier =
+                    metadataExtractor.get("dc:identifier");
+                final String orgType =
+                    metadataExtractor.get("eterms:organization-type");
+                final String country = metadataExtractor.get("eterms:country");
+                final String city = metadataExtractor.get("eterms:city");
+                final String coordinate =
+                    metadataExtractor.get("kml:coordinates");
+                final String startDate =
+                    metadataExtractor.get("eterms:start-date");
+                final String endDate = metadataExtractor.get("eterms:end-date");
+=====================================================================
+Found a 19 line (71 tokens) duplication in the following files: 
+Starting at line 59 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/service/UserService.java
+Starting at line 103 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/service/OrgUnitService.java
+
+        filters.add(getFilter("", "", null));
+
+        final TaskParam filterParam = new TaskParam();
+        filterParam.setFilters(filters);
+        return filterParam;
+    }
+
+    // FIXME duplicate method in ContextService
+    private Filter getFilter(
+        final String name, final String value, final Collection<String> ids) {
+
+        final Filter filter = new Filter();
+        filter.setName(name);
+        filter.setValue(value);
+        filter.setIds(ids);
+        return filter;
+    }
+
+    public OrganizationalUnit create(final OrganizationalUnit ou)
+=====================================================================
+Found a 17 line (68 tokens) duplication in the following files: 
+Starting at line 103 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/orgunit/AbstractStatusDialog.java
+Starting at line 140 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/ContextToolbar.java
+Starting at line 621 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/ContextEditForm.java
+
+            app.showContextView();
+        }
+        catch (final EscidocException e) {
+            log.error("An unexpected error occured! See log for details.", e);
+            e.printStackTrace();
+        }
+        catch (final InternalClientException e) {
+            log.error("An unexpected error occured! See log for details.", e);
+            e.printStackTrace();
+        }
+        catch (final TransportException e) {
+            log.error("An unexpected error occured! See log for details.", e);
+            e.printStackTrace();
+        }
+
+    }
+}
+=====================================================================
+Found a 14 line (67 tokens) duplication in the following files: 
+Starting at line 308 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/ContextEditForm.java
+Starting at line 539 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/ContextEditForm.java
+
+            e.printStackTrace();
+        }
+
+        catch (final EscidocException e) {
+            log
+                .error("root cause: " + ExceptionUtils.getRootCauseMessage(e),
+                    e);
+            app.getMainWindow().addWindow(
+                new ErrorDialog(app.getMainWindow(), "Error", e.getMessage()));
+            e.printStackTrace();
+        }
+        catch (final InternalClientException e) {
+            log
+                .error("root cause: " + ExceptionUtils.getRootCauseMessage(e),
+=====================================================================
+Found a 18 line (67 tokens) duplication in the following files: 
+Starting at line 564 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/orgunit/OrgUnitEditView.java
+Starting at line 103 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/orgunit/AbstractStatusDialog.java
+
+                    closeWindow();
+                }
+                catch (final EscidocException e) {
+                    log.error(
+                        "An unexpected error occured! See log for details.", e);
+                    e.printStackTrace();
+                }
+                catch (final InternalClientException e) {
+                    log.error(
+                        "An unexpected error occured! See log for details.", e);
+                    e.printStackTrace();
+                }
+                catch (final TransportException e) {
+                    log.error(
+                        "An unexpected error occured! See log for details.", e);
+                    e.printStackTrace();
+                }
+            }
+=====================================================================
+Found a 17 line (67 tokens) duplication in the following files: 
+Starting at line 269 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/user/lab/UserLabEditForm.java
+Starting at line 189 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/orgunit/OrgUnitAddView.java
+
+        }
+        catch (final EscidocException e) {
+            log.error("An unexpected error occured! See log for details.", e);
+            e.printStackTrace();
+
+        }
+        catch (final InternalClientException e) {
+            log.error("An unexpected error occured! See log for details.", e);
+            e.printStackTrace();
+
+        }
+        catch (final TransportException e) {
+            log.error("An unexpected error occured! See log for details.", e);
+            e.printStackTrace();
+
+        }
+        catch (final ParserConfigurationException e) {
+=====================================================================
+Found a 14 line (66 tokens) duplication in the following files: 
+Starting at line 160 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/orgunit/OrgUnitEditView.java
+Starting at line 564 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/orgunit/OrgUnitEditView.java
+
+            app.showOrganizationalUnitView();
+        }
+        catch (final EscidocException e) {
+            log.error("An unexpected error occured! See log for details.", e);
+            e.printStackTrace();
+        }
+        catch (final InternalClientException e) {
+            log.error("An unexpected error occured! See log for details.", e);
+            e.printStackTrace();
+        }
+        catch (final TransportException e) {
+            log.error("An unexpected error occured! See log for details.", e);
+            e.printStackTrace();
+        }
+=====================================================================
+Found a 18 line (66 tokens) duplication in the following files: 
+Starting at line 140 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/orgunit/OrgUnitEditView.java
+Starting at line 202 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/orgunit/OrgUnitAddView.java
+
+            e.printStackTrace();
+
+        }
+        catch (final ParserConfigurationException e) {
+            log.error("An unexpected error occured! See log for details.", e);
+            e.printStackTrace();
+
+        }
+        catch (final SAXException e) {
+            log.error("An unexpected error occured! See log for details.", e);
+            e.printStackTrace();
+
+        }
+        catch (final IOException e) {
+            log.error("An unexpected error occured! See log for details.", e);
+            e.printStackTrace();
+
+        }
+=====================================================================
+Found a 16 line (66 tokens) duplication in the following files: 
+Starting at line 38 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/orgunit/OrgUnitView.java
+Starting at line 160 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/orgunit/OrgUnitEditView.java
+
+            e.printStackTrace();
+        }
+        catch (final EscidocException e) {
+            log.error("An unexpected error occured! See log for details.", e);
+            e.printStackTrace();
+        }
+        catch (final InternalClientException e) {
+            log.error("An unexpected error occured! See log for details.", e);
+            e.printStackTrace();
+        }
+        catch (final TransportException e) {
+            log.error("An unexpected error occured! See log for details.", e);
+            e.printStackTrace();
+        }
+
+        return backedOrgUnit;
+=====================================================================
+Found a 17 line (65 tokens) duplication in the following files: 
+Starting at line 38 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/orgunit/OrgUnitView.java
+Starting at line 564 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/orgunit/OrgUnitEditView.java
+Starting at line 188 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/orgunit/OrgUnitAddView.java
+
+            orgUnitList.select(createdOrgUnit);
+        }
+        catch (final EscidocException e) {
+            log.error("An unexpected error occured! See log for details.", e);
+            e.printStackTrace();
+
+        }
+        catch (final InternalClientException e) {
+            log.error("An unexpected error occured! See log for details.", e);
+            e.printStackTrace();
+
+        }
+        catch (final TransportException e) {
+            log.error("An unexpected error occured! See log for details.", e);
+            e.printStackTrace();
+
+        }
+=====================================================================
+Found a 16 line (64 tokens) duplication in the following files: 
+Starting at line 269 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/user/lab/UserLabEditForm.java
+Starting at line 39 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/orgunit/OrgUnitView.java
+
+        }
+        catch (final EscidocException e) {
+            log.error("An unexpected error occured! See log for details.", e);
+            e.printStackTrace();
+
+        }
+        catch (final InternalClientException e) {
+            log.error("An unexpected error occured! See log for details.", e);
+            e.printStackTrace();
+
+        }
+        catch (final TransportException e) {
+            log.error("An unexpected error occured! See log for details.", e);
+            e.printStackTrace();
+
+        }
+=====================================================================
+Found a 16 line (63 tokens) duplication in the following files: 
+Starting at line 46 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/orgunit/editor/SpinOffPPredecessorEditor.java
+Starting at line 39 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/orgunit/editor/FusionPredecessorEditor.java
+
+    }
+
+    @Override
+    protected void showAddedPredecessors() {
+        final AbstractPredecessorView addedPredecessorView =
+            createPredecessorView(super.getSelectedPredecessors());
+        orgUnitEditorView.showAddedPredecessors(addedPredecessorView);
+    }
+
+    private AbstractPredecessorView createPredecessorView(
+        final List<ResourceRefDisplay> selectedPredecessors) {
+        for (final ResourceRefDisplay resourceRefDisplay : selectedPredecessors) {
+            log.info("selected: " + resourceRefDisplay);
+        }
+        final AbstractPredecessorView addedPredecessorView =
+            new FusionPredecessorView(selectedPredecessors, super
+=====================================================================
+Found a 11 line (61 tokens) duplication in the following files: 
+Starting at line 395 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/ContextEditForm.java
+Starting at line 267 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/ContextAddView.java
+
+                    e.printStackTrace();
+                }
+                catch (final ParserConfigurationException e) {
+                    log.error(
+                        "An unexpected error occured! See log for details.", e);
+                    app.getMainWindow().addWindow(
+                        new ErrorDialog(app.getMainWindow(), "Error", e
+                            .getMessage()));
+                    setComponentError(new SystemError(e.getMessage()));
+                    e.printStackTrace();
+                }
+=====================================================================
+Found a 18 line (61 tokens) duplication in the following files: 
+Starting at line 252 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/ContextEditForm.java
+Starting at line 204 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/ContextAddView.java
+
+        else if (source == save) {
+            boolean valid = true;
+            valid =
+                EmptyFieldValidator
+                    .isValid(nameField, "Name can not be empty.");
+            valid &=
+                EmptyFieldValidator.isValid(descriptionField,
+                    "Description can not be empty.");
+            valid &=
+                EmptyFieldValidator.isValid(typeField, ViewConstants.TYPE_LABEL
+                    + " can not be empty.");
+            valid &=
+                EmptyFieldValidator.isValid(orgUnitList,
+                    ViewConstants.ORGANIZATION_UNITS_LABEL
+                        + " can not be empty");
+
+            if (valid) {
+                try {
+=====================================================================
+Found a 20 line (59 tokens) duplication in the following files: 
+Starting at line 53 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/OpenContextModalWindow.java
+Starting at line 50 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/CloseContextModalWindow.java
+
+                contextForm.closeContext((String) commentField.getValue());
+                ((Window) subwindow.getParent()).removeWindow(subwindow);
+
+            }
+            catch (final EscidocException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            catch (final InternalClientException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            catch (final TransportException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private CloseContextModalWindow footer() {
+=====================================================================
+Found a 12 line (59 tokens) duplication in the following files: 
+Starting at line 147 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/orgunit/OrgUnitAddView.java
+Starting at line 85 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/ContextToolbar.java
+
+        catch (final IllegalAccessException e) {
+            log.error("An unexpected error occured! See log for details.", e);
+            e.printStackTrace();
+        }
+        catch (final IllegalArgumentException e) {
+            log.error("An unexpected error occured! See log for details.", e);
+            e.printStackTrace();
+        }
+        catch (final InvocationTargetException e) {
+            log.error("An unexpected error occured! See log for details.", e);
+            e.printStackTrace();
+        }
+=====================================================================
+Found a 13 line (59 tokens) duplication in the following files: 
+Starting at line 138 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/orgunit/OrgUnitAddView.java
+Starting at line 97 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/ContextToolbar.java
+
+        catch (final ClassNotFoundException e) {
+            log.error("An unexpected error occured! See log for details.", e);
+            e.printStackTrace();
+        }
+        catch (final SecurityException e) {
+            log.error("An unexpected error occured! See log for details.", e);
+            e.printStackTrace();
+        }
+        catch (final NoSuchMethodException e) {
+            log.error("An unexpected error occured! See log for details.", e);
+            e.printStackTrace();
+
+        }
+=====================================================================
+Found a 12 line (59 tokens) duplication in the following files: 
+Starting at line 524 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/orgunit/OrgUnitEditView.java
+Starting at line 85 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/ContextToolbar.java
+
+        catch (final IllegalAccessException e) {
+            log.error("An unexpected error occured! See log for details.", e);
+            e.printStackTrace();
+        }
+        catch (final IllegalArgumentException e) {
+            log.error("An unexpected error occured! See log for details.", e);
+            e.printStackTrace();
+        }
+        catch (final InvocationTargetException e) {
+            log.error("An unexpected error occured! See log for details.", e);
+            e.printStackTrace();
+        }
+=====================================================================
+Found a 13 line (59 tokens) duplication in the following files: 
+Starting at line 515 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/orgunit/OrgUnitEditView.java
+Starting at line 97 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/ContextToolbar.java
+
+        catch (final ClassNotFoundException e) {
+            log.error("An unexpected error occured! See log for details.", e);
+            e.printStackTrace();
+        }
+        catch (final SecurityException e) {
+            log.error("An unexpected error occured! See log for details.", e);
+            e.printStackTrace();
+        }
+        catch (final NoSuchMethodException e) {
+            log.error("An unexpected error occured! See log for details.", e);
+            e.printStackTrace();
+
+        }
+=====================================================================
+Found a 10 line (59 tokens) duplication in the following files: 
+Starting at line 62 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/orgunit/editor/SpinOffPPredecessorEditor.java
+Starting at line 60 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/orgunit/editor/ReplacementPredecessorEditor.java
+
+            new ReplacementPredecessorView(selectedPredecessors
+                .get(0).getTitle(), super.getOrgUnitName());
+        addedPredecessorView.setResourceRefDisplay(selectedPredecessors.get(0));
+        return addedPredecessorView;
+    }
+
+    @Override
+    protected void showErrorMessage() {
+        super.getMainWindow().addWindow(
+            new ErrorDialog(super.getMainWindow(), "Error",
+=====================================================================
+Found a 10 line (58 tokens) duplication in the following files: 
+Starting at line 398 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/ContextEditForm.java
+Starting at line 407 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/ContextEditForm.java
+
+            catch (final SAXException e) {
+                log.error("An unexpected error occured! See log for details.",
+                    e);
+                app.getMainWindow().addWindow(
+                    new ErrorDialog(app.getMainWindow(), "Error", e
+                        .getMessage()));
+                setComponentError(new SystemError(e.getMessage()));
+                e.printStackTrace();
+            }
+            catch (final IOException e) {
+=====================================================================
+Found a 10 line (57 tokens) duplication in the following files: 
+Starting at line 62 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/orgunit/editor/SpinOffPPredecessorEditor.java
+Starting at line 60 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/orgunit/editor/AffiliationPredecessorEditor.java
+
+            new AffiliationPredecessorView(selectedPredecessors
+                .get(0).getTitle(), super.getOrgUnitName());
+        addedPredecessorView.setResourceRefDisplay(selectedPredecessors.get(0));
+        return addedPredecessorView;
+    }
+
+    @Override
+    protected void showErrorMessage() {
+        super.getMainWindow().addWindow(
+            new ErrorDialog(super.getMainWindow(), "Grave Error",
+=====================================================================
+Found a 10 line (56 tokens) duplication in the following files: 
+Starting at line 416 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/ContextEditForm.java
+Starting at line 269 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/ContextAddView.java
+
+                catch (final ParserConfigurationException e) {
+                    log.error(
+                        "An unexpected error occured! See log for details.", e);
+                    app.getMainWindow().addWindow(
+                        new ErrorDialog(app.getMainWindow(), "Error", e
+                            .getMessage()));
+                    setComponentError(new SystemError(e.getMessage()));
+                    e.printStackTrace();
+                }
+            }
+=====================================================================
+Found a 9 line (55 tokens) duplication in the following files: 
+Starting at line 269 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/ContextAddView.java
+Starting at line 310 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/ContextAddView.java
+
+            catch (final SAXException e) {
+                log.error("An unexpected error occured! See log for details.",
+                    e);
+                app.getMainWindow().addWindow(
+                    new ErrorDialog(app.getMainWindow(), "Error", e
+                        .getMessage()));
+                setComponentError(new SystemError(e.getMessage()));
+                e.printStackTrace();
+            }
+=====================================================================
+Found a 11 line (55 tokens) duplication in the following files: 
+Starting at line 430 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/ContextEditForm.java
+Starting at line 193 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/ContextAddView.java
+
+        if (source == cancel) {
+            nameField.setValue("");
+            nameField.setComponentError(null);
+            descriptionField.setValue("");
+            descriptionField.setComponentError(null);
+            typeField.setValue("");
+            typeField.setComponentError(null);
+            orgUnitList.removeAllItems();
+            orgUnitList.setComponentError(null);
+            adminDescriptorAccordion.removeAllComponents();
+        }
+=====================================================================
+Found a 9 line (55 tokens) duplication in the following files: 
+Starting at line 398 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/ContextEditForm.java
+Starting at line 416 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/ContextEditForm.java
+
+            catch (final IOException e) {
+                log.error("An unexpected error occured! See log for details.",
+                    e);
+                app.getMainWindow().addWindow(
+                    new ErrorDialog(app.getMainWindow(), "Error", e
+                        .getMessage()));
+                setComponentError(new SystemError(e.getMessage()));
+                e.printStackTrace();
+            }
+=====================================================================
+Found a 16 line (54 tokens) duplication in the following files: 
+Starting at line 88 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/OpenContextModalWindow.java
+Starting at line 86 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/CloseContextModalWindow.java
+
+        subwindow = new Window("Close Context");
+        subwindow.setModal(true);
+        subwindow.setWidth("450px");
+        subwindow.setHeight("300px");
+
+        layout = (VerticalLayout) subwindow.getContent();
+        layout.setMargin(true);
+        layout.setSpacing(true);
+        return this;
+    }
+
+    public Window getSubWindow() {
+        return subwindow;
+    }
+
+}
+=====================================================================
+Found a 5 line (54 tokens) duplication in the following files: 
+Starting at line 127 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/orgunit/OrgUnitEditView.java
+Starting at line 182 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/orgunit/OrgUnitAddView.java
+
+                        (String) alternativeField.getValue()).orgType(
+                        (String) orgTypeField.getValue()).country(
+                        (String) countryField.getValue()).city(
+                        (String) cityField.getValue()).coordinates(
+                        (String) coordinatesField.getValue()).build());
+=====================================================================
+Found a 10 line (53 tokens) duplication in the following files: 
+Starting at line 116 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/AdminDescriptorView.java
+Starting at line 24 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/AdminDescriptorAddView.java
+
+    protected void doSave() {
+        final String content = (String) adminDescContent.getValue();
+        if (validate(content)) {
+            adminDescriptorAccordion.addTab(new Label(content,
+                Label.CONTENT_PREFORMATTED), (String) adminDescName.getValue(),
+                null);
+            closeWindow();
+        }
+    }
+}
+=====================================================================
+Found a 7 line (52 tokens) duplication in the following files: 
+Starting at line 172 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/service/ContextService.java
+Starting at line 219 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/service/ContextService.java
+
+    public Context close(final String objectId, final String comment)
+        throws EscidocException, InternalClientException, TransportException {
+        assert !(objectId == null || objectId.isEmpty()) : "objectId must not be null or empty";
+
+        final TaskParam taskParam = new TaskParam();
+        taskParam.setLastModificationDate(getSelected(objectId)
+            .getLastModificationDate());
+=====================================================================
+Found a 7 line (52 tokens) duplication in the following files: 
+Starting at line 208 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/service/OrgUnitService.java
+Starting at line 232 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/service/OrgUnitService.java
+
+    public OrganizationalUnit close(final String objectId, final String comment)
+        throws EscidocException, InternalClientException, TransportException {
+        assert !(objectId == null || objectId.isEmpty()) : "objectId must not be null or empty";
+
+        final TaskParam taskParam = new TaskParam();
+        taskParam.setLastModificationDate(find(objectId)
+            .getLastModificationDate());
+=====================================================================
+Found a 16 line (52 tokens) duplication in the following files: 
+Starting at line 198 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/orgunit/OrgUnitEditView.java
+Starting at line 455 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/ContextEditForm.java
+
+                PropertyId.PUBLIC_STATUS).getValue()).toUpperCase());
+        switch (publicStatus) {
+            case CREATED: {
+                setFormReadOnly(false);
+                footer.setVisible(true);
+                break;
+            }
+            case OPENED: {
+                setFormReadOnly(false);
+                break;
+            }
+            case CLOSED: {
+                setFormReadOnly(true);
+                footer.setVisible(false);
+                break;
+            }
+=====================================================================
+Found a 10 line (51 tokens) duplication in the following files: 
+Starting at line 22 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/OpenContextModalWindow.java
+Starting at line 21 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/CloseContextModalWindow.java
+
+    private final Button cancelBtn =
+        new Button("Cancel", new Button.ClickListener() {
+
+            public void buttonClick(final ClickEvent event) {
+                ((Window) subwindow.getParent()).removeWindow(subwindow);
+            }
+        });
+
+    final Button submitBtn =
+        new Button("Close Context", new SubmitCloseContextClickListener());
+=====================================================================
+Found a 8 line (50 tokens) duplication in the following files: 
+Starting at line 58 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/ContextView.java
+Starting at line 310 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/ContextEditForm.java
+Starting at line 558 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/ContextEditForm.java
+
+        catch (final TransportException e) {
+            log
+                .error("root cause: " + ExceptionUtils.getRootCauseMessage(e),
+                    e);
+            app.getMainWindow().addWindow(
+                new ErrorDialog(app.getMainWindow(), "Error", e.getMessage()));
+            e.printStackTrace();
+        }
+=====================================================================
+Found a 8 line (49 tokens) duplication in the following files: 
+Starting at line 146 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/AdminDescriptorView.java
+Starting at line 166 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/AdminDescriptorView.java
+
+        catch (final IOException e) {
+            log.error("An unexpected error occured! See log for details.", e);
+            mainWindow.addWindow(new ErrorDialog(mainWindow, "Error", e
+                .getMessage()));
+            setComponentError(new SystemError(e.getMessage()));
+            e.printStackTrace();
+            return false;
+        }
+=====================================================================
+Found a 13 line (49 tokens) duplication in the following files: 
+Starting at line 54 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/orgunit/OrgUnitEditView.java
+Starting at line 85 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/ContextEditForm.java
+
+    private final TextField descriptionField = new TextField();
+
+    private final Label objIdField = new Label();
+
+    private final Label modifiedOn = new Label();
+
+    private final Label modifiedBy = new Label();
+
+    private final Label createdOn = new Label();
+
+    private final Label createdBy = new Label();
+
+    private final Label status = new Label();
+=====================================================================
+Found a 14 line (48 tokens) duplication in the following files: 
+Starting at line 192 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/orgunit/OrgUnitAddView.java
+Starting at line 58 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/OrgUnitTree.java
+
+            tree = orgUnitTreeFactory.create();
+
+        }
+        catch (final InternalClientException e) {
+            log.error("An unexpected error occured! See log for details.", e);
+            e.printStackTrace();
+
+        }
+        catch (final TransportException e) {
+            log.error("An unexpected error occured! See log for details.", e);
+            e.printStackTrace();
+
+        }
+        catch (final EscidocException e) {
+=====================================================================
+Found a 11 line (48 tokens) duplication in the following files: 
+Starting at line 508 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/orgunit/OrgUnitEditView.java
+Starting at line 79 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/ContextToolbar.java
+
+            workflowState.changeState();
+        }
+        catch (final InstantiationException e) {
+            log.error("An unexpected error occured! See log for details.", e);
+            e.printStackTrace();
+        }
+        catch (final IllegalAccessException e) {
+            log.error("An unexpected error occured! See log for details.", e);
+            e.printStackTrace();
+        }
+        catch (final IllegalArgumentException e) {
+=====================================================================
+Found a 14 line (48 tokens) duplication in the following files: 
+Starting at line 273 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/user/lab/UserLabEditForm.java
+Starting at line 58 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/OrgUnitTree.java
+
+            tree = orgUnitTreeFactory.create();
+
+        }
+        catch (final InternalClientException e) {
+            log.error("An unexpected error occured! See log for details.", e);
+            e.printStackTrace();
+
+        }
+        catch (final TransportException e) {
+            log.error("An unexpected error occured! See log for details.", e);
+            e.printStackTrace();
+
+        }
+        catch (final EscidocException e) {
+=====================================================================
+Found a 19 line (47 tokens) duplication in the following files: 
+Starting at line 171 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/user/lab/UserLabAddView.java
+Starting at line 145 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/ContextToolbar.java
+
+                e.printStackTrace();
+
+            }
+            catch (final InternalClientException e) {
+                log.error("An unexpected error occured! See log for details.",
+                    e);
+                e.printStackTrace();
+
+            }
+            catch (final TransportException e) {
+                log.error("An unexpected error occured! See log for details.",
+                    e);
+                e.printStackTrace();
+
+            }
+        }
+    }
+
+}
+=====================================================================
+Found a 11 line (47 tokens) duplication in the following files: 
+Starting at line 180 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/user/lab/UserLabEditForm.java
+Starting at line 223 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/user/lab/UserLabEditForm.java
+
+        catch (final EscidocClientException e) {
+            app.getMainWindow().addWindow(
+                new ErrorDialog(app.getMainWindow(), "Error",
+                    "An unexpected error occured! See log for details."));
+            log.error("An unexpected error occured! See log for details.", e);
+            e.printStackTrace();
+        }
+        return Collections.emptyList();
+    }
+
+    private HorizontalLayout addFooter() {
+=====================================================================
+Found a 7 line (46 tokens) duplication in the following files: 
+Starting at line 112 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/service/UserService.java
+Starting at line 125 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/service/UserService.java
+
+    public void deactivate(final String selectedItemId)
+        throws InternalClientException, TransportException,
+        EscidocClientException {
+        assert !(selectedItemId == null || selectedItemId.isEmpty()) : "selectedItemId must not be null or empty";
+
+        final UserAccount userAccount = getSelectedUser(selectedItemId);
+        assert userAccount.getProperties().isActive() == true : "User account is not active.";
+=====================================================================
+Found a 14 line (46 tokens) duplication in the following files: 
+Starting at line 171 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/user/lab/UserLabAddView.java
+Starting at line 108 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/orgunit/AbstractStatusDialog.java
+
+                    e.printStackTrace();
+                }
+                catch (final InternalClientException e) {
+                    log.error(
+                        "An unexpected error occured! See log for details.", e);
+                    e.printStackTrace();
+                }
+                catch (final TransportException e) {
+                    log.error(
+                        "An unexpected error occured! See log for details.", e);
+                    e.printStackTrace();
+                }
+            }
+        });
+=====================================================================
+Found a 8 line (46 tokens) duplication in the following files: 
+Starting at line 242 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/user/lab/UserLabEditForm.java
+Starting at line 134 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/user/lab/UserLabAddView.java
+
+    public void buttonClick(final ClickEvent event) {
+        final Button source = event.getButton();
+
+        if (source == cancel) {
+            nameField.setValue("");
+            loginNameField.setValue("");
+        }
+        else if (source == save) {
+=====================================================================
+Found a 8 line (45 tokens) duplication in the following files: 
+Starting at line 64 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/LoginWindow.java
+Starting at line 71 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/LoginWindow.java
+
+                catch (final TransportException e) {
+                    LoginWindow.this.showNotification(new Window.Notification(
+                        "Internal Server Error", e.getMessage(),
+                        Window.Notification.TYPE_ERROR_MESSAGE));
+                    e.printStackTrace();
+                    log.error("Internal Server Error", e);
+                }
+                catch (IOException e) {
+=====================================================================
+Found a 13 line (45 tokens) duplication in the following files: 
+Starting at line 42 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/orgunit/OrgUnitView.java
+Starting at line 58 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/OrgUnitTree.java
+
+            tree = orgUnitTreeFactory.create();
+
+        }
+        catch (final InternalClientException e) {
+            log.error("An unexpected error occured! See log for details.", e);
+            e.printStackTrace();
+
+        }
+        catch (final TransportException e) {
+            log.error("An unexpected error occured! See log for details.", e);
+            e.printStackTrace();
+
+        }
+=====================================================================
+Found a 12 line (45 tokens) duplication in the following files: 
+Starting at line 171 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/user/lab/UserLabAddView.java
+Starting at line 568 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/orgunit/OrgUnitEditView.java
+
+            e.printStackTrace();
+        }
+        catch (final InternalClientException e) {
+            log.error("An unexpected error occured! See log for details.", e);
+            e.printStackTrace();
+        }
+        catch (final TransportException e) {
+            log.error("An unexpected error occured! See log for details.", e);
+            e.printStackTrace();
+        }
+
+    }
+=====================================================================
+Found a 6 line (44 tokens) duplication in the following files: 
+Starting at line 232 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/service/OrgUnitService.java
+Starting at line 219 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/service/ContextService.java
+
+    public Context close(final String objectId, final String comment)
+        throws EscidocException, InternalClientException, TransportException {
+        assert !(objectId == null || objectId.isEmpty()) : "objectId must not be null or empty";
+
+        final TaskParam taskParam = new TaskParam();
+        taskParam.setLastModificationDate(getSelected(objectId)
+=====================================================================
+Found a 6 line (44 tokens) duplication in the following files: 
+Starting at line 208 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/service/OrgUnitService.java
+Starting at line 172 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/service/ContextService.java
+
+    public Context open(final String objectId, final String comment)
+        throws EscidocException, InternalClientException, TransportException {
+        assert !(objectId == null || objectId.isEmpty()) : "objectId must not be null or empty";
+
+        final TaskParam taskParam = new TaskParam();
+        taskParam.setLastModificationDate(getSelected(objectId)
+=====================================================================
+Found a 8 line (44 tokens) duplication in the following files: 
+Starting at line 553 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/ContextEditForm.java
+Starting at line 254 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/ContextAddView.java
+
+                    setComponentError(new UserError(e.getMessage()));
+                    app.getMainWindow().addWindow(
+                        new ErrorDialog(app.getMainWindow(), "Error", e
+                            .getMessage()));
+                    e.printStackTrace();
+                }
+                catch (final TransportException e) {
+                    log.error(
+=====================================================================
+Found a 12 line (44 tokens) duplication in the following files: 
+Starting at line 273 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/user/lab/UserLabEditForm.java
+Starting at line 171 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/user/lab/UserLabAddView.java
+
+                    log.error(error, e);
+                }
+                catch (final InternalClientException e) {
+                    log.error(
+                        "An unexpected error occured! See log for details.", e);
+                    e.printStackTrace();
+                }
+                catch (final TransportException e) {
+                    log.error(
+                        "An unexpected error occured! See log for details.", e);
+                    e.printStackTrace();
+                }
+=====================================================================
+Found a 6 line (43 tokens) duplication in the following files: 
+Starting at line 232 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/service/OrgUnitService.java
+Starting at line 172 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/service/ContextService.java
+
+    public Context open(final String objectId, final String comment)
+        throws EscidocException, InternalClientException, TransportException {
+        assert !(objectId == null || objectId.isEmpty()) : "objectId must not be null or empty";
+
+        final TaskParam taskParam = new TaskParam();
+        taskParam.setLastModificationDate(getSelected(objectId)
+=====================================================================
+Found a 8 line (43 tokens) duplication in the following files: 
+Starting at line 56 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/ContextView.java
+Starting at line 529 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/ContextEditForm.java
+
+                resourceRef.getObjid());
+        }
+        catch (final ResourceNotFoundException e) {
+            log
+                .error("root cause: " + ExceptionUtils.getRootCauseMessage(e),
+                    e);
+            app.getMainWindow().addWindow(
+                new ErrorDialog(app.getMainWindow(), "Error",
+=====================================================================
+Found a 10 line (43 tokens) duplication in the following files: 
+Starting at line 12 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/workflow/OpenedState.java
+Starting at line 12 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/workflow/ClosedState.java
+
+    public ClosedState(Button deleteContextBtn, Button openContextBtn,
+        Button closeContextBtn) {
+        this.deleteContextBtn = deleteContextBtn;
+        this.openContextBtn = openContextBtn;
+        this.closeContextBtn = closeContextBtn;
+    }
+
+    public void changeState() {
+        openContextBtn.setVisible(false);
+        closeContextBtn.setVisible(false);
+=====================================================================
+Found a 15 line (42 tokens) duplication in the following files: 
+Starting at line 45 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/orgunit/OrgUnitListView.java
+Starting at line 54 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/OpenContextModalWindow.java
+
+                ((Window) subwindow.getParent()).removeWindow(subwindow);
+            }
+            catch (final EscidocException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            catch (final InternalClientException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            catch (final TransportException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+=====================================================================
+Found a 8 line (42 tokens) duplication in the following files: 
+Starting at line 166 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/user/lab/UserLabEditForm.java
+Starting at line 173 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/user/lab/UserLabEditForm.java
+
+        catch (final InternalClientException e) {
+            app.getMainWindow().addWindow(
+                new ErrorDialog(app.getMainWindow(), "Error",
+                    "An unexpected error occured! See log for details."));
+            log.error("An unexpected error occured! See log for details.", e);
+            e.printStackTrace();
+        }
+        catch (final TransportException e) {
+=====================================================================
+Found a 14 line (41 tokens) duplication in the following files: 
+Starting at line 380 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/role/RoleView.java
+Starting at line 45 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/orgunit/OrgUnitListView.java
+
+            bindDataSource();
+        }
+        catch (final EscidocException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        catch (final InternalClientException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        catch (final TransportException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+=====================================================================
+Found a 7 line (40 tokens) duplication in the following files: 
+Starting at line 327 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/ContextEditForm.java
+Starting at line 398 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/ContextEditForm.java
+
+            catch (final ParserConfigurationException e) {
+                log.error("An unexpected error occured! See log for details.",
+                    e);
+                app.getMainWindow().addWindow(
+                    new ErrorDialog(app.getMainWindow(), "Error", e
+                        .getMessage()));
+                setComponentError(new SystemError(e.getMessage()));
+=====================================================================
+Found a 10 line (40 tokens) duplication in the following files: 
+Starting at line 249 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/user/lab/UserLabEditForm.java
+Starting at line 141 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/user/lab/UserLabAddView.java
+
+        else if (source == save) {
+            boolean valid = true;
+            valid =
+                EmptyFieldValidator.isValid(nameField, "Please enter a "
+                    + ViewConstants.NAME_ID);
+            valid &=
+                (EmptyFieldValidator.isValid(loginNameField, "Please enter a "
+                    + ViewConstants.LOGIN_NAME_ID));
+
+            if (valid) {
+=====================================================================
+Found a 7 line (39 tokens) duplication in the following files: 
+Starting at line 166 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/user/lab/UserLabEditForm.java
+Starting at line 180 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/user/lab/UserLabEditForm.java
+
+        catch (final TransportException e) {
+            app.getMainWindow().addWindow(
+                new ErrorDialog(app.getMainWindow(), "Error",
+                    "An unexpected error occured! See log for details."));
+            log.error("An unexpected error occured! See log for details.", e);
+            e.printStackTrace();
+        }
+=====================================================================
+Found a 6 line (38 tokens) duplication in the following files: 
+Starting at line 64 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/LoginWindow.java
+Starting at line 78 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/LoginWindow.java
+
+                catch (IOException e) {
+                    LoginWindow.this.showNotification(new Window.Notification(
+                        "Internal Server Error", e.getMessage(),
+                        Window.Notification.TYPE_ERROR_MESSAGE));
+                    e.printStackTrace();
+                    log.error("IOException", e);
+=====================================================================
+Found a 6 line (38 tokens) duplication in the following files: 
+Starting at line 332 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/orgunit/OrgUnitEditView.java
+Starting at line 337 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/orgunit/OrgUnitEditView.java
+
+        catch (final InternalClientException e) {
+            app.getMainWindow().addWindow(
+                new ErrorDialog(app.getMainWindow(), Messages
+                    .getString("AdminToolApplication.15"), e.getMessage())); //$NON-NLS-1$
+        }
+        catch (final TransportException e) {
+=====================================================================
+Found a 6 line (37 tokens) duplication in the following files: 
+Starting at line 310 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/ContextEditForm.java
+Starting at line 531 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/ContextEditForm.java
+
+        catch (final ResourceNotFoundException e) {
+            log
+                .error("root cause: " + ExceptionUtils.getRootCauseMessage(e),
+                    e);
+            app.getMainWindow().addWindow(
+                new ErrorDialog(app.getMainWindow(), "Error",
+=====================================================================
+Found a 9 line (37 tokens) duplication in the following files: 
+Starting at line 12 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/workflow/OpenedState.java
+Starting at line 12 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/workflow/CreatedState.java
+
+    public CreatedState(Button deleteContextBtn, Button openContextBtn,
+        Button closeContextBtn) {
+        this.deleteContextBtn = deleteContextBtn;
+        this.openContextBtn = openContextBtn;
+        this.closeContextBtn = closeContextBtn;
+    }
+
+    public void changeState() {
+        openContextBtn.setVisible(true);
+=====================================================================
+Found a 6 line (37 tokens) duplication in the following files: 
+Starting at line 94 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/orgunit/OrgUnitEditView.java
+Starting at line 159 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/ContextEditForm.java
+
+        form.addComponent(LayoutHelper.create(ViewConstants.OBJECT_ID_LABEL,
+            objIdField, labelWidth, false));
+
+        // modified
+        form.addComponent(LayoutHelper.create("Modified", "by", modifiedOn,
+            modifiedBy, labelWidth, height, false));
+=====================================================================
+Found a 9 line (37 tokens) duplication in the following files: 
+Starting at line 129 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/user/lab/UserLabAddView.java
+Starting at line 186 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/ContextAddView.java
+
+        footer.addComponent(cancel);
+        return footer;
+    }
+
+    @Override
+    public void buttonClick(final ClickEvent event) {
+        final Button source = event.getButton();
+        if (source == cancel) {
+            nameField.setValue("");
+=====================================================================
+Found a 7 line (36 tokens) duplication in the following files: 
+Starting at line 312 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/ContextEditForm.java
+Starting at line 321 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/ContextEditForm.java
+
+                setComponentError(new UserError(e.getMessage()));
+                app.getMainWindow().addWindow(
+                    new ErrorDialog(app.getMainWindow(), "Error", e
+                        .getMessage()));
+                e.printStackTrace();
+            }
+            catch (final TransportException e) {
+=====================================================================
+Found a 13 line (36 tokens) duplication in the following files: 
+Starting at line 95 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/user/lab/UserLabAddView.java
+Starting at line 173 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/ContextAddView.java
+
+                addButton, editButton, delButton }));
+
+        // Footer
+        panel.addComponent(addFooter());
+
+        setCompositionRoot(panel);
+    }
+
+    private HorizontalLayout addFooter() {
+        footer = new HorizontalLayout();
+        footer.setSpacing(true);
+
+        footer.addComponent(save);
+=====================================================================
+Found a 11 line (36 tokens) duplication in the following files: 
+Starting at line 43 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/user/lab/UserLabListView.java
+Starting at line 50 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/ContextListView.java
+
+        setSizeFull();
+        setColumnCollapsingAllowed(false);
+        setColumnReorderingAllowed(false);
+
+        setSelectable(true);
+        setImmediate(true);
+        addListener((ValueChangeListener) app);
+        setNullSelectionAllowed(false);
+    }
+
+    private void bindDataSource() throws EscidocException,
+=====================================================================
+Found a 10 line (35 tokens) duplication in the following files: 
+Starting at line 37 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/OpenContextModalWindow.java
+Starting at line 36 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/CloseContextModalWindow.java
+
+    public CloseContextModalWindow(final ContextEditForm contextForm) {
+        this.contextForm = contextForm;
+        buildUI();
+    }
+
+    private void buildUI() {
+        modalWindow().commentTextField().footer();
+    }
+
+    private class SubmitCloseContextClickListener
+=====================================================================
+Found a 5 line (35 tokens) duplication in the following files: 
+Starting at line 332 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/orgunit/OrgUnitEditView.java
+Starting at line 342 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/orgunit/OrgUnitEditView.java
+
+        catch (final TransportException e) {
+            app.getMainWindow().addWindow(
+                new ErrorDialog(app.getMainWindow(), Messages
+                    .getString("AdminToolApplication.15"), e.getMessage())); //$NON-NLS-1$
+        }
+=====================================================================
+Found a 11 line (35 tokens) duplication in the following files: 
+Starting at line 230 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/user/lab/UserLabEditForm.java
+Starting at line 178 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/ContextAddView.java
+
+        setCompositionRoot(panel);
+    }
+
+    private HorizontalLayout addFooter() {
+        footer = new HorizontalLayout();
+        footer.setSpacing(true);
+
+        footer.addComponent(save);
+        footer.addComponent(cancel);
+        return footer;
+    }
+=====================================================================
+Found a 6 line (34 tokens) duplication in the following files: 
+Starting at line 355 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/app/AdminToolApplication.java
+Starting at line 360 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/app/AdminToolApplication.java
+Starting at line 365 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/app/AdminToolApplication.java
+Starting at line 370 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/app/AdminToolApplication.java
+
+            catch (final UnsupportedOperationException e) {
+                getMainWindow().addWindow(
+                    new ErrorDialog(getMainWindow(), Messages
+                        .getString("AdminToolApplication.15"), e.getMessage())); //$NON-NLS-1$
+            }
+            catch (final Exception e) {
+=====================================================================
+Found a 8 line (34 tokens) duplication in the following files: 
+Starting at line 213 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/service/OrgUnitService.java
+Starting at line 177 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/service/ContextService.java
+
+        taskParam.setLastModificationDate(getSelected(objectId)
+            .getLastModificationDate());
+
+        if (!comment.isEmpty()) {
+            taskParam.setComment(comment);
+        }
+        client.open(objectId, taskParam);
+        final Context openedContext = client.retrieve(objectId);
+=====================================================================
+Found a 9 line (34 tokens) duplication in the following files: 
+Starting at line 71 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/OpenContextModalWindow.java
+Starting at line 69 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/CloseContextModalWindow.java
+
+    private CloseContextModalWindow footer() {
+        final HorizontalLayout footer = new HorizontalLayout();
+        footer.addComponent(submitBtn);
+        footer.addComponent(cancelBtn);
+        layout.addComponent(footer);
+        return this;
+    }
+
+    private CloseContextModalWindow commentTextField() {
+=====================================================================
+Found a 11 line (34 tokens) duplication in the following files: 
+Starting at line 66 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/user/lab/UserLabEditForm.java
+Starting at line 39 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/user/lab/UserLabAddView.java
+
+    private HorizontalLayout footer;
+
+    private final Button save = new Button("Save", this);
+
+    private final Button cancel = new Button("Cancel", this);
+
+    private TextField nameField;
+
+    private TextField loginNameField;
+
+    private ObjectProperty nameProperty;
+=====================================================================
+Found a 6 line (34 tokens) duplication in the following files: 
+Starting at line 79 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/user/lab/UserLabEditView.java
+Starting at line 159 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/orgunit/OrgUnitEditView.java
+
+            log.error("An unexpected error occured! See log for details.", e);
+            e.printStackTrace();
+        }
+        catch (final EscidocException e) {
+            log.error("An unexpected error occured! See log for details.", e);
+            e.printStackTrace();
+=====================================================================
+Found a 6 line (33 tokens) duplication in the following files: 
+Starting at line 61 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/ContextView.java
+Starting at line 321 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/ContextEditForm.java
+
+                setComponentError(new UserError(e.getMessage()));
+                app.getMainWindow().addWindow(
+                    new ErrorDialog(app.getMainWindow(), "Error", e
+                        .getMessage()));
+                e.printStackTrace();
+            }
+=====================================================================
+Found a 9 line (33 tokens) duplication in the following files: 
+Starting at line 79 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/OpenContextModalWindow.java
+Starting at line 77 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/CloseContextModalWindow.java
+
+    private CloseContextModalWindow commentTextField() {
+        commentField = new TextField("Comment");
+        commentField.setWidth("400px");
+        commentField.setRows(3);
+        subwindow.addComponent(commentField);
+        return this;
+    }
+
+    private CloseContextModalWindow modalWindow() {
+=====================================================================
+Found a 9 line (33 tokens) duplication in the following files: 
+Starting at line 85 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/OrgUnitTree.java
+Starting at line 111 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/OrgUnitTree.java
+
+                "MPI for biophysical chemistry", };
+
+        for (final Object o : extOrg) {
+            tree.addItem(o);
+            // Set it to be a child.
+            tree.setParent(o, rootOrg);
+            // Make the moons look like leaves.
+            tree.setChildrenAllowed(o, false);
+        }
+=====================================================================
+Found a 8 line (32 tokens) duplication in the following files: 
+Starting at line 66 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/orgunit/editor/SpinOffPPredecessorEditor.java
+Starting at line 32 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/orgunit/editor/FusionPredecessorEditor.java
+
+    }
+
+    @Override
+    protected void showErrorMessage() {
+        super.getMainWindow().addWindow(
+            new ErrorDialog(super.getMainWindow(), "Error",
+                "Select at least two items, please."));
+    }
+=====================================================================
+Found a 6 line (32 tokens) duplication in the following files: 
+Starting at line 72 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/user/lab/UserLabEditView.java
+Starting at line 77 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/user/lab/UserLabEditView.java
+
+            catch (final TransportException e) {
+                setComponentError(new SystemError(e.getMessage()));
+                log.error("An unexpected error occured! See log for details.", e);
+                e.printStackTrace();
+            }
+            catch (final EscidocException e) {
+=====================================================================
+Found a 5 line (31 tokens) duplication in the following files: 
+Starting at line 355 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/app/AdminToolApplication.java
+Starting at line 375 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/app/AdminToolApplication.java
+
+            catch (final Exception e) {
+                getMainWindow().addWindow(
+                    new ErrorDialog(getMainWindow(), Messages
+                        .getString("AdminToolApplication.15"), e.getMessage())); //$NON-NLS-1$
+            }
+=====================================================================
+Found a 5 line (31 tokens) duplication in the following files: 
+Starting at line 287 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/ContextEditForm.java
+Starting at line 234 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/ContextAddView.java
+
+                        contextService.create((String) nameField.getValue(),
+                            (String) descriptionField.getValue(),
+                            (String) typeField.getValue(),
+                            // TODO: Replace by real call.
+                            selectedOrgUnitRefs, adminDescriptors);
+=====================================================================
+Found a 5 line (31 tokens) duplication in the following files: 
+Starting at line 302 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/user/lab/UserLabEditForm.java
+Starting at line 226 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/orgunit/OrgUnitEditView.java
+
+            objIdField.setValue(item.getItemProperty(PropertyId.OBJECT_ID));
+
+            modifiedOn.setCaption(Converter
+                .dateTimeToString((org.joda.time.DateTime) item
+                    .getItemProperty(PropertyId.LAST_MODIFICATION_DATE)
+=====================================================================
+Found a 4 line (31 tokens) duplication in the following files: 
+Starting at line 242 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/user/lab/UserLabEditForm.java
+Starting at line 191 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/ContextAddView.java
+
+    public void buttonClick(final ClickEvent event) {
+        final Button source = event.getButton();
+        if (source == cancel) {
+            nameField.setValue("");
+=====================================================================
+Found a 7 line (30 tokens) duplication in the following files: 
+Starting at line 17 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/AdminDescriptorEditView.java
+Starting at line 20 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/AdminDescriptorAddView.java
+
+        setCaption(ADD_A_NEW_ADMIN_DESCRIPTOR);
+    }
+
+    @Override
+    protected void doSave() {
+        final String content = (String) adminDescContent.getValue();
+        if (validate(content)) {
+=====================================================================
+Found a 5 line (30 tokens) duplication in the following files: 
+Starting at line 304 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/ContextEditForm.java
+Starting at line 222 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/ContextAddView.java
+
+                    nameField.setComponentError(null);
+                    descriptionField.setComponentError(null);
+                    typeField.setComponentError(null);
+                    orgUnitList.setComponentError(null);
+                    adminDescriptorAccordion.setComponentError(null);
+=====================================================================
+Found a 6 line (30 tokens) duplication in the following files: 
+Starting at line 119 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/ContextEditForm.java
+Starting at line 88 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/ContextAddView.java
+
+    private final Button addOrgUnitButton = new Button(ViewConstants.ADD_LABEL);
+
+    private final Button removeOrgUnitButton =
+        new Button(ViewConstants.REMOVE_LABEL);
+
+    private final int labelWidth = 140;
+=====================================================================
+Found a 7 line (30 tokens) duplication in the following files: 
+Starting at line 22 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/NewAdminDescriptorListener.java
+Starting at line 25 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/EditAdminDescriptorListener.java
+
+    public EditAdminDescriptorListener(final Window mainWindow,
+        final Accordion adminDescriptorAccordion) {
+        this.mainWindow = mainWindow;
+        this.adminDescriptorAccordion = adminDescriptorAccordion;
+    }
+
+    public void buttonClick(final ClickEvent event) {
+=====================================================================
+Found a 8 line (30 tokens) duplication in the following files: 
+Starting at line 249 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/role/RoleView.java
+Starting at line 264 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/role/RoleView.java
+
+        catch (final EscidocClientException e) {
+            mainWindow.addWindow(new ErrorDialog(mainWindow, "Error", e
+                .getMessage()));
+        }
+        return Collections.emptyList();
+    }
+
+    private static class SaveBtnListener implements Button.ClickListener {
+=====================================================================
+Found a 5 line (29 tokens) duplication in the following files: 
+Starting at line 159 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/service/ContextService.java
+Starting at line 195 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/service/ContextService.java
+
+    public Context close(final String objectId) throws EscidocException,
+        InternalClientException, TransportException {
+        assert !(objectId == null || objectId.isEmpty()) : "objectId must not be null or empty";
+
+        client.close(objectId, lastModificationDate(getSelected(objectId)
+=====================================================================
+Found a 5 line (29 tokens) duplication in the following files: 
+Starting at line 60 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/ContextView.java
+Starting at line 328 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/ContextEditForm.java
+
+                log.error("An unexpected error occured! See log for details.",
+                    e);
+                app.getMainWindow().addWindow(
+                    new ErrorDialog(app.getMainWindow(), "Error", e
+                        .getMessage()));
+=====================================================================
+Found a 5 line (29 tokens) duplication in the following files: 
+Starting at line 111 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/orgunit/OrgUnitListView.java
+Starting at line 118 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/orgunit/OrgUnitListView.java
+
+    private Collection<Parent> getParents(final OrganizationalUnit ou) {
+        if (ou.getParents().getParentRef() == null) {
+            return Collections.emptyList();
+        }
+        return ou.getParents().getParentRef();
+=====================================================================
+Found a 10 line (29 tokens) duplication in the following files: 
+Starting at line 205 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/orgunit/editor/SplittingPredecessorEditor.java
+Starting at line 42 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/orgunit/editor/BlankPredecessorEditor.java
+
+    }
+
+    @Override
+    public void setMainWindow(final Window parent) {
+        this.parent = parent;
+
+    }
+
+    @Override
+    public void setList(final ListSelect select) {
+=====================================================================
+Found a 8 line (28 tokens) duplication in the following files: 
+Starting at line 223 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/orgunit/AbstractOrgUnitView.java
+Starting at line 186 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/ContextAddView.java
+
+        footer.addComponent(cancel);
+        return footer;
+    }
+
+    @Override
+    public void buttonClick(final ClickEvent event) {
+        final Button source = event.getButton();
+        if (source == cancel) {
+=====================================================================
+Found a 10 line (28 tokens) duplication in the following files: 
+Starting at line 544 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/orgunit/OrgUnitEditView.java
+Starting at line 262 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/orgunit/OrgUnitAddView.java
+
+    }
+
+    // TODO: discard changes
+    @Override
+    protected void cancelClicked(final ClickEvent event) {
+        super.app.showOrganizationalUnitView();
+    }
+
+    @Override
+    protected Component addToolbar() {
+=====================================================================
+Found a 6 line (28 tokens) duplication in the following files: 
+Starting at line 64 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/orgunit/editor/ReplacementPredecessorEditor.java
+Starting at line 32 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/orgunit/editor/FusionPredecessorEditor.java
+
+    }
+
+    @Override
+    protected void showErrorMessage() {
+        super.getMainWindow().addWindow(
+            new ErrorDialog(super.getMainWindow(), "Error",
+=====================================================================
+Found a 8 line (28 tokens) duplication in the following files: 
+Starting at line 129 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/user/lab/UserLabAddView.java
+Starting at line 223 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/orgunit/AbstractOrgUnitView.java
+
+        footer.addComponent(cancelButton);
+        return footer;
+    }
+
+    @Override
+    public void buttonClick(final ClickEvent event) {
+        final Button source = event.getButton();
+        if (source == saveButton) {
+=====================================================================
+Found a 7 line (28 tokens) duplication in the following files: 
+Starting at line 66 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/user/lab/UserLabEditForm.java
+Starting at line 78 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/ContextAddView.java
+
+    private HorizontalLayout footer;
+
+    private final Button save = new Button("Save", this);
+
+    private final Button cancel = new Button("Cancel", this);
+
+    private Accordion adminDescriptorAccordion;
+=====================================================================
+Found a 7 line (27 tokens) duplication in the following files: 
+Starting at line 248 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/service/OrgUnitService.java
+Starting at line 187 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/service/ContextService.java
+
+    }
+
+    private TaskParam lastModificationDate(final DateTime lastModificationDate) {
+        final TaskParam taskParam = new TaskParam();
+        taskParam.setLastModificationDate(lastModificationDate);
+        return taskParam;
+    }
+=====================================================================
+Found a 10 line (27 tokens) duplication in the following files: 
+Starting at line 55 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/OrgUnitTreeFactory.java
+Starting at line 65 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/OrgUnitTreeFactory.java
+
+                    TreeHelper.addRoot(orgUnitTree,
+                        resourceRef2Display(orgUnit), true);
+                }
+            }
+            else {
+                TreeHelper.addRoot(orgUnitTree, resourceRef2Display(orgUnit),
+                    true);
+            }
+
+        }
+=====================================================================
+Found a 4 line (27 tokens) duplication in the following files: 
+Starting at line 273 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/ContextAddView.java
+Starting at line 148 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/AdminDescriptorView.java
+
+            mainWindow.addWindow(new ErrorDialog(mainWindow, "Error", e
+                .getMessage()));
+            setComponentError(new SystemError(e.getMessage()));
+            e.printStackTrace();
+=====================================================================
+Found a 4 line (27 tokens) duplication in the following files: 
+Starting at line 254 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/ContextAddView.java
+Starting at line 262 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/ContextAddView.java
+
+                        "An unexpected error occured! See log for details.", e);
+                    app.getMainWindow().addWindow(
+                        new ErrorDialog(app.getMainWindow(), "Error", e
+                            .getMessage()));
+=====================================================================
+Found a 4 line (27 tokens) duplication in the following files: 
+Starting at line 420 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/ContextEditForm.java
+Starting at line 148 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/AdminDescriptorView.java
+
+            mainWindow.addWindow(new ErrorDialog(mainWindow, "Error", e
+                .getMessage()));
+            setComponentError(new SystemError(e.getMessage()));
+            e.printStackTrace();
+=====================================================================
+Found a 4 line (27 tokens) duplication in the following files: 
+Starting at line 418 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/ContextEditForm.java
+Starting at line 254 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/ContextAddView.java
+
+                    setComponentError(new UserError(e.getMessage()));
+                    app.getMainWindow().addWindow(
+                        new ErrorDialog(app.getMainWindow(), "Error", e
+                            .getMessage()));
+=====================================================================
+Found a 4 line (27 tokens) duplication in the following files: 
+Starting at line 411 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/ContextEditForm.java
+Starting at line 148 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/AdminDescriptorView.java
+
+            mainWindow.addWindow(new ErrorDialog(mainWindow, "Error", e
+                .getMessage()));
+            setComponentError(new SystemError(e.getMessage()));
+            e.printStackTrace();
+=====================================================================
+Found a 4 line (27 tokens) duplication in the following files: 
+Starting at line 409 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/ContextEditForm.java
+Starting at line 254 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/ContextAddView.java
+
+                    setComponentError(new UserError(e.getMessage()));
+                    app.getMainWindow().addWindow(
+                        new ErrorDialog(app.getMainWindow(), "Error", e
+                            .getMessage()));
+=====================================================================
+Found a 4 line (27 tokens) duplication in the following files: 
+Starting at line 402 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/ContextEditForm.java
+Starting at line 148 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/AdminDescriptorView.java
+
+            mainWindow.addWindow(new ErrorDialog(mainWindow, "Error", e
+                .getMessage()));
+            setComponentError(new SystemError(e.getMessage()));
+            e.printStackTrace();
+=====================================================================
+Found a 4 line (27 tokens) duplication in the following files: 
+Starting at line 321 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/ContextEditForm.java
+Starting at line 329 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/ContextEditForm.java
+
+                    e);
+                app.getMainWindow().addWindow(
+                    new ErrorDialog(app.getMainWindow(), "Error", e
+                        .getMessage()));
+=====================================================================
+Found a 5 line (27 tokens) duplication in the following files: 
+Starting at line 272 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/orgunit/AbstractOrgUnitView.java
+Starting at line 361 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/ContextEditForm.java
+
+                .getContainerDataSource().getItemIds().iterator().hasNext()) {
+            return Collections.emptySet();
+        }
+
+        final ResourceRefDisplay orgUnit =
+=====================================================================
+Found a 7 line (27 tokens) duplication in the following files: 
+Starting at line 53 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/user/lab/UserLabView.java
+Starting at line 76 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/ContextView.java
+
+        return contextList.getItem(contextList.getValue());
+    }
+
+    private String getSelectedItemId() {
+        return (String) getSelectedItem().getItemProperty(
+            ViewConstants.OBJECT_ID).getValue();
+    }
+=====================================================================
+Found a 5 line (26 tokens) duplication in the following files: 
+Starting at line 569 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/ContextEditForm.java
+Starting at line 580 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/ContextEditForm.java
+
+    public Context closeContext(final String comment) throws EscidocException,
+        InternalClientException, TransportException {
+        final Context oldContext =
+            contextService.getSelected(getSelectedItemId());
+        final Context closedContext =
+=====================================================================
+Found a 5 line (26 tokens) duplication in the following files: 
+Starting at line 581 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/orgunit/OrgUnitEditView.java
+Starting at line 592 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/orgunit/OrgUnitEditView.java
+
+    public OrganizationalUnit close(final String comment)
+        throws EscidocException, InternalClientException, TransportException {
+        final OrganizationalUnit oldOrgUnit =
+            service.find(getSelectedOrgUnitId());
+        final OrganizationalUnit closedOrgUnit =
+=====================================================================
+Found a 4 line (26 tokens) duplication in the following files: 
+Starting at line 339 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/orgunit/OrgUnitEditView.java
+Starting at line 362 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/app/AdminToolApplication.java
+
+                    new ErrorDialog(getMainWindow(), Messages
+                        .getString("AdminToolApplication.15"), e.getMessage())); //$NON-NLS-1$
+            }
+            catch (final TransportException e) {
+=====================================================================
+Found a 4 line (26 tokens) duplication in the following files: 
+Starting at line 334 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/orgunit/OrgUnitEditView.java
+Starting at line 357 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/app/AdminToolApplication.java
+
+                    new ErrorDialog(getMainWindow(), Messages
+                        .getString("AdminToolApplication.15"), e.getMessage())); //$NON-NLS-1$
+            }
+            catch (final InternalClientException e) {
+=====================================================================
+Found a 6 line (26 tokens) duplication in the following files: 
+Starting at line 32 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/orgunit/editor/FusionPredecessorEditor.java
+Starting at line 64 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/orgunit/editor/AffiliationPredecessorEditor.java
+
+    }
+
+    @Override
+    protected void showErrorMessage() {
+        super.getMainWindow().addWindow(
+            new ErrorDialog(super.getMainWindow(), "Grave Error",
+=====================================================================
+Found a 5 line (26 tokens) duplication in the following files: 
+Starting at line 214 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/user/lab/UserLabEditForm.java
+Starting at line 340 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/orgunit/OrgUnitEditView.java
+
+                    .getString("AdminToolApplication.15"), e.getMessage())); //$NON-NLS-1$
+        }
+        catch (final TransportException e) {
+            app.getMainWindow().addWindow(
+                new ErrorDialog(app.getMainWindow(), Messages
+=====================================================================
+Found a 5 line (26 tokens) duplication in the following files: 
+Starting at line 207 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/user/lab/UserLabEditForm.java
+Starting at line 335 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/orgunit/OrgUnitEditView.java
+
+                    .getString("AdminToolApplication.15"), e.getMessage())); //$NON-NLS-1$
+        }
+        catch (final InternalClientException e) {
+            app.getMainWindow().addWindow(
+                new ErrorDialog(app.getMainWindow(), Messages
+=====================================================================
+Found a 5 line (26 tokens) duplication in the following files: 
+Starting at line 178 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/user/lab/UserLabEditForm.java
+Starting at line 340 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/orgunit/OrgUnitEditView.java
+
+                    .getString("AdminToolApplication.15"), e.getMessage())); //$NON-NLS-1$
+        }
+        catch (final TransportException e) {
+            app.getMainWindow().addWindow(
+                new ErrorDialog(app.getMainWindow(), Messages
+=====================================================================
+Found a 5 line (26 tokens) duplication in the following files: 
+Starting at line 171 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/user/lab/UserLabEditForm.java
+Starting at line 335 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/orgunit/OrgUnitEditView.java
+
+                    .getString("AdminToolApplication.15"), e.getMessage())); //$NON-NLS-1$
+        }
+        catch (final InternalClientException e) {
+            app.getMainWindow().addWindow(
+                new ErrorDialog(app.getMainWindow(), Messages
+=====================================================================
+Found a 5 line (26 tokens) duplication in the following files: 
+Starting at line 164 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/user/lab/UserLabEditForm.java
+Starting at line 330 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/orgunit/OrgUnitEditView.java
+
+            return service.findOrgUnitTitleById(predecessorObjectId);
+        }
+        catch (final EscidocException e) {
+            app.getMainWindow().addWindow(
+                new ErrorDialog(app.getMainWindow(), Messages
+=====================================================================
+Found a 6 line (25 tokens) duplication in the following files: 
+Starting at line 53 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/service/UserService.java
+Starting at line 98 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/service/OrgUnitService.java
+
+    }
+
+    // FIXME duplicate method in ContextService
+    private TaskParam emptyFilter() {
+        final Collection<Filter> filters = TaskParam.filtersFactory();
+        filters.add(getFilter("", "", null));
+=====================================================================
+Found a 5 line (25 tokens) duplication in the following files: 
+Starting at line 112 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/ContextToolbar.java
+Starting at line 120 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/ContextToolbar.java
+
+    private class CloseContextListener implements Button.ClickListener {
+        @Override
+        public void buttonClick(final ClickEvent event) {
+            app.getMainWindow().addWindow(
+                new CloseContextModalWindow(parent).getSubWindow());
+=====================================================================
+Found a 7 line (25 tokens) duplication in the following files: 
+Starting at line 87 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/OrgUnitTree.java
+Starting at line 175 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/OrgUnitTree.java
+
+        for (final Object o : asia) {
+            tree.addItem(o);
+            // Set it to be a child.
+            tree.setParent(o, rootOrg);
+            // Make the moons look like leaves.
+            tree.setChildrenAllowed(o, false);
+        }
+=====================================================================
+Found a 5 line (25 tokens) duplication in the following files: 
+Starting at line 65 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/orgunit/OrgUnitToolbar.java
+Starting at line 75 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/orgunit/OrgUnitToolbar.java
+Starting at line 112 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/ContextToolbar.java
+
+    private class OpenContextListener implements Button.ClickListener {
+        @Override
+        public void buttonClick(final ClickEvent event) {
+            app.getMainWindow().addWindow(
+                new OpenContextModalWindow(parent).getSubWindow());
+=====================================================================
+Found a 5 line (25 tokens) duplication in the following files: 
+Starting at line 159 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/orgunit/editor/SplittingPredecessorEditor.java
+Starting at line 52 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/orgunit/editor/BlankPredecessorEditor.java
+
+    }
+
+    private void addListener() {
+        okButton.addListener(new Button.ClickListener() {
+            private static final long serialVersionUID = -8695976921167275051L;
+=====================================================================
+Found a 5 line (25 tokens) duplication in the following files: 
+Starting at line 241 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/role/RoleView.java
+Starting at line 245 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/role/RoleView.java
+
+        catch (final InternalClientException e) {
+            mainWindow.addWindow(new ErrorDialog(mainWindow, "Error", e
+                .getMessage()));
+        }
+        catch (final TransportException e) {
+=====================================================================
+Found a 6 line (25 tokens) duplication in the following files: 
+Starting at line 55 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/user/lab/UserLabAddView.java
+Starting at line 119 of /home/chh/workspace/AdminTool/src/main/java/de/escidoc/admintool/view/context/ContextEditForm.java
+
+    private final Button addOrgUnitButton = new Button(ViewConstants.ADD_LABEL);
+
+    private final Button removeOrgUnitButton =
+        new Button(ViewConstants.REMOVE_LABEL);
+
+    private final int labelWidth = 140;
