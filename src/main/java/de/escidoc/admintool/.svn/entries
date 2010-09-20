@@ -1,80 +1,0 @@
-10
-
-dir
-37070
-http://escidev5:8888/prototype/branches/eSciDocAdminTool/eSciDocAdmin-mavenize/eSciDocAdminTool/src/main/java/de/escidoc/admintool
-http://escidev5:8888/prototype
-
-
-
-2010-08-19T16:59:02.706505Z
-37069
-asp
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-5c398c58-3d0a-0410-a38c-d0825f6816e0
-
-app
-dir
-
-service
-dir
-
-package-info.java
-file
-
-
-
-
-2010-08-17T14:27:20.153805Z
-85bf1fc135a364df0fefb8d3ac2e9f07
-2010-08-17T06:56:56.789329Z
-36969
-asp
-has-props
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-107
-
-domain
-dir
-
-messages
-dir
-
-view
-dir
-
-exception
-dir
-
