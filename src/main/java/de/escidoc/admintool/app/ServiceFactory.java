@@ -34,5 +34,4 @@ public class ServiceFactory {
         InternalClientException, TransportException {
         return new RoleService(authentication);
     }
-
 }

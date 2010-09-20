@@ -1,6 +1,9 @@
 package de.escidoc.admintool.view;
 
-public class ResourceRefDisplay {
+import java.io.Serializable;
+
+@SuppressWarnings("serial")
+public class ResourceRefDisplay implements Serializable {
 
     private final String objectId;
 

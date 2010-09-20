@@ -29,6 +29,13 @@ public class UserService {
 
     private Collection<UserAccount> userAccounts;
 
+    private final Map<String, UserAccount> userAccountById =
+        new ConcurrentHashMap<String, UserAccount>();
+
+    private UserAccount user;
+
+    private GrantProperties grantProps;
+
     public UserService(final String handle) throws EscidocException,
         InternalClientException, TransportException {
         client = createUserClient(handle);
@@ -41,9 +48,6 @@ public class UserService {
         client.setServiceAddress(AdminToolContants.ESCIDOC_URI);
         return client;
     }
-
-    private final Map<String, UserAccount> userAccountById =
-        new ConcurrentHashMap<String, UserAccount>();
 
     @SuppressWarnings("deprecation")
     public Collection<UserAccount> findAll() throws EscidocClientException {
@@ -123,7 +127,7 @@ public class UserService {
         assert !(selectedItemId == null || selectedItemId.isEmpty()) : "selectedItemId must not be null or empty";
 
         final UserAccount userAccount = getSelectedUser(selectedItemId);
-        assert userAccount.getProperties().isActive() == false : "User account is already active.";
+        assert !userAccount.getProperties().isActive() : "User account is already active.";
 
         getSoapClient().activate(userAccount.getObjid(),
             lastModificationDate(userAccount));
@@ -135,7 +139,7 @@ public class UserService {
         assert !(selectedItemId == null || selectedItemId.isEmpty()) : "selectedItemId must not be null or empty";
 
         final UserAccount userAccount = getSelectedUser(selectedItemId);
-        assert userAccount.getProperties().isActive() == true : "User account is not active.";
+        assert !userAccount.getProperties().isActive() : "User account is not active.";
 
         getSoapClient().deactivate(userAccount.getObjid(),
             lastModificationDate(userAccount));
@@ -210,10 +214,6 @@ public class UserService {
         grant.setGrantProperties(gProp);
         getSoapClient().createGrant(userId, grant);
     }
-
-    private UserAccount user;
-
-    private GrantProperties grantProps;
 
     public UserService assign(final UserAccount user) {
         if (user == null) {

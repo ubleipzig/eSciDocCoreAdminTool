@@ -40,7 +40,7 @@ public class ContextService {
     private final ContextHandlerClient client;
 
     // NOPMD by CHH on 9/17/10 10:20 AM @See above
-    private static final Map<String, Context> contextById =
+    private final Map<String, Context> contextById =
         new ConcurrentHashMap<String, Context>();
 
     // NOPMD by CHH on 9/17/10 10:20 AM @See above

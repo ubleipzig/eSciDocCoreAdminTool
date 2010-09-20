@@ -86,23 +86,19 @@ public class ContextListView extends Table {
                 new ErrorDialog(app.getMainWindow(), "Error",
                     "An unexpected error occured! See log for details."));
             log.error("An unexpected error occured! See log for details.", e);
-            e.printStackTrace();
         }
         catch (final InternalClientException e) {
             app.getMainWindow().addWindow(
                 new ErrorDialog(app.getMainWindow(), "Error",
                     "An unexpected error occured! See log for details."));
             log.error("An unexpected error occured! See log for details.", e);
-            e.printStackTrace();
         }
         catch (final TransportException e) {
             app.getMainWindow().addWindow(
                 new ErrorDialog(app.getMainWindow(), "Error",
                     "An unexpected error occured! See log for details."));
             log.error("An unexpected error occured! See log for details.", e);
-            e.printStackTrace();
         }
-
     }
 
     public void addContext(final Context context) {

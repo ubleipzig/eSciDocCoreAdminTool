@@ -59,17 +59,14 @@ public class OrgUnitTree extends CustomComponent {
         }
         catch (final InternalClientException e) {
             log.error("An unexpected error occured! See log for details.", e);
-            e.printStackTrace();
 
         }
         catch (final TransportException e) {
             log.error("An unexpected error occured! See log for details.", e);
-            e.printStackTrace();
 
         }
         catch (final EscidocException e) {
             log.error("An unexpected error occured! See log for details.", e);
-            e.printStackTrace();
         }
     }
 

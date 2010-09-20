@@ -231,7 +231,8 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
             discard();
         }
         else {
-            throw new RuntimeException("Unknown Button " + clickedButton);
+            throw new IllegalArgumentException("Unknown Button "
+                + clickedButton);
         }
     }
 
@@ -244,9 +245,9 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
         return footer;
     }
 
-    private void setFieldsWriteThrough(final boolean b) {
+    private void setFieldsWriteThrough(final boolean isWriteThrough) {
         for (final Field field : fields) {
-            field.setWriteThrough(b);
+            field.setWriteThrough(isWriteThrough);
         }
     }
 
@@ -292,7 +293,6 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
                 app.getMainWindow().addWindow(
                     new ErrorDialog(app.getMainWindow(), "Error", e
                         .getMessage()));
-                e.printStackTrace();
             }
             catch (final InternalClientException e) {
                 log.error("An unexpected error occured! See log for details.",
@@ -301,7 +301,6 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
                 app.getMainWindow().addWindow(
                     new ErrorDialog(app.getMainWindow(), "Error", e
                         .getMessage()));
-                e.printStackTrace();
             }
             catch (final TransportException e) {
                 log.error("An unexpected error occured! See log for details.",
@@ -310,7 +309,6 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
                     new ErrorDialog(app.getMainWindow(), "Error", e
                         .getMessage()));
                 setComponentError(new UserError(e.getMessage()));
-                e.printStackTrace();
             }
         }
     }
@@ -381,7 +379,6 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
                     new ErrorDialog(app.getMainWindow(), "Error", e
                         .getMessage()));
                 setComponentError(new SystemError(e.getMessage()));
-                e.printStackTrace();
             }
             catch (final SAXException e) {
                 log.error("An unexpected error occured! See log for details.",
@@ -390,7 +387,6 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
                     new ErrorDialog(app.getMainWindow(), "Error", e
                         .getMessage()));
                 setComponentError(new SystemError(e.getMessage()));
-                e.printStackTrace();
             }
             catch (final IOException e) {
                 log.error("An unexpected error occured! See log for details.",
@@ -399,7 +395,6 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
                     new ErrorDialog(app.getMainWindow(), "Error", e
                         .getMessage()));
                 setComponentError(new SystemError(e.getMessage()));
-                e.printStackTrace();
             }
         }
 
@@ -498,7 +493,7 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
             catch (final TransformerException e) {
                 log.error("An unexpected error occured! See log for details.",
                     e);
-                e.printStackTrace();
+                ;
             }
         }
     }

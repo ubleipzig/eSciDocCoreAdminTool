@@ -33,7 +33,8 @@ public class OrgUnitFactory {
     private OrganizationalUnit orgUnit;
 
     public OrgUnitFactory update(
-        final OrganizationalUnit orgUnit, final String title, // NOPMD by CHH on 9/16/10 6:41 PM
+        final OrganizationalUnit orgUnit, final String title, // NOPMD by CHH on
+                                                              // 9/16/10 6:41 PM
         final String description) throws ParserConfigurationException,
         SAXException, IOException {
         this.orgUnit = orgUnit;
@@ -201,7 +202,7 @@ public class OrgUnitFactory {
 
     public OrgUnitFactory parents(final Set<String> parentObjectIds) {
 
-        if (parentObjectIds == null || parentObjectIds.isEmpty()) { // NOPMD by CHH on 9/16/10 6:41 PM
+        if (parentObjectIds == null || parentObjectIds.isEmpty()) {
             return this;
         }
 
@@ -218,7 +219,7 @@ public class OrgUnitFactory {
         final Set<String> predecessorsObjectIds,
         final PredecessorForm predecessorType) {
 
-        if (predecessorsObjectIds == null || predecessorsObjectIds.size() == 0) {
+        if (predecessorsObjectIds == null || predecessorsObjectIds.isEmpty()) {
             log.info("empty predecessor.");
             return this;
         }
@@ -232,5 +233,4 @@ public class OrgUnitFactory {
         orgUnit.setPredecessors(predecessor);
         return this;
     }
-
 }

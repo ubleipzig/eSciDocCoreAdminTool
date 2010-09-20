@@ -204,4 +204,15 @@ public class ViewConstants {
 
     public static final String SERVER_INTERNAL_ERROR = "Server Internal Error";
 
+    // TODO put these in files or extra contents class,i.e. Label,
+    public static final String ORGANIZATIONAL_UNIT = Messages
+        .getString("NavigationTree.0"); //$NON-NLS-1$
+
+    public static final String CONTEXT = Messages.getString("NavigationTree.1"); //$NON-NLS-1$
+
+    public static final String USERS_LAB = Messages
+    .getString("NavigationTree.2"); //$NON-NLS-1$
+
+    public static final String ROLE = "Role";
+
 }

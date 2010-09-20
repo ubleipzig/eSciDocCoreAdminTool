@@ -53,15 +53,15 @@ public class CloseContextModalWindow extends VerticalLayout {
             }
             catch (final EscidocException e) {
                 // TODO Auto-generated catch block
-                e.printStackTrace();
+ ;
             }
             catch (final InternalClientException e) {
                 // TODO Auto-generated catch block
-                e.printStackTrace();
+ ;
             }
             catch (final TransportException e) {
                 // TODO Auto-generated catch block
-                e.printStackTrace();
+ ;
             }
         }
     }

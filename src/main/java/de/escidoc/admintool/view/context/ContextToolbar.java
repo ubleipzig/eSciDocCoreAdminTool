@@ -31,17 +31,17 @@ public class ContextToolbar extends CustomComponent {
 
     private final HorizontalLayout header = new HorizontalLayout();
 
-    private final Button newContextBtn =
-        new Button("New", new NewContextListener());
+    private final Button newContextBtn = new Button("New",
+        new NewContextListener());
 
-    private final Button deleteContextBtn =
-        new Button("Delete", new DeleteContextListener());
+    private final Button deleteContextBtn = new Button("Delete",
+        new DeleteContextListener());
 
-    private final Button openContextBtn =
-        new Button("Open", new OpenContextListener());
+    private final Button openContextBtn = new Button("Open",
+        new OpenContextListener());
 
-    private final Button closeContextBtn =
-        new Button("Close", new CloseContextListener());
+    private final Button closeContextBtn = new Button("Close",
+        new CloseContextListener());
 
     private final ContextEditForm parent;
 
@@ -80,15 +80,12 @@ public class ContextToolbar extends CustomComponent {
         }
         catch (final InstantiationException e) {
             log.error("An unexpected error occured! See log for details.", e);
-            e.printStackTrace();
         }
         catch (final IllegalAccessException e) {
             log.error("An unexpected error occured! See log for details.", e);
-            e.printStackTrace();
         }
         catch (final IllegalArgumentException e) {
             log.error("An unexpected error occured! See log for details.", e);
-            e.printStackTrace();
         }
         catch (final InvocationTargetException e) {
             log.error("An unexpected error occured! See log for details.", e);
@@ -96,15 +93,12 @@ public class ContextToolbar extends CustomComponent {
         }
         catch (final ClassNotFoundException e) {
             log.error("An unexpected error occured! See log for details.", e);
-            e.printStackTrace();
         }
         catch (final SecurityException e) {
             log.error("An unexpected error occured! See log for details.", e);
-            e.printStackTrace();
         }
         catch (final NoSuchMethodException e) {
             log.error("An unexpected error occured! See log for details.", e);
-            e.printStackTrace();
 
         }
     }
@@ -142,22 +136,17 @@ public class ContextToolbar extends CustomComponent {
             catch (final EscidocException e) {
                 log.error("An unexpected error occured! See log for details.",
                     e);
-                e.printStackTrace();
 
             }
             catch (final InternalClientException e) {
                 log.error("An unexpected error occured! See log for details.",
                     e);
-                e.printStackTrace();
 
             }
             catch (final TransportException e) {
                 log.error("An unexpected error occured! See log for details.",
                     e);
-                e.printStackTrace();
-
             }
         }
     }
-
 }

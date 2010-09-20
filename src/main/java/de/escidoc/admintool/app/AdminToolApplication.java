@@ -313,16 +313,16 @@ public class AdminToolApplication extends Application
             if (itemId == null) {
                 return;
             }
-            else if (NavigationTree.ORGANIZATIONAL_UNIT.equals(itemId)) {
+            else if (ViewConstants.ORGANIZATIONAL_UNIT.equals(itemId)) {
                 showOrganizationalUnitView();
             }
-            else if (NavigationTree.CONTEXT.equals(itemId)) {
+            else if (ViewConstants.CONTEXT.equals(itemId)) {
                 showContextView();
             }
-            else if (NavigationTree.USERS_LAB.equals(itemId)) {
+            else if (ViewConstants.USERS_LAB.equals(itemId)) {
                 showUsersLabView();
             }
-            else if (NavigationTree.ROLE.equals(itemId)) {
+            else if (ViewConstants.ROLE.equals(itemId)) {
                 showRoleView();
             }
             else {

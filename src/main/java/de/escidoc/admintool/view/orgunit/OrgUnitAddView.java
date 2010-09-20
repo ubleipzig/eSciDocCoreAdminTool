@@ -255,7 +255,7 @@ public class OrgUnitAddView extends AbstractOrgUnitView
             }
             catch (final EscidocClientException e) {
                 // TODO Auto-generated catch block
-                e.printStackTrace();
+ ;
             }
         }
         return predecessorForm;

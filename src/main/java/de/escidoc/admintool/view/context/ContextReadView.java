@@ -179,7 +179,6 @@ public class ContextReadView extends Form implements ClickListener {
         if (clickedButton == edit) {
             app.getMainWindow().showNotification(
                 "Show edit view: " + context.getProperties().getName());
-            // ((ContextView) getParent()).showEditView(context);
         }
         else if (clickedButton == delete) {
             app.getMainWindow().showNotification(
@@ -194,7 +193,8 @@ public class ContextReadView extends Form implements ClickListener {
                 "Closing... " + context.getProperties().getName());
         }
         else {
-            throw new RuntimeException("Unknown Button " + clickedButton);
+            throw new IllegalArgumentException("Unknown Button "
+                + clickedButton);
         }
     }
 }

@@ -65,13 +65,6 @@ public class ContextView extends SplitPanel {
         }
     }
 
-    public void remove() {
-        System.out.println("removing: "
-            + (String) getSelectedItem().getItemProperty(
-                ViewConstants.OBJECT_ID).getValue());
-        // contextList.removeContext(getSelectedItemId());
-    }
-
     public Item getSelectedItem() {
         return contextList.getItem(contextList.getValue());
     }

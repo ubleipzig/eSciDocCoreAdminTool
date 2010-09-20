@@ -23,8 +23,7 @@ public class RoleService {
                                                     // 10:34 AM
         .getLogger(RoleService.class);
 
-    private static final Map<String, Role> roleById =
-        new HashMap<String, Role>();
+    private final Map<String, Role> roleById = new HashMap<String, Role>();
 
     private final String authentification;
 

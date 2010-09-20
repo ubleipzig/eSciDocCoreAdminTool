@@ -158,18 +158,18 @@ public class UserAddView extends CustomComponent implements ClickListener {
                             + (String) nameProperty.getValue()
                             + " already exist.";
                     loginNameField.setComponentError(new UserError(error));
-                    e.printStackTrace();
+     ;
                     log.error(error, e);
                 }
                 catch (final InternalClientException e) {
                     log.error(
                         "An unexpected error occured! See log for details.", e);
-                    e.printStackTrace();
+     ;
                 }
                 catch (final TransportException e) {
                     log.error(
                         "An unexpected error occured! See log for details.", e);
-                    e.printStackTrace();
+     ;
                 }
             }
         }

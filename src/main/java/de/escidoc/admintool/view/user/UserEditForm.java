@@ -447,18 +447,18 @@ public class UserEditForm extends CustomComponent implements ClickListener {
                 setComponentError(new SystemError(e.getMessage()));
                 log.error("An unexpected error occured! See log for details.",
                     e);
-                e.printStackTrace();
+ ;
             }
             catch (final TransportException e) {
                 setComponentError(new SystemError(e.getMessage()));
                 log.error("An unexpected error occured! See log for details.",
                     e);
-                e.printStackTrace();
+ ;
             }
             catch (final EscidocException e) {
                 log.error("An unexpected error occured! See log for details.",
                     e);
-                e.printStackTrace();
+ ;
                 setComponentError(new SystemError(e.getMessage()));
             }
         }

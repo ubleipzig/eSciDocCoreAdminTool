@@ -240,7 +240,7 @@ public class ContextAddView extends CustomComponent implements ClickListener {
                     app.getMainWindow().addWindow(
                         new ErrorDialog(app.getMainWindow(), "Error", e
                             .getMessage()));
-                    e.printStackTrace();
+     ;
                 }
                 catch (final InternalClientException e) {
                     log.error(
@@ -249,7 +249,7 @@ public class ContextAddView extends CustomComponent implements ClickListener {
                     app.getMainWindow().addWindow(
                         new ErrorDialog(app.getMainWindow(), "Error", e
                             .getMessage()));
-                    e.printStackTrace();
+     ;
                 }
                 catch (final TransportException e) {
                     log.error(
@@ -258,7 +258,7 @@ public class ContextAddView extends CustomComponent implements ClickListener {
                         new ErrorDialog(app.getMainWindow(), "Error", e
                             .getMessage()));
                     setComponentError(new UserError(e.getMessage()));
-                    e.printStackTrace();
+     ;
                 }
                 catch (final ParserConfigurationException e) {
                     log.error(
@@ -267,7 +267,7 @@ public class ContextAddView extends CustomComponent implements ClickListener {
                         new ErrorDialog(app.getMainWindow(), "Error", e
                             .getMessage()));
                     setComponentError(new SystemError(e.getMessage()));
-                    e.printStackTrace();
+     ;
                 }
             }
         }
@@ -299,7 +299,7 @@ public class ContextAddView extends CustomComponent implements ClickListener {
                     new ErrorDialog(app.getMainWindow(), "Error", e
                         .getMessage()));
                 setComponentError(new SystemError(e.getMessage()));
-                e.printStackTrace();
+ ;
             }
             catch (final SAXException e) {
                 log.error("An unexpected error occured! See log for details.",
@@ -308,7 +308,7 @@ public class ContextAddView extends CustomComponent implements ClickListener {
                     new ErrorDialog(app.getMainWindow(), "Error", e
                         .getMessage()));
                 setComponentError(new SystemError(e.getMessage()));
-                e.printStackTrace();
+ ;
             }
             catch (final IOException e) {
                 log.error("An unexpected error occured! See log for details.",
@@ -317,7 +317,7 @@ public class ContextAddView extends CustomComponent implements ClickListener {
                     new ErrorDialog(app.getMainWindow(), "Error", e
                         .getMessage()));
                 setComponentError(new SystemError(e.getMessage()));
-                e.printStackTrace();
+ ;
             }
         }
 
