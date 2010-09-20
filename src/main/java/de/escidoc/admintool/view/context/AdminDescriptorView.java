@@ -148,7 +148,7 @@ public abstract class AdminDescriptorView extends Window {
             mainWindow.addWindow(new ErrorDialog(mainWindow, "Error", e
                 .getMessage()));
             setComponentError(new SystemError(e.getMessage()));
-            e.printStackTrace();
+              
             return false;
         }
         catch (final SAXException e) {
@@ -159,7 +159,7 @@ public abstract class AdminDescriptorView extends Window {
             mainWindow.addWindow(errorDialog);
             log.error("An unexpected error occured! See log for details.", e);
             setComponentError(new SystemError(e.getMessage()));
-            e.printStackTrace();
+              
             return false;
 
         }
@@ -168,7 +168,7 @@ public abstract class AdminDescriptorView extends Window {
             mainWindow.addWindow(new ErrorDialog(mainWindow, "Error", e
                 .getMessage()));
             setComponentError(new SystemError(e.getMessage()));
-            e.printStackTrace();
+              
             return false;
         }
     }

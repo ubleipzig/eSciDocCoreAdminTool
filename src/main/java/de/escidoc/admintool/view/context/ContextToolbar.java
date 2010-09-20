@@ -89,7 +89,7 @@ public class ContextToolbar extends CustomComponent {
         }
         catch (final InvocationTargetException e) {
             log.error("An unexpected error occured! See log for details.", e);
-            e.printStackTrace();
+              
         }
         catch (final ClassNotFoundException e) {
             log.error("An unexpected error occured! See log for details.", e);

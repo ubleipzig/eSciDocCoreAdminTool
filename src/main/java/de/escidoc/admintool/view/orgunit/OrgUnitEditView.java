@@ -52,8 +52,6 @@ public class OrgUnitEditView extends AbstractOrgUnitView {
 
     private static final long serialVersionUID = -1488130998058019932L;
 
-    private static final String EMPTY_STRING = "";
-
     private final Label objIdField = new Label();
 
     private final Label modifiedOn = new Label();
@@ -96,7 +94,7 @@ public class OrgUnitEditView extends AbstractOrgUnitView {
         form.addComponent(LayoutHelper.create("Status", publicStatus,
             LABEL_WIDTH, false));
 
-        if (!publicStatusComment.getValue().equals(EMPTY_STRING)) {
+        if (!publicStatusComment.getValue().equals(ViewConstants.EMPTY_STRING)) {
             form.addComponent(LayoutHelper.create("Status Comment",
                 publicStatusComment, LABEL_WIDTH, false));
         }
@@ -141,37 +139,25 @@ public class OrgUnitEditView extends AbstractOrgUnitView {
         }
         catch (final ParserConfigurationException e) {
             log.error("An unexpected error occured! See log for details.", e);
-            e.printStackTrace();
         }
         catch (final SAXException e) {
             log.error("An unexpected error occured! See log for details.", e);
-            e.printStackTrace();
         }
         catch (final IOException e) {
             log.error("An unexpected error occured! See log for details.", e);
-            e.printStackTrace();
         }
         catch (final EscidocException e) {
             log.error("An unexpected error occured! See log for details.", e);
-            e.printStackTrace();
         }
         catch (final InternalClientException e) {
             log.error("An unexpected error occured! See log for details.", e);
-            e.printStackTrace();
         }
         catch (final TransportException e) {
             log.error("An unexpected error occured! See log for details.", e);
-            e.printStackTrace();
         }
 
         return backedOrgUnit;
     }
-
-    // private void commitFields() {
-    // for (final Field field : attachedFields) {
-    // field.commit();
-    // }
-    // }
 
     private String getSelectedOrgUnitId() {
         final String objid =
@@ -252,10 +238,8 @@ public class OrgUnitEditView extends AbstractOrgUnitView {
             else {
                 parentList.removeAllItems();
             }
-
             // Predecessor
             bindPredecessor();
-
             if (publicStatus != PublicStatus.CLOSED) {
                 final OrganizationalUnit orgUnit =
                     service.find((String) item.getItemProperty(
@@ -334,7 +318,7 @@ public class OrgUnitEditView extends AbstractOrgUnitView {
                 new ErrorDialog(app.getMainWindow(), Messages
                     .getString("AdminToolApplication.15"), e.getMessage())); //$NON-NLS-1$
         }
-        return EMPTY_STRING;
+        return ViewConstants.EMPTY_STRING;
     }
 
     private void showPredecessorView(
@@ -446,7 +430,6 @@ public class OrgUnitEditView extends AbstractOrgUnitView {
         coordinatesField.setReadOnly(isReadOnly);
         parentList.setReadOnly(isReadOnly);
         predecessorTypeSelect.setReadOnly(isReadOnly);
-
         addOrgUnitButton.setVisible(!isReadOnly);
         removeOrgUnitButton.setVisible(!isReadOnly);
         addPredecessorButton.setVisible(!isReadOnly);
@@ -494,35 +477,30 @@ public class OrgUnitEditView extends AbstractOrgUnitView {
         }
         catch (final ClassNotFoundException e) {
             log.error("An unexpected error occured! See log for details.", e);
-            e.printStackTrace();
+
         }
         catch (final InstantiationException e) {
             log.error("An unexpected error occured! See log for details.", e);
-            e.printStackTrace();
 
         }
         catch (final IllegalAccessException e) {
             log.error("An unexpected error occured! See log for details.", e);
-            e.printStackTrace();
+
         }
         catch (final SecurityException e) {
             log.error("An unexpected error occured! See log for details.", e);
-            e.printStackTrace();
 
         }
         catch (final NoSuchMethodException e) {
             log.error("An unexpected error occured! See log for details.", e);
-            e.printStackTrace();
 
         }
         catch (final IllegalArgumentException e) {
             log.error("An unexpected error occured! See log for details.", e);
-            e.printStackTrace();
 
         }
         catch (final InvocationTargetException e) {
             log.error("An unexpected error occured! See log for details.", e);
-            e.printStackTrace();
 
         }
     }
@@ -543,15 +521,15 @@ public class OrgUnitEditView extends AbstractOrgUnitView {
         }
         catch (final EscidocException e) {
             log.error("An unexpected error occured! See log for details.", e);
-            e.printStackTrace();
+
         }
         catch (final InternalClientException e) {
             log.error("An unexpected error occured! See log for details.", e);
-            e.printStackTrace();
+
         }
         catch (final TransportException e) {
             log.error("An unexpected error occured! See log for details.", e);
-            e.printStackTrace();
+
         }
 
     }
@@ -564,7 +542,6 @@ public class OrgUnitEditView extends AbstractOrgUnitView {
             service.open(getSelectedOrgUnitId(), comment);
         orgUnitList.updateOrgUnit(oldOrgUnit, openedOrgUnit);
         return openedOrgUnit;
-
     }
 
     public OrganizationalUnit close(final String comment)
@@ -575,6 +552,5 @@ public class OrgUnitEditView extends AbstractOrgUnitView {
             service.close(getSelectedOrgUnitId(), comment);
         orgUnitList.updateOrgUnit(oldOrgUnit, closedOrgUnit);
         return closedOrgUnit;
-
     }
 }

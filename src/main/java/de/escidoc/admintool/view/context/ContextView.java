@@ -61,7 +61,7 @@ public class ContextView extends SplitPanel {
                     e);
             app.getMainWindow().addWindow(
                 new ErrorDialog(app.getMainWindow(), "Error", e.getMessage()));
-            e.printStackTrace();
+              
         }
     }
 

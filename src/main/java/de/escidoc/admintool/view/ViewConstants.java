@@ -215,4 +215,15 @@ public class ViewConstants {
 
     public static final String ROLE = "Role";
 
+    public static final String OPEN = "Open";
+
+    public static final String COMMENT = "Comment:";
+
+    public static final String ORGANIZATIONAL_UNIT_LABEL =
+    "Organizational Unit";
+
+    public static final String EMPTY_STRING = "";
+
+    public static final String CLOSE = "Close";
+
 }

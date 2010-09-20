@@ -17,15 +17,46 @@ import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
 
 public abstract class AbstractStatusDialog extends CustomComponent {
+    @SuppressWarnings("serial")
+    private final class CancelButtonListener implements Button.ClickListener {
+        @Override
+        public void buttonClick(final ClickEvent event) {
+            closeWindow();
+        }
+    }
+
+    @SuppressWarnings("serial")
+    private final class SubmitButtonListener implements Button.ClickListener {
+        @Override
+        public void buttonClick(final ClickEvent event) {
+            final String enteredComment = (String) commentField.getValue();
+            assert enteredComment != null : "comment can not be null.";
+            try {
+                doAction(enteredComment);
+                closeWindow();
+            }
+            catch (final EscidocException e) {
+                log.error("An unexpected error occured! See log for details.",
+                    e);
+                ;
+            }
+            catch (final InternalClientException e) {
+                log.error("An unexpected error occured! See log for details.",
+                    e);
+                ;
+            }
+            catch (final TransportException e) {
+                log.error("An unexpected error occured! See log for details.",
+                    e);
+                ;
+            }
+        }
+    }
+
     private static final long serialVersionUID = 7257217308593700424L;
 
-    private static final Logger log =
-        LoggerFactory.getLogger(AbstractStatusDialog.class);
-
-    private static final String COMMENT = "Comment:";
-
-    private static final String ORGANIZATIONAL_UNIT_LABEL =
-        "Organizational Unit";
+    private static final Logger log = LoggerFactory
+        .getLogger(AbstractStatusDialog.class);
 
     protected final OrgUnitEditView orgUnitEditView;
 
@@ -33,7 +64,7 @@ public abstract class AbstractStatusDialog extends CustomComponent {
 
     protected Window subwindow = new Window(getWindowCaption());
 
-    private final TextField commentField = new TextField(COMMENT);
+    private final TextField commentField = new TextField(ViewConstants.COMMENT);
 
     private final HorizontalLayout footer = new HorizontalLayout();
 
@@ -41,7 +72,11 @@ public abstract class AbstractStatusDialog extends CustomComponent {
 
     private final Button cancelBtn = new Button(ViewConstants.CANCEL_LABEL);
 
-    public AbstractStatusDialog(final OrgUnitEditView orgUnitEditView) {
+    protected final OrgUnitToolbar toolbar;
+
+    public AbstractStatusDialog(final OrgUnitToolbar toolbar,
+        final OrgUnitEditView orgUnitEditView) {
+        this.toolbar = toolbar;
         this.orgUnitEditView = orgUnitEditView;
         buildUI();
         addButtonListeners();
@@ -52,7 +87,8 @@ public abstract class AbstractStatusDialog extends CustomComponent {
     }
 
     protected String getWindowCaption() {
-        return getSubmitBtnText() + " " + ORGANIZATIONAL_UNIT_LABEL;
+        return getSubmitBtnText() + " "
+            + ViewConstants.ORGANIZATIONAL_UNIT_LABEL;
     }
 
     protected abstract String getSubmitBtnText();
@@ -92,51 +128,17 @@ public abstract class AbstractStatusDialog extends CustomComponent {
     }
 
     protected void addSubmitButtonListener() {
-        submitBtn.addListener(new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(final ClickEvent event) {
-                final String enteredComment = (String) commentField.getValue();
-                assert enteredComment != null : "comment can not be null.";
-                try {
-                    doAction(enteredComment);
-                    closeWindow();
-                }
-                catch (final EscidocException e) {
-                    log.error(
-                        "An unexpected error occured! See log for details.", e);
-     ;
-                }
-                catch (final InternalClientException e) {
-                    log.error(
-                        "An unexpected error occured! See log for details.", e);
-     ;
-                }
-                catch (final TransportException e) {
-                    log.error(
-                        "An unexpected error occured! See log for details.", e);
-     ;
-                }
-            }
-        });
+        submitBtn.addListener(new SubmitButtonListener());
     }
 
     protected abstract void doAction(String enteredComment)
         throws EscidocException, InternalClientException, TransportException;
 
     private void closeWindow() {
-        ((Window) subwindow.getParent()).removeWindow(subwindow);
+        (subwindow.getParent()).removeWindow(subwindow);
     }
 
     private void addCancelButtonListener() {
-        cancelBtn.addListener(new Button.ClickListener() {
-            private static final long serialVersionUID = 1L;
-
-            @Override
-            public void buttonClick(final ClickEvent event) {
-                closeWindow();
-            }
-
-        });
+        cancelBtn.addListener(new CancelButtonListener());
     }
 }

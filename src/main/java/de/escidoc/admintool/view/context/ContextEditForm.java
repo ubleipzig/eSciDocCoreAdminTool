@@ -511,7 +511,7 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
                 new ErrorDialog(app.getMainWindow(), "Error",
                     "Organizational Unit does not exist anymore."
                         + e.getMessage()));
-            e.printStackTrace();
+              
         }
 
         catch (final EscidocException e) {
@@ -520,7 +520,7 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
                     e);
             app.getMainWindow().addWindow(
                 new ErrorDialog(app.getMainWindow(), "Error", e.getMessage()));
-            e.printStackTrace();
+              
         }
         catch (final InternalClientException e) {
             log
@@ -528,7 +528,7 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
                     e);
             app.getMainWindow().addWindow(
                 new ErrorDialog(app.getMainWindow(), "Error", e.getMessage()));
-            e.printStackTrace();
+              
         }
         catch (final TransportException e) {
             log
@@ -536,7 +536,7 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
                     e);
             app.getMainWindow().addWindow(
                 new ErrorDialog(app.getMainWindow(), "Error", e.getMessage()));
-            e.printStackTrace();
+              
         }
         return "Organization does exist, please remove.";
     }
@@ -597,15 +597,15 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
         }
         catch (final EscidocException e) {
             log.error("An unexpected error occured! See log for details.", e);
-            e.printStackTrace();
+              
         }
         catch (final InternalClientException e) {
             log.error("An unexpected error occured! See log for details.", e);
-            e.printStackTrace();
+              
         }
         catch (final TransportException e) {
             log.error("An unexpected error occured! See log for details.", e);
-            e.printStackTrace();
+              
         }
 
     }

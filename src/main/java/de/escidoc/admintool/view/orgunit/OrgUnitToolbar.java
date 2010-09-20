@@ -22,17 +22,17 @@ public class OrgUnitToolbar extends CustomComponent {
 
     private final HorizontalLayout header = new HorizontalLayout();
 
-    private final Button newOrgUnitButton =
-        new Button("New", new NewOrgUnitListener());
+    private final Button newOrgUnitButton = new Button("New",
+        new NewOrgUnitListener());
 
-    private final Button openOrgUnitButton =
-        new Button("Open", new OpenOrgUnitListener());
+    private final Button openOrgUnitButton = new Button("Open",
+        new OpenOrgUnitListener());
 
-    private final Button closeOrgUnitButton =
-        new Button("Close", new CloseOrgUnitListener());
+    private final Button closeOrgUnitButton = new Button("Close",
+        new CloseOrgUnitListener());
 
-    private final Button deleteOrgUnitButton =
-        new Button("Delete", new DeleteOrgUnitListener());
+    private final Button deleteOrgUnitButton = new Button("Delete",
+        new DeleteOrgUnitListener());
 
     public OrgUnitToolbar(final AdminToolApplication app,
         final OrgUnitEditView orgUnitEditView) {
@@ -66,9 +66,10 @@ public class OrgUnitToolbar extends CustomComponent {
 
         @Override
         public void buttonClick(final ClickEvent event) {
-            app.getMainWindow().addWindow(
-                new OpenOrgUnitModalWindow(orgUnitEditView).getSubWindow());
-            changeState(PublicStatus.OPENED);
+            app.getMainWindow()
+                .addWindow(
+                    new OpenOrgUnitModalWindow(OrgUnitToolbar.this,
+                        orgUnitEditView).getSubWindow());
         }
     }
 
@@ -77,8 +78,8 @@ public class OrgUnitToolbar extends CustomComponent {
         @Override
         public void buttonClick(final ClickEvent event) {
             app.getMainWindow().addWindow(
-                new CloseOrgUnitModalWindow(orgUnitEditView).getSubWindow());
-            changeState(PublicStatus.CLOSED);
+                new CloseOrgUnitModalWindow(OrgUnitToolbar.this,
+                    orgUnitEditView).getSubWindow());
         }
     }
 

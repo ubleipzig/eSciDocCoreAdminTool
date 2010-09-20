@@ -248,21 +248,21 @@ public class UserEditForm extends CustomComponent implements ClickListener {
                 new ErrorDialog(app.getMainWindow(), "Error",
                     "An unexpected error occured! See log for details."));
             log.error("An unexpected error occured! See log for details.", e);
-            e.printStackTrace();
+              
         }
         catch (final TransportException e) {
             app.getMainWindow().addWindow(
                 new ErrorDialog(app.getMainWindow(), "Error",
                     "An unexpected error occured! See log for details."));
             log.error("An unexpected error occured! See log for details.", e);
-            e.printStackTrace();
+              
         }
         catch (final EscidocClientException e) {
             app.getMainWindow().addWindow(
                 new ErrorDialog(app.getMainWindow(), "Error",
                     "An unexpected error occured! See log for details."));
             log.error("An unexpected error occured! See log for details.", e);
-            e.printStackTrace();
+              
         }
         return Collections.emptyList();
     }
@@ -316,19 +316,19 @@ public class UserEditForm extends CustomComponent implements ClickListener {
         }
         catch (final EscidocException e) {
             log.error("An unexpected error occured! See log for details.", e);
-            e.printStackTrace();
+              
         }
         catch (final InternalClientException e) {
             log.error("An unexpected error occured! See log for details.", e);
-            e.printStackTrace();
+              
         }
         catch (final TransportException e) {
             log.error("An unexpected error occured! See log for details.", e);
-            e.printStackTrace();
+              
         }
         catch (final EscidocClientException e) {
             log.error("An unexpected error occured! See log for details.", e);
-            e.printStackTrace();
+              
         }
     }
 

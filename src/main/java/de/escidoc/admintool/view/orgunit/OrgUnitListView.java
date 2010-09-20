@@ -66,21 +66,21 @@ public class OrgUnitListView extends Table {
                 new ErrorDialog(app.getMainWindow(), "Error",
                     "An unexpected error occured! See log for details."));
             log.error("An unexpected error occured! See log for details.", e);
-            e.printStackTrace();
+
         }
         catch (final InternalClientException e) {
             app.getMainWindow().addWindow(
                 new ErrorDialog(app.getMainWindow(), "Error",
                     "An unexpected error occured! See log for details."));
             log.error("An unexpected error occured! See log for details.", e);
-            e.printStackTrace();
+
         }
         catch (final TransportException e) {
             app.getMainWindow().addWindow(
                 new ErrorDialog(app.getMainWindow(), "Error",
                     "An unexpected error occured! See log for details."));
             log.error("An unexpected error occured! See log for details.", e);
-            e.printStackTrace();
+
         }
     }
 
@@ -124,10 +124,7 @@ public class OrgUnitListView extends Table {
 
     public void removeOrgUnit(final OrganizationalUnit selected) {
         assert selected != null : "orgUnit must not be null.";
-
-        final boolean succesful = orgUnitContainer.removeItem(selected);
-
-        assert succesful == true : "Removing context to the list failed.";
+        orgUnitContainer.removeItem(selected);
     }
 
     public void updateOrgUnit(

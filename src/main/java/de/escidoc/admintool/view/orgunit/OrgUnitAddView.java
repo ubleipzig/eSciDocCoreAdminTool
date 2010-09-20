@@ -128,35 +128,35 @@ public class OrgUnitAddView extends AbstractOrgUnitView
         }
         catch (final ClassNotFoundException e) {
             log.error("An unexpected error occured! See log for details.", e);
-            e.printStackTrace();
+              
         }
         catch (final InstantiationException e) {
             log.error("An unexpected error occured! See log for details.", e);
-            e.printStackTrace();
+              
 
         }
         catch (final IllegalAccessException e) {
             log.error("An unexpected error occured! See log for details.", e);
-            e.printStackTrace();
+              
         }
         catch (final SecurityException e) {
             log.error("An unexpected error occured! See log for details.", e);
-            e.printStackTrace();
+              
 
         }
         catch (final NoSuchMethodException e) {
             log.error("An unexpected error occured! See log for details.", e);
-            e.printStackTrace();
+              
 
         }
         catch (final IllegalArgumentException e) {
             log.error("An unexpected error occured! See log for details.", e);
-            e.printStackTrace();
+              
 
         }
         catch (final InvocationTargetException e) {
             log.error("An unexpected error occured! See log for details.", e);
-            e.printStackTrace();
+              
 
         }
     }
@@ -189,32 +189,32 @@ public class OrgUnitAddView extends AbstractOrgUnitView
         }
         catch (final EscidocException e) {
             log.error("An unexpected error occured! See log for details.", e);
-            e.printStackTrace();
+              
 
         }
         catch (final InternalClientException e) {
             log.error("An unexpected error occured! See log for details.", e);
-            e.printStackTrace();
+              
 
         }
         catch (final TransportException e) {
             log.error("An unexpected error occured! See log for details.", e);
-            e.printStackTrace();
+              
 
         }
         catch (final ParserConfigurationException e) {
             log.error("An unexpected error occured! See log for details.", e);
-            e.printStackTrace();
+              
 
         }
         catch (final SAXException e) {
             log.error("An unexpected error occured! See log for details.", e);
-            e.printStackTrace();
+              
 
         }
         catch (final IOException e) {
             log.error("An unexpected error occured! See log for details.", e);
-            e.printStackTrace();
+              
 
         }
     }

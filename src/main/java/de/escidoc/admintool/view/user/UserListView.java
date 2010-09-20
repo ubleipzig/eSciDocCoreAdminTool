@@ -60,7 +60,7 @@ public class UserListView extends Table {
                 new ErrorDialog(app.getMainWindow(), "Error",
                     "An unexpected error occured! See log for details."));
             log.error("An unexpected error occured! See log for details.", e);
-            e.printStackTrace();
+              
         }
     }
 
