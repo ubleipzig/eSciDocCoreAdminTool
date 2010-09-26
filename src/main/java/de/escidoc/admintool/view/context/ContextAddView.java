@@ -40,10 +40,10 @@ import de.escidoc.admintool.view.validator.EmptyFieldValidator;
 import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
-import de.escidoc.core.resources.ResourceRef;
 import de.escidoc.core.resources.om.context.AdminDescriptor;
 import de.escidoc.core.resources.om.context.AdminDescriptors;
 import de.escidoc.core.resources.om.context.Context;
+import de.escidoc.core.resources.common.reference.OrganizationalUnitRef;
 import de.escidoc.core.resources.om.context.OrganizationalUnitRefs;
 import de.escidoc.vaadin.dialog.ErrorDialog;
 import de.escidoc.vaadin.utilities.LayoutHelper;
@@ -329,7 +329,7 @@ public class ContextAddView extends CustomComponent implements ClickListener {
             new OrganizationalUnitRefs();
 
         for (final String objectId : getEnteredOrgUnits()) {
-            organizationalUnitRefs.add(new ResourceRef(objectId));
+            organizationalUnitRefs.add(new OrganizationalUnitRef(objectId));
         }
 
         return organizationalUnitRefs;

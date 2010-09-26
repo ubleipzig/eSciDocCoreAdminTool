@@ -42,6 +42,7 @@ import de.escidoc.admintool.app.PropertyId;
 import de.escidoc.admintool.exception.ResourceNotFoundException;
 import de.escidoc.admintool.service.ContextService;
 import de.escidoc.admintool.service.OrgUnitService;
+import de.escidoc.core.resources.common.reference.OrganizationalUnitRef;
 import de.escidoc.admintool.view.ResourceRefDisplay;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.admintool.view.orgunit.OrgUnitEditor;
@@ -49,7 +50,6 @@ import de.escidoc.admintool.view.validator.EmptyFieldValidator;
 import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
-import de.escidoc.core.resources.ResourceRef;
 import de.escidoc.core.resources.om.context.AdminDescriptor;
 import de.escidoc.core.resources.om.context.AdminDescriptors;
 import de.escidoc.core.resources.om.context.Context;
@@ -324,7 +324,7 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
             new OrganizationalUnitRefs();
 
         for (final String objectId : getEnteredOrgUnits()) {
-            organizationalUnitRefs.add(new ResourceRef(objectId));
+            organizationalUnitRefs.add(new OrganizationalUnitRef(objectId));
         }
 
         return organizationalUnitRefs;
@@ -466,11 +466,11 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
         editToolbar.setSelected(publicStatus);
 
         orgUnitList.removeAllItems();
-        final List<ResourceRef> refs =
-            (List<ResourceRef>) item
+        final List<OrganizationalUnitRef> refs =
+            (List<OrganizationalUnitRef>) item
                 .getItemProperty(PropertyId.ORG_UNIT_REFS).getValue();
 
-        for (final ResourceRef resourceRef : refs) {
+        for (final OrganizationalUnitRef resourceRef : refs) {
             final String orgUnitTitle = findOrgUnitTitle(resourceRef);
             final ResourceRefDisplay resourceRefDisplay =
                 new ResourceRefDisplay(resourceRef.getObjid(), orgUnitTitle);
@@ -498,7 +498,7 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
         }
     }
 
-    private String findOrgUnitTitle(final ResourceRef resourceRef) {
+    private String findOrgUnitTitle(final OrganizationalUnitRef resourceRef) {
         try {
             return app.getOrgUnitService().findOrgUnitTitleById(
                 resourceRef.getObjid());

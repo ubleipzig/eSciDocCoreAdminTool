@@ -29,6 +29,7 @@ import de.escidoc.admintool.app.PropertyId;
 import de.escidoc.admintool.service.RoleService;
 import de.escidoc.admintool.service.UserService;
 import de.escidoc.admintool.view.ViewConstants;
+import de.escidoc.core.resources.common.reference.Reference;
 import de.escidoc.admintool.view.role.RevokeGrantCommand;
 import de.escidoc.admintool.view.role.RevokeGrantWindow;
 import de.escidoc.admintool.view.validator.EmptyFieldValidator;
@@ -36,7 +37,6 @@ import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
-import de.escidoc.core.resources.ResourceRef;
 import de.escidoc.core.resources.aa.useraccount.Grant;
 import de.escidoc.core.resources.aa.useraccount.UserAccount;
 import de.escidoc.vaadin.dialog.ErrorDialog;
@@ -374,9 +374,10 @@ public class UserEditForm extends CustomComponent implements ClickListener {
 
     private void bindRolesWithView() {
         final List<Grant> userGrants = (List<Grant>) getGrants();
-        for (final Grant grant : userGrants) {
-            System.out.println("Grant title: " + grant.getTitle());
-        }
+        // FIXME SWA title is maybe not supported
+//        for (final Grant grant : userGrants) {
+//            System.out.println("Grant title: " + grant.getTitle());
+//        }
         if (userGrants.size() > 0) {
             grantContainer =
                 new POJOContainer<Grant>(Grant.class, GRANT_TITLE,
@@ -387,11 +388,11 @@ public class UserEditForm extends CustomComponent implements ClickListener {
             roleTable.setColumnHeaders(ROLE_COLUMN_HEADERS);
 
             for (final Grant grant : userGrants) {
-                final ResourceRef assignedOn =
+                final Reference assignedOn =
                     grant.getGrantProperties().getAssignedOn();
                 if (assignedOn == null) {
                     grant.getGrantProperties().setAssignedOn(
-                        new ResourceRef("", ""));
+                        new Reference("", Reference.RESOURCE_TYPE.Grant));
                 }
                 grantContainer.addPOJO(grant);
             }

@@ -10,12 +10,13 @@ import org.joda.time.DateTime;
 import de.escidoc.admintool.app.AdminToolContants;
 import de.escidoc.admintool.domain.UserAccountFactory;
 import de.escidoc.core.client.TransportProtocol;
+import de.escidoc.core.resources.common.reference.Reference;
+import de.escidoc.core.resources.common.reference.RoleRef;
 import de.escidoc.core.client.UserAccountHandlerClient;
 import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
-import de.escidoc.core.resources.ResourceRef;
 import de.escidoc.core.resources.aa.role.Role;
 import de.escidoc.core.resources.aa.useraccount.Grant;
 import de.escidoc.core.resources.aa.useraccount.GrantProperties;
@@ -210,7 +211,7 @@ public class UserService {
         throws EscidocClientException {
         final Grant grant = new Grant();
         final GrantProperties gProp = new GrantProperties();
-        gProp.setRole(new ResourceRef(roleId));
+        gProp.setRole(new RoleRef(roleId));
         grant.setGrantProperties(gProp);
         getSoapClient().createGrant(userId, grant);
     }
@@ -232,12 +233,12 @@ public class UserService {
                 "You must sign a role to a user.");
         }
         grantProps = new GrantProperties();
-        grantProps.setRole(new ResourceRef(selectedRole.getObjid()));
+        grantProps.setRole(new RoleRef(selectedRole.getObjid()));
         return this;
     }
 
-    public UserService onResources(final Set<ResourceRef> selectedResources) {
-        for (final ResourceRef resourceRef : selectedResources) {
+    public UserService onResources(final Set<Reference> selectedResources) {
+        for (final Reference resourceRef : selectedResources) {
             grantProps.setAssignedOn(resourceRef);
         }
         return this;

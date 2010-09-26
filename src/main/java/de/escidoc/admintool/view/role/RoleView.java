@@ -32,6 +32,7 @@ import com.vaadin.ui.themes.Reindeer;
 
 import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.app.PropertyId;
+import de.escidoc.core.resources.common.reference.Reference;
 import de.escidoc.admintool.service.ContextService;
 import de.escidoc.admintool.service.RoleService;
 import de.escidoc.admintool.service.UserService;
@@ -41,7 +42,6 @@ import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
 import de.escidoc.core.client.exceptions.application.notfound.RoleNotFoundException;
-import de.escidoc.core.resources.ResourceRef;
 import de.escidoc.core.resources.aa.role.Role;
 import de.escidoc.core.resources.aa.useraccount.UserAccount;
 import de.escidoc.core.resources.om.context.Context;
@@ -372,15 +372,15 @@ public class RoleView extends CustomComponent {
             return new Role();
         }
 
-        private Set<ResourceRef> getSelectedResources() {
+        private Set<Reference> getSelectedResources() {
             final Object value = resouceResult.getValue();
             if (value instanceof Set) {
-                final Set<ResourceRef> toBeScopes = (Set<ResourceRef>) value;
+                final Set<Reference> toBeScopes = (Set<Reference>) value;
                 mainWindow.showNotification(toBeScopes.toString());
                 return toBeScopes;
             }
-            else if (value instanceof ResourceRef) {
-                return Collections.singleton((ResourceRef) value);
+            else if (value instanceof Reference) {
+                return Collections.singleton((Reference) value);
             }
             return Collections.emptySet();
         }

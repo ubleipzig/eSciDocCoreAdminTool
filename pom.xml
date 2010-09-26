@@ -21,12 +21,11 @@
 			<artifactId>VaadinLib</artifactId>
 			<version>1.0-SNAPSHOT</version>
 		</dependency>
-		<!-- Not availaible on public repository: either manual install on your 
-			local repo or upload to eSciDoc Maven Repo -->
 		<dependency>
-			<groupId>de.escidoc</groupId>
-			<artifactId>core-client</artifactId>
-			<version>1.2-client-SNAPSHOT</version>
+			<groupId>org.escidoc.core</groupId>
+			<artifactId>client-1.2</artifactId>
+			<version>0.8-SNAPSHOT</version>
+			<type>jar</type>
 		</dependency>
 		<dependency>
 			<groupId>com.vaadin</groupId>
@@ -88,12 +87,6 @@
 			<groupId>org.jdom</groupId>
 			<artifactId>jdom</artifactId>
 			<version>1.1</version>
-		</dependency>
-		<!-- Uploaded in eSciDoc Maven repo -->
-		<dependency>
-			<groupId>biz.source_code.base64Coder</groupId>
-			<artifactId>base64coder</artifactId>
-			<version>1.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jibx</groupId>

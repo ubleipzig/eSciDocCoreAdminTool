@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 import com.vaadin.ui.Tree;
 
 import de.escidoc.admintool.view.ResourceRefDisplay;
-import de.escidoc.core.resources.ResourceRef;
+import de.escidoc.core.resources.common.reference.OrganizationalUnitRef;
 import de.escidoc.core.resources.oum.OrganizationalUnit;
 import de.escidoc.core.resources.oum.Parent;
 import de.escidoc.vaadin.utilities.TreeHelper;
@@ -38,14 +38,14 @@ public class OrgUnitTreeFactory {
     public Tree create() {
         for (final OrganizationalUnit orgUnit : allOrgUnits) {
             if (isRoot(orgUnit)) {
-                createRoot(orgUnit);
+                createRoot(new OrganizationalUnitRef(orgUnit.getObjid()));
             }
             else {
                 if (parentExistInTree(orgUnit)) {
                     setParent(orgUnit, getParent(orgUnit));
                 }
                 else {
-                    createRoot(getParent(orgUnit));
+                    createRoot(new OrganizationalUnitRef(getParent(orgUnit).getObjid()));
                     setParent(orgUnit, getParent(orgUnit));
                 }
             }
@@ -57,7 +57,7 @@ public class OrgUnitTreeFactory {
         return orgUnit.getParents() == null || !hasParent(orgUnit);
     }
 
-    private void createRoot(final ResourceRef orgUnit) {
+    private void createRoot(final OrganizationalUnitRef orgUnit) {
         if (hasChildren(orgUnit)) {
             TreeHelper.addRoot(orgUnitTree, resourceRef2Display(orgUnit), true);
         }
@@ -68,14 +68,14 @@ public class OrgUnitTreeFactory {
     }
 
     private void setParent(final OrganizationalUnit orgUnit, final Parent parent) {
-        if (hasChildren(orgUnit)) {
+        if (hasChildren(new OrganizationalUnitRef(orgUnit.getObjid()))) {
             TreeHelper
-                .addChildrenNotExpand(orgUnitTree, resourceRef2Display(parent),
-                    resourceRef2Display(orgUnit), true);
+                .addChildrenNotExpand(orgUnitTree, resourceRef2Display(new OrganizationalUnitRef(parent.getObjid())),
+                    resourceRef2Display(new OrganizationalUnitRef(orgUnit.getObjid())), true);
         }
         else {
             TreeHelper.addChildrenNotExpand(orgUnitTree,
-                resourceRef2Display(parent), resourceRef2Display(orgUnit),
+                resourceRef2Display(new OrganizationalUnitRef(parent.getObjid())), resourceRef2Display(new OrganizationalUnitRef(orgUnit.getObjid())),
                 false);
         }
     }
@@ -85,7 +85,7 @@ public class OrgUnitTreeFactory {
     }
 
     private boolean parentExistInTree(final OrganizationalUnit orgUnit) {
-        return orgUnitTree.containsId(resourceRef2Display(getParent(orgUnit)));
+        return orgUnitTree.containsId(resourceRef2Display(new OrganizationalUnitRef(getParent(orgUnit).getObjid())));
     }
 
     private boolean isNotEmpty(final OrganizationalUnit orgUnit) {
@@ -107,13 +107,13 @@ public class OrgUnitTreeFactory {
         return parentRef;
     }
 
-    private boolean hasChildren(final ResourceRef resourceRef) {
+    private boolean hasChildren(final OrganizationalUnitRef resourceRef) {
         final OrganizationalUnit cachedOrgUnit =
             orgUnitsByObjectId.get(resourceRef.getObjid());
         return cachedOrgUnit.getProperties().getHasChildren();
     }
 
-    private ResourceRefDisplay resourceRef2Display(final ResourceRef resourceRef) {
+    private ResourceRefDisplay resourceRef2Display(final OrganizationalUnitRef resourceRef) {
 
         final OrganizationalUnit cachedOrgUnit =
             orgUnitsByObjectId.get(resourceRef.getObjid());

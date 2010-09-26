@@ -10,12 +10,9 @@ import de.escidoc.core.client.Authentication;
 import de.escidoc.core.client.TransportProtocol;
 import de.escidoc.core.client.UserAccountHandlerClient;
 import de.escidoc.core.client.exceptions.EscidocClientException;
-import de.escidoc.core.resources.ResourceRef;
 import de.escidoc.core.resources.aa.useraccount.Grant;
 import de.escidoc.core.resources.aa.useraccount.Grants;
 import de.escidoc.core.resources.aa.useraccount.UserAccount;
-import de.escidoc.core.test.client.Constants;
-import de.escidoc.core.test.client.EscidocClientTestBase;
 
 public class RetrieveCurrentGrants {
 
@@ -30,8 +27,8 @@ public class RetrieveCurrentGrants {
 
     private void createRestClientForUserAccount() throws EscidocClientException {
         final Authentication auth =
-            new Authentication(EscidocClientTestBase.DEFAULT_SERVICE_URL,
-                Constants.SYSTEM_ADMIN_USER, Constants.SYSTEM_ADMIN_PASSWORD);
+            new Authentication("http://localhost:8080",
+                "sysadmin", "eSciDoc");
         client = new UserAccountHandlerClient();
         client.setTransport(TransportProtocol.REST);
         client.setServiceAddress(EscidocClientTestBase.DEFAULT_SERVICE_URL);

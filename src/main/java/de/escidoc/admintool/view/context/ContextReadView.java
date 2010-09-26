@@ -19,7 +19,7 @@ import com.vaadin.ui.themes.BaseTheme;
 
 import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.view.ViewConstants;
-import de.escidoc.core.resources.ResourceRef;
+import de.escidoc.core.resources.common.reference.OrganizationalUnitRef;
 import de.escidoc.core.resources.om.context.AdminDescriptor;
 import de.escidoc.core.resources.om.context.Context;
 
@@ -102,9 +102,9 @@ public class ContextReadView extends Form implements ClickListener {
 
         verticalLayout.addComponent(orgUnitLabel);
 
-        final Collection<ResourceRef> organizationalUnitRefs =
+        final Collection<OrganizationalUnitRef> organizationalUnitRefs =
             context.getProperties().getOrganizationalUnitRefs();
-        for (final ResourceRef resourceRef : organizationalUnitRefs) {
+        for (final OrganizationalUnitRef resourceRef : organizationalUnitRefs) {
             verticalLayout.addComponent(new Label(resourceRef.getObjid()));
         }
 
