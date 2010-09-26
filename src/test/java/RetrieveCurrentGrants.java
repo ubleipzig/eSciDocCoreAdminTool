@@ -8,11 +8,13 @@ import org.junit.Test;
 
 import de.escidoc.core.client.Authentication;
 import de.escidoc.core.client.TransportProtocol;
+import de.escidoc.core.resources.common.reference.Reference;
 import de.escidoc.core.client.UserAccountHandlerClient;
 import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.resources.aa.useraccount.Grant;
 import de.escidoc.core.resources.aa.useraccount.Grants;
 import de.escidoc.core.resources.aa.useraccount.UserAccount;
+import de.escidoc.core.resources.common.reference.RoleRef;
 
 public class RetrieveCurrentGrants {
 
@@ -31,7 +33,7 @@ public class RetrieveCurrentGrants {
                 "sysadmin", "eSciDoc");
         client = new UserAccountHandlerClient();
         client.setTransport(TransportProtocol.REST);
-        client.setServiceAddress(EscidocClientTestBase.DEFAULT_SERVICE_URL);
+        client.setServiceAddress(auth.getServiceAddress());
         client.setHandle(auth.getHandle());
     }
 
@@ -61,18 +63,20 @@ public class RetrieveCurrentGrants {
 
         final Collection<Grant> grants = christianCurrentGrants.getGrants();
         for (final Grant grant : grants) {
-            System.out.println(grant.getTitle());
+        	// title is not supported by grant
+        	//System.out.println(grant.getTitle());
 
-            final ResourceRef role = grant.getGrantProperties().getRole();
+            final RoleRef role = grant.getGrantProperties().getRole();
             assertNotNull(role);
 
-            final ResourceRef assignedOn =
+            final Reference assignedOn =
                 grant.getGrantProperties().getAssignedOn();
             assertNotNull(assignedOn);
 
-            final String xLinkTitle = assignedOn.getTitle();
-            assertNotNull("XLink Title should not be null. " + xLinkTitle);
-            System.out.println(xLinkTitle);
+            // TODO SWA missing sopport in new client lib version
+//            final String xLinkTitle = assignedOn.getTitle();
+//            assertNotNull("XLink Title should not be null. " + xLinkTitle);
+//            System.out.println(xLinkTitle);
         }
     }
 }
