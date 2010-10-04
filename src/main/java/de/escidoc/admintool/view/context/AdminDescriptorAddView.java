@@ -4,9 +4,9 @@ import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Window;
 
-@SuppressWarnings("serial")
 public class AdminDescriptorAddView extends AdminDescriptorView {
 
+    private static final long serialVersionUID = 2214387401157125312L;
     private static final String ADD_A_NEW_ADMIN_DESCRIPTOR =
         "Add a new Admin Descriptor";
 
