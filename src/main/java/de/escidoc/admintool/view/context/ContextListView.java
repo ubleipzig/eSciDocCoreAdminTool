@@ -48,7 +48,7 @@ public class ContextListView extends Table {
         setSizeFull();
         setSelectable(true);
         setImmediate(true);
-        addListener((ValueChangeListener) app);
+        addListener(new ContextSelectListener(app));
         setNullSelectionAllowed(false);
     }
 

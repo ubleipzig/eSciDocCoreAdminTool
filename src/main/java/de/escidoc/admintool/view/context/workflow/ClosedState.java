@@ -9,8 +9,8 @@ public class ClosedState implements AbstractState {
 
     private final Button closeContextBtn;
 
-    public ClosedState(Button deleteContextBtn, Button openContextBtn,
-        Button closeContextBtn) {
+    public ClosedState(final Button deleteContextBtn,
+        final Button openContextBtn, final Button closeContextBtn) {
         this.deleteContextBtn = deleteContextBtn;
         this.openContextBtn = openContextBtn;
         this.closeContextBtn = closeContextBtn;
@@ -21,5 +21,4 @@ public class ClosedState implements AbstractState {
         closeContextBtn.setVisible(false);
         deleteContextBtn.setVisible(false);
     }
-
 }

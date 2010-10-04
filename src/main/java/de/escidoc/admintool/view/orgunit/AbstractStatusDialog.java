@@ -17,41 +17,6 @@ import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
 
 public abstract class AbstractStatusDialog extends CustomComponent {
-    @SuppressWarnings("serial")
-    private final class CancelButtonListener implements Button.ClickListener {
-        @Override
-        public void buttonClick(final ClickEvent event) {
-            closeWindow();
-        }
-    }
-
-    @SuppressWarnings("serial")
-    private final class SubmitButtonListener implements Button.ClickListener {
-        @Override
-        public void buttonClick(final ClickEvent event) {
-            final String enteredComment = (String) commentField.getValue();
-            assert enteredComment != null : "comment can not be null.";
-            try {
-                doAction(enteredComment);
-                closeWindow();
-            }
-            catch (final EscidocException e) {
-                log.error("An unexpected error occured! See log for details.",
-                    e);
-                ;
-            }
-            catch (final InternalClientException e) {
-                log.error("An unexpected error occured! See log for details.",
-                    e);
-                ;
-            }
-            catch (final TransportException e) {
-                log.error("An unexpected error occured! See log for details.",
-                    e);
-                ;
-            }
-        }
-    }
 
     private static final long serialVersionUID = 7257217308593700424L;
 
@@ -99,8 +64,8 @@ public abstract class AbstractStatusDialog extends CustomComponent {
 
     private AbstractStatusDialog modalWindow() {
         subwindow.setModal(true);
-        subwindow.setWidth("450px");
-        subwindow.setHeight("300px");
+        subwindow.setWidth(ViewConstants.MODAL_WINDOW_WIDTH);
+        subwindow.setHeight(ViewConstants.MODAL_WINDOW_HEIGHT);
 
         mainLayout = (VerticalLayout) subwindow.getContent();
         mainLayout.setMargin(true);
@@ -109,7 +74,7 @@ public abstract class AbstractStatusDialog extends CustomComponent {
     }
 
     private AbstractStatusDialog commentTextField() {
-        commentField.setWidth("400px");
+        commentField.setWidth(ViewConstants.FIELD_WIDTH);
         commentField.setRows(3);
         subwindow.addComponent(commentField);
         return this;
@@ -140,5 +105,41 @@ public abstract class AbstractStatusDialog extends CustomComponent {
 
     private void addCancelButtonListener() {
         cancelBtn.addListener(new CancelButtonListener());
+    }
+
+    private final class CancelButtonListener implements Button.ClickListener {
+        private static final long serialVersionUID = 1839906716209667918L;
+
+        @Override
+        public void buttonClick(final ClickEvent event) {
+            closeWindow();
+        }
+    }
+
+    private final class SubmitButtonListener implements Button.ClickListener {
+        private static final long serialVersionUID = 3694320420679990411L;
+
+        @Override
+        public void buttonClick(final ClickEvent event) {
+            final String enteredComment = (String) commentField.getValue();
+            assert enteredComment != null : "comment can not be null.";
+            try {
+                doAction(enteredComment);
+                closeWindow();
+            }
+            // FIXME: show error message to user.
+            catch (final EscidocException e) {
+                log.error("An unexpected error occured! See log for details.",
+                    e);
+            }
+            catch (final InternalClientException e) {
+                log.error("An unexpected error occured! See log for details.",
+                    e);
+            }
+            catch (final TransportException e) {
+                log.error("An unexpected error occured! See log for details.",
+                    e);
+            }
+        }
     }
 }

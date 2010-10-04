@@ -13,6 +13,7 @@ import com.vaadin.ui.Window;
 
 import de.escidoc.admintool.service.OrgUnitService;
 import de.escidoc.admintool.view.ResourceRefDisplay;
+import de.escidoc.admintool.view.lab.orgunit.AbstractOrgUnitViewLab;
 import de.escidoc.admintool.view.orgunit.AbstractOrgUnitView;
 
 public class BlankPredecessorEditor extends CustomComponent
@@ -73,6 +74,13 @@ public class BlankPredecessorEditor extends CustomComponent
 
     @Override
     public void setOrgUnitEditorView(final AbstractOrgUnitView orgUnitEditorView) {
+        throw new UnsupportedOperationException(
+            "setOrgUnitEditorView is not supported for BlankPredecessorEditor");
+    }
+
+    @Override
+    public void setOrgUnitEditorView(
+        final AbstractOrgUnitViewLab orgUnitEditorViewLab) {
         throw new UnsupportedOperationException(
             "setOrgUnitEditorView is not supported for BlankPredecessorEditor");
     }

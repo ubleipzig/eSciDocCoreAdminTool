@@ -43,13 +43,13 @@ public class ContextToolbar extends CustomComponent {
     private final Button closeContextBtn = new Button("Close",
         new CloseContextListener());
 
-    private final ContextEditForm parent;
+    private final ContextEditForm contextEditForm;
 
     private final AdminToolApplication app;
 
-    public ContextToolbar(final ContextEditForm parent,
+    public ContextToolbar(final ContextEditForm contextEditForm,
         final AdminToolApplication app) {
-        this.parent = parent;
+        this.contextEditForm = contextEditForm;
         this.app = app;
         header.setMargin(true);
         header.setSpacing(true);
@@ -61,6 +61,7 @@ public class ContextToolbar extends CustomComponent {
         setCompositionRoot(header);
     }
 
+    // TODO refactor this to Map and factory pattern.
     public void setSelected(final PublicStatus publicStatus) {
         final Class<?>[] buttonArgsClass =
             new Class<?>[] { Button.class, Button.class, Button.class };
@@ -89,7 +90,6 @@ public class ContextToolbar extends CustomComponent {
         }
         catch (final InvocationTargetException e) {
             log.error("An unexpected error occured! See log for details.", e);
-              
         }
         catch (final ClassNotFoundException e) {
             log.error("An unexpected error occured! See log for details.", e);
@@ -99,7 +99,6 @@ public class ContextToolbar extends CustomComponent {
         }
         catch (final NoSuchMethodException e) {
             log.error("An unexpected error occured! See log for details.", e);
-
         }
     }
 
@@ -107,7 +106,7 @@ public class ContextToolbar extends CustomComponent {
         @Override
         public void buttonClick(final ClickEvent event) {
             app.getMainWindow().addWindow(
-                new OpenContextModalWindow(parent).getSubWindow());
+                new OpenContextModalWindow(contextEditForm).getSubWindow());
         }
     }
 
@@ -115,7 +114,7 @@ public class ContextToolbar extends CustomComponent {
         @Override
         public void buttonClick(final ClickEvent event) {
             app.getMainWindow().addWindow(
-                new CloseContextModalWindow(parent).getSubWindow());
+                new CloseContextModalWindow(contextEditForm).getSubWindow());
 
         }
     }
@@ -123,7 +122,7 @@ public class ContextToolbar extends CustomComponent {
     private class DeleteContextListener implements Button.ClickListener {
         @Override
         public void buttonClick(final ClickEvent event) {
-            parent.deleteContext();
+            contextEditForm.deleteContext();
         }
     }
 
@@ -131,7 +130,7 @@ public class ContextToolbar extends CustomComponent {
         @Override
         public void buttonClick(final ClickEvent event) {
             try {
-                app.getContextView().showContextAddView();
+                app.getContextView().showAddView();
             }
             catch (final EscidocException e) {
                 log.error("An unexpected error occured! See log for details.",

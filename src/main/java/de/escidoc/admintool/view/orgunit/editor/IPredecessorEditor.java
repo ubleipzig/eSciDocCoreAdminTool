@@ -9,6 +9,7 @@ import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.Window;
 
 import de.escidoc.admintool.view.ResourceRefDisplay;
+import de.escidoc.admintool.view.lab.orgunit.AbstractOrgUnitViewLab;
 import de.escidoc.admintool.view.orgunit.AbstractOrgUnitView;
 
 /**
@@ -22,12 +23,11 @@ public interface IPredecessorEditor {
 
     void setList(final ListSelect select);
 
-    // TODO Remove after succesful refactoring
-    // public List<Object> getSelected();
-
     List<ResourceRefDisplay> getSelectedPredecessors();
 
     void setOrgUnitEditorView(AbstractOrgUnitView orgUnitEditorView);
 
     void setNewOrgUnit(String orgUnitName);
+
+    void setOrgUnitEditorView(AbstractOrgUnitViewLab orgUnitEditorViewLab);
 }

@@ -45,12 +45,16 @@ import de.escidoc.vaadin.dialog.ErrorDialog;
 import de.escidoc.vaadin.utilities.Converter;
 import de.escidoc.vaadin.utilities.LayoutHelper;
 
+//TODO this class is too big, extract some component to another class.
 public class OrgUnitEditView extends AbstractOrgUnitView {
 
     private static final Logger log = LoggerFactory
         .getLogger(OrgUnitEditView.class);
 
     private static final long serialVersionUID = -1488130998058019932L;
+
+    // TODO move this to constant, rename variable to a more meaningful name.
+    private static final int HEIGHT = 15;
 
     private final Label objIdField = new Label();
 
@@ -66,16 +70,13 @@ public class OrgUnitEditView extends AbstractOrgUnitView {
 
     private final Label publicStatusComment = new Label();
 
-    private static final int HEIGHT = 15;
-
     private OrgUnitToolbar toolbar;
 
     private Item item;
 
     public OrgUnitEditView(final AdminToolApplication app,
         final OrgUnitService service) throws EscidocException,
-        InternalClientException, TransportException,
-        UnsupportedOperationException {
+        InternalClientException, TransportException {
         super(app, service);
         middleInit();
         postInit();
@@ -182,6 +183,7 @@ public class OrgUnitEditView extends AbstractOrgUnitView {
                 }
                 case OPENED: {
                     setFormReadOnly(false);
+                    footer.setVisible(true);
                     break;
                 }
                 case CLOSED: {
@@ -190,7 +192,7 @@ public class OrgUnitEditView extends AbstractOrgUnitView {
                     break;
                 }
                 default: {
-                    throw new RuntimeException("unknown status");
+                    throw new IllegalArgumentException("Unknown status");
                 }
             }
             titleField.setPropertyDataSource(item
@@ -290,7 +292,6 @@ public class OrgUnitEditView extends AbstractOrgUnitView {
             }
         }
         else {
-            log.info("no predecessor");
             final BlankPredecessorView blankPredecessorView =
                 new BlankPredecessorView();
             predecessorLayout.replaceComponent(predecessorResult,
@@ -512,8 +513,7 @@ public class OrgUnitEditView extends AbstractOrgUnitView {
     }
 
     public void deleteOrgUnit() {
-        final OrganizationalUnit selected =
-            service.find(getSelectedOrgUnitId());
+        final OrganizationalUnit selected = getFromCache();
         try {
             service.delete(selected);
             orgUnitList.removeOrgUnit(selected);
@@ -521,36 +521,54 @@ public class OrgUnitEditView extends AbstractOrgUnitView {
         }
         catch (final EscidocException e) {
             log.error("An unexpected error occured! See log for details.", e);
-
         }
         catch (final InternalClientException e) {
             log.error("An unexpected error occured! See log for details.", e);
-
         }
         catch (final TransportException e) {
             log.error("An unexpected error occured! See log for details.", e);
-
         }
-
     }
 
     public OrganizationalUnit open(final String comment)
         throws EscidocException, InternalClientException, TransportException {
-        final OrganizationalUnit oldOrgUnit =
-            service.find(getSelectedOrgUnitId());
-        final OrganizationalUnit openedOrgUnit =
-            service.open(getSelectedOrgUnitId(), comment);
-        orgUnitList.updateOrgUnit(oldOrgUnit, openedOrgUnit);
+        final OrganizationalUnit cachedOrgUnit = getFromCache();
+        final OrganizationalUnit openedOrgUnit = openOrgUnit(comment);
+        updateListView(cachedOrgUnit, openedOrgUnit);
+        updateEditView(PublicStatus.OPENED);
         return openedOrgUnit;
+    }
+
+    private void updateEditView(final PublicStatus status) {
+        item.getItemProperty(PropertyId.PUBLIC_STATUS).setValue(status);
+    }
+
+    private void updateListView(
+        final OrganizationalUnit cachedOrgUnit,
+        final OrganizationalUnit openedOrgUnit) {
+        orgUnitList.updateOrgUnit(cachedOrgUnit, openedOrgUnit);
+    }
+
+    private OrganizationalUnit openOrgUnit(final String comment)
+        throws EscidocException, InternalClientException, TransportException {
+        return service.open(getSelectedOrgUnitId(), comment);
+    }
+
+    private OrganizationalUnit getFromCache() {
+        return service.find(getSelectedOrgUnitId());
     }
 
     public OrganizationalUnit close(final String comment)
         throws EscidocException, InternalClientException, TransportException {
-        final OrganizationalUnit oldOrgUnit =
-            service.find(getSelectedOrgUnitId());
-        final OrganizationalUnit closedOrgUnit =
-            service.close(getSelectedOrgUnitId(), comment);
-        orgUnitList.updateOrgUnit(oldOrgUnit, closedOrgUnit);
+        final OrganizationalUnit cachedOrgUnit = getFromCache();
+        final OrganizationalUnit closedOrgUnit = closeOrgUnit(comment);
+        updateListView(cachedOrgUnit, closedOrgUnit);
+        updateEditView(PublicStatus.CLOSED);
         return closedOrgUnit;
+    }
+
+    private OrganizationalUnit closeOrgUnit(final String comment)
+        throws EscidocException, InternalClientException, TransportException {
+        return service.close(getSelectedOrgUnitId(), comment);
     }
 }

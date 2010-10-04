@@ -4,53 +4,52 @@ import com.vaadin.data.Item;
 import com.vaadin.ui.SplitPanel;
 
 import de.escidoc.admintool.app.AdminToolApplication;
+import de.escidoc.admintool.view.ResourceView;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.core.resources.aa.useraccount.UserAccount;
 
 @SuppressWarnings("serial")
-public class UserView extends SplitPanel {
+public class UserView extends SplitPanel implements ResourceView {
 
     private final AdminToolApplication app;
 
-    private final UserListView userLabList;
+    private final UserListView userList;
 
-    private final UserEditView userLabEditView;
+    private final UserEditView userEditView;
 
     public UserView(final AdminToolApplication app,
         final UserListView userLabList, final UserEditView userLabEditView) {
         this.app = app;
-        this.userLabList = userLabList;
-        this.userLabEditView = userLabEditView;
+        userList = userLabList;
+        userEditView = userLabEditView;
         buildUI();
     }
 
     private void buildUI() {
         setSplitPosition(ViewConstants.SPLIT_POSITION_IN_PERCENT);
         setOrientation(ORIENTATION_HORIZONTAL);
-        setFirstComponent(userLabList);
+        setFirstComponent(userList);
     }
 
     public UserListView getUserList() {
-        return userLabList;
+        return userList;
     }
 
     public Item getSelectedItem() {
-        return userLabList.getItem(userLabList.getValue());
+        return userList.getItem(userList.getValue());
     }
 
-    public UserView showAddView() {
+    public void showAddView() {
         setSecondComponent(app.newUserLabAddView());
-        return this;
     }
 
     public void showEditView(final Item item) {
-        setSecondComponent(userLabEditView);
-        userLabEditView.setSelected(item);
+        setSecondComponent(userEditView);
+        userEditView.setSelected(item);
     }
 
     public void remove(final UserAccount deletedUser) {
-        userLabList.remove(deletedUser);
+        userList.remove(deletedUser);
         showAddView();
     }
-
 }

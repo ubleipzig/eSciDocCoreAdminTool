@@ -14,8 +14,8 @@ import de.escidoc.vaadin.dialog.ErrorDialog;
 public class SpinOffPPredecessorEditor extends AbstractPredecessorEditor
     implements IPredecessorEditor {
 
-    private static final Logger log =
-        LoggerFactory.getLogger(SpinOffPPredecessorEditor.class);
+    private static final Logger log = LoggerFactory
+        .getLogger(SpinOffPPredecessorEditor.class);
 
     private static final String EDITOR_DESCRIPTION =
         "Select one organizational unit to be replaced.";
@@ -71,4 +71,5 @@ public class SpinOffPPredecessorEditor extends AbstractPredecessorEditor
             new ErrorDialog(super.getMainWindow(), "Error",
                 "Select at least two items, please."));
     }
+
 }

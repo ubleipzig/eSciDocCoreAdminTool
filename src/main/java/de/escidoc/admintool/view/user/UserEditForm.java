@@ -29,7 +29,6 @@ import de.escidoc.admintool.app.PropertyId;
 import de.escidoc.admintool.service.RoleService;
 import de.escidoc.admintool.service.UserService;
 import de.escidoc.admintool.view.ViewConstants;
-import de.escidoc.core.resources.common.reference.Reference;
 import de.escidoc.admintool.view.role.RevokeGrantCommand;
 import de.escidoc.admintool.view.role.RevokeGrantWindow;
 import de.escidoc.admintool.view.validator.EmptyFieldValidator;
@@ -39,6 +38,8 @@ import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
 import de.escidoc.core.resources.aa.useraccount.Grant;
 import de.escidoc.core.resources.aa.useraccount.UserAccount;
+import de.escidoc.core.resources.common.reference.Reference;
+import de.escidoc.core.resources.common.reference.RoleRef;
 import de.escidoc.vaadin.dialog.ErrorDialog;
 import de.escidoc.vaadin.utilities.Converter;
 import de.escidoc.vaadin.utilities.LayoutHelper;
@@ -46,20 +47,10 @@ import de.escidoc.vaadin.utilities.LayoutHelper;
 public class UserEditForm extends CustomComponent implements ClickListener {
     private static final long serialVersionUID = 3182336883168014436L;
 
-    private static final String ASSIGN_ON = "grantProperties.assignedOn.objid";
-
-    private static final String GRANT_ROLE_OBJECT_ID =
-        "grantProperties.role.objid";
-
-    private static final String GRANT_TITLE = "title";
-
-    private static final String[] ROLE_COLUMN_HEADERS = new String[] { "Title",
-        "Role", "Asssigned On" };
+    private static final String GRANT_TITLE = "xLinkTitle";
 
     private static final Logger log = LoggerFactory
         .getLogger(UserEditForm.class);
-
-    private static final String EDIT_USER_VIEW_CAPTION = "Edit User Account";
 
     private static final int ROLE_LIST_HEIGHT = 100;
 
@@ -136,7 +127,7 @@ public class UserEditForm extends CustomComponent implements ClickListener {
         setCompositionRoot(panel);
         panel.setContent(form);
         form.setSpacing(false);
-        panel.setCaption(EDIT_USER_VIEW_CAPTION);
+        panel.setCaption(ViewConstants.EDIT_USER_VIEW_CAPTION);
         panel.addComponent(createHeader());
 
         nameField = new TextField();
@@ -191,9 +182,9 @@ public class UserEditForm extends CustomComponent implements ClickListener {
     private void initRoleTable() {
         roleTable.setWidth(ROLE_LIST_WIDTH);
         roleTable.setSelectable(true);
-        roleTable.setNullSelectionAllowed(true);
-        roleTable.setMultiSelect(true);
-        roleTable.setImmediate(true);
+        // roleTable.setNullSelectionAllowed(true);
+        // roleTable.setMultiSelect(true);
+        // roleTable.setImmediate(true);
     }
 
     private final class AddRoleButtonListener implements Button.ClickListener {
@@ -248,21 +239,21 @@ public class UserEditForm extends CustomComponent implements ClickListener {
                 new ErrorDialog(app.getMainWindow(), "Error",
                     "An unexpected error occured! See log for details."));
             log.error("An unexpected error occured! See log for details.", e);
-              
+
         }
         catch (final TransportException e) {
             app.getMainWindow().addWindow(
                 new ErrorDialog(app.getMainWindow(), "Error",
                     "An unexpected error occured! See log for details."));
             log.error("An unexpected error occured! See log for details.", e);
-              
+
         }
         catch (final EscidocClientException e) {
             app.getMainWindow().addWindow(
                 new ErrorDialog(app.getMainWindow(), "Error",
                     "An unexpected error occured! See log for details."));
             log.error("An unexpected error occured! See log for details.", e);
-              
+
         }
         return Collections.emptyList();
     }
@@ -316,19 +307,15 @@ public class UserEditForm extends CustomComponent implements ClickListener {
         }
         catch (final EscidocException e) {
             log.error("An unexpected error occured! See log for details.", e);
-              
         }
         catch (final InternalClientException e) {
             log.error("An unexpected error occured! See log for details.", e);
-              
         }
         catch (final TransportException e) {
             log.error("An unexpected error occured! See log for details.", e);
-              
         }
         catch (final EscidocClientException e) {
             log.error("An unexpected error occured! See log for details.", e);
-              
         }
     }
 
@@ -344,55 +331,57 @@ public class UserEditForm extends CustomComponent implements ClickListener {
     }
 
     public void setSelected(final Item item) {
-        this.item = item;
-        if (item != null) {
-            userObjectId =
-                (String) item.getItemProperty(PropertyId.OBJECT_ID).getValue();
-            nameField.setPropertyDataSource(item
-                .getItemProperty(ViewConstants.NAME_ID));
-            loginNameField.setPropertyDataSource(item
-                .getItemProperty(PropertyId.LOGIN_NAME));
-            objIdField.setPropertyDataSource(item
-                .getItemProperty(PropertyId.OBJECT_ID));
-            modifiedOn.setCaption(Converter
-                .dateTimeToString((org.joda.time.DateTime) item
-                    .getItemProperty(PropertyId.LAST_MODIFICATION_DATE)
-                    .getValue()));
-            modifiedBy.setPropertyDataSource(item
-                .getItemProperty(PropertyId.MODIFIED_BY));
-            state
-                .setPropertyDataSource(item.getItemProperty(PropertyId.ACTIVE));
-            createdOn.setCaption(Converter
-                .dateTimeToString((org.joda.time.DateTime) item
-                    .getItemProperty(PropertyId.CREATED_ON).getValue()));
-            createdBy.setPropertyDataSource(item
-                .getItemProperty(PropertyId.CREATED_BY));
-
-            bindRolesWithView();
+        if (item == null) {
+            return;
         }
+        this.item = item;
+        bindData();
+    }
+
+    private void bindData() {
+        userObjectId =
+            (String) item.getItemProperty(PropertyId.OBJECT_ID).getValue();
+        nameField.setPropertyDataSource(item
+            .getItemProperty(ViewConstants.NAME_ID));
+        loginNameField.setPropertyDataSource(item
+            .getItemProperty(PropertyId.LOGIN_NAME));
+        objIdField.setPropertyDataSource(item
+            .getItemProperty(PropertyId.OBJECT_ID));
+        modifiedOn.setCaption(Converter
+            .dateTimeToString((org.joda.time.DateTime) item.getItemProperty(
+                PropertyId.LAST_MODIFICATION_DATE).getValue()));
+        modifiedBy.setPropertyDataSource(item
+            .getItemProperty(PropertyId.MODIFIED_BY));
+        state.setPropertyDataSource(item.getItemProperty(PropertyId.ACTIVE));
+        createdOn.setCaption(Converter
+            .dateTimeToString((org.joda.time.DateTime) item.getItemProperty(
+                PropertyId.CREATED_ON).getValue()));
+        createdBy.setPropertyDataSource(item
+            .getItemProperty(PropertyId.CREATED_BY));
+        bindRolesWithView();
     }
 
     private void bindRolesWithView() {
         final List<Grant> userGrants = (List<Grant>) getGrants();
-        // FIXME SWA title is maybe not supported
-//        for (final Grant grant : userGrants) {
-//            System.out.println("Grant title: " + grant.getTitle());
-//        }
+        for (final Grant grant : userGrants) {
+            System.out.println("Grant title: " + grant.getXLinkTitle());
+        }
         if (userGrants.size() > 0) {
             grantContainer =
                 new POJOContainer<Grant>(Grant.class, GRANT_TITLE,
-                    PropertyId.OBJECT_ID, GRANT_ROLE_OBJECT_ID, ASSIGN_ON);
+                    PropertyId.OBJECT_ID, PropertyId.GRANT_ROLE_OBJECT_ID,
+                    PropertyId.ASSIGN_ON);
             roleTable.setContainerDataSource(grantContainer);
             roleTable.setVisibleColumns(new String[] { GRANT_TITLE,
-                GRANT_ROLE_OBJECT_ID, ASSIGN_ON });
-            roleTable.setColumnHeaders(ROLE_COLUMN_HEADERS);
+                PropertyId.GRANT_ROLE_OBJECT_ID, PropertyId.ASSIGN_ON });
+            roleTable.setColumnHeaders(ViewConstants.ROLE_COLUMN_HEADERS);
 
             for (final Grant grant : userGrants) {
                 final Reference assignedOn =
                     grant.getGrantProperties().getAssignedOn();
                 if (assignedOn == null) {
                     grant.getGrantProperties().setAssignedOn(
-                        new Reference("", Reference.RESOURCE_TYPE.Grant));
+                        new RoleRef("", ""));
                 }
                 grantContainer.addPOJO(grant);
             }
@@ -448,18 +437,15 @@ public class UserEditForm extends CustomComponent implements ClickListener {
                 setComponentError(new SystemError(e.getMessage()));
                 log.error("An unexpected error occured! See log for details.",
                     e);
- ;
             }
             catch (final TransportException e) {
                 setComponentError(new SystemError(e.getMessage()));
                 log.error("An unexpected error occured! See log for details.",
                     e);
- ;
             }
             catch (final EscidocException e) {
                 log.error("An unexpected error occured! See log for details.",
                     e);
- ;
                 setComponentError(new SystemError(e.getMessage()));
             }
         }

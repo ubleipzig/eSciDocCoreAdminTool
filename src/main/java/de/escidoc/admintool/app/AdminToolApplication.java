@@ -4,13 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.vaadin.Application;
-import com.vaadin.data.Item;
-import com.vaadin.data.Property;
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
-import com.vaadin.event.ItemClickEvent;
-import com.vaadin.event.ItemClickEvent.ItemClickListener;
-import com.vaadin.terminal.ExternalResource;
 import com.vaadin.terminal.ThemeResource;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -18,20 +11,22 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.SplitPanel;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
-import com.vaadin.ui.Window.Notification;
 
 import de.escidoc.admintool.messages.Messages;
 import de.escidoc.admintool.service.ContextService;
 import de.escidoc.admintool.service.OrgUnitService;
 import de.escidoc.admintool.service.RoleService;
 import de.escidoc.admintool.service.UserService;
+import de.escidoc.admintool.view.ErrorMessage;
 import de.escidoc.admintool.view.NavigationTree;
+import de.escidoc.admintool.view.StartPage;
 import de.escidoc.admintool.view.Toolbar;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.admintool.view.context.ContextAddView;
 import de.escidoc.admintool.view.context.ContextEditForm;
 import de.escidoc.admintool.view.context.ContextListView;
 import de.escidoc.admintool.view.context.ContextView;
+import de.escidoc.admintool.view.lab.orgunit.OrgUnitViewFactory;
 import de.escidoc.admintool.view.orgunit.OrgUnitAddView;
 import de.escidoc.admintool.view.orgunit.OrgUnitEditView;
 import de.escidoc.admintool.view.orgunit.OrgUnitListView;
@@ -45,13 +40,10 @@ import de.escidoc.admintool.view.user.UserView;
 import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
-import de.escidoc.core.client.exceptions.application.security.AuthenticationException;
 import de.escidoc.core.resources.aa.useraccount.UserAccount;
-import de.escidoc.vaadin.dialog.ErrorDialog;
 
 @SuppressWarnings("serial")
-public class AdminToolApplication extends Application
-    implements ValueChangeListener, ItemClickListener {
+public class AdminToolApplication extends Application {
     // TODO / FIXME
     // too many method
     // too many fields
@@ -62,27 +54,31 @@ public class AdminToolApplication extends Application
     private final Window mainWindow = new Window(
         ViewConstants.MAIN_WINDOW_TITLE);
 
+    private final VerticalLayout appLayout = new VerticalLayout();
+
     private final SplitPanel horizontalSplit = new SplitPanel(
         SplitPanel.ORIENTATION_HORIZONTAL);
 
     private final Button logoutButton = new Button(
         Messages.getString("AdminToolApplication.6")); //$NON-NLS-1$
 
-    private final Button newUserButton = new Button(
-        Messages.getString("AdminToolApplication.7")); //$NON-NLS-1$
-
     private final StartPage startPage = new StartPage();
 
-    private final NavigationTree tree = new NavigationTree(this);
+    private final NavigationTree navigation = new NavigationTree(this);
 
-    // TODO: move Context related views to a class.
+    private ContextService contextService;
+
+    private OrgUnitService orgUnitService;
+
+    private RoleService roleService;
+
+    private UserService userService;
+
     private ContextView contextView;
-
-    private ContextEditForm contextForm;
 
     private ContextListView contextList;
 
-    private ContextService contextService;
+    private ContextEditForm contextForm;
 
     private OrgUnitAddView orgUnitAddForm;
 
@@ -90,19 +86,7 @@ public class AdminToolApplication extends Application
 
     private OrgUnitListView orgUnitList;
 
-    private OrgUnitService orgUnitService;
-
     private OrgUnitView orgUnitView;
-
-    // FIXME: FindBugs reports following warning:
-    /*
-     * "This Serializable class defines a non-primitive instance field which is
-     * neither transient, Serializable, or java.lang.Object, and does not appear
-     * to implement the Externalizable interface or the readObject() and
-     * writeObject() methods. Objects of this class will not be deserialized
-     * correctly if a non-Serializable object is stored in this field."
-     */
-    private RoleService roleService;
 
     private RoleView roleView;
 
@@ -110,9 +94,9 @@ public class AdminToolApplication extends Application
 
     private UserListView userListView;
 
-    private UserService userService;
-
     private UserView userView;
+
+    private OrgUnitViewFactory orgUnitViewFactory;
 
     @Override
     public void init() {
@@ -120,16 +104,9 @@ public class AdminToolApplication extends Application
         addParameterHandler();
     }
 
-    private void addLogoutButton() {
-        logoutButton.setIcon(new ThemeResource(Messages
-            .getString("AdminToolApplication.1")));
-        logoutButton.addListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(final ClickEvent event) {
-                mainWindow.open(new ExternalResource(
-                    AdminToolContants.LOGOUT_URL + getURL()));
-            }
-        });
+    private void initMainWindow() {
+        setTheme(AdminToolContants.THEME_NAME);
+        setMainWindow(mainWindow);
     }
 
     private void addParameterHandler() {
@@ -137,62 +114,114 @@ public class AdminToolApplication extends Application
             this));
     }
 
-    public void authenticate(final String token) throws AuthenticationException {
-        try {
-            loadProtectedResources(token);
-        }
-        catch (final AuthenticationException e) {
-            getMainWindow().showNotification(
-                new Notification(ViewConstants.SERVER_INTERNAL_ERROR, e
-                    .getMessage(), Notification.TYPE_ERROR_MESSAGE));
-            log.error(ViewConstants.SERVER_INTERNAL_ERROR, e);
-        }
-        catch (final EscidocException e) {
-            getMainWindow().showNotification(
-                new Notification(ViewConstants.SERVER_INTERNAL_ERROR, e
-                    .getMessage(), Notification.TYPE_ERROR_MESSAGE));
-            log.error(ViewConstants.SERVER_INTERNAL_ERROR, e);
-        }
-        catch (final InternalClientException e) {
-            getMainWindow().showNotification(
-                new Notification(ViewConstants.SERVER_INTERNAL_ERROR, e
-                    .getMessage(), Notification.TYPE_ERROR_MESSAGE));
-            log.error(ViewConstants.SERVER_INTERNAL_ERROR, e);
-        }
-        catch (final TransportException e) {
-            getMainWindow().showNotification(
-                new Notification(ViewConstants.SERVER_INTERNAL_ERROR, e
-                    .getMessage(), Notification.TYPE_ERROR_MESSAGE));
-            log.error(ViewConstants.SERVER_INTERNAL_ERROR, e);
-        }
+    public void authenticate(final String token)
+        throws InternalClientException, EscidocException, TransportException {
+        loadProtectedResources(token);
+    }
+
+    private void loadProtectedResources(final String token)
+        throws InternalClientException, EscidocException, TransportException {
+        initServices(token);
+        initFactories();
+        buildMainLayout();
+        setMainView(startPage);
+    }
+
+    private void initServices(final String token)
+        throws InternalClientException, EscidocException, TransportException {
+        final ServiceFactory serviceFactory = new ServiceFactory(token);
+        orgUnitService = serviceFactory.createOrgService();
+        userService = serviceFactory.createUserService();
+        contextService = serviceFactory.createContextService();
+        roleService = serviceFactory.createRoleService();
+    }
+
+    private void initFactories() throws EscidocException,
+        InternalClientException, TransportException {
+        orgUnitViewFactory = new OrgUnitViewFactory(orgUnitService, mainWindow);
     }
 
     private void buildMainLayout() {
-        mainWindow.setSizeFull();
-        final VerticalLayout layout = new VerticalLayout();
-        layout.setSizeFull();
+        mainWindow.setContent(appLayout);
 
-        layout.addComponent(Toolbar.createToolbar(getMainWindow(),
-            new Button[] { logoutButton }));
-        layout.addComponent(horizontalSplit);
-        layout.setExpandRatio(horizontalSplit, 1);
-
-        horizontalSplit.setSplitPosition(200, SplitPanel.UNITS_PIXELS);
-        horizontalSplit.setFirstComponent(tree);
-
-        getMainWindow().setContent(layout);
+        setFullSize();
+        addToolbar();
         addLogoutButton();
+        addNavigationTree();
     }
 
-    public void buttonClick(final ClickEvent event) {
-        final Button source = event.getButton();
-        if (source.equals(newUserButton)) {
-            showUserAddForm();
+    private void setFullSize() {
+        mainWindow.setSizeFull();
+        appLayout.setSizeFull();
+    }
+
+    private void setMainView(final Component component) {
+        horizontalSplit.setSecondComponent(component);
+    }
+
+    private void addToolbar() {
+        appLayout.addComponent(Toolbar.createToolbar(mainWindow,
+            new Button[] { logoutButton }));
+    }
+
+    private void addLogoutButton() {
+        logoutButton.setIcon(new ThemeResource(Messages
+            .getString("AdminToolApplication.1")));
+        setLogoutURL(AdminToolContants.LOGOUT_URL + getURL());
+        logoutButton.addListener(new Button.ClickListener() {
+
+            @Override
+            public void buttonClick(final ClickEvent event) {
+                close();
+            }
+        });
+    }
+
+    private void addNavigationTree() {
+        appLayout.addComponent(horizontalSplit);
+        appLayout.setExpandRatio(horizontalSplit, 1);
+        horizontalSplit.setSplitPosition(
+            ViewConstants.SPLIT_POSITION_FROM_LEFT, SplitPanel.UNITS_PIXELS);
+        horizontalSplit.setFirstComponent(navigation);
+    }
+
+    public OrgUnitListView getOrgUnitTable() {
+        if (orgUnitList == null) {
+            orgUnitList = new OrgUnitListView(this, orgUnitService);
         }
-        else {
-            throw new IllegalArgumentException(
-                Messages.getString("AdminToolApplication.17") + source);
+        return orgUnitList;
+    }
+
+    public OrgUnitView getOrgUnitView() {
+        if (orgUnitView == null) {
+            try {
+                orgUnitList = new OrgUnitListView(this, orgUnitService);
+                orgUnitEditForm = new OrgUnitEditView(this, orgUnitService);
+                orgUnitEditForm.setOrgUnitList(orgUnitList);
+                orgUnitView =
+                    new OrgUnitView(this, orgUnitList, orgUnitEditForm,
+                        orgUnitAddForm);
+            }
+            catch (final EscidocException e) {
+                ErrorMessage.show(mainWindow, e);
+                log.error(ViewConstants.SERVER_INTERNAL_ERROR, e);
+            }
+            catch (final InternalClientException e) {
+                ErrorMessage.show(mainWindow, e);
+                log.error(ViewConstants.SERVER_INTERNAL_ERROR, e);
+            }
+            catch (final TransportException e) {
+                ErrorMessage.show(mainWindow, e);
+                log.error(ViewConstants.SERVER_INTERNAL_ERROR, e);
+            }
+            // FIXME check if this necassary
+            catch (final Exception e) {
+                ErrorMessage.show(mainWindow, e);
+                log.error(ViewConstants.SERVER_INTERNAL_ERROR, e);
+            }
         }
+        orgUnitView.showAddView();
+        return orgUnitView;
     }
 
     public ContextView getContextView() throws EscidocException,
@@ -208,65 +237,11 @@ public class AdminToolApplication extends Application
             contextView =
                 new ContextView(this, contextList, contextForm, contextAddView);
         }
-        contextView.showContextAddView();
+        // contextView =
+        // new ContextViewFactory(this, contextService, orgUnitService)
+        // .getContexView();
+        contextView.showAddView();
         return contextView;
-    }
-
-    public OrgUnitService getOrgUnitService() {
-        return orgUnitService;
-    }
-
-    public OrgUnitListView getOrgUnitTable() {
-        if (orgUnitList == null) {
-            orgUnitList = new OrgUnitListView(this, orgUnitService);
-        }
-        return orgUnitList;
-    }
-
-    /*
-     * View getters exist so we can lazily generate the views, resulting in
-     * faster application startup time.
-     */
-    public OrgUnitView getOrgUnitView() {
-        if (orgUnitView == null) {
-            try {
-                orgUnitList = new OrgUnitListView(this, orgUnitService);
-                orgUnitEditForm = new OrgUnitEditView(this, orgUnitService);
-                orgUnitEditForm.setOrgUnitList(orgUnitList);
-                orgUnitView =
-                    new OrgUnitView(this, orgUnitList, orgUnitEditForm,
-                        orgUnitAddForm);
-            }
-
-            catch (final EscidocException e) {
-                getMainWindow().addWindow(
-                    new ErrorDialog(getMainWindow(),
-                        ViewConstants.SERVER_INTERNAL_ERROR, e.getMessage())); //$NON-NLS-1$
-            }
-            catch (final InternalClientException e) {
-                getMainWindow().addWindow(
-                    new ErrorDialog(getMainWindow(),
-                        ViewConstants.SERVER_INTERNAL_ERROR, e.getMessage()));
-            }
-            catch (final TransportException e) {
-                getMainWindow().addWindow(
-                    new ErrorDialog(getMainWindow(),
-                        ViewConstants.SERVER_INTERNAL_ERROR, e.getMessage()));
-            }
-            catch (final UnsupportedOperationException e) {
-                getMainWindow().addWindow(
-                    new ErrorDialog(getMainWindow(),
-                        ViewConstants.SERVER_INTERNAL_ERROR, e.getMessage()));
-            }
-            catch (final Exception e) {
-                getMainWindow().addWindow(
-                    new ErrorDialog(getMainWindow(),
-                        ViewConstants.SERVER_INTERNAL_ERROR, e.getMessage()));
-            }
-        }
-        orgUnitView.showOrganizationalUnitAddForm();
-
-        return orgUnitView;
     }
 
     private RoleService getRoleService() {
@@ -281,7 +256,7 @@ public class AdminToolApplication extends Application
         return roleView;
     }
 
-    private UserView getUsersLabView() {
+    public UserView getUserView() {
         if (userView == null) {
             userListView = new UserListView(this, userService);
             userEditForm =
@@ -293,59 +268,9 @@ public class AdminToolApplication extends Application
         return userView;
     }
 
-    private void initMainWindow() {
-        setTheme(AdminToolContants.THEME_NAME);
-        setMainWindow(mainWindow);
-    }
-
-    private void initServices(final String token) throws EscidocException,
-        InternalClientException, TransportException {
-        final ServiceFactory serviceFactory = new ServiceFactory(token);
-        orgUnitService = serviceFactory.createOrgService();
-        userService = serviceFactory.createUserService();
-        contextService = serviceFactory.createContextService();
-        roleService = serviceFactory.createRoleService();
-    }
-
-    public void itemClick(final ItemClickEvent event) {
-        if (isFromTree(event)) {
-            final Object itemId = event.getItemId();
-            if (itemId == null) {
-                return;
-            }
-            else if (ViewConstants.ORGANIZATIONAL_UNIT.equals(itemId)) {
-                showOrganizationalUnitView();
-            }
-            else if (ViewConstants.CONTEXT.equals(itemId)) {
-                showContextView();
-            }
-            else if (ViewConstants.USERS_LAB.equals(itemId)) {
-                showUsersLabView();
-            }
-            else if (ViewConstants.ROLE.equals(itemId)) {
-                showRoleView();
-            }
-            else {
-                throw new IllegalArgumentException(
-                    Messages.getString("AdminToolApplication.10"));
-            }
-        }
-    }
-
-    private boolean isFromTree(final ItemClickEvent event) {
-        return event.getSource() == tree;
-    }
-
-    private void loadProtectedResources(final String token)
-        throws EscidocException, InternalClientException, TransportException {
-        initServices(token);
-        buildMainLayout();
-        setMainComponent(startPage);
-    }
-
     public ContextAddView newContextAddView() {
-        return new ContextAddView(this, contextList, contextService,
-            orgUnitService);
+        return new ContextAddView(this, contextView.getContextList(),
+            contextService, orgUnitService);
     }
 
     public Component newOrgUnitAddView() throws EscidocException,
@@ -358,15 +283,11 @@ public class AdminToolApplication extends Application
             orgUnitService);
     }
 
-    private void setMainComponent(final Component component) {
-        horizontalSplit.setSecondComponent(component);
-    }
-
     public void showContextView() {
         ContextView contextView;
         try {
             contextView = getContextView();
-            setMainComponent(contextView);
+            setMainView(contextView);
         }
         catch (final EscidocException e) {
             log.error(Messages.getString("AdminToolApplication.8"), e);
@@ -380,68 +301,46 @@ public class AdminToolApplication extends Application
     }
 
     public void showOrganizationalUnitView() {
-        setMainComponent(getOrgUnitView());
+        setMainView(getOrgUnitView());
     }
 
     public void showRoleView() {
-        setMainComponent(getRoleView());
+        setMainView(getRoleView());
     }
 
     public void showRoleView(final UserAccount userAccount) {
         roleView.selectUser(userAccount);
-        setMainComponent(roleView);
-    }
-
-    private void showUserAddForm() {
-        showUsersLabView();
-        getUsersLabView();
+        setMainView(roleView);
     }
 
     public void showUserInEditView(final UserAccount user) {
-        getUsersLabView();
-        userListView.select(user);
+        userView.getUserList().select(user);
+        userView.showEditView(userView.getSelectedItem());
+        setMainView(userView);
     }
 
-    private void showUsersLabView() {
-        setMainComponent(getUsersLabView());
+    public void showUserView() {
+        setMainView(getUserView());
     }
 
-    public void showUsersView() {
-        setMainComponent(getUsersLabView());
+    public void showOrgUnitViewLab() {
+        setMainView(getOrgUnitViewLab());
     }
 
-    public void valueChange(final ValueChangeEvent event) {
-        final Property property = event.getProperty();
-        // TODO this is not OOP, redesign this part of code.
-        if (property.equals(orgUnitList)) {
-            final Item item = orgUnitList.getItem(orgUnitList.getValue());
-
-            if (item != null) {
-                orgUnitView.showEditView(item);
-            }
+    private Component getOrgUnitViewLab() {
+        assert (orgUnitViewFactory != null) : "orgUnitViewFactory can not be null.";
+        try {
+            return orgUnitViewFactory.getOrgUnitViewLab();
         }
-        else if (property.equals(contextList)) {
-            final Item item = contextView.getSelectedItem();
-            if (item == null) {
-                contextView.showContextAddView();
-            }
-            else {
-                contextView.showEditView(item);
-            }
+        catch (final EscidocException e) {
+            ErrorMessage.show(mainWindow, e);
         }
-        else if (property.equals(userView.getUserList())) {
-            final Item item = userView.getSelectedItem();
-
-            if (item == null) {
-                userView.showAddView();
-            }
-            else {
-                userView.showEditView(item);
-            }
+        catch (final InternalClientException e) {
+            ErrorMessage.show(mainWindow, e);
         }
-        else {
-            throw new IllegalArgumentException(
-                Messages.getString("AdminToolApplication.16"));
+        catch (final TransportException e) {
+            ErrorMessage.show(mainWindow, e);
         }
+        return new VerticalLayout();
     }
 }

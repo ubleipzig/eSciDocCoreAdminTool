@@ -32,7 +32,6 @@ import com.vaadin.ui.themes.Reindeer;
 
 import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.app.PropertyId;
-import de.escidoc.core.resources.common.reference.Reference;
 import de.escidoc.admintool.service.ContextService;
 import de.escidoc.admintool.service.RoleService;
 import de.escidoc.admintool.service.UserService;
@@ -44,6 +43,7 @@ import de.escidoc.core.client.exceptions.TransportException;
 import de.escidoc.core.client.exceptions.application.notfound.RoleNotFoundException;
 import de.escidoc.core.resources.aa.role.Role;
 import de.escidoc.core.resources.aa.useraccount.UserAccount;
+import de.escidoc.core.resources.common.reference.RoleRef;
 import de.escidoc.core.resources.om.context.Context;
 import de.escidoc.vaadin.dialog.ErrorDialog;
 
@@ -282,9 +282,6 @@ public class RoleView extends CustomComponent {
 
     private class SaveBtnListener implements Button.ClickListener {
 
-        private static final String REQUESTED_ROLE_HAS_NO_SCOPE_DEFINITIONS =
-            "Requested role has no scope-definitions";
-
         private static final long serialVersionUID = -7128599340989436927L;
 
         @Override
@@ -293,58 +290,29 @@ public class RoleView extends CustomComponent {
         }
 
         private void onSaveClick() {
-            if (scopeNeeded()) {
-                mainWindow
-                    .showNotification("Assign Grants to user account is not yet implemented.");
-            }
-            else {
-                if (isValid()) {
-                    mainWindow.showNotification("Assign role: "
-                        + getSelectedRole().getProperties().getName()
-                        + " to user: "
-                        + getSelectedUser().getProperties().getName());
-
-                    assignRole();
-                }
-            }
+            // TODO add validation
+            showNotification();
+            assignRole();
         }
 
-        private boolean scopeNeeded() {
-            return false;
-        }
-
-        private boolean isValid() {
-            return true;
-            // if (resourceTypeComboBox.isEnabled()) {
-            // return userComboBox.isValid()
-            // && getSelectedResources().size() > 0;
-            // }
-            //
-            // return userComboBox.isValid() && roleComboBox.isValid();
+        private void showNotification() {
+            mainWindow.showNotification("Assign role: "
+                + getSelectedRole().getProperties().getName() + " to user: "
+                + getSelectedUser().getProperties().getName());
         }
 
         private void assignRole() {
             try {
-                // userService.assign(getSelectedUser().getObjid(),
-                // getSelectedRole().getObjid());
                 userService
                     .assign(getSelectedUser()).withRole(getSelectedRole())
                     .onResources(getSelectedResources()).execute();
-
-                final Object value = userComboBox.getValue();
-                if (value instanceof UserAccount) {
-                    final UserAccount user = (UserAccount) value;
-                    log.info(user.getProperties().getName());
-                }
-
-                selectUser((UserAccount) userComboBox.getValue());
-                app.showUserInEditView(selectedUser);
+                app.showUserInEditView(getSelectedUser());
             }
             catch (final RoleNotFoundException e) {
                 app.getMainWindow().addWindow(
                     new ErrorDialog(app.getMainWindow(),
                         ViewConstants.ERROR_DIALOG_CAPTION,
-                        REQUESTED_ROLE_HAS_NO_SCOPE_DEFINITIONS));
+                        ViewConstants.REQUESTED_ROLE_HAS_NO_SCOPE_DEFINITIONS));
                 log.error("An unexpected error occured! See log for details.",
                     e);
             }
@@ -372,15 +340,15 @@ public class RoleView extends CustomComponent {
             return new Role();
         }
 
-        private Set<Reference> getSelectedResources() {
+        private Set<RoleRef> getSelectedResources() {
             final Object value = resouceResult.getValue();
             if (value instanceof Set) {
-                final Set<Reference> toBeScopes = (Set<Reference>) value;
+                final Set<RoleRef> toBeScopes = (Set<RoleRef>) value;
                 mainWindow.showNotification(toBeScopes.toString());
                 return toBeScopes;
             }
-            else if (value instanceof Reference) {
-                return Collections.singleton((Reference) value);
+            else if (value instanceof RoleRef) {
+                return Collections.singleton((RoleRef) value);
             }
             return Collections.emptySet();
         }

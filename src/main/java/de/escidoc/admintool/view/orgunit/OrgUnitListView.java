@@ -47,7 +47,7 @@ public class OrgUnitListView extends Table {
         setSizeFull();
         setSelectable(true);
         setImmediate(true);
-        addListener((ValueChangeListener) app);
+        addListener(new OrgUnitSelectListener(app));
         setNullSelectionAllowed(false);
     }
 

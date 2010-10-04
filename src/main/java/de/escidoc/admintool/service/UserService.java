@@ -10,8 +10,6 @@ import org.joda.time.DateTime;
 import de.escidoc.admintool.app.AdminToolContants;
 import de.escidoc.admintool.domain.UserAccountFactory;
 import de.escidoc.core.client.TransportProtocol;
-import de.escidoc.core.resources.common.reference.Reference;
-import de.escidoc.core.resources.common.reference.RoleRef;
 import de.escidoc.core.client.UserAccountHandlerClient;
 import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.client.exceptions.EscidocException;
@@ -23,6 +21,7 @@ import de.escidoc.core.resources.aa.useraccount.GrantProperties;
 import de.escidoc.core.resources.aa.useraccount.UserAccount;
 import de.escidoc.core.resources.common.Filter;
 import de.escidoc.core.resources.common.TaskParam;
+import de.escidoc.core.resources.common.reference.RoleRef;
 
 public class UserService {
 
@@ -140,7 +139,7 @@ public class UserService {
         assert !(selectedItemId == null || selectedItemId.isEmpty()) : "selectedItemId must not be null or empty";
 
         final UserAccount userAccount = getSelectedUser(selectedItemId);
-        assert !userAccount.getProperties().isActive() : "User account is not active.";
+        assert userAccount.getProperties().isActive() : "User account is not active.";
 
         getSoapClient().deactivate(userAccount.getObjid(),
             lastModificationDate(userAccount));
@@ -237,8 +236,8 @@ public class UserService {
         return this;
     }
 
-    public UserService onResources(final Set<Reference> selectedResources) {
-        for (final Reference resourceRef : selectedResources) {
+    public UserService onResources(final Set<RoleRef> selectedResources) {
+        for (final RoleRef resourceRef : selectedResources) {
             grantProps.setAssignedOn(resourceRef);
         }
         return this;

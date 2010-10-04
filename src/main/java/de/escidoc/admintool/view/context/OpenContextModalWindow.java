@@ -10,6 +10,7 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
+import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
@@ -21,25 +22,19 @@ public class OpenContextModalWindow extends VerticalLayout {
 
     private static final long serialVersionUID = -6815586703714340558L;
 
-    private Window subwindow;
+    private final Window subwindow = new Window(ViewConstants.OPEN);
+
+    private final Button cancelBtn = new Button(ViewConstants.CANCEL,
+        new CancelClickListener(subwindow));
+
+    private final Button submitBtn = new Button(ViewConstants.OPEN,
+        new SubmitOpenContextClickListener());
 
     private final ContextEditForm contextForm;
-
-    final Button submitBtn = new Button("Open Context",
-        new SubmitOpenContextClickListener());
 
     private TextField commentField;
 
     private VerticalLayout layout;
-
-    @SuppressWarnings("serial")
-    private final Button cancelBtn = new Button("Cancel",
-        new Button.ClickListener() {
-
-            public void buttonClick(final ClickEvent event) {
-                (subwindow.getParent()).removeWindow(subwindow);
-            }
-        });
 
     public OpenContextModalWindow(final ContextEditForm contextForm) {
         this.contextForm = contextForm;
@@ -53,22 +48,22 @@ public class OpenContextModalWindow extends VerticalLayout {
     private class SubmitOpenContextClickListener
         implements Button.ClickListener {
 
+        private static final long serialVersionUID = -8527938690355384964L;
+
         public void buttonClick(final ClickEvent event) {
             try {
                 final String enteredComment = (String) commentField.getValue();
                 assert enteredComment != null;
-                contextForm.openContext(enteredComment);
-                (subwindow.getParent()).removeWindow(subwindow);
+                contextForm.open(enteredComment);
+                subwindow.getParent().removeWindow(subwindow);
             }
             catch (final EscidocException e) {
                 log.error("An unexpected error occured! See log for details.",
                     e);
-
             }
             catch (final InternalClientException e) {
                 log.error("An unexpected error occured! See log for details.",
                     e);
-
             }
             catch (final TransportException e) {
                 log.error("An unexpected error occured! See log for details.",
@@ -94,11 +89,9 @@ public class OpenContextModalWindow extends VerticalLayout {
     }
 
     private OpenContextModalWindow modalWindow() {
-        subwindow = new Window("Open Context");
         subwindow.setModal(true);
-        subwindow.setWidth("450px");
-        subwindow.setHeight("300px");
-
+        subwindow.setWidth(ViewConstants.MODAL_WINDOW_WIDTH);
+        subwindow.setHeight(ViewConstants.MODAL_WINDOW_HEIGHT);
         layout = (VerticalLayout) subwindow.getContent();
         layout.setMargin(true);
         layout.setSpacing(true);

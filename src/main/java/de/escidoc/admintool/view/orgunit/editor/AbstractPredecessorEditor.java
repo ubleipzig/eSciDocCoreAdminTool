@@ -23,6 +23,7 @@ import com.vaadin.ui.Window;
 import de.escidoc.admintool.service.OrgUnitService;
 import de.escidoc.admintool.view.ResourceRefDisplay;
 import de.escidoc.admintool.view.context.OrgUnitTree;
+import de.escidoc.admintool.view.lab.orgunit.AbstractOrgUnitViewLab;
 import de.escidoc.admintool.view.orgunit.AbstractOrgUnitView;
 import de.escidoc.admintool.view.orgunit.PredecessorType;
 
@@ -33,8 +34,8 @@ import de.escidoc.admintool.view.orgunit.PredecessorType;
 public abstract class AbstractPredecessorEditor extends CustomComponent
     implements IPredecessorEditor {
 
-    private static final Logger log =
-        LoggerFactory.getLogger(AbstractPredecessorEditor.class);
+    private static final Logger log = LoggerFactory
+        .getLogger(AbstractPredecessorEditor.class);
 
     private static final long serialVersionUID = -9122833046327977836L;
 
@@ -61,6 +62,8 @@ public abstract class AbstractPredecessorEditor extends CustomComponent
     private final OrgUnitService service;
 
     protected AbstractOrgUnitView orgUnitEditorView;
+
+    protected AbstractOrgUnitViewLab orgUnitEditorViewLab;
 
     public AbstractPredecessorEditor(final OrgUnitService service) {
         this.service = service;
@@ -179,6 +182,12 @@ public abstract class AbstractPredecessorEditor extends CustomComponent
 
     public void setOrgUnitEditorView(final AbstractOrgUnitView orgUnitEditorView) {
         this.orgUnitEditorView = orgUnitEditorView;
+    }
+
+    public void setOrgUnitEditorView(
+        final AbstractOrgUnitViewLab orgUnitEditorViewLab) {
+        this.orgUnitEditorViewLab = orgUnitEditorViewLab;
+
     }
 
     @Override

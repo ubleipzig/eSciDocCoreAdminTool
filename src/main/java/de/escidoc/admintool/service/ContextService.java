@@ -27,8 +27,8 @@ import de.escidoc.core.resources.om.context.Context;
 import de.escidoc.core.resources.om.context.OrganizationalUnitRefs;
 
 public class ContextService {
-    private static final Logger log = LoggerFactory // NOPMD by CHH on 9/17/10
-                                                    // 10:20 AM
+
+    private static final Logger log = LoggerFactory
         .getLogger(ContextService.class);
 
     // TODO separate Model/Cache and Service

@@ -13,7 +13,11 @@ import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.Notification;
 
 import de.escidoc.admintool.messages.Messages;
+import de.escidoc.admintool.view.ErrorMessage;
 import de.escidoc.admintool.view.ViewConstants;
+import de.escidoc.core.client.exceptions.EscidocException;
+import de.escidoc.core.client.exceptions.InternalClientException;
+import de.escidoc.core.client.exceptions.TransportException;
 import de.escidoc.core.client.exceptions.application.security.AuthenticationException;
 
 @SuppressWarnings("serial")
@@ -67,6 +71,18 @@ public class ParamaterHandlerImpl implements ParameterHandler {
                 ViewConstants.WRONG_TOKEN_MESSAGE, e.getMessage(),
                 Notification.TYPE_ERROR_MESSAGE));
             log.error(Messages.getString("AdminToolApplication.3"), e); //$NON-NLS-1$
+        }
+        catch (final EscidocException e) {
+            ErrorMessage.show(mainWindow, e);
+            log.error(ViewConstants.SERVER_INTERNAL_ERROR, e);
+        }
+        catch (final InternalClientException e) {
+            ErrorMessage.show(mainWindow, e);
+            log.error(ViewConstants.SERVER_INTERNAL_ERROR, e);
+        }
+        catch (final TransportException e) {
+            ErrorMessage.show(mainWindow, e);
+            log.error(ViewConstants.SERVER_INTERNAL_ERROR, e);
         }
     }
 

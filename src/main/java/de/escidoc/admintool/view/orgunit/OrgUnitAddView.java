@@ -40,14 +40,14 @@ public class OrgUnitAddView extends AbstractOrgUnitView
     implements ClickListener, Serializable {
     private static final long serialVersionUID = 8351229526921020901L;
 
-    private static final Logger log =
-        LoggerFactory.getLogger(OrgUnitAddView.class);
+    private static final Logger log = LoggerFactory
+        .getLogger(OrgUnitAddView.class);
 
-    private final ObjectProperty titleProperty =
-        new ObjectProperty("", String.class);
+    private final ObjectProperty titleProperty = new ObjectProperty("",
+        String.class);
 
-    private final ObjectProperty descProperty =
-        new ObjectProperty("", String.class);
+    private final ObjectProperty descProperty = new ObjectProperty("",
+        String.class);
 
     public OrgUnitAddView(final AdminToolApplication app,
         final OrgUnitService service) {
@@ -74,16 +74,6 @@ public class OrgUnitAddView extends AbstractOrgUnitView
         final OrganizationalUnit orgUnit) throws EscidocException,
         InternalClientException, TransportException {
         return service.create(orgUnit);
-    }
-
-    private void updateOrgUnitTableView(final OrganizationalUnit createdOrgUnit) {
-        // TODO: fix me. Bad! everytime we do changes in the repository we have
-        // to change model and the view
-        // we should only have to change the model, and the view will get notify
-        // and update it self.
-        // Investigate how to use Vaadin's DataBinding
-        app.getOrgUnitTable().addOrgUnit(createdOrgUnit);
-        orgUnitList.addOrgUnit(createdOrgUnit);
     }
 
     @Override
@@ -128,35 +118,30 @@ public class OrgUnitAddView extends AbstractOrgUnitView
         }
         catch (final ClassNotFoundException e) {
             log.error("An unexpected error occured! See log for details.", e);
-              
+
         }
         catch (final InstantiationException e) {
             log.error("An unexpected error occured! See log for details.", e);
-              
 
         }
         catch (final IllegalAccessException e) {
             log.error("An unexpected error occured! See log for details.", e);
-              
+
         }
         catch (final SecurityException e) {
             log.error("An unexpected error occured! See log for details.", e);
-              
 
         }
         catch (final NoSuchMethodException e) {
             log.error("An unexpected error occured! See log for details.", e);
-              
 
         }
         catch (final IllegalArgumentException e) {
             log.error("An unexpected error occured! See log for details.", e);
-              
 
         }
         catch (final InvocationTargetException e) {
             log.error("An unexpected error occured! See log for details.", e);
-              
 
         }
     }
@@ -177,44 +162,38 @@ public class OrgUnitAddView extends AbstractOrgUnitView
                 storeInRepository(new OrgUnitFactory()
                     .create((String) titleField.getValue(),
                         (String) descriptionField.getValue()).parents(parents)
-                    .predecessors(predecessors, predecessorForm).identifier(
-                        (String) identifierField.getValue()).alternative(
-                        (String) alternativeField.getValue()).orgType(
-                        (String) orgTypeField.getValue()).country(
-                        (String) countryField.getValue()).city(
-                        (String) cityField.getValue()).coordinates(
-                        (String) coordinatesField.getValue()).build());
+                    .predecessors(predecessors, predecessorForm)
+                    .identifier((String) identifierField.getValue())
+                    .alternative((String) alternativeField.getValue())
+                    .orgType((String) orgTypeField.getValue())
+                    .country((String) countryField.getValue())
+                    .city((String) cityField.getValue())
+                    .coordinates((String) coordinatesField.getValue()).build());
             orgUnitList.addOrgUnit(createdOrgUnit);
             orgUnitList.select(createdOrgUnit);
         }
         catch (final EscidocException e) {
             log.error("An unexpected error occured! See log for details.", e);
-              
 
         }
         catch (final InternalClientException e) {
             log.error("An unexpected error occured! See log for details.", e);
-              
 
         }
         catch (final TransportException e) {
             log.error("An unexpected error occured! See log for details.", e);
-              
 
         }
         catch (final ParserConfigurationException e) {
             log.error("An unexpected error occured! See log for details.", e);
-              
 
         }
         catch (final SAXException e) {
             log.error("An unexpected error occured! See log for details.", e);
-              
 
         }
         catch (final IOException e) {
             log.error("An unexpected error occured! See log for details.", e);
-              
 
         }
     }
@@ -255,7 +234,7 @@ public class OrgUnitAddView extends AbstractOrgUnitView
             }
             catch (final EscidocClientException e) {
                 // TODO Auto-generated catch block
- ;
+                ;
             }
         }
         return predecessorForm;

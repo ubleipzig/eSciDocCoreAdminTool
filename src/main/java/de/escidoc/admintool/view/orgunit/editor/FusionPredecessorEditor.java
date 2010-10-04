@@ -13,8 +13,8 @@ import de.escidoc.vaadin.dialog.ErrorDialog;
 
 public class FusionPredecessorEditor extends AbstractPredecessorEditor {
 
-    private static final Logger log =
-        LoggerFactory.getLogger(FusionPredecessorEditor.class);
+    private static final Logger log = LoggerFactory
+        .getLogger(FusionPredecessorEditor.class);
 
     private static final String EDITOR_DESCRIPTION =
         "Select minimal two organizational units, please.";
@@ -51,8 +51,8 @@ public class FusionPredecessorEditor extends AbstractPredecessorEditor {
             log.info("selected: " + resourceRefDisplay);
         }
         final AbstractPredecessorView addedPredecessorView =
-            new FusionPredecessorView(selectedPredecessors, super
-                .getOrgUnitName());
+            new FusionPredecessorView(selectedPredecessors,
+                super.getOrgUnitName());
         addedPredecessorView.setResourceRefDisplay(selectedPredecessors);
         return addedPredecessorView;
     }

@@ -24,4 +24,9 @@ public class AdminToolContants {
 
     public static final String SYSADMIN_OBJECT_ID = "escidoc:exuser1";
 
+    public static final String IS_TOP_LEVEL = "true";
+
+    public static final String TOP_LEVEL_ORGANIZATIONAL_UNITS =
+    "top-level-organizational-units";
+
 }

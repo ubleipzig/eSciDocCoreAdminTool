@@ -18,8 +18,8 @@ import com.vaadin.ui.Window;
 import de.escidoc.admintool.service.OrgUnitService;
 import de.escidoc.admintool.view.ResourceRefDisplay;
 import de.escidoc.admintool.view.context.OrgUnitTree;
+import de.escidoc.admintool.view.lab.orgunit.AbstractOrgUnitViewLab;
 import de.escidoc.admintool.view.orgunit.AbstractOrgUnitView;
-import de.escidoc.admintool.view.orgunit.OrgUnitAddView;
 import de.escidoc.admintool.view.orgunit.PredecessorType;
 import de.escidoc.admintool.view.orgunit.predecessor.SplittingPredeccesorView;
 import de.escidoc.vaadin.dialog.ErrorDialog;
@@ -53,7 +53,7 @@ public class SplittingPredecessorEditor extends CustomComponent
 
     private Window parent;
 
-    private OrgUnitAddView orgUnitAddView;
+    private AbstractOrgUnitViewLab orgUnitEditorViewLab;
 
     private String orgUnitName;
 
@@ -259,12 +259,18 @@ public class SplittingPredecessorEditor extends CustomComponent
     @Override
     public void setNewOrgUnit(final String orgUnitName) {
         this.orgUnitName = orgUnitName;
-
     }
 
     @Override
     public List<ResourceRefDisplay> getSelectedPredecessors() {
         // TODO Auto-generated method stub
         return null;
+    }
+
+    @Override
+    public void setOrgUnitEditorView(
+        final AbstractOrgUnitViewLab orgUnitEditorView) {
+        orgUnitEditorViewLab = orgUnitEditorView;
+        buildLayout();
     }
 }

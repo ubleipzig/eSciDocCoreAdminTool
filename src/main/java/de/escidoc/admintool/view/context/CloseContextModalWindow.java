@@ -1,5 +1,8 @@
 package de.escidoc.admintool.view.context;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.HorizontalLayout;
@@ -7,27 +10,26 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
+import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
 
-@SuppressWarnings("serial")
 public class CloseContextModalWindow extends VerticalLayout {
+    private static final long serialVersionUID = -2916506925078723208L;
 
-    private Window subwindow;
+    private static final Logger log = LoggerFactory
+        .getLogger(CloseContextModalWindow.class);
+
+    private final Window subwindow = new Window("Close Context");
+
+    private final Button submitBtn = new Button(ViewConstants.CLOSE,
+        new SubmitCloseContextClickListener());
+
+    private final Button cancelBtn = new Button(ViewConstants.CANCEL,
+        new CancelClickListener(subwindow));
 
     private final ContextEditForm contextForm;
-
-    private final Button cancelBtn =
-        new Button("Cancel", new Button.ClickListener() {
-
-            public void buttonClick(final ClickEvent event) {
-                ((Window) subwindow.getParent()).removeWindow(subwindow);
-            }
-        });
-
-    final Button submitBtn =
-        new Button("Close Context", new SubmitCloseContextClickListener());
 
     private TextField commentField;
 
@@ -44,24 +46,24 @@ public class CloseContextModalWindow extends VerticalLayout {
 
     private class SubmitCloseContextClickListener
         implements Button.ClickListener {
+        private static final long serialVersionUID = 5642227677682855700L;
 
         public void buttonClick(final ClickEvent event) {
             try {
-                contextForm.closeContext((String) commentField.getValue());
-                ((Window) subwindow.getParent()).removeWindow(subwindow);
-
+                contextForm.close((String) commentField.getValue());
+                (subwindow.getParent()).removeWindow(subwindow);
             }
             catch (final EscidocException e) {
-                // TODO Auto-generated catch block
- ;
+                log.error("An unexpected error occured! See log for details.",
+                    e);
             }
             catch (final InternalClientException e) {
-                // TODO Auto-generated catch block
- ;
+                log.error("An unexpected error occured! See log for details.",
+                    e);
             }
             catch (final TransportException e) {
-                // TODO Auto-generated catch block
- ;
+                log.error("An unexpected error occured! See log for details.",
+                    e);
             }
         }
     }
@@ -83,11 +85,9 @@ public class CloseContextModalWindow extends VerticalLayout {
     }
 
     private CloseContextModalWindow modalWindow() {
-        subwindow = new Window("Close Context");
         subwindow.setModal(true);
-        subwindow.setWidth("450px");
-        subwindow.setHeight("300px");
-
+        subwindow.setWidth(ViewConstants.MODAL_WINDOW_WIDTH);
+        subwindow.setHeight(ViewConstants.MODAL_WINDOW_HEIGHT);
         layout = (VerticalLayout) subwindow.getContent();
         layout.setMargin(true);
         layout.setSpacing(true);
@@ -97,5 +97,4 @@ public class CloseContextModalWindow extends VerticalLayout {
     public Window getSubWindow() {
         return subwindow;
     }
-
 }

@@ -1,7 +1,6 @@
 package de.escidoc.admintool.view.context;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import com.vaadin.data.Item;
@@ -19,9 +18,10 @@ import com.vaadin.ui.themes.BaseTheme;
 
 import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.view.ViewConstants;
-import de.escidoc.core.resources.common.reference.OrganizationalUnitRef;
+import de.escidoc.core.resources.common.reference.Reference;
 import de.escidoc.core.resources.om.context.AdminDescriptor;
 import de.escidoc.core.resources.om.context.Context;
+import de.escidoc.core.resources.om.context.OrganizationalUnitRefs;
 
 @SuppressWarnings("serial")
 public class ContextReadView extends Form implements ClickListener {
@@ -102,9 +102,9 @@ public class ContextReadView extends Form implements ClickListener {
 
         verticalLayout.addComponent(orgUnitLabel);
 
-        final Collection<OrganizationalUnitRef> organizationalUnitRefs =
+        final OrganizationalUnitRefs organizationalUnitRefs =
             context.getProperties().getOrganizationalUnitRefs();
-        for (final OrganizationalUnitRef resourceRef : organizationalUnitRefs) {
+        for (final Reference resourceRef : organizationalUnitRefs) {
             verticalLayout.addComponent(new Label(resourceRef.getObjid()));
         }
 

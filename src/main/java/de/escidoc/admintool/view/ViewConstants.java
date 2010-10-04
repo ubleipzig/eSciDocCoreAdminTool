@@ -197,10 +197,10 @@ public class ViewConstants {
     public static final String NO_TOKEN = "You are not logged in";
 
     public static final String WRONG_TOKEN_MESSAGE =
-    "You are not authentificated";
+        "You are not authentificated";
 
     public static final String INVALID_TOKEN_ERROR_MESSAGE =
-    "Invalid token, try again";
+        "Invalid token, try again";
 
     public static final String SERVER_INTERNAL_ERROR = "Server Internal Error";
 
@@ -210,8 +210,7 @@ public class ViewConstants {
 
     public static final String CONTEXT = Messages.getString("NavigationTree.1"); //$NON-NLS-1$
 
-    public static final String USERS_LAB = Messages
-    .getString("NavigationTree.2"); //$NON-NLS-1$
+    public static final String USERS = Messages.getString("NavigationTree.2"); //$NON-NLS-1$
 
     public static final String ROLE = "Role";
 
@@ -220,10 +219,29 @@ public class ViewConstants {
     public static final String COMMENT = "Comment:";
 
     public static final String ORGANIZATIONAL_UNIT_LABEL =
-    "Organizational Unit";
+        "Organizational Unit";
 
     public static final String EMPTY_STRING = "";
 
     public static final String CLOSE = "Close";
 
+    public static final String ORG_UNIT_TREE = "OrgUnitTree";
+
+    public static final String EDIT_USER_VIEW_CAPTION = "Edit User Account";
+
+    public static final String[] ROLE_COLUMN_HEADERS = new String[] { "Title",
+        "Role", "Asssigned On" };
+
+    public static final String REQUESTED_ROLE_HAS_NO_SCOPE_DEFINITIONS =
+        "Requested role has no scope-definitions";
+
+    public static final String FIELD_WIDTH = "400px";
+
+    public static final String MODAL_WINDOW_WIDTH = "460px";
+
+    public static final String MODAL_WINDOW_HEIGHT = "200px";
+
+    public static final int SPLIT_POSITION_FROM_LEFT = 200;
+
+    public static final String CANCEL = "Cancel";
 }

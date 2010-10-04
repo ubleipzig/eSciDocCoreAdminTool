@@ -15,12 +15,14 @@ import org.slf4j.LoggerFactory;
 import de.escidoc.admintool.app.AdminToolContants;
 import de.escidoc.admintool.exception.ResourceNotFoundException;
 import de.escidoc.core.client.OrganizationalUnitHandlerClient;
+import de.escidoc.core.client.TransportProtocol;
 import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
 import de.escidoc.core.resources.common.Filter;
 import de.escidoc.core.resources.common.TaskParam;
 import de.escidoc.core.resources.oum.OrganizationalUnit;
+import de.escidoc.core.resources.oum.OrganizationalUnitList;
 import de.escidoc.core.resources.oum.Predecessor;
 
 public class OrgUnitService {
@@ -244,5 +246,41 @@ public class OrgUnitService {
         updateMap(objectId, closedContext);
 
         return closedContext;
+    }
+
+    public OrganizationalUnitList retrieveTopLevelOrgUnits()
+        throws EscidocException, InternalClientException, TransportException {
+        client.setTransport(TransportProtocol.REST);
+        return client
+            .retrieveOrganizationalUnits(createTaskParamWithTopLevelFilter());
+    }
+
+    private TaskParam createTaskParamWithTopLevelFilter() {
+        final Collection<Filter> filters = TaskParam.filtersFactory();
+        filters.add(createTopLevelFilter());
+        final TaskParam taskParam = new TaskParam();
+        taskParam.setFilters(filters);
+        return taskParam;
+    }
+
+    private Filter createTopLevelFilter() {
+        final Filter filter = new Filter();
+        filter.setName(AdminToolContants.TOP_LEVEL_ORGANIZATIONAL_UNITS);
+        filter.setValue(AdminToolContants.IS_TOP_LEVEL);
+        filter.setIds(Collections.singletonList(""));
+        return filter;
+    }
+
+    public Collection<OrganizationalUnit> retrieveChildren(final String parentId)
+        throws EscidocException, InternalClientException, TransportException {
+
+        final OrganizationalUnitList childList =
+            client.retrieveChildObjects(parentId);
+
+        if (childList == null) {
+            return Collections.emptyList();
+        }
+
+        return childList.getOrganizationalUnits();
     }
 }

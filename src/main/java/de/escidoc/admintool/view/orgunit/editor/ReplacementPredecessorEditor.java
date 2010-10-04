@@ -13,8 +13,8 @@ import de.escidoc.vaadin.dialog.ErrorDialog;
 
 public class ReplacementPredecessorEditor extends AbstractPredecessorEditor {
 
-    private static final Logger log =
-        LoggerFactory.getLogger(ReplacementPredecessorEditor.class);
+    private static final Logger log = LoggerFactory
+        .getLogger(ReplacementPredecessorEditor.class);
 
     private static final String EDITOR_DESCRIPTION =
         "Select one organizational unit to be replaced.";
