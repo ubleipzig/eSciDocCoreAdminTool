@@ -24,7 +24,7 @@
 		<dependency>
 			<groupId>org.escidoc.core</groupId>
 			<artifactId>client-1.2</artifactId>
-			<version>build45</version>
+			<version>0.8-SNAPSHOT</version>
 			<type>jar</type>
 		</dependency>
 		<dependency>
