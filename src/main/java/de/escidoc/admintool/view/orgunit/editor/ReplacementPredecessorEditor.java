@@ -47,15 +47,16 @@ public class ReplacementPredecessorEditor extends AbstractPredecessorEditor {
     protected void showAddedPredecessors() {
         final AbstractPredecessorView addedPredecessorView =
             createPredecessorView(super.getSelectedPredecessors());
-        orgUnitEditorView.showAddedPredecessors(addedPredecessorView);
+        orgUnitEditorViewLab.showAddedPredecessors(addedPredecessorView);
     }
 
-    // TODO move to a factory class.DRY
     private AbstractPredecessorView createPredecessorView(
         final List<ResourceRefDisplay> selectedPredecessors) {
+
         for (final ResourceRefDisplay resourceRefDisplay : selectedPredecessors) {
             log.info("selected: " + resourceRefDisplay);
         }
+
         final AbstractPredecessorView addedPredecessorView =
             new ReplacementPredecessorView(selectedPredecessors
                 .get(0).getTitle(), super.getOrgUnitName());

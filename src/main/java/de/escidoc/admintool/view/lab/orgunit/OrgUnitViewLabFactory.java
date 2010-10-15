@@ -59,11 +59,14 @@ public class OrgUnitViewLabFactory {
     private void createOrgUnitAddViewFactory() throws EscidocException,
         InternalClientException, TransportException {
         OrgUnitAddViewFactory =
-            new OrgUnitAddViewFactory(mainWindow, orgUnitService, container);
+            new OrgUnitAddViewFactory(mainWindow, orgUnitService, container,
+                orgUnitContainerFactory);
     }
 
     private void createOrgUnitEditViewFactory() {
-        orgUnitEditViewLab = new OrgUnitEditViewLab(orgUnitService, mainWindow);
+        orgUnitEditViewLab =
+            new OrgUnitEditViewLab(orgUnitService, mainWindow,
+                orgUnitContainerFactory);
     }
 
     public OrgUnitViewLab getOrgUnitViewLab() throws EscidocException,
@@ -73,6 +76,7 @@ public class OrgUnitViewLabFactory {
         }
         orgUnitAddViewLab.setOrgUnitView(orgUnitViewLab);
         orgUnitTreeViewLab.setOrgUnitView(orgUnitViewLab);
+        orgUnitEditViewLab.setOrgUnitView(orgUnitViewLab);
         return orgUnitViewLab;
     }
 

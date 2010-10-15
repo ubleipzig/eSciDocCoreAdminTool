@@ -1,5 +1,6 @@
 package de.escidoc.admintool.service;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
@@ -14,7 +15,7 @@ import org.slf4j.LoggerFactory;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 
-import de.escidoc.admintool.app.AdminToolContants;
+import de.escidoc.admintool.app.AppConstants;
 import de.escidoc.admintool.domain.ContextFactory;
 import de.escidoc.core.client.ContextHandlerClient;
 import de.escidoc.core.client.exceptions.EscidocException;
@@ -26,7 +27,9 @@ import de.escidoc.core.resources.om.context.AdminDescriptors;
 import de.escidoc.core.resources.om.context.Context;
 import de.escidoc.core.resources.om.context.OrganizationalUnitRefs;
 
-public class ContextService {
+@SuppressWarnings("serial")
+public class ContextService implements Serializable {
+    // NOPMD by CHH on 9/17/10 10:20 AM
 
     private static final Logger log = LoggerFactory
         .getLogger(ContextService.class);
@@ -47,16 +50,22 @@ public class ContextService {
     private final Multimap<String, Context> contextByTitle = HashMultimap
         .create();
 
-    public ContextService(final String authentication) throws EscidocException,
-        TransportException, InternalClientException {
+    private final String eSciDocUri;
+
+    public ContextService(final String eSciDocUri, final String authentication)
+        throws EscidocException, TransportException, InternalClientException {
+
+        this.eSciDocUri = eSciDocUri;
         client = initClient(authentication);
     }
 
     private ContextHandlerClient initClient(final String handle)
         throws EscidocException, TransportException, InternalClientException {
+
         final ContextHandlerClient client = new ContextHandlerClient();
         client.setHandle(handle);
-        client.setServiceAddress(AdminToolContants.ESCIDOC_SERVICE_ROOT_URI);
+        client.setServiceAddress(eSciDocUri);
+
         return client;
     }
 
@@ -94,8 +103,8 @@ public class ContextService {
 
     private TaskParam createdBySysAdmin() {
         final Collection<Filter> filters = TaskParam.filtersFactory();
-        filters.add(getFilter(AdminToolContants.CREATED_BY_FILTER,
-            AdminToolContants.SYSADMIN_OBJECT_ID, null));
+        filters.add(getFilter(AppConstants.CREATED_BY_FILTER,
+            AppConstants.SYSADMIN_OBJECT_ID, null));
 
         final TaskParam filterParam = new TaskParam();
         filterParam.setFilters(filters);

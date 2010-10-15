@@ -190,9 +190,11 @@ public class OrgUnitAddView extends AbstractOrgUnitView
         }
         catch (final SAXException e) {
             log.error("An unexpected error occured! See log for details.", e);
+
         }
         catch (final IOException e) {
             log.error("An unexpected error occured! See log for details.", e);
+
         }
     }
 
@@ -231,8 +233,8 @@ public class OrgUnitAddView extends AbstractOrgUnitView
                 return predecessorForm;
             }
             catch (final EscidocClientException e) {
-                log.error("An unexpected error occured! See log for details.",
-                    e);
+                // TODO Auto-generated catch block
+                ;
             }
         }
         return predecessorForm;

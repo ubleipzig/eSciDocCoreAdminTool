@@ -49,7 +49,7 @@ public class SpinOffPPredecessorEditor extends AbstractPredecessorEditor
     protected void showAddedPredecessors() {
         final AbstractPredecessorView addedPredecessorView =
             createPredecessorView(super.getSelectedPredecessors());
-        orgUnitEditorView.showAddedPredecessors(addedPredecessorView);
+        orgUnitEditorViewLab.showAddedPredecessors(addedPredecessorView);
     }
 
     // TODO move to a factory class.DRY

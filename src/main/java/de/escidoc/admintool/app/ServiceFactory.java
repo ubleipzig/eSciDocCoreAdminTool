@@ -10,28 +10,31 @@ import de.escidoc.core.client.exceptions.TransportException;
 
 public class ServiceFactory {
 
+    private final String eSciDocUri;
+
     private final String authentication;
 
-    public ServiceFactory(final String token) {
+    public ServiceFactory(final String eSciDocUri, final String token) {
+        this.eSciDocUri = eSciDocUri;
         authentication = token;
     }
 
     public OrgUnitService createOrgService() throws InternalClientException {
-        return new OrgUnitService(authentication);
+        return new OrgUnitService(eSciDocUri, authentication);
     }
 
     public UserService createUserService() throws EscidocException,
         InternalClientException, TransportException {
-        return new UserService(authentication);
+        return new UserService(eSciDocUri, authentication);
     }
 
     public ContextService createContextService() throws EscidocException,
         TransportException, InternalClientException {
-        return new ContextService(authentication);
+        return new ContextService(eSciDocUri, authentication);
     }
 
     public RoleService createRoleService() throws EscidocException,
         InternalClientException, TransportException {
-        return new RoleService(authentication);
+        return new RoleService(eSciDocUri, authentication);
     }
 }

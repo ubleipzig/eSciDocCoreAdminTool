@@ -7,8 +7,14 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Window;
 
+import de.escidoc.admintool.view.ErrorMessage;
+import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.admintool.view.context.PublicStatus;
+import de.escidoc.core.client.exceptions.EscidocException;
+import de.escidoc.core.client.exceptions.InternalClientException;
+import de.escidoc.core.client.exceptions.TransportException;
 
 public class OrgUnitToolbarLab extends CustomComponent {
 
@@ -18,20 +24,29 @@ public class OrgUnitToolbarLab extends CustomComponent {
 
     private final HorizontalLayout header = new HorizontalLayout();
 
-    private final Button newOrgUnitButton = new Button("New",
+    private final Button newOrgUnitButton = new Button(ViewConstants.NEW,
         new NewOrgUnitListener());
 
-    private final Button openOrgUnitButton = new Button("Open",
+    private final Button openOrgUnitButton = new Button(ViewConstants.OPEN,
         new OpenOrgUnitListener());
 
-    private final Button closeOrgUnitButton = new Button("Close",
+    private final Button closeOrgUnitButton = new Button(ViewConstants.CLOSE,
         new CloseOrgUnitListener());
 
-    private final Button deleteOrgUnitButton = new Button("Delete",
+    private final Button deleteOrgUnitButton = new Button(ViewConstants.DELETE,
         new DeleteOrgUnitListener());
 
-    public OrgUnitToolbarLab() {
+    private final Window mainWindow;
+
+    private OrgUnitViewLab orgUnitViewLab;
+
+    public OrgUnitToolbarLab(final Window mainWindow) {
+        this.mainWindow = mainWindow;
         init();
+    }
+
+    public void setOrgUnitView(final OrgUnitViewLab orgUnitViewLab) {
+        this.orgUnitViewLab = orgUnitViewLab;
     }
 
     private void init() {
@@ -47,29 +62,60 @@ public class OrgUnitToolbarLab extends CustomComponent {
 
     private class NewOrgUnitListener implements Button.ClickListener {
 
+        private static final long serialVersionUID = -5497939033019573360L;
+
         @Override
         public void buttonClick(final ClickEvent event) {
+            orgUnitViewLab.showAddView();
         }
     }
 
     private class OpenOrgUnitListener implements Button.ClickListener {
 
+        private static final long serialVersionUID = -413173113376360998L;
+
         @Override
         public void buttonClick(final ClickEvent event) {
+            mainWindow.addWindow(new OpenOrgUnitModalWindow(
+                OrgUnitToolbarLab.this, orgUnitViewLab).getSubWindow());
         }
     }
 
     private class CloseOrgUnitListener implements Button.ClickListener {
 
+        private static final long serialVersionUID = 4038394242582696771L;
+
         @Override
         public void buttonClick(final ClickEvent event) {
+            mainWindow.addWindow(new CloseOrgUnitModalWindow(
+                OrgUnitToolbarLab.this, orgUnitViewLab).getSubWindow());
         }
     }
 
     private class DeleteOrgUnitListener implements Button.ClickListener {
 
+        private static final long serialVersionUID = -290305308440696149L;
+
         @Override
         public void buttonClick(final ClickEvent event) {
+            try {
+                orgUnitViewLab.deleteOrgUnit();
+            }
+            catch (final EscidocException e) {
+                log.error("An unexpected error occured! See log for details.",
+                    e);
+                ErrorMessage.show(mainWindow, e);
+            }
+            catch (final InternalClientException e) {
+                log.error("An unexpected error occured! See log for details.",
+                    e);
+                ErrorMessage.show(mainWindow, e);
+            }
+            catch (final TransportException e) {
+                log.error("An unexpected error occured! See log for details.",
+                    e);
+                ErrorMessage.show(mainWindow, e);
+            }
         }
     }
 
@@ -94,7 +140,5 @@ public class OrgUnitToolbarLab extends CustomComponent {
                 break;
             }
         }
-
     }
-
 }

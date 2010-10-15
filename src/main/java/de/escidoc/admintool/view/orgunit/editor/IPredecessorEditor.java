@@ -23,6 +23,9 @@ public interface IPredecessorEditor {
 
     void setList(final ListSelect select);
 
+    // TODO Remove after succesful refactoring
+    // public List<Object> getSelected();
+
     List<ResourceRefDisplay> getSelectedPredecessors();
 
     void setOrgUnitEditorView(AbstractOrgUnitView orgUnitEditorView);

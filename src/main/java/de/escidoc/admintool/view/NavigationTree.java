@@ -12,8 +12,7 @@ public class NavigationTree extends Tree {
 
     // TODO refactor to enum
     private final String[] MENU_ACTIONS = { ViewConstants.ORGANIZATIONAL_UNIT,
-        ViewConstants.CONTEXT, ViewConstants.USERS, ViewConstants.ROLE,
-        ViewConstants.ORG_UNIT_TREE };
+        ViewConstants.CONTEXT, ViewConstants.USERS, ViewConstants.ROLE };
 
     private final AdminToolApplication app;
 
@@ -40,9 +39,9 @@ public class NavigationTree extends Tree {
             if (itemId == null) {
                 return;
             }
-            else if (ViewConstants.ORGANIZATIONAL_UNIT.equals(itemId)) {
-                app.showOrganizationalUnitView();
-            }
+            // else if (ViewConstants.ORGANIZATIONAL_UNIT.equals(itemId)) {
+            // app.showOrganizationalUnitView();
+            // }
             else if (ViewConstants.CONTEXT.equals(itemId)) {
                 app.showContextView();
             }
@@ -52,7 +51,7 @@ public class NavigationTree extends Tree {
             else if (ViewConstants.ROLE.equals(itemId)) {
                 app.showRoleView();
             }
-            else if (ViewConstants.ORG_UNIT_TREE.equals(itemId)) {
+            else if (ViewConstants.ORGANIZATIONAL_UNIT.equals(itemId)) {
                 app.showOrgUnitViewLab();
             }
             else {

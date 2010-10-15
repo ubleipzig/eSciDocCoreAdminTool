@@ -22,7 +22,6 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Window;
 
-import de.escidoc.admintool.app.PropertyId;
 import de.escidoc.admintool.domain.OrgUnitFactory;
 import de.escidoc.admintool.service.OrgUnitService;
 import de.escidoc.admintool.view.ErrorMessage;
@@ -36,11 +35,9 @@ import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
 import de.escidoc.core.resources.oum.OrganizationalUnit;
-import de.escidoc.core.resources.oum.Parent;
 import de.escidoc.core.resources.oum.PredecessorForm;
 import de.escidoc.vaadin.dialog.ErrorDialog;
 
-@SuppressWarnings("serial")
 public class OrgUnitAddViewLab extends AbstractOrgUnitViewLab {
 
     private static final Logger log = LoggerFactory
@@ -54,18 +51,22 @@ public class OrgUnitAddViewLab extends AbstractOrgUnitViewLab {
 
     private final HierarchicalContainer container;
 
-    private Component orgUnitView;
+    private OrgUnitViewLab orgUnitView;
+
+    private final OrgUnitContainerFactory orgUnitContainerFactory;
 
     public OrgUnitAddViewLab(final OrgUnitService orgUnitService,
-        final HierarchicalContainer container, final Window mainWindow) {
+        final HierarchicalContainer container, final Window mainWindow,
+        final OrgUnitContainerFactory orgUnitContainerFactory) {
         super(orgUnitService, mainWindow);
         super.postInit();
         Preconditions.checkNotNull(container);
         this.container = container;
+        this.orgUnitContainerFactory = orgUnitContainerFactory;
         mapObjectWithProperty();
     }
 
-    public void setOrgUnitView(final Component orgUnitView) {
+    public void setOrgUnitView(final OrgUnitViewLab orgUnitView) {
         this.orgUnitView = orgUnitView;
     }
 
@@ -80,12 +81,6 @@ public class OrgUnitAddViewLab extends AbstractOrgUnitViewLab {
         predecessorLayout.replaceComponent(predecessorResult,
             addedPredecessorView);
         predecessorResult = addedPredecessorView;
-    }
-
-    private OrganizationalUnit storeInRepository(
-        final OrganizationalUnit orgUnit) throws EscidocException,
-        InternalClientException, TransportException {
-        return service.create(orgUnit);
     }
 
     @Override
@@ -157,45 +152,26 @@ public class OrgUnitAddViewLab extends AbstractOrgUnitViewLab {
         }
     }
 
-    // TODO this is crazy. Data binding to the rescue for later.
     @Override
     protected void saveClicked(final ClickEvent event) {
-        titleField.setComponentError(null);
-        descriptionField.setComponentError(null);
+        removeComponentErrors();
+        updateView(storeInRepository(createOrgUnit()));
+    }
 
-        final Set<String> parents = getSelectedParents();
-
+    private OrganizationalUnit createOrgUnit() {
         try {
-            final PredecessorForm predecessorForm =
-                getSelectedPredecessorForm();
-            final Set<String> predecessors = getSelectedPredecessors();
-            final OrganizationalUnit createdOrgUnit =
-                storeInRepository(new OrgUnitFactory()
-                    .create((String) titleField.getValue(),
-                        (String) descriptionField.getValue()).parents(parents)
-                    .predecessors(predecessors, predecessorForm)
-                    .identifier((String) identifierField.getValue())
-                    .alternative((String) alternativeField.getValue())
-                    .orgType((String) orgTypeField.getValue())
-                    .country((String) countryField.getValue())
-                    .city((String) cityField.getValue())
-                    .coordinates((String) coordinatesField.getValue()).build());
-            updateView(createdOrgUnit);
-
-            // TODO select the created org unit in tree view
-            // orgUnitList.select(createdOrgUnit);
-        }
-        catch (final EscidocException e) {
-            log.error("An unexpected error occured! See log for details.", e);
-            ErrorMessage.show(mainWindow, e);
-        }
-        catch (final InternalClientException e) {
-            log.error("An unexpected error occured! See log for details.", e);
-            ErrorMessage.show(mainWindow, e);
-        }
-        catch (final TransportException e) {
-            log.error("An unexpected error occured! See log for details.", e);
-            ErrorMessage.show(mainWindow, e);
+            return new OrgUnitFactory()
+                .create((String) titleField.getValue(),
+                    (String) descriptionField.getValue())
+                .parents(getSelectedParents())
+                .predecessors(getSelectedPredecessors(),
+                    getSelectedPredecessorForm())
+                .identifier((String) identifierField.getValue())
+                .alternative((String) alternativeField.getValue())
+                .orgType((String) orgTypeField.getValue())
+                .country((String) countryField.getValue())
+                .city((String) cityField.getValue())
+                .coordinates((String) coordinatesField.getValue()).build();
         }
         catch (final ParserConfigurationException e) {
             log.error("An unexpected error occured! See log for details.", e);
@@ -209,6 +185,32 @@ public class OrgUnitAddViewLab extends AbstractOrgUnitViewLab {
             log.error("An unexpected error occured! See log for details.", e);
             ErrorMessage.show(mainWindow, e);
         }
+        return null;
+    }
+
+    private void removeComponentErrors() {
+        titleField.setComponentError(null);
+        descriptionField.setComponentError(null);
+    }
+
+    private OrganizationalUnit storeInRepository(
+        final OrganizationalUnit orgUnit) {
+        try {
+            return service.create(orgUnit);
+        }
+        catch (final EscidocException e) {
+            log.error("An unexpected error occured! See log for details.", e);
+            ErrorMessage.show(mainWindow, e);
+        }
+        catch (final InternalClientException e) {
+            log.error("An unexpected error occured! See log for details.", e);
+            ErrorMessage.show(mainWindow, e);
+        }
+        catch (final TransportException e) {
+            log.error("An unexpected error occured! See log for details.", e);
+            ErrorMessage.show(mainWindow, e);
+        }
+        return orgUnit;
     }
 
     private Set<String> getSelectedPredecessors() {
@@ -228,9 +230,7 @@ public class OrgUnitAddViewLab extends AbstractOrgUnitViewLab {
                 log.info("saving: " + resourceRefDisplay.getTitle());
                 predecessors.add(resourceRefDisplay.getObjectId());
             }
-
         }
-
         return predecessors;
     }
 
@@ -264,10 +264,13 @@ public class OrgUnitAddViewLab extends AbstractOrgUnitViewLab {
 
     private void updateView(final OrganizationalUnit createdOrgUnit) {
         assert createdOrgUnit != null : "createdOrgUnit can not be null.";
+        assert orgUnitView != null : "orgUnitView can not be null.";
+
         try {
-            addToContainer(createdOrgUnit);
-            setParentIfAny(createdOrgUnit);
-            ((OrgUnitViewLab) orgUnitView).select(createdOrgUnit);
+            orgUnitContainerFactory.addToContainer(createdOrgUnit, null);
+            final Item addedItem =
+                orgUnitContainerFactory.getItem(createdOrgUnit);
+            orgUnitView.showEditView(addedItem);
         }
         catch (final EscidocException e) {
             log.error("An unexpected error occured! See log for details.", e);
@@ -282,55 +285,4 @@ public class OrgUnitAddViewLab extends AbstractOrgUnitViewLab {
             ErrorMessage.show(mainWindow, e);
         }
     }
-
-    private void setParentIfAny(final OrganizationalUnit orgUnit) {
-        if (hasParent(orgUnit)) {
-            final OrganizationalUnit parent = getParent(orgUnit);
-            container.setChildrenAllowed(parent, true);
-            container.setParent(orgUnit, parent);
-        }
-    }
-
-    private OrganizationalUnit getParent(final OrganizationalUnit createdOrgUnit) {
-        final List<Parent> parentRef =
-            (List<Parent>) createdOrgUnit.getParents().getParentRef();
-        return service.find(parentRef.get(0).getObjid());
-    }
-
-    // FIXME factor these methods out, do not belong here.
-    private boolean hasParent(final OrganizationalUnit createdOrgUnit) {
-        return createdOrgUnit.getParents() != null
-            && createdOrgUnit.getParents().getParentRef() != null
-            && !createdOrgUnit.getParents().getParentRef().isEmpty();
-    }
-
-    private void addToContainer(final OrganizationalUnit orgUnit)
-        throws EscidocException, InternalClientException, TransportException {
-        assert (orgUnit != null) : "orgUnit org unit is null";
-
-        final Item item = container.addItem(orgUnit);
-        setNameAsCaption(item, orgUnit);
-        markAsLeafIfNecessary(orgUnit);
-    }
-
-    private void setNameAsCaption(final Item item, final OrganizationalUnit root) {
-        assert (item != null) : "item can not be null";
-        assert (root != null) : "root can not be null";
-
-        item.getItemProperty(PropertyId.NAME).setValue(
-            root.getProperties().getName());
-    }
-
-    private void markAsLeafIfNecessary(final OrganizationalUnit root)
-        throws EscidocException, InternalClientException, TransportException {
-        container.setChildrenAllowed(root, hasChildren(root));
-    }
-
-    private boolean hasChildren(final OrganizationalUnit orgUnit)
-        throws EscidocException, InternalClientException, TransportException {
-        return orgUnit.getProperties().getHasChildren();
-        // TODO need to verify
-        // && getChildren(root) != null && !getChildren(root).isEmpty();
-    }
-
 }

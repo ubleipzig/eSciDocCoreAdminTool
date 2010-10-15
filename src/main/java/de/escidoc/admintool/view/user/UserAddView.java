@@ -13,6 +13,7 @@ import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.themes.Reindeer;
 
 import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.service.OrgUnitService;
@@ -73,6 +74,9 @@ public class UserAddView extends CustomComponent implements ClickListener {
     }
 
     public void init() {
+        setCompositionRoot(panel);
+        setStyleName("view");
+        panel.setStyleName(Reindeer.PANEL_LIGHT);
         panel.setContent(form);
         form.setSpacing(false);
         panel.setCaption(USER_ADD_VIEW_CAPTION);
@@ -90,32 +94,7 @@ public class UserAddView extends CustomComponent implements ClickListener {
         loginNameProperty = new ObjectProperty("", String.class);
         loginNameField.setPropertyDataSource(loginNameProperty);
         loginNameField.setWidth(FIELD_WIDTH);
-
-        // TODO implement the functionality for saving org unit and email
-        // // OrgUnit
-        // orgUnitList.setRows(5);
-        // orgUnitList.setWidth("400px");
-        // orgUnitList.setNullSelectionAllowed(true);
-        // orgUnitList.setMultiSelect(true);
-        // orgUnitList.setImmediate(true);
-        //
-        // form
-        // .addComponent(LayoutHelper.create(
-        // ViewConstants.ORGANIZATION_UNITS_LABEL, new OrgUnitEditor(
-        // ViewConstants.ORGANIZATION_UNITS_LABEL, orgUnitList,
-        // addOrgUnitButton, removeOrgUnitButton, service),
-        // labelWidth, 140, false, new Button[] { addOrgUnitButton,
-        // removeOrgUnitButton }));
-        //
-        // // e-Mail
-        // panel.addComponent(LayoutHelper.create("E-Mail", emailField =
-        // new TextField(), labelWidth, true));
-        // emailProperty = new ObjectProperty("", String.class);
-        // emailField.setPropertyDataSource(emailProperty);
-        // emailField.setWidth("400px");
-
         panel.addComponent(addFooter());
-        setCompositionRoot(panel);
     }
 
     private HorizontalLayout addFooter() {
@@ -158,18 +137,18 @@ public class UserAddView extends CustomComponent implements ClickListener {
                             + (String) nameProperty.getValue()
                             + " already exist.";
                     loginNameField.setComponentError(new UserError(error));
-     ;
+                    ;
                     log.error(error, e);
                 }
                 catch (final InternalClientException e) {
                     log.error(
                         "An unexpected error occured! See log for details.", e);
-     ;
+                    ;
                 }
                 catch (final TransportException e) {
                     log.error(
                         "An unexpected error occured! See log for details.", e);
-     ;
+                    ;
                 }
             }
         }

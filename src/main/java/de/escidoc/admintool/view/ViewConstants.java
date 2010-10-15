@@ -214,16 +214,12 @@ public class ViewConstants {
 
     public static final String ROLE = "Role";
 
-    public static final String OPEN = "Open";
-
     public static final String COMMENT = "Comment:";
 
     public static final String ORGANIZATIONAL_UNIT_LABEL =
         "Organizational Unit";
 
     public static final String EMPTY_STRING = "";
-
-    public static final String CLOSE = "Close";
 
     public static final String ORG_UNIT_TREE = "OrgUnitTree";
 
@@ -244,4 +240,27 @@ public class ViewConstants {
     public static final int SPLIT_POSITION_FROM_LEFT = 200;
 
     public static final String CANCEL = "Cancel";
+
+    public static final String SAVE = "Save";
+
+    public static final String EDIT = "Edit ";
+
+    public static final String OPEN = "Open";
+
+    public static final String CLOSE = "Close";
+
+    public static final String PREDESSOR_TYPE = "Predessor Type";
+
+    public static final String ADD_PARENT_LABEL = "Add Parent";
+
+    public static final String DELETE = "Delete";
+
+    public static final String NEW = "New";
+
+    public static final String ROLES_LABEL = "Roles";
+
+    public static final String AN_UNEXPECTED_ERROR_OCCURED_SEE_LOG_FOR_DETAILS =
+    "An unexpected error occured! See log for details.";
+
+    public static final int LABEL_WIDTH = 140;
 }

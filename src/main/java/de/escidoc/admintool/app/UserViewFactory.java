@@ -1,6 +1,5 @@
 package de.escidoc.admintool.app;
 
-import de.escidoc.admintool.service.RoleService;
 import de.escidoc.admintool.service.UserService;
 import de.escidoc.admintool.view.user.UserEditForm;
 import de.escidoc.admintool.view.user.UserEditView;
@@ -17,15 +16,12 @@ public class UserViewFactory {
 
     private UserEditForm userEditForm;
 
-    private final RoleService roleService;
-
     private UserView userView;
 
     public UserViewFactory(final AdminToolApplication app,
-        final UserService userService, final RoleService roleService) {
+        final UserService userService) {
         this.app = app;
         this.userService = userService;
-        this.roleService = roleService;
     }
 
     public UserView getUserView() {
@@ -37,7 +33,7 @@ public class UserViewFactory {
 
     private UserView create() {
         userListView = new UserListView(app, userService);
-        userEditForm = new UserEditForm(app, userService, roleService);
+        userEditForm = new UserEditForm(app, userService);
         final UserEditView userEditView = new UserEditView(userEditForm);
         return new UserView(app, userListView, userEditView);
     }

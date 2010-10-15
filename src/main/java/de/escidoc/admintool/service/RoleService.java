@@ -7,7 +7,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.escidoc.admintool.app.AdminToolContants;
+import de.escidoc.admintool.app.AppConstants;
 import de.escidoc.core.client.RoleHandlerClient;
 import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.client.exceptions.EscidocException;
@@ -31,8 +31,11 @@ public class RoleService {
 
     private Collection<Role> allRoles; // NOPMD by CHH on 9/17/10 10:34 AM
 
-    public RoleService(final String authentification) throws EscidocException,
-        InternalClientException, TransportException {
+    private final String eSciDocUri;
+
+    public RoleService(final String eSciDocUri, final String authentification)
+        throws EscidocException, InternalClientException, TransportException {
+        this.eSciDocUri = eSciDocUri;
         this.authentification = authentification;
         createClient();
     }
@@ -41,7 +44,7 @@ public class RoleService {
         InternalClientException, TransportException {
         roleClient = new RoleHandlerClient();
         roleClient.setHandle(authentification);
-        roleClient.setServiceAddress(AdminToolContants.ESCIDOC_URI);
+        roleClient.setServiceAddress(eSciDocUri);
     }
 
     public Role retrieve(final String roleObjectId) throws EscidocException,
@@ -64,8 +67,8 @@ public class RoleService {
 
     private TaskParam emptyFilter() {
         final Collection<Filter> filters = TaskParam.filtersFactory();
-        filters.add(getFilter(AdminToolContants.CREATED_BY_FILTER,
-            AdminToolContants.SYSADMIN_OBJECT_ID, null));
+        filters.add(getFilter(AppConstants.CREATED_BY_FILTER,
+            AppConstants.SYSADMIN_OBJECT_ID, null));
 
         final TaskParam filterParam = new TaskParam();
         filterParam.setFilters(filters);

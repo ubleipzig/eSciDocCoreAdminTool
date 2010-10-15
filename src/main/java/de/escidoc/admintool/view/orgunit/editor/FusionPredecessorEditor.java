@@ -42,7 +42,7 @@ public class FusionPredecessorEditor extends AbstractPredecessorEditor {
     protected void showAddedPredecessors() {
         final AbstractPredecessorView addedPredecessorView =
             createPredecessorView(super.getSelectedPredecessors());
-        orgUnitEditorView.showAddedPredecessors(addedPredecessorView);
+        orgUnitEditorViewLab.showAddedPredecessors(addedPredecessorView);
     }
 
     private AbstractPredecessorView createPredecessorView(

@@ -567,6 +567,7 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
     private void updateEditView(final PublicStatus publicStatus) {
         item.getItemProperty(PropertyId.PUBLIC_STATUS).setValue(publicStatus);
         editToolbar.setSelected(publicStatus);
+        setSelected(item);
     }
 
     public Context close(final String comment) throws EscidocException,
@@ -587,6 +588,7 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
 
     private void setFormReadOnly(final boolean isReadOnly) {
         nameField.setReadOnly(isReadOnly);
+        descriptionField.setReadOnly(isReadOnly);
         typeField.setReadOnly(isReadOnly);
         orgUnitList.setReadOnly(isReadOnly);
         adminDescriptorAccordion.setReadOnly(isReadOnly);

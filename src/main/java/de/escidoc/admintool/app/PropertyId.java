@@ -40,4 +40,6 @@ public class PropertyId {
 
     public static final String GRANT_ROLE_OBJECT_ID =
     "grantProperties.role.objid";
+
+    public static final String XLINK_TITLE = "xLinkTitle";
 }

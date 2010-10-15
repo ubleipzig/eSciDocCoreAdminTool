@@ -12,7 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.escidoc.admintool.app.AdminToolContants;
+import de.escidoc.admintool.app.AppConstants;
 import de.escidoc.admintool.exception.ResourceNotFoundException;
 import de.escidoc.core.client.OrganizationalUnitHandlerClient;
 import de.escidoc.core.client.TransportProtocol;
@@ -39,20 +39,28 @@ public class OrgUnitService {
 
     private Collection<OrganizationalUnit> orgUnits;
 
-    public OrgUnitService(final OrganizationalUnitHandlerClient client) {
+    private final String eSciDocUri;
+
+    public OrgUnitService(final String eSciDocUri,
+        final OrganizationalUnitHandlerClient client) {
+        this.eSciDocUri = eSciDocUri;
+
         this.client = client;
     }
 
-    public OrgUnitService(final String handle) throws InternalClientException {
-        client = createOuClient(handle);
+    public OrgUnitService(final String eSciDocUri, final String token)
+        throws InternalClientException {
+
+        this.eSciDocUri = eSciDocUri;
+        client = createOuClient(token);
     }
 
-    private OrganizationalUnitHandlerClient createOuClient(final String handle)
+    private OrganizationalUnitHandlerClient createOuClient(final String token)
         throws InternalClientException {
         final OrganizationalUnitHandlerClient client =
             new OrganizationalUnitHandlerClient();
-        client.setHandle(handle);
-        client.setServiceAddress(AdminToolContants.ESCIDOC_SERVICE_ROOT_URI);
+        client.setHandle(token);
+        client.setServiceAddress(eSciDocUri);
         return client;
     }
 
@@ -63,7 +71,11 @@ public class OrgUnitService {
         return orgUnitById;
     }
 
-    public OrganizationalUnit find(final String objectId) {
+    public OrganizationalUnit find(final String objectId)
+        throws EscidocException, InternalClientException, TransportException {
+        if (orgUnitById.isEmpty()) {
+            findAll();
+        }
         return orgUnitById.get(objectId);
     }
 
@@ -101,8 +113,8 @@ public class OrgUnitService {
     // FIXME duplicate method in ContextService
     private TaskParam emptyFilter() {
         final Collection<Filter> filters = TaskParam.filtersFactory();
-        filters.add(getFilter(AdminToolContants.CREATED_BY_FILTER,
-            AdminToolContants.SYSADMIN_OBJECT_ID, null));
+        filters.add(getFilter(AppConstants.CREATED_BY_FILTER,
+            AppConstants.SYSADMIN_OBJECT_ID, null));
 
         final TaskParam filterParam = new TaskParam();
         filterParam.setFilters(filters);
@@ -265,8 +277,8 @@ public class OrgUnitService {
 
     private Filter createTopLevelFilter() {
         final Filter filter = new Filter();
-        filter.setName(AdminToolContants.TOP_LEVEL_ORGANIZATIONAL_UNITS);
-        filter.setValue(AdminToolContants.IS_TOP_LEVEL);
+        filter.setName(AppConstants.TOP_LEVEL_ORGANIZATIONAL_UNITS);
+        filter.setValue(AppConstants.IS_TOP_LEVEL);
         filter.setIds(Collections.singletonList(""));
         return filter;
     }

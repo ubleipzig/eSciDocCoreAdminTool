@@ -22,12 +22,13 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.themes.Reindeer;
 
 import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.app.Command;
 import de.escidoc.admintool.app.PropertyId;
-import de.escidoc.admintool.service.RoleService;
 import de.escidoc.admintool.service.UserService;
+import de.escidoc.admintool.view.ErrorMessage;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.admintool.view.role.RevokeGrantCommand;
 import de.escidoc.admintool.view.role.RevokeGrantWindow;
@@ -40,14 +41,11 @@ import de.escidoc.core.resources.aa.useraccount.Grant;
 import de.escidoc.core.resources.aa.useraccount.UserAccount;
 import de.escidoc.core.resources.common.reference.Reference;
 import de.escidoc.core.resources.common.reference.RoleRef;
-import de.escidoc.vaadin.dialog.ErrorDialog;
 import de.escidoc.vaadin.utilities.Converter;
 import de.escidoc.vaadin.utilities.LayoutHelper;
 
 public class UserEditForm extends CustomComponent implements ClickListener {
     private static final long serialVersionUID = 3182336883168014436L;
-
-    private static final String GRANT_TITLE = "xLinkTitle";
 
     private static final Logger log = LoggerFactory
         .getLogger(UserEditForm.class);
@@ -55,8 +53,6 @@ public class UserEditForm extends CustomComponent implements ClickListener {
     private static final int ROLE_LIST_HEIGHT = 100;
 
     private static final String ROLE_LIST_WIDTH = "400px";
-
-    private static final String ROLES_LABEL = "Roles";
 
     private static final int LABEL_WIDTH = 100;
 
@@ -70,9 +66,10 @@ public class UserEditForm extends CustomComponent implements ClickListener {
 
     private final HorizontalLayout footer = new HorizontalLayout();
 
-    private final Button newUserBtn = new Button("New", new NewUserListener());
+    private final Button newUserBtn = new Button(ViewConstants.NEW,
+        new NewUserListener());
 
-    private final Button deleteUserBtn = new Button("Delete",
+    private final Button deleteUserBtn = new Button(ViewConstants.DELETE,
         new DeleteUserListener());
 
     private final Button addRoleButton = new Button(ViewConstants.ADD_LABEL,
@@ -81,9 +78,9 @@ public class UserEditForm extends CustomComponent implements ClickListener {
     private final Button removeRoleButton = new Button(
         ViewConstants.REMOVE_LABEL, new RemoveRoleButtonListener());
 
-    private final Button save = new Button("Save", this);
+    private final Button save = new Button(ViewConstants.SAVE, this);
 
-    private final Button cancel = new Button("Cancel", this);
+    private final Button cancel = new Button(ViewConstants.CANCEL, this);
 
     private final Label objIdField = new Label();
 
@@ -96,8 +93,6 @@ public class UserEditForm extends CustomComponent implements ClickListener {
     private final AdminToolApplication app;
 
     private final UserService userService;
-
-    private final RoleService roleService;
 
     private TextField nameField;
 
@@ -116,15 +111,15 @@ public class UserEditForm extends CustomComponent implements ClickListener {
     private POJOContainer<Grant> grantContainer;
 
     public UserEditForm(final AdminToolApplication app,
-        final UserService userService, final RoleService roleService) {
+        final UserService userService) {
         this.app = app;
         this.userService = userService;
-        this.roleService = roleService;
         init();
     }
 
-    public void init() {
+    public final void init() {
         setCompositionRoot(panel);
+        panel.setStyleName(Reindeer.PANEL_LIGHT);
         panel.setContent(form);
         form.setSpacing(false);
         panel.setCaption(ViewConstants.EDIT_USER_VIEW_CAPTION);
@@ -173,18 +168,17 @@ public class UserEditForm extends CustomComponent implements ClickListener {
 
     private void initRoleComponent() {
         initRoleTable();
-
-        panel.addComponent(LayoutHelper.create(ROLES_LABEL, roleTable,
-            LABEL_WIDTH, ROLE_LIST_HEIGHT, false, new Button[] { addRoleButton,
-                removeRoleButton }));
+        panel.addComponent(LayoutHelper.create(ViewConstants.ROLES_LABEL,
+            roleTable, LABEL_WIDTH, ROLE_LIST_HEIGHT, false, new Button[] {
+                addRoleButton, removeRoleButton }));
     }
 
     private void initRoleTable() {
         roleTable.setWidth(ROLE_LIST_WIDTH);
         roleTable.setSelectable(true);
-        // roleTable.setNullSelectionAllowed(true);
-        // roleTable.setMultiSelect(true);
-        // roleTable.setImmediate(true);
+        roleTable.setNullSelectionAllowed(true);
+        roleTable.setMultiSelect(true);
+        roleTable.setImmediate(true);
     }
 
     private final class AddRoleButtonListener implements Button.ClickListener {
@@ -235,32 +229,28 @@ public class UserEditForm extends CustomComponent implements ClickListener {
             return userService.retrieveCurrentGrants(userObjectId);
         }
         catch (final InternalClientException e) {
-            app.getMainWindow().addWindow(
-                new ErrorDialog(app.getMainWindow(), "Error",
-                    "An unexpected error occured! See log for details."));
-            log.error("An unexpected error occured! See log for details.", e);
-
+            ErrorMessage.show(app.getMainWindow(), e);
+            log.error(
+                ViewConstants.AN_UNEXPECTED_ERROR_OCCURED_SEE_LOG_FOR_DETAILS,
+                e);
         }
         catch (final TransportException e) {
-            app.getMainWindow().addWindow(
-                new ErrorDialog(app.getMainWindow(), "Error",
-                    "An unexpected error occured! See log for details."));
-            log.error("An unexpected error occured! See log for details.", e);
-
+            ErrorMessage.show(app.getMainWindow(), e);
+            log.error(
+                ViewConstants.AN_UNEXPECTED_ERROR_OCCURED_SEE_LOG_FOR_DETAILS,
+                e);
         }
         catch (final EscidocClientException e) {
-            app.getMainWindow().addWindow(
-                new ErrorDialog(app.getMainWindow(), "Error",
-                    "An unexpected error occured! See log for details."));
-            log.error("An unexpected error occured! See log for details.", e);
-
+            ErrorMessage.show(app.getMainWindow(), e);
+            log.error(
+                ViewConstants.AN_UNEXPECTED_ERROR_OCCURED_SEE_LOG_FOR_DETAILS,
+                e);
         }
         return Collections.emptyList();
     }
 
     private HorizontalLayout addFooter() {
         footer.setSpacing(true);
-
         footer.addComponent(save);
         footer.addComponent(cancel);
         return footer;
@@ -268,16 +258,14 @@ public class UserEditForm extends CustomComponent implements ClickListener {
 
     public void buttonClick(final ClickEvent event) {
         final Button source = event.getButton();
-        if (source == cancel) {
+        if (source.equals(cancel)) {
             discardFields();
             removeAllError();
         }
-        else if (source == save) {
-            if (isValid()) {
-                updateUserAccount();
-                commitFields();
-                removeAllError();
-            }
+        else if (source.equals(save) && isValid()) {
+            updateUserAccount();
+            commitFields();
+            removeAllError();
         }
     }
 
@@ -306,28 +294,40 @@ public class UserEditForm extends CustomComponent implements ClickListener {
             }
         }
         catch (final EscidocException e) {
-            log.error("An unexpected error occured! See log for details.", e);
+            ErrorMessage.show(app.getMainWindow(), e);
+            log.error(
+                ViewConstants.AN_UNEXPECTED_ERROR_OCCURED_SEE_LOG_FOR_DETAILS,
+                e);
         }
         catch (final InternalClientException e) {
-            log.error("An unexpected error occured! See log for details.", e);
+            ErrorMessage.show(app.getMainWindow(), e);
+            log.error(
+                ViewConstants.AN_UNEXPECTED_ERROR_OCCURED_SEE_LOG_FOR_DETAILS,
+                e);
         }
         catch (final TransportException e) {
-            log.error("An unexpected error occured! See log for details.", e);
+            ErrorMessage.show(app.getMainWindow(), e);
+            log.error(
+                ViewConstants.AN_UNEXPECTED_ERROR_OCCURED_SEE_LOG_FOR_DETAILS,
+                e);
         }
         catch (final EscidocClientException e) {
-            log.error("An unexpected error occured! See log for details.", e);
+            ErrorMessage.show(app.getMainWindow(), e);
+            log.error(
+                ViewConstants.AN_UNEXPECTED_ERROR_OCCURED_SEE_LOG_FOR_DETAILS,
+                e);
         }
     }
 
     private boolean isValid() {
-        boolean valid = true;
-        valid =
+        boolean isValid = true;
+        isValid =
             EmptyFieldValidator.isValid(nameField, "Please enter a "
                 + ViewConstants.NAME_ID);
-        valid &=
-            (EmptyFieldValidator.isValid(loginNameField, "Please enter a "
-                + ViewConstants.LOGIN_NAME_ID));
-        return valid;
+        isValid &=
+            EmptyFieldValidator.isValid(loginNameField, "Please enter a "
+                + ViewConstants.LOGIN_NAME_ID);
+        return isValid;
     }
 
     public void setSelected(final Item item) {
@@ -362,17 +362,26 @@ public class UserEditForm extends CustomComponent implements ClickListener {
     }
 
     private void bindRolesWithView() {
+
         final List<Grant> userGrants = (List<Grant>) getGrants();
+
         for (final Grant grant : userGrants) {
-            System.out.println("Grant title: " + grant.getXLinkTitle());
+            log.info("Grant title: " + grant.getXLinkTitle());
         }
-        if (userGrants.size() > 0) {
+
+        if (userGrants.isEmpty()) {
+            if (grantContainer != null) {
+                grantContainer.removeAllItems();
+            }
+        }
+        else {
+
             grantContainer =
-                new POJOContainer<Grant>(Grant.class, GRANT_TITLE,
+                new POJOContainer<Grant>(Grant.class, PropertyId.XLINK_TITLE,
                     PropertyId.OBJECT_ID, PropertyId.GRANT_ROLE_OBJECT_ID,
                     PropertyId.ASSIGN_ON);
             roleTable.setContainerDataSource(grantContainer);
-            roleTable.setVisibleColumns(new String[] { GRANT_TITLE,
+            roleTable.setVisibleColumns(new String[] { PropertyId.XLINK_TITLE,
                 PropertyId.GRANT_ROLE_OBJECT_ID, PropertyId.ASSIGN_ON });
             roleTable.setColumnHeaders(ViewConstants.ROLE_COLUMN_HEADERS);
 
@@ -385,11 +394,7 @@ public class UserEditForm extends CustomComponent implements ClickListener {
                 }
                 grantContainer.addPOJO(grant);
             }
-        }
-        else {
-            if (grantContainer != null) {
-                grantContainer.removeAllItems();
-            }
+
         }
     }
 
@@ -435,17 +440,23 @@ public class UserEditForm extends CustomComponent implements ClickListener {
             }
             catch (final InternalClientException e) {
                 setComponentError(new SystemError(e.getMessage()));
-                log.error("An unexpected error occured! See log for details.",
-                    e);
+                log
+                    .error(
+                        ViewConstants.AN_UNEXPECTED_ERROR_OCCURED_SEE_LOG_FOR_DETAILS,
+                        e);
             }
             catch (final TransportException e) {
                 setComponentError(new SystemError(e.getMessage()));
-                log.error("An unexpected error occured! See log for details.",
-                    e);
+                log
+                    .error(
+                        ViewConstants.AN_UNEXPECTED_ERROR_OCCURED_SEE_LOG_FOR_DETAILS,
+                        e);
             }
             catch (final EscidocException e) {
-                log.error("An unexpected error occured! See log for details.",
-                    e);
+                log
+                    .error(
+                        ViewConstants.AN_UNEXPECTED_ERROR_OCCURED_SEE_LOG_FOR_DETAILS,
+                        e);
                 setComponentError(new SystemError(e.getMessage()));
             }
         }

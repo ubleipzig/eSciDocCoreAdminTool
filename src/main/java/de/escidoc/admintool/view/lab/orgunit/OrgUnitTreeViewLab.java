@@ -3,13 +3,16 @@ package de.escidoc.admintool.view.lab.orgunit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.vaadin.data.Item;
 import com.vaadin.data.util.HierarchicalContainer;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.ui.AbstractSelect;
 import com.vaadin.ui.CustomComponent;
+import com.vaadin.ui.Panel;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.Tree.ExpandEvent;
+import com.vaadin.ui.themes.Reindeer;
 
 import de.escidoc.admintool.app.Command;
 import de.escidoc.admintool.app.PropertyId;
@@ -30,25 +33,30 @@ public class OrgUnitTreeViewLab extends CustomComponent {
 
     private OrgUnitViewLab orgUnitViewLab;
 
+    private final Panel treePanel = new Panel();
+
     public OrgUnitTreeViewLab(final HierarchicalContainer container,
         final Command addChildrenCommand) {
         this.container = container;
         this.addChildrenCommand = addChildrenCommand;
-        setCompositionRoot(tree);
+
+        setCompositionRoot(treePanel);
         init();
     }
 
-    public void select(final OrganizationalUnit orgUnit) {
-        tree.select(orgUnit);
+    public void select(final Item item) {
+        tree.select(item);
     }
 
     private void init() {
         setSizeFull();
+        treePanel.setSizeFull();
+        treePanel.setStyleName(Reindeer.PANEL_LIGHT);
+        treePanel.addComponent(tree);
         tree.setSizeFull();
         tree.setContainerDataSource(container);
         tree.addListener(new NodeExpandListener());
         tree.addListener(new NodeClickedListener());
-
         tree.setItemCaptionMode(AbstractSelect.ITEM_CAPTION_MODE_PROPERTY);
         tree.setItemCaptionPropertyId(PropertyId.NAME);
     }
@@ -57,10 +65,12 @@ public class OrgUnitTreeViewLab extends CustomComponent {
 
         @Override
         public void itemClick(final ItemClickEvent event) {
-            final Object selectedOrgUnit = event.getItemId();
-            if (selectedOrgUnit instanceof OrganizationalUnit) {
-                orgUnitViewLab.select((OrganizationalUnit) selectedOrgUnit);
+            final Item item = event.getItem();
+            if (item == null) {
+                return;
             }
+            assert orgUnitViewLab != null : "orgUnitViewLab can not be null";
+            orgUnitViewLab.select(item);
         }
     }
 
@@ -98,5 +108,10 @@ public class OrgUnitTreeViewLab extends CustomComponent {
 
     public void setOrgUnitView(final OrgUnitViewLab orgUnitViewLab) {
         this.orgUnitViewLab = orgUnitViewLab;
+    }
+
+    public void delete(final OrganizationalUnit orgUnit) {
+        final boolean removeItem = container.removeItem(orgUnit);
+        assert removeItem == true : "removing item failed";
     }
 }

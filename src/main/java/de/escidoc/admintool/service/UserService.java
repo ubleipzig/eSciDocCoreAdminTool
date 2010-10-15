@@ -7,7 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.joda.time.DateTime;
 
-import de.escidoc.admintool.app.AdminToolContants;
+import de.escidoc.admintool.app.AppConstants;
 import de.escidoc.admintool.domain.UserAccountFactory;
 import de.escidoc.core.client.TransportProtocol;
 import de.escidoc.core.client.UserAccountHandlerClient;
@@ -36,8 +36,11 @@ public class UserService {
 
     private GrantProperties grantProps;
 
-    public UserService(final String handle) throws EscidocException,
-        InternalClientException, TransportException {
+    private final String eSciDocUri;
+
+    public UserService(final String eSciDocUri, final String handle)
+        throws EscidocException, InternalClientException, TransportException {
+        this.eSciDocUri = eSciDocUri;
         client = createUserClient(handle);
     }
 
@@ -45,7 +48,7 @@ public class UserService {
         throws EscidocException, InternalClientException, TransportException {
         final UserAccountHandlerClient client = new UserAccountHandlerClient();
         client.setHandle(handle);
-        client.setServiceAddress(AdminToolContants.ESCIDOC_URI);
+        client.setServiceAddress(eSciDocUri);
         return client;
     }
 
@@ -67,8 +70,8 @@ public class UserService {
 
     private TaskParam emptyFilter() {
         final Collection<Filter> filters = TaskParam.filtersFactory();
-        filters.add(getFilter(AdminToolContants.CREATED_BY_FILTER,
-            AdminToolContants.SYSADMIN_OBJECT_ID, null));
+        filters.add(getFilter(AppConstants.CREATED_BY_FILTER,
+            AppConstants.SYSADMIN_OBJECT_ID, null));
         final TaskParam filterParam = new TaskParam();
         filterParam.setFilters(filters);
         return filterParam;
@@ -77,7 +80,6 @@ public class UserService {
     // FIXME duplicate method in UserAccountService
     private Filter getFilter(
         final String name, final String value, final Collection<String> ids) {
-
         final Filter filter = new Filter();
         filter.setName(name);
         filter.setValue(value);

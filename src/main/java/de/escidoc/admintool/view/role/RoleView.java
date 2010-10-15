@@ -29,6 +29,7 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.Reindeer;
+import com.vaadin.ui.themes.Runo;
 
 import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.app.PropertyId;
@@ -82,9 +83,10 @@ public class RoleView extends CustomComponent {
     // TODO refactor all footer to a class.
     private final HorizontalLayout footer = new HorizontalLayout();
 
-    private final Button saveBtn = new Button("Save", new SaveBtnListener());
+    private final Button saveBtn = new Button(ViewConstants.SAVE,
+        new SaveBtnListener());
 
-    private final Button cancelBtn = new Button("Cancel",
+    private final Button cancelBtn = new Button(ViewConstants.CANCEL,
         new CancelBtnListener());
 
     private final Window mainWindow;
@@ -99,8 +101,6 @@ public class RoleView extends CustomComponent {
 
     private final ContextService contextService;
 
-    private POJOContainer<UserAccount> userContainer;
-
     private final AdminToolApplication app;
 
     private final RoleService roleService;
@@ -109,10 +109,13 @@ public class RoleView extends CustomComponent {
 
     private UserAccount selectedUser;
 
+    private POJOContainer<UserAccount> userContainer;
+
     // TODO: add logged in user;
     public RoleView(final AdminToolApplication app,
         final RoleService roleService, final UserService userService,
         final ContextService contextService) {
+
         if (app == null || roleService == null || userService == null
             || contextService == null) {
             throw new IllegalArgumentException(
@@ -122,6 +125,7 @@ public class RoleView extends CustomComponent {
         this.roleService = roleService;
         this.userService = userService;
         this.contextService = contextService;
+
         mainWindow = app.getMainWindow();
         init();
         bindData();
@@ -139,6 +143,9 @@ public class RoleView extends CustomComponent {
 
     private void initLayout() {
         setCompositionRoot(panel);
+        panel.setStyleName(Runo.PANEL_LIGHT);
+        setSizeFull();
+
         panel.setContent(verticalLayout);
         panel.setCaption(CAPTION);
 

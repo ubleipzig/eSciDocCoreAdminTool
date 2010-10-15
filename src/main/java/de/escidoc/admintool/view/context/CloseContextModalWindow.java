@@ -51,7 +51,7 @@ public class CloseContextModalWindow extends VerticalLayout {
         public void buttonClick(final ClickEvent event) {
             try {
                 contextForm.close((String) commentField.getValue());
-                (subwindow.getParent()).removeWindow(subwindow);
+                subwindow.getParent().removeWindow(subwindow);
             }
             catch (final EscidocException e) {
                 log.error("An unexpected error occured! See log for details.",

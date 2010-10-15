@@ -1,5 +1,7 @@
 package de.escidoc.admintool.view.lab.orgunit;
 
+import com.google.common.base.Preconditions;
+import com.vaadin.data.Item;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.SplitPanel;
 
@@ -9,8 +11,8 @@ import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
 import de.escidoc.core.resources.oum.OrganizationalUnit;
 
-@SuppressWarnings("serial")
 public class OrgUnitViewLab extends CustomComponent {
+    private static final long serialVersionUID = -4908615257310260128L;
 
     private final SplitPanel splitPanel = new SplitPanel();
 
@@ -27,8 +29,18 @@ public class OrgUnitViewLab extends CustomComponent {
         this.orgUnitTreeViewLab = orgUnitTreeViewLab;
         this.orgUnitAddViewLab = orgUnitAddViewLab;
         this.orgUnitEditViewLab = orgUnitEditViewLab;
+        checkForNull();
         setCompositionRoot(splitPanel);
         buildUI();
+    }
+
+    private void checkForNull() {
+        Preconditions.checkNotNull(orgUnitTreeViewLab,
+            "orgUnitTreeViewLab can not be null");
+        Preconditions.checkNotNull(orgUnitAddViewLab,
+            "orgUnitAddViewLab can not be null");
+        Preconditions.checkNotNull(orgUnitEditViewLab,
+            "orgUnitEditViewLab can not be null");
     }
 
     private void buildUI() throws EscidocException, InternalClientException,
@@ -37,23 +49,43 @@ public class OrgUnitViewLab extends CustomComponent {
         setSizeFull();
         splitPanel.setSplitPosition(ViewConstants.SPLIT_POSITION_IN_PERCENT);
         splitPanel.setOrientation(SplitPanel.ORIENTATION_HORIZONTAL);
-
         splitPanel.setFirstComponent(orgUnitTreeViewLab);
         showAddView();
     }
 
-    private void showAddView() {
+    public void showAddView() {
         splitPanel.setSecondComponent(orgUnitAddViewLab);
     }
 
-    // FIXME: What is the diff between select(X x) and showEditView(X x)
-    public void select(final OrganizationalUnit orgUnit) {
-        (orgUnitTreeViewLab).select(orgUnit);
-        showEditView(orgUnit);
+    void showEditView(final Item item) {
+        orgUnitEditViewLab.setOrgUnit(item);
+        splitPanel.setSecondComponent(orgUnitEditViewLab);
     }
 
-    private void showEditView(final OrganizationalUnit orgUnit) {
-        orgUnitEditViewLab.setOrgUnit(orgUnit);
-        splitPanel.setSecondComponent(orgUnitEditViewLab);
+    public void select(final Item item) {
+        orgUnitTreeViewLab.select(item);
+        showEditView(item);
+    }
+
+    public void open(final String comment) throws EscidocException,
+        InternalClientException, TransportException {
+        orgUnitEditViewLab.open(comment);
+    }
+
+    public void close(final String comment) throws EscidocException,
+        InternalClientException, TransportException {
+        orgUnitEditViewLab.close(comment);
+    }
+
+    public void deleteOrgUnit() throws EscidocException,
+        InternalClientException, TransportException {
+        final OrganizationalUnit deletedOrgUnit =
+            orgUnitEditViewLab.deleteOrgUnit();
+        removeFromTreeView(deletedOrgUnit);
+        showAddView();
+    }
+
+    private void removeFromTreeView(final OrganizationalUnit orgUnit) {
+        orgUnitTreeViewLab.delete(orgUnit);
     }
 }

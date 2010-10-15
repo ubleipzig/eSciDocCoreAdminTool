@@ -13,8 +13,8 @@ import de.escidoc.vaadin.dialog.ErrorDialog;
 
 public class AffiliationPredecessorEditor extends AbstractPredecessorEditor {
 
-    private static final Logger log =
-        LoggerFactory.getLogger(AffiliationPredecessorEditor.class);
+    private static final Logger log = LoggerFactory
+        .getLogger(AffiliationPredecessorEditor.class);
 
     private static final String EDITOR_DESCRIPTION =
         "Select one organizational unit, please.";
@@ -47,7 +47,7 @@ public class AffiliationPredecessorEditor extends AbstractPredecessorEditor {
     protected void showAddedPredecessors() {
         final AbstractPredecessorView addedPredecessorView =
             createPredecessorView(super.getSelectedPredecessors());
-        orgUnitEditorView.showAddedPredecessors(addedPredecessorView);
+        orgUnitEditorViewLab.showAddedPredecessors(addedPredecessorView);
     }
 
     // TODO move to a factory class.DRY

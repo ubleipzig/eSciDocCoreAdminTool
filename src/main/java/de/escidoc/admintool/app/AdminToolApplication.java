@@ -4,13 +4,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.vaadin.Application;
-import com.vaadin.terminal.ThemeResource;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.SplitPanel;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.themes.Reindeer;
 
 import de.escidoc.admintool.messages.Messages;
 import de.escidoc.admintool.service.ContextService;
@@ -20,13 +21,13 @@ import de.escidoc.admintool.service.UserService;
 import de.escidoc.admintool.view.ErrorMessage;
 import de.escidoc.admintool.view.NavigationTree;
 import de.escidoc.admintool.view.StartPage;
-import de.escidoc.admintool.view.Toolbar;
+import de.escidoc.admintool.view.ToolbarFactory;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.admintool.view.context.ContextAddView;
 import de.escidoc.admintool.view.context.ContextEditForm;
 import de.escidoc.admintool.view.context.ContextListView;
 import de.escidoc.admintool.view.context.ContextView;
-import de.escidoc.admintool.view.lab.orgunit.OrgUnitViewFactory;
+import de.escidoc.admintool.view.lab.orgunit.OrgUnitViewLabFactory;
 import de.escidoc.admintool.view.orgunit.OrgUnitAddView;
 import de.escidoc.admintool.view.orgunit.OrgUnitEditView;
 import de.escidoc.admintool.view.orgunit.OrgUnitListView;
@@ -66,6 +67,10 @@ public class AdminToolApplication extends Application {
 
     private final NavigationTree navigation = new NavigationTree(this);
 
+    private final ToolbarFactory factory = new ToolbarFactory();
+
+    private GridLayout toolbar;
+
     private ContextService contextService;
 
     private OrgUnitService orgUnitService;
@@ -96,7 +101,16 @@ public class AdminToolApplication extends Application {
 
     private UserView userView;
 
-    private OrgUnitViewFactory orgUnitViewFactory;
+    private OrgUnitViewLabFactory orgUnitViewFactory;
+
+    public static final String ESCIDOC_URI = "http://localhost:8080";
+
+    private final static String eSciDocUri = AdminToolApplication.ESCIDOC_URI;
+
+    public static final String ESCIDOC_LOGIN_URL = eSciDocUri
+        + "/aa/login?target=";
+
+    public static final String LOGOUT_URL = eSciDocUri + "/aa/logout?target=";
 
     @Override
     public void init() {
@@ -105,7 +119,7 @@ public class AdminToolApplication extends Application {
     }
 
     private void initMainWindow() {
-        setTheme(AdminToolContants.THEME_NAME);
+        setTheme(AppConstants.ESCIDOC_THEME);
         setMainWindow(mainWindow);
     }
 
@@ -129,7 +143,8 @@ public class AdminToolApplication extends Application {
 
     private void initServices(final String token)
         throws InternalClientException, EscidocException, TransportException {
-        final ServiceFactory serviceFactory = new ServiceFactory(token);
+        final ServiceFactory serviceFactory =
+            new ServiceFactory(eSciDocUri, token);
         orgUnitService = serviceFactory.createOrgService();
         userService = serviceFactory.createUserService();
         contextService = serviceFactory.createContextService();
@@ -138,15 +153,17 @@ public class AdminToolApplication extends Application {
 
     private void initFactories() throws EscidocException,
         InternalClientException, TransportException {
-        orgUnitViewFactory = new OrgUnitViewFactory(orgUnitService, mainWindow);
+        orgUnitViewFactory =
+            new OrgUnitViewLabFactory(orgUnitService, mainWindow);
     }
 
     private void buildMainLayout() {
         mainWindow.setContent(appLayout);
 
         setFullSize();
-        addToolbar();
         addLogoutButton();
+
+        addToolbar();
         addNavigationTree();
     }
 
@@ -159,15 +176,10 @@ public class AdminToolApplication extends Application {
         horizontalSplit.setSecondComponent(component);
     }
 
-    private void addToolbar() {
-        appLayout.addComponent(Toolbar.createToolbar(mainWindow,
-            new Button[] { logoutButton }));
-    }
-
     private void addLogoutButton() {
-        logoutButton.setIcon(new ThemeResource(Messages
-            .getString("AdminToolApplication.1")));
-        setLogoutURL(AdminToolContants.LOGOUT_URL + getURL());
+        logoutButton.setEnabled(true);
+        logoutButton.setStyleName(Reindeer.BUTTON_SMALL);
+        setLogoutURL(AdminToolApplication.LOGOUT_URL + getURL());
         logoutButton.addListener(new Button.ClickListener() {
 
             @Override
@@ -177,11 +189,19 @@ public class AdminToolApplication extends Application {
         });
     }
 
+    private void addToolbar() {
+        if (appLayout.getComponentIndex(toolbar) < 0) {
+            toolbar = factory.createToolbar(new Button[] { logoutButton });
+            appLayout.addComponent(toolbar);
+        }
+    }
+
     private void addNavigationTree() {
         appLayout.addComponent(horizontalSplit);
         appLayout.setExpandRatio(horizontalSplit, 1);
         horizontalSplit.setSplitPosition(
             ViewConstants.SPLIT_POSITION_FROM_LEFT, SplitPanel.UNITS_PIXELS);
+        horizontalSplit.addStyleName("small blue white");
         horizontalSplit.setFirstComponent(navigation);
     }
 
@@ -237,15 +257,8 @@ public class AdminToolApplication extends Application {
             contextView =
                 new ContextView(this, contextList, contextForm, contextAddView);
         }
-        // contextView =
-        // new ContextViewFactory(this, contextService, orgUnitService)
-        // .getContexView();
         contextView.showAddView();
         return contextView;
-    }
-
-    private RoleService getRoleService() {
-        return roleService;
     }
 
     private RoleView getRoleView() {
@@ -259,8 +272,7 @@ public class AdminToolApplication extends Application {
     public UserView getUserView() {
         if (userView == null) {
             userListView = new UserListView(this, userService);
-            userEditForm =
-                new UserEditForm(this, userService, getRoleService());
+            userEditForm = new UserEditForm(this, userService);
             final UserEditView userEditView = new UserEditView(userEditForm);
             userView = new UserView(this, userListView, userEditView);
         }

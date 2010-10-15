@@ -231,11 +231,28 @@ public class OrgUnitEditView extends AbstractOrgUnitView {
                 && parents.getParentRef().iterator().hasNext()) {
                 final Parent parent = parents.getParentRef().iterator().next();
 
-                final String parentName =
-                    service.find(parent.getObjid()).getProperties().getName();
-                parentList.removeAllItems();
-                parentList.addItem(new ResourceRefDisplay(parent.getObjid(),
-                    parentName));
+                String parentName;
+                try {
+                    parentName =
+                        service
+                            .find(parent.getObjid()).getProperties().getName();
+                    parentList.removeAllItems();
+                    parentList.addItem(new ResourceRefDisplay(
+                        parent.getObjid(), parentName));
+                }
+                catch (final EscidocException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+                catch (final InternalClientException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+                catch (final TransportException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+
             }
             else {
                 parentList.removeAllItems();
@@ -243,28 +260,45 @@ public class OrgUnitEditView extends AbstractOrgUnitView {
             // Predecessor
             bindPredecessor();
             if (publicStatus != PublicStatus.CLOSED) {
-                final OrganizationalUnit orgUnit =
-                    service.find((String) item.getItemProperty(
-                        PropertyId.OBJECT_ID).getValue());
-                final MetadataExtractor metadataExtractor =
-                    new MetadataExtractor(orgUnit);
-                final String alternative =
-                    metadataExtractor.get("dcterms:alternative");
-                final String identifier =
-                    metadataExtractor.get("dc:identifier");
-                final String orgType =
-                    metadataExtractor.get("eterms:organization-type");
-                final String country = metadataExtractor.get("eterms:country");
-                final String city = metadataExtractor.get("eterms:city");
-                final String coordinate =
-                    metadataExtractor.get("kml:coordinates");
+                OrganizationalUnit orgUnit;
+                try {
+                    orgUnit =
+                        service.find((String) item.getItemProperty(
+                            PropertyId.OBJECT_ID).getValue());
+                    final MetadataExtractor metadataExtractor =
+                        new MetadataExtractor(orgUnit);
+                    final String alternative =
+                        metadataExtractor.get("dcterms:alternative");
+                    final String identifier =
+                        metadataExtractor.get("dc:identifier");
+                    final String orgType =
+                        metadataExtractor.get("eterms:organization-type");
+                    final String country =
+                        metadataExtractor.get("eterms:country");
+                    final String city = metadataExtractor.get("eterms:city");
+                    final String coordinate =
+                        metadataExtractor.get("kml:coordinates");
 
-                alternativeField.setValue(alternative);
-                identifierField.setValue(identifier);
-                orgTypeField.setValue(orgType);
-                countryField.setValue(country);
-                cityField.setValue(city);
-                coordinatesField.setValue(coordinate);
+                    alternativeField.setValue(alternative);
+                    identifierField.setValue(identifier);
+                    orgTypeField.setValue(orgType);
+                    countryField.setValue(country);
+                    cityField.setValue(city);
+                    coordinatesField.setValue(coordinate);
+                }
+                catch (final EscidocException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+                catch (final InternalClientException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+                catch (final TransportException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+
             }
             toolbar.changeState(PublicStatus.valueOf(status.toUpperCase()));
         }
@@ -555,7 +589,22 @@ public class OrgUnitEditView extends AbstractOrgUnitView {
     }
 
     private OrganizationalUnit getFromCache() {
-        return service.find(getSelectedOrgUnitId());
+        try {
+            return service.find(getSelectedOrgUnitId());
+        }
+        catch (final EscidocException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        catch (final InternalClientException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        catch (final TransportException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public OrganizationalUnit close(final String comment)

@@ -1,5 +1,7 @@
 package de.escidoc.admintool.view.lab.orgunit;
 
+import static de.escidoc.admintool.view.ViewConstants.FIELD_WIDTH;
+
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collections;
@@ -18,6 +20,7 @@ import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.themes.Reindeer;
 
 import de.escidoc.admintool.service.OrgUnitService;
 import de.escidoc.admintool.view.ResourceRefDisplay;
@@ -32,13 +35,11 @@ import de.escidoc.vaadin.utilities.LayoutHelper;
 public abstract class AbstractOrgUnitViewLab extends CustomComponent
     implements ClickListener, Serializable {
 
-    private static final String ADD_PARENT_LABEL = "Add Parent";
-
     private static final long serialVersionUID = 8351229526921020901L;
 
-    private final Button saveButton = new Button("Save", this);
+    private final Button saveButton = new Button(ViewConstants.SAVE, this);
 
-    private final Button cancelButton = new Button("Cancel", this);
+    private final Button cancelButton = new Button(ViewConstants.CANCEL, this);
 
     protected final FormLayout form = new FormLayout();
 
@@ -62,8 +63,6 @@ public abstract class AbstractOrgUnitViewLab extends CustomComponent
 
     protected final ListSelect parentList = new ListSelect();
 
-    protected OrgUnitService service;
-
     protected final Button addOrgUnitButton = new Button(
         ViewConstants.ADD_LABEL);
 
@@ -73,19 +72,19 @@ public abstract class AbstractOrgUnitViewLab extends CustomComponent
     protected final Button addPredecessorButton = new Button(
         ViewConstants.ADD_LABEL);
 
-    final HorizontalLayout footer = new HorizontalLayout();
-
-    protected AbstractPredecessorView predecessorResult;
-
-    protected HorizontalLayout predecessorLayout;
-
-    public final int LABEL_WIDTH = 140;;
+    protected final HorizontalLayout footer = new HorizontalLayout();
 
     protected final ListSelect predecessorTypeSelect = new ListSelect("",
         Arrays.asList(new PredecessorType[] { PredecessorType.BLANK,
             PredecessorType.SPLITTING, PredecessorType.FUSION,
             PredecessorType.SPIN_OFF, PredecessorType.AFFILIATION,
             PredecessorType.REPLACEMENT }));
+
+    protected OrgUnitService service;
+
+    protected AbstractPredecessorView predecessorResult;
+
+    protected HorizontalLayout predecessorLayout;
 
     protected final Window mainWindow;
 
@@ -105,113 +104,103 @@ public abstract class AbstractOrgUnitViewLab extends CustomComponent
     private void preInit() {
         setSizeFull();
         setCompositionRoot(panel);
+        panel.setStyleName(Reindeer.PANEL_LIGHT);
         panel.setCaption(getViewCaption());
         panel.setContent(form);
         panel.setSizeFull();
         form.addComponent(addToolbar());
 
-        // Title
-        titleField.setWidth("400px");
-        // attachedFields.add(titleField);
+        titleField.setWidth(FIELD_WIDTH);
         form.addComponent(LayoutHelper.create(ViewConstants.TITLE_LABEL,
-            titleField, LABEL_WIDTH, true));
+            titleField, ViewConstants.LABEL_WIDTH, true));
         titleField.focus();
 
-        // Description
-        descriptionField.setWidth("400px");
+        descriptionField.setWidth(FIELD_WIDTH);
         descriptionField.setRows(5);
-        // attachedFields.add(descriptionField);
         form.addComponent(LayoutHelper.create(ViewConstants.DESCRIPTION_LABEL,
-            descriptionField, LABEL_WIDTH, 100, true));
+            descriptionField, ViewConstants.LABEL_WIDTH, 100, true));
     }
 
     protected void postInit() {
-        // Alternative Title
-        alternativeField.setWidth("400px");
-        // attachedFields.add(alternativeField);
+        alternativeField.setWidth(FIELD_WIDTH);
         form.addComponent(LayoutHelper.create(ViewConstants.ALTERNATIVE_LABEL,
-            alternativeField, LABEL_WIDTH, false));
+            alternativeField, ViewConstants.LABEL_WIDTH, false));
 
-        // identifier
-        identifierField.setWidth("400px");
-        // attachedFields.add(identifierField);
+        identifierField.setWidth(FIELD_WIDTH);
         form.addComponent(LayoutHelper.create(ViewConstants.IDENTIFIER_LABEL,
-            identifierField, LABEL_WIDTH, false));
+            identifierField, ViewConstants.LABEL_WIDTH, false));
 
-        // Org Type
-        orgTypeField.setWidth("400px");
-        // attachedFields.add(orgTypeField);
+        orgTypeField.setWidth(FIELD_WIDTH);
         form.addComponent(LayoutHelper.create(ViewConstants.ORGANIZATION_TYPE,
-            orgTypeField, LABEL_WIDTH, false));
+            orgTypeField, ViewConstants.LABEL_WIDTH, false));
 
-        // city
-        cityField.setWidth("400px");
-        // attachedFields.add(cityField);
-        form.addComponent(LayoutHelper.create("City", cityField, LABEL_WIDTH,
-            false));
+        cityField.setWidth(FIELD_WIDTH);
+        form.addComponent(LayoutHelper.create("City", cityField,
+            ViewConstants.LABEL_WIDTH, false));
 
-        // Country
-        countryField.setWidth("400px");
-        // attachedFields.add(countryField);
+        countryField.setWidth(FIELD_WIDTH);
         form.addComponent(LayoutHelper.create("Country", countryField,
-            LABEL_WIDTH, false));
+            ViewConstants.LABEL_WIDTH, false));
 
         // coordinates
-        coordinatesField.setWidth("400px");
-        // attachedFields.add(coordinatesField);
+        coordinatesField.setWidth(FIELD_WIDTH);
         form.addComponent(LayoutHelper.create(ViewConstants.COORDINATES_LABEL,
-            coordinatesField, LABEL_WIDTH, false));
+            coordinatesField, ViewConstants.LABEL_WIDTH, false));
 
-        // Parent
+        addParentField();
+        addPredecessorField();
+        addFooter();
+    }
+
+    private void addParentField() {
         parentList.setRows(5);
-        parentList.setWidth("400px");
+        parentList.setWidth(ViewConstants.FIELD_WIDTH);
         parentList.setNullSelectionAllowed(true);
         parentList.setMultiSelect(true);
         parentList.setImmediate(true);
-
         form.addComponent(LayoutHelper.create(ViewConstants.PARENTS_LABEL,
-            new OrgUnitEditor(ADD_PARENT_LABEL, parentList, addOrgUnitButton,
-                removeOrgUnitButton, service), LABEL_WIDTH, 100, false,
-            new Button[] { addOrgUnitButton, removeOrgUnitButton }));
+            new OrgUnitEditor(ViewConstants.ADD_PARENT_LABEL, parentList,
+                addOrgUnitButton, removeOrgUnitButton, service),
+            ViewConstants.LABEL_WIDTH, 100, false, new Button[] {
+                addOrgUnitButton, removeOrgUnitButton }));
+    }
 
-        // Predecessor Type
+    private void addPredecessorField() {
         predecessorTypeSelect.setRows(1);
         predecessorTypeSelect.setImmediate(true);
         predecessorTypeSelect.setNullSelectionAllowed(false);
-        // attachedFields.add(predecessorTypeSelect);
 
         final HorizontalLayout hl = new HorizontalLayout();
         hl.addComponent(predecessorTypeSelect);
         hl.setComponentAlignment(predecessorTypeSelect, Alignment.TOP_RIGHT);
         hl.addComponent(addPredecessorButton);
         hl.setComponentAlignment(addPredecessorButton, Alignment.MIDDLE_LEFT);
-        predecessorTypeSelect.setWidth("400px");
+        predecessorTypeSelect.setWidth(ViewConstants.FIELD_WIDTH);
+        form.addComponent(LayoutHelper.create(ViewConstants.PREDESSOR_TYPE, hl,
+            ViewConstants.LABEL_WIDTH, 40, false));
 
-        form.addComponent(LayoutHelper.create("Predessor Type", hl,
-            LABEL_WIDTH, 40, false));
         predecessorResult = new BlankPredecessorView();
         predecessorLayout =
             LayoutHelper.create(ViewConstants.PREDECESSORS_LABEL,
-                predecessorResult, LABEL_WIDTH, 100, false);
-        predecessorLayout.setSizeFull();
-        form.addComponent(predecessorLayout);
-
+                predecessorResult, ViewConstants.LABEL_WIDTH, 100, false);
         addPredecessorButton.addListener(new Button.ClickListener() {
+            private static final long serialVersionUID = -8189365334148809529L;
+
             @Override
             public void buttonClick(final ClickEvent event) {
                 onAddPredecessorClicked();
             }
         });
-        form.addComponent(addFooter());
+        form.addComponent(predecessorLayout);
     }
 
     protected abstract void onAddPredecessorClicked();
 
-    private HorizontalLayout addFooter() {
+    private void addFooter() {
         footer.setSpacing(true);
         footer.addComponent(saveButton);
         footer.addComponent(cancelButton);
-        return footer;
+        form.addComponent(footer);
     }
 
     @Override

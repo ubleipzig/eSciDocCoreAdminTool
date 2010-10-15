@@ -14,7 +14,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
-import de.escidoc.admintool.app.AdminToolContants;
+import de.escidoc.admintool.app.AppConstants;
 import de.escidoc.core.resources.common.MetadataRecord;
 import de.escidoc.core.resources.common.MetadataRecords;
 import de.escidoc.core.resources.oum.OrganizationalUnit;
@@ -161,7 +161,7 @@ public class OrgUnitFactory {
 
     public OrgUnitFactory country(final String country) {
         final Element element =
-            doc.createElementNS(AdminToolContants.ESCIDOC_METADATA_TERMS_NS,
+            doc.createElementNS(AppConstants.ESCIDOC_METADATA_TERMS_NS,
                 "country");
         element.setPrefix("eterms");
         element.setTextContent(country);
@@ -171,7 +171,7 @@ public class OrgUnitFactory {
 
     public OrgUnitFactory city(final String city) {
         final Element element =
-            doc.createElementNS(AdminToolContants.ESCIDOC_METADATA_TERMS_NS,
+            doc.createElementNS(AppConstants.ESCIDOC_METADATA_TERMS_NS,
                 "city");
         element.setPrefix("eterms");
         element.setTextContent(city);
@@ -181,7 +181,7 @@ public class OrgUnitFactory {
 
     public OrgUnitFactory orgType(final String orgType) {
         final Element element =
-            doc.createElementNS(AdminToolContants.ESCIDOC_METADATA_TERMS_NS,
+            doc.createElementNS(AppConstants.ESCIDOC_METADATA_TERMS_NS,
                 "organization-type");
         element.setPrefix("eterms");
         element.setTextContent(orgType);

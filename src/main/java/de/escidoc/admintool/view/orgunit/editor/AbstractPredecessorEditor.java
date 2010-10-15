@@ -187,7 +187,6 @@ public abstract class AbstractPredecessorEditor extends CustomComponent
     public void setOrgUnitEditorView(
         final AbstractOrgUnitViewLab orgUnitEditorViewLab) {
         this.orgUnitEditorViewLab = orgUnitEditorViewLab;
-
     }
 
     @Override

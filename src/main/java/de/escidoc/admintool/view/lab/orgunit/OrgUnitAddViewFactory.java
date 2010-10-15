@@ -13,9 +13,12 @@ public class OrgUnitAddViewFactory {
 
     private final HierarchicalContainer orgUnitContainer;
 
+    private final OrgUnitContainerFactory orgUnitContainerFactory;
+
     public OrgUnitAddViewFactory(final Window mainWindow,
         final OrgUnitService orgUnitService,
-        final HierarchicalContainer orgUnitContainer) {
+        final HierarchicalContainer orgUnitContainer,
+        final OrgUnitContainerFactory orgUnitContainerFactory) {
         Preconditions.checkNotNull(mainWindow, "mainWindow can not be null.");
         Preconditions.checkNotNull(orgUnitService,
             "orgUnitService can not be null.");
@@ -24,12 +27,14 @@ public class OrgUnitAddViewFactory {
         this.mainWindow = mainWindow;
         this.orgUnitService = orgUnitService;
         this.orgUnitContainer = orgUnitContainer;
+        this.orgUnitContainerFactory = orgUnitContainerFactory;
     }
 
     public OrgUnitAddViewLab getOrgUnitAddView() {
         assert (mainWindow != null) : "MainWindow can not be null";
         final OrgUnitAddViewLab orgUnitAddView =
-            new OrgUnitAddViewLab(orgUnitService, orgUnitContainer, mainWindow);
+            new OrgUnitAddViewLab(orgUnitService, orgUnitContainer, mainWindow,
+                orgUnitContainerFactory);
         return orgUnitAddView;
     }
 }

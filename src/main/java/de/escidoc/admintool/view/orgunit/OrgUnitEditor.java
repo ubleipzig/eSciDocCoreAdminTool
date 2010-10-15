@@ -64,7 +64,7 @@ public class OrgUnitEditor extends CustomComponent {
                 orgUnitList.removeItem(ob);
             }
         }
-        else {
+        else if (o instanceof Object) {
             orgUnitList.removeItem(o);
         }
     }

@@ -42,8 +42,10 @@ public class ParamaterHandlerImpl implements ParameterHandler {
     public void handleParameters(final Map<String, String[]> parameters) {
         try {
             final String token = parseAndDecodeToken(parameters);
+            log.info("token: " + token);
             if (isEmpty(token)) {
-                redirectTo(AdminToolContants.ESCIDOC_LOGIN_URL + app.getURL());
+                redirectTo(AdminToolApplication.ESCIDOC_LOGIN_URL
+                    + app.getURL());
             }
             else {
                 tryToAutentificate(token);
@@ -52,7 +54,7 @@ public class ParamaterHandlerImpl implements ParameterHandler {
         catch (final IllegalArgumentException e) {
             mainWindow
                 .showNotification(ViewConstants.INVALID_TOKEN_ERROR_MESSAGE);
-            redirectTo(AdminToolContants.ESCIDOC_LOGIN_URL + app.getURL());
+            redirectTo(AdminToolApplication.ESCIDOC_LOGIN_URL + app.getURL());
         }
 
     }
@@ -92,9 +94,9 @@ public class ParamaterHandlerImpl implements ParameterHandler {
 
     private String parseAndDecodeToken(final Map<String, String[]> parameters)
         throws IllegalArgumentException {
-        if (parameters.containsKey(AdminToolContants.ESCIDOC_USER_HANDLE)) {
+        if (parameters.containsKey(AppConstants.ESCIDOC_USER_HANDLE)) {
             final String parameter =
-                parameters.get(AdminToolContants.ESCIDOC_USER_HANDLE)[0];
+                parameters.get(AppConstants.ESCIDOC_USER_HANDLE)[0];
             return Base64Coder.decodeString(parameter); // NOPMD by CHH on
                                                         // 9/17/10 10:20 AM
         }
