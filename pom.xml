@@ -256,7 +256,7 @@
 	<!-- TODO: replace the right URL after being hudsonized -->
 	<ciManagement>
 		<system>Hudson</system>
-		<url>http://escidev2:8484/</url>
+		<url>http://escidev2:8484/job/eSciDocAdminTool</url>
 	</ciManagement>
 	<mailingLists>
 		<mailingList>
