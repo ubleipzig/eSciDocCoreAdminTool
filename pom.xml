@@ -36,7 +36,7 @@
 		<dependency>
 			<groupId>com.vaadin</groupId>
 			<artifactId>vaadin</artifactId>
-			<version>6.4.3</version>
+			<version>6.4.5</version>
 		</dependency>
 		<dependency>
 			<groupId>log4j</groupId>
@@ -253,7 +253,6 @@
 		<system>jira</system>
 		<url>https://www.escidoc.org/jira/browse/BWESCIT</url>
 	</issueManagement>
-	<!-- TODO: replace the right URL after being hudsonized -->
 	<ciManagement>
 		<system>Hudson</system>
 		<url>http://escidev2:8484/job/eSciDocAdminTool</url>
