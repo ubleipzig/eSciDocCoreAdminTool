@@ -75,15 +75,14 @@ public class OrgUnitSelectorView extends CustomComponent {
                 orgUnitList.addItem(str);
             }
         }
-        else if (o instanceof Object) {
+        else {
             orgUnitList.addItem(o);
         }
         closeWindow();
     }
 
     private void closeWindow() {
-        ((Window) openTreeButtonWindow.getParent())
-            .removeWindow(openTreeButtonWindow);
+        (openTreeButtonWindow.getParent()).removeWindow(openTreeButtonWindow);
     }
 
     public void cancelButtonClick(final ClickEvent event) {

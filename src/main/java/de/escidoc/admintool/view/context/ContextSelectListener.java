@@ -1,7 +1,5 @@
 package de.escidoc.admintool.view.context;
 
-import com.vaadin.ui.VerticalLayout;
-
 import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.view.AbstractResourceSelectListener;
 import de.escidoc.admintool.view.ErrorMessage;
@@ -34,6 +32,6 @@ public class ContextSelectListener extends AbstractResourceSelectListener {
         catch (final TransportException e) {
             ErrorMessage.show(app.getMainWindow(), e);
         }
-        return (ResourceView) new VerticalLayout();
+        return null;
     }
 }

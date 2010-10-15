@@ -16,10 +16,6 @@ public class EmptyStringValidator extends AbstractValidator {
             return ALLOW_NULL;
         }
         final String s = value.toString();
-        if (s == null) {
-            return ALLOW_NULL;
-        }
-
         return s.trim().length() != 0;
     }
 

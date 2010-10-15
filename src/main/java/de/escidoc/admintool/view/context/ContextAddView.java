@@ -13,7 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
-import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.terminal.SystemError;
 import com.vaadin.terminal.UserError;
 import com.vaadin.ui.Accordion;
@@ -94,12 +93,6 @@ public class ContextAddView extends CustomComponent implements ClickListener {
         init();
     }
 
-    private ObjectProperty mapBinding(final String initText, final TextField tf) {
-        final ObjectProperty op = new ObjectProperty(initText, String.class);
-        tf.setPropertyDataSource(op);
-        return op;
-    }
-
     private void init() {
         final Panel panel = new Panel();
         final FormLayout form = new FormLayout();
@@ -110,21 +103,17 @@ public class ContextAddView extends CustomComponent implements ClickListener {
         nameField.setWidth("400px");
         panel.addComponent(LayoutHelper.create(ViewConstants.NAME_LABEL,
             nameField, LABEL_WIDTH, true));
-        final ObjectProperty nameProperty = mapBinding("", nameField);
 
         descriptionField = new TextField();
         descriptionField.setWidth("400px");
         descriptionField.setRows(3);
         panel.addComponent(LayoutHelper.create(ViewConstants.DESCRIPTION_LABEL,
             descriptionField, LABEL_WIDTH, 80, true));
-        final ObjectProperty descriptionProperty =
-            mapBinding("", descriptionField);
 
         typeField = new TextField();
         typeField.setWidth("400px");
         panel.addComponent(LayoutHelper.create(ViewConstants.TYPE_LABEL,
             typeField, LABEL_WIDTH, true));
-        final ObjectProperty typeProperty = mapBinding("", typeField);
 
         orgUnitList = new ListSelect();
         orgUnitList.setRows(5);
@@ -347,6 +336,8 @@ public class ContextAddView extends CustomComponent implements ClickListener {
             (ResourceRefDisplay) orgUnitList
                 .getContainerDataSource().getItemIds().iterator().next();
         final Set<String> orgUnits = new HashSet<String>() {
+
+            private static final long serialVersionUID = -5180997160175800619L;
 
             {
                 add(orgUnit.getObjectId());
