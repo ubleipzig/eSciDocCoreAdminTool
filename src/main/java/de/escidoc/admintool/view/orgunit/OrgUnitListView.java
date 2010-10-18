@@ -12,11 +12,11 @@ import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.app.PropertyId;
 import de.escidoc.admintool.service.OrgUnitService;
 import de.escidoc.admintool.view.ViewConstants;
+import de.escidoc.admintool.view.util.dialog.ErrorDialog;
 import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
 import de.escidoc.core.resources.oum.OrganizationalUnit;
-import de.escidoc.vaadin.dialog.ErrorDialog;
 
 @SuppressWarnings("serial")
 public class OrgUnitListView extends Table {
@@ -85,7 +85,7 @@ public class OrgUnitListView extends Table {
     }
 
     private boolean isOrgUnitExist() {
-        return !allOrgUnits.isEmpty();
+        return allOrgUnits != null && !allOrgUnits.isEmpty();
     }
 
     private void initOrgUnitContainer() {

@@ -32,6 +32,8 @@ import de.escidoc.admintool.view.ErrorMessage;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.admintool.view.role.RevokeGrantCommand;
 import de.escidoc.admintool.view.role.RevokeGrantWindow;
+import de.escidoc.admintool.view.util.Converter;
+import de.escidoc.admintool.view.util.LayoutHelper;
 import de.escidoc.admintool.view.validator.EmptyFieldValidator;
 import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.client.exceptions.EscidocException;
@@ -41,8 +43,6 @@ import de.escidoc.core.resources.aa.useraccount.Grant;
 import de.escidoc.core.resources.aa.useraccount.UserAccount;
 import de.escidoc.core.resources.common.reference.Reference;
 import de.escidoc.core.resources.common.reference.RoleRef;
-import de.escidoc.vaadin.utilities.Converter;
-import de.escidoc.vaadin.utilities.LayoutHelper;
 
 public class UserEditForm extends CustomComponent implements ClickListener {
     private static final long serialVersionUID = 3182336883168014436L;

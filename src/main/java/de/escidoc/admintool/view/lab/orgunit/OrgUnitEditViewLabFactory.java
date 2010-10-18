@@ -1,6 +1,5 @@
 package de.escidoc.admintool.view.lab.orgunit;
 
-
 public class OrgUnitEditViewLabFactory {
 
     public OrgUnitEditViewLab getOrgUnitEditView() {

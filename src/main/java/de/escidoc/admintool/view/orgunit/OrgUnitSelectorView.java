@@ -13,7 +13,7 @@ import de.escidoc.admintool.service.OrgUnitService;
 import de.escidoc.admintool.view.ResourceRefDisplay;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.admintool.view.context.OrgUnitTree;
-import de.escidoc.vaadin.utilities.LayoutHelper;
+import de.escidoc.admintool.view.util.LayoutHelper;
 
 @SuppressWarnings("serial")
 public class OrgUnitSelectorView extends CustomComponent {

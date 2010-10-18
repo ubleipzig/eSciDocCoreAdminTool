@@ -29,8 +29,8 @@ import de.escidoc.admintool.view.orgunit.OrgUnitEditor;
 import de.escidoc.admintool.view.orgunit.PredecessorType;
 import de.escidoc.admintool.view.orgunit.predecessor.AbstractPredecessorView;
 import de.escidoc.admintool.view.orgunit.predecessor.BlankPredecessorView;
+import de.escidoc.admintool.view.util.LayoutHelper;
 import de.escidoc.admintool.view.validator.EmptyFieldValidator;
-import de.escidoc.vaadin.utilities.LayoutHelper;
 
 public abstract class AbstractOrgUnitViewLab extends CustomComponent
     implements ClickListener, Serializable {

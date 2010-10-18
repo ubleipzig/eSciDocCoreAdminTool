@@ -36,6 +36,8 @@ import de.escidoc.admintool.service.OrgUnitService;
 import de.escidoc.admintool.view.ResourceRefDisplay;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.admintool.view.orgunit.OrgUnitEditor;
+import de.escidoc.admintool.view.util.LayoutHelper;
+import de.escidoc.admintool.view.util.dialog.ErrorDialog;
 import de.escidoc.admintool.view.validator.EmptyFieldValidator;
 import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
@@ -45,8 +47,6 @@ import de.escidoc.core.resources.om.context.AdminDescriptor;
 import de.escidoc.core.resources.om.context.AdminDescriptors;
 import de.escidoc.core.resources.om.context.Context;
 import de.escidoc.core.resources.om.context.OrganizationalUnitRefs;
-import de.escidoc.vaadin.dialog.ErrorDialog;
-import de.escidoc.vaadin.utilities.LayoutHelper;
 
 public class ContextAddView extends CustomComponent implements ClickListener {
     private static final long serialVersionUID = 1100228979605484119L;

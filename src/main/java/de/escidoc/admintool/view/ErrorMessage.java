@@ -2,7 +2,7 @@ package de.escidoc.admintool.view;
 
 import com.vaadin.ui.Window;
 
-import de.escidoc.vaadin.dialog.ErrorDialog;
+import de.escidoc.admintool.view.util.dialog.ErrorDialog;
 
 public class ErrorMessage {
 

@@ -9,7 +9,7 @@ import de.escidoc.admintool.service.OrgUnitService;
 import de.escidoc.admintool.view.ResourceRefDisplay;
 import de.escidoc.admintool.view.orgunit.predecessor.AbstractPredecessorView;
 import de.escidoc.admintool.view.orgunit.predecessor.FusionPredecessorView;
-import de.escidoc.vaadin.dialog.ErrorDialog;
+import de.escidoc.admintool.view.util.dialog.ErrorDialog;
 
 public class FusionPredecessorEditor extends AbstractPredecessorEditor {
 

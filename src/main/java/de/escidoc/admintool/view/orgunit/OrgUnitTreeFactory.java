@@ -9,9 +9,9 @@ import org.slf4j.LoggerFactory;
 import com.vaadin.ui.Tree;
 
 import de.escidoc.admintool.view.ResourceRefDisplay;
+import de.escidoc.admintool.view.util.TreeHelper;
 import de.escidoc.core.resources.oum.OrganizationalUnit;
 import de.escidoc.core.resources.oum.Parent;
-import de.escidoc.vaadin.utilities.TreeHelper;
 
 public class OrgUnitTreeFactory {
 

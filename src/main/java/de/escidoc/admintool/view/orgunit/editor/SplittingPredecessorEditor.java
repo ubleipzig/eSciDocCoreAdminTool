@@ -22,8 +22,8 @@ import de.escidoc.admintool.view.lab.orgunit.AbstractOrgUnitViewLab;
 import de.escidoc.admintool.view.orgunit.AbstractOrgUnitView;
 import de.escidoc.admintool.view.orgunit.PredecessorType;
 import de.escidoc.admintool.view.orgunit.predecessor.SplittingPredeccesorView;
-import de.escidoc.vaadin.dialog.ErrorDialog;
-import de.escidoc.vaadin.utilities.LayoutHelper;
+import de.escidoc.admintool.view.util.LayoutHelper;
+import de.escidoc.admintool.view.util.dialog.ErrorDialog;
 
 public class SplittingPredecessorEditor extends CustomComponent
     implements IPredecessorEditor {

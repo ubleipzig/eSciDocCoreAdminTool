@@ -30,13 +30,13 @@ import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.admintool.view.orgunit.PredecessorType;
 import de.escidoc.admintool.view.orgunit.editor.IPredecessorEditor;
 import de.escidoc.admintool.view.orgunit.predecessor.AbstractPredecessorView;
+import de.escidoc.admintool.view.util.dialog.ErrorDialog;
 import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
 import de.escidoc.core.resources.oum.OrganizationalUnit;
 import de.escidoc.core.resources.oum.PredecessorForm;
-import de.escidoc.vaadin.dialog.ErrorDialog;
 
 public class OrgUnitAddViewLab extends AbstractOrgUnitViewLab {
 

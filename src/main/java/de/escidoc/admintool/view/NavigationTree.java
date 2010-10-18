@@ -39,9 +39,6 @@ public class NavigationTree extends Tree {
             if (itemId == null) {
                 return;
             }
-            // else if (ViewConstants.ORGANIZATIONAL_UNIT.equals(itemId)) {
-            // app.showOrganizationalUnitView();
-            // }
             else if (ViewConstants.CONTEXT.equals(itemId)) {
                 app.showContextView();
             }

@@ -7,16 +7,17 @@ import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.themes.Reindeer;
 
 import de.escidoc.admintool.view.ResourceRefDisplay;
 import de.escidoc.admintool.view.ViewConstants;
 
 public class AbstractPredecessorView extends CustomComponent {
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1279873768615689377L;
 
     protected Panel mainLayout = new Panel();
 
-    protected final GridLayout hl = new GridLayout(1, 3);
+    protected final GridLayout gridLayout = new GridLayout(1, 3);
 
     private ResourceRefDisplay resourceRefDisplay;
 
@@ -24,22 +25,26 @@ public class AbstractPredecessorView extends CustomComponent {
 
     public AbstractPredecessorView(final String predecessor,
         final String newOrgUnitName) {
-        mainLayout.setWidth("400px");
+        mainLayout.setStyleName(Reindeer.PANEL_LIGHT);
+        setCompositionRoot(mainLayout);
+        mainLayout.setWidth(ViewConstants.FIELD_WIDTH);
+
         final Label left =
             new Label("<span align=\"center\">" + predecessor + "</span>",
                 Label.CONTENT_XHTML);
-        hl.addComponent(left, 0, 0);
-        hl.setComponentAlignment(left, Alignment.TOP_CENTER);
+        gridLayout.addComponent(left, 0, 0);
+        gridLayout.setComponentAlignment(left, Alignment.TOP_CENTER);
+
         final Label middle =
             new Label("<span align=\"center\">" + ViewConstants.DOWN_ARROW
                 + "</span>", Label.CONTENT_XHTML);
-        hl.addComponent(middle, 0, 1);
-        hl.setComponentAlignment(middle, Alignment.MIDDLE_CENTER);
+        gridLayout.addComponent(middle, 0, 1);
+        gridLayout.setComponentAlignment(middle, Alignment.MIDDLE_CENTER);
+
         final Label right = new Label(newOrgUnitName);
-        hl.addComponent(right, 0, 2);
-        hl.setComponentAlignment(right, Alignment.BOTTOM_CENTER);
-        mainLayout.addComponent(hl);
-        setCompositionRoot(mainLayout);
+        gridLayout.addComponent(right, 0, 2);
+        gridLayout.setComponentAlignment(right, Alignment.BOTTOM_CENTER);
+        mainLayout.addComponent(gridLayout);
     }
 
     public AbstractPredecessorView() {
@@ -63,7 +68,7 @@ public class AbstractPredecessorView extends CustomComponent {
     }
 
     public boolean isSelected() {
-        return resourceRefDisplay != null && resourceRefList != null
+        return resourceRefDisplay != null || resourceRefList != null
             && resourceRefList.size() > 0;
     }
 
@@ -75,5 +80,4 @@ public class AbstractPredecessorView extends CustomComponent {
     public List<ResourceRefDisplay> getResourceRefList() {
         return resourceRefList;
     }
-
 }

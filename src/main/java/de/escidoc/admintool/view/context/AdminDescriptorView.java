@@ -18,13 +18,13 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
 
+import de.escidoc.admintool.view.util.dialog.ErrorDialog;
 import de.escidoc.core.resources.om.context.AdminDescriptor;
-import de.escidoc.vaadin.dialog.ErrorDialog;
 
 @SuppressWarnings("serial")
 public abstract class AdminDescriptorView extends Window {
-    private final Logger log =
-        LoggerFactory.getLogger(AdminDescriptorView.class);
+    private final Logger log = LoggerFactory
+        .getLogger(AdminDescriptorView.class);
 
     protected static final String EDIT_ADMIN_DESCRIPTOR =
         "Edit Admin Descriptor";
@@ -148,7 +148,7 @@ public abstract class AdminDescriptorView extends Window {
             mainWindow.addWindow(new ErrorDialog(mainWindow, "Error", e
                 .getMessage()));
             setComponentError(new SystemError(e.getMessage()));
-              
+
             return false;
         }
         catch (final SAXException e) {
@@ -159,7 +159,7 @@ public abstract class AdminDescriptorView extends Window {
             mainWindow.addWindow(errorDialog);
             log.error("An unexpected error occured! See log for details.", e);
             setComponentError(new SystemError(e.getMessage()));
-              
+
             return false;
 
         }
@@ -168,7 +168,7 @@ public abstract class AdminDescriptorView extends Window {
             mainWindow.addWindow(new ErrorDialog(mainWindow, "Error", e
                 .getMessage()));
             setComponentError(new SystemError(e.getMessage()));
-              
+
             return false;
         }
     }

@@ -32,6 +32,9 @@ import de.escidoc.admintool.view.orgunit.predecessor.AbstractPredecessorView;
 import de.escidoc.admintool.view.orgunit.predecessor.AffiliationPredecessorView;
 import de.escidoc.admintool.view.orgunit.predecessor.BlankPredecessorView;
 import de.escidoc.admintool.view.orgunit.predecessor.SpinOffPredecessorView;
+import de.escidoc.admintool.view.util.Converter;
+import de.escidoc.admintool.view.util.LayoutHelper;
+import de.escidoc.admintool.view.util.dialog.ErrorDialog;
 import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
@@ -41,9 +44,6 @@ import de.escidoc.core.resources.oum.Parents;
 import de.escidoc.core.resources.oum.Predecessor;
 import de.escidoc.core.resources.oum.PredecessorForm;
 import de.escidoc.core.resources.oum.Predecessors;
-import de.escidoc.vaadin.dialog.ErrorDialog;
-import de.escidoc.vaadin.utilities.Converter;
-import de.escidoc.vaadin.utilities.LayoutHelper;
 
 //TODO this class is too big, extract some component to another class.
 public class OrgUnitEditView extends AbstractOrgUnitView {
