@@ -23,9 +23,7 @@ import de.escidoc.core.client.exceptions.application.security.AuthenticationExce
 @SuppressWarnings("serial")
 public class ParamaterHandlerImpl implements ParameterHandler {
 
-    private static final Logger log = LoggerFactory // NOPMD by CHH on 9/17/10
-                                                    // 10:19 AM => logger is not
-                                                    // not a constants
+    private static final Logger log = LoggerFactory
         .getLogger(ParamaterHandlerImpl.class);
 
     private final Window mainWindow;
@@ -42,21 +40,22 @@ public class ParamaterHandlerImpl implements ParameterHandler {
     public void handleParameters(final Map<String, String[]> parameters) {
         try {
             final String token = parseAndDecodeToken(parameters);
-            log.info("token: " + token);
+
             if (isEmpty(token)) {
-                redirectTo(AdminToolApplication.ESCIDOC_LOGIN_URL
-                    + app.getURL());
+                log.debug("the user does not have any token.");
+                app.showLandingView();
             }
             else {
+                log.debug("the user has a token.");
                 tryToAutentificate(token);
             }
         }
         catch (final IllegalArgumentException e) {
-            mainWindow
-                .showNotification(ViewConstants.INVALID_TOKEN_ERROR_MESSAGE);
-            redirectTo(AdminToolApplication.ESCIDOC_LOGIN_URL + app.getURL());
+            mainWindow.showNotification(
+                ViewConstants.INVALID_TOKEN_ERROR_MESSAGE,
+                Notification.TYPE_HUMANIZED_MESSAGE);
+            app.showLandingView();
         }
-
     }
 
     private boolean isEmpty(final String token) {

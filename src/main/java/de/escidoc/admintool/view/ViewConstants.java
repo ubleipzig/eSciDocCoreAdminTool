@@ -260,7 +260,11 @@ public class ViewConstants {
     public static final String ROLES_LABEL = "Roles";
 
     public static final String AN_UNEXPECTED_ERROR_OCCURED_SEE_LOG_FOR_DETAILS =
-    "An unexpected error occured! See log for details.";
+        "An unexpected error occured! See log for details.";
 
     public static final int LABEL_WIDTH = 140;
+
+    public static final String WELCOMING_MESSAGE = "Welcome to eSciDoc";
+
+    public static final String ESCIDOC_URL_TEXTFIELD = "eSciDoc URL ";
 }
