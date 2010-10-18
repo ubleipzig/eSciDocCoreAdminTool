@@ -1,19 +1,8 @@
-@import "../reindeermods/styles.css";
+@import "../reindeer/styles.css";
 
 @import "button/button.css";
 @import "window/window.css";
 @import "layout/layout.css";
-@import "layout/toolbar.css";
-.escidoc-toolbar {
-	background: transparent;
-	background-image: url("images/escidoc-logo.jpg");
-	background-repeat: repeat-x;
-}
-
-.landing-view {
-background-color:#bcd0de;
-min-height: 100%;
-}
 
 .v-sa .v-app,
 .v-sa .v-window,
