@@ -13,9 +13,9 @@ import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.app.PropertyId;
 import de.escidoc.admintool.service.UserService;
 import de.escidoc.admintool.view.ViewConstants;
+import de.escidoc.admintool.view.util.dialog.ErrorDialog;
 import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.resources.aa.useraccount.UserAccount;
-import de.escidoc.vaadin.dialog.ErrorDialog;
 
 @SuppressWarnings("serial")
 public class UserListView extends Table {
@@ -71,7 +71,7 @@ public class UserListView extends Table {
     }
 
     private boolean isUserExists() {
-        return !allUserAccounts.isEmpty();
+        return allUserAccounts != null && !allUserAccounts.isEmpty();
     }
 
     private void initUserContainer() {

@@ -13,11 +13,11 @@ import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.app.PropertyId;
 import de.escidoc.admintool.service.ContextService;
 import de.escidoc.admintool.view.ViewConstants;
+import de.escidoc.admintool.view.util.dialog.ErrorDialog;
 import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
 import de.escidoc.core.resources.om.context.Context;
-import de.escidoc.vaadin.dialog.ErrorDialog;
 
 @SuppressWarnings("serial")
 public class ContextListView extends Table {
@@ -59,7 +59,7 @@ public class ContextListView extends Table {
     }
 
     private boolean isContextExist() {
-        return !allContexts.isEmpty();
+        return allContexts != null && !allContexts.isEmpty();
     }
 
     private void initContextContainer() {

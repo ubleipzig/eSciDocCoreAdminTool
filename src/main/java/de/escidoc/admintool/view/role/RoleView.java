@@ -37,6 +37,7 @@ import de.escidoc.admintool.service.ContextService;
 import de.escidoc.admintool.service.RoleService;
 import de.escidoc.admintool.service.UserService;
 import de.escidoc.admintool.view.ViewConstants;
+import de.escidoc.admintool.view.util.dialog.ErrorDialog;
 import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
@@ -46,7 +47,6 @@ import de.escidoc.core.resources.aa.role.Role;
 import de.escidoc.core.resources.aa.useraccount.UserAccount;
 import de.escidoc.core.resources.common.reference.RoleRef;
 import de.escidoc.core.resources.om.context.Context;
-import de.escidoc.vaadin.dialog.ErrorDialog;
 
 public class RoleView extends CustomComponent {
 
