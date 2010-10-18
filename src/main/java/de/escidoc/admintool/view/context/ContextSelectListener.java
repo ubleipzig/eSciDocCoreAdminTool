@@ -1,5 +1,8 @@
 package de.escidoc.admintool.view.context;
 
+import org.apache.commons.lang.NotImplementedException;
+
+import com.vaadin.data.Item;
 import com.vaadin.ui.VerticalLayout;
 
 import de.escidoc.admintool.app.AdminToolApplication;
@@ -34,6 +37,21 @@ public class ContextSelectListener extends AbstractResourceSelectListener {
         catch (final TransportException e) {
             ErrorMessage.show(app.getMainWindow(), e);
         }
-        return (ResourceView) new VerticalLayout();
+        return new EmptyView();
+    }
+
+    private class EmptyView extends VerticalLayout implements ResourceView {
+
+        private static final long serialVersionUID = -2661185418534655185L;
+
+        @Override
+        public void showAddView() {
+            throw new NotImplementedException(EmptyView.class);
+        }
+
+        @Override
+        public void showEditView(final Item item) {
+            throw new NotImplementedException(EmptyView.class);
+        }
     }
 }
