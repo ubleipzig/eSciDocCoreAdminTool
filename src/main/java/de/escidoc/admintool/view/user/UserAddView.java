@@ -127,9 +127,8 @@ public class UserAddView extends CustomComponent implements ClickListener {
                             (String) loginNameProperty.getValue());
 
                     userListView.addUser(createdUserAccount);
-                    userListView.select(createdUserAccount);
-
                     resetFields();
+                    userListView.select(createdUserAccount);
                 }
                 catch (final EscidocException e) {
                     final String error =

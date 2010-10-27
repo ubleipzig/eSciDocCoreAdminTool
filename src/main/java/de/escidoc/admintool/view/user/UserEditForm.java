@@ -22,6 +22,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.Reindeer;
 
 import de.escidoc.admintool.app.AdminToolApplication;
@@ -110,10 +111,13 @@ public class UserEditForm extends CustomComponent implements ClickListener {
 
     private POJOContainer<Grant> grantContainer;
 
+    private final Window mainWindow;
+
     public UserEditForm(final AdminToolApplication app,
         final UserService userService) {
         this.app = app;
         this.userService = userService;
+        mainWindow = app.getMainWindow();
         init();
     }
 
@@ -382,7 +386,9 @@ public class UserEditForm extends CustomComponent implements ClickListener {
                     PropertyId.ASSIGN_ON);
             roleTable.setContainerDataSource(grantContainer);
             roleTable.setVisibleColumns(new String[] { PropertyId.XLINK_TITLE,
-                PropertyId.GRANT_ROLE_OBJECT_ID, PropertyId.ASSIGN_ON });
+            // PropertyId.GRANT_ROLE_OBJECT_ID,
+            // PropertyId.ASSIGN_ON
+                });
             roleTable.setColumnHeaders(ViewConstants.ROLE_COLUMN_HEADERS);
 
             for (final Grant grant : userGrants) {
@@ -405,8 +411,7 @@ public class UserEditForm extends CustomComponent implements ClickListener {
         return (String) item.getItemProperty("objid").getValue();
     }
 
-    public UserAccount deleteUser() throws EscidocException,
-        InternalClientException, TransportException {
+    public UserAccount deleteUser() throws EscidocClientException {
         return userService.delete(getSelectedItemId());
     }
 
@@ -458,6 +463,12 @@ public class UserEditForm extends CustomComponent implements ClickListener {
                         ViewConstants.AN_UNEXPECTED_ERROR_OCCURED_SEE_LOG_FOR_DETAILS,
                         e);
                 setComponentError(new SystemError(e.getMessage()));
+            }
+            catch (final EscidocClientException e) {
+                setComponentError(new SystemError(e.getMessage()));
+                log.error("An unexpected error occured! See log for details.",
+                    e);
+                ErrorMessage.show(mainWindow, e);
             }
         }
     }
