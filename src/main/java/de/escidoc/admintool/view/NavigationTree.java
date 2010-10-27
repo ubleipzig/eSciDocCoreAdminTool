@@ -12,7 +12,8 @@ public class NavigationTree extends Tree {
 
     // TODO refactor to enum
     private final String[] MENU_ACTIONS = { ViewConstants.ORGANIZATIONAL_UNIT,
-        ViewConstants.CONTEXT, ViewConstants.USERS, ViewConstants.ROLE };
+        ViewConstants.CONTEXT, ViewConstants.USERS, ViewConstants.ROLE,
+        ViewConstants.ADMIN_TASK };
 
     private final AdminToolApplication app;
 
@@ -27,7 +28,7 @@ public class NavigationTree extends Tree {
             setChildrenAllowed(action, false);
         }
         setSelectable(true);
-        setNullSelectionAllowed(false);
+        setNullSelectionAllowed(true);
         addListener(new NavigationClickListener());
     }
 
@@ -42,6 +43,9 @@ public class NavigationTree extends Tree {
             else if (ViewConstants.CONTEXT.equals(itemId)) {
                 app.showContextView();
             }
+            else if (ViewConstants.CONTAINER.equals(itemId)) {
+                app.showContainerView();
+            }
             else if (ViewConstants.USERS.equals(itemId)) {
                 app.showUserView();
             }
@@ -51,6 +55,10 @@ public class NavigationTree extends Tree {
             else if (ViewConstants.ORGANIZATIONAL_UNIT.equals(itemId)) {
                 app.showOrgUnitViewLab();
             }
+            else if (ViewConstants.ADMIN_TASK.equals(itemId)) {
+                app.showAdminTaskView();
+            }
+
             else {
                 throw new IllegalArgumentException(
                     Messages.getString("AdminToolApplication.10"));

@@ -3,6 +3,7 @@ package de.escidoc.admintool.app;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.base.Preconditions;
 import com.vaadin.Application;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.VerticalLayout;
@@ -10,9 +11,13 @@ import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.Notification;
 
 import de.escidoc.admintool.messages.Messages;
+import de.escidoc.admintool.service.AdminService;
 import de.escidoc.admintool.service.ContextService;
+import de.escidoc.admintool.service.EscidocService;
 import de.escidoc.admintool.service.OrgUnitService;
 import de.escidoc.admintool.service.RoleService;
+import de.escidoc.admintool.service.ServiceContainer;
+import de.escidoc.admintool.service.ServiceContaiterImpl;
 import de.escidoc.admintool.service.UserService;
 import de.escidoc.admintool.view.ErrorMessage;
 import de.escidoc.admintool.view.MainView;
@@ -21,11 +26,14 @@ import de.escidoc.admintool.view.UserViewComponent;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.admintool.view.ViewManager;
 import de.escidoc.admintool.view.ViewManagerImpl;
+import de.escidoc.admintool.view.admintask.AdminTaskView;
+import de.escidoc.admintool.view.admintask.AdminTaskViewImpl;
 import de.escidoc.admintool.view.context.ContextAddView;
 import de.escidoc.admintool.view.context.ContextEditForm;
 import de.escidoc.admintool.view.context.ContextListView;
 import de.escidoc.admintool.view.context.ContextView;
 import de.escidoc.admintool.view.lab.orgunit.OrgUnitViewLabFactory;
+import de.escidoc.admintool.view.login.WelcomePage;
 import de.escidoc.admintool.view.orgunit.OrgUnitAddView;
 import de.escidoc.admintool.view.orgunit.OrgUnitEditView;
 import de.escidoc.admintool.view.orgunit.OrgUnitListView;
@@ -86,6 +94,8 @@ public class AdminToolApplication extends Application {
 
     private WelcomePage welcomePage;
 
+    private EscidocService containerService;
+
     private final StartPage startPage = new StartPage();
 
     @Override
@@ -138,17 +148,37 @@ public class AdminToolApplication extends Application {
         initServices(token);
         initFactories();
         buildMainLayout();
+
         createUserViewComponent();
+        createContainerViewComponent();
+        createAdminTaskView();
     }
+
+    private final ServiceContainer services = new ServiceContaiterImpl();
 
     private void initServices(final String token)
         throws InternalClientException, EscidocException, TransportException {
         final ServiceFactory serviceFactory =
             new ServiceFactory(eSciDocUri, token);
+
         orgUnitService = serviceFactory.createOrgService();
+
         userService = serviceFactory.createUserService();
+
         contextService = serviceFactory.createContextService();
+
         roleService = serviceFactory.createRoleService();
+
+        containerService = serviceFactory.createContainerService();
+        services.add(containerService);
+
+        adminService = serviceFactory.createAdminService();
+        services.add(adminService);
+
+        final AdminService adminService = services.getAdminService();
+        Preconditions.checkNotNull(adminService,
+            "can not get AdminService from service container");
+        assert adminService != null : "can not get AdminService from service container";
     }
 
     private void initFactories() throws EscidocException,
@@ -164,6 +194,19 @@ public class AdminToolApplication extends Application {
 
     private void createUserViewComponent() {
         userViewComp = new UserViewComponent(this, userService);
+    }
+
+    private ResourceViewComponent containerViewComponent;
+
+    private AdminService adminService;
+
+    private void createContainerViewComponent() {
+        containerViewComponent =
+            new ContainerViewComponent(this, containerService);
+    }
+
+    private void createAdminTaskView() {
+        adminTaskView = new AdminTaskViewImpl(mainWindow, services);
     }
 
     private void setMainView(final Component component) {
@@ -313,5 +356,23 @@ public class AdminToolApplication extends Application {
             ErrorMessage.show(mainWindow, e);
         }
         return new VerticalLayout();
+    }
+
+    public void showContainerView() {
+        setMainView(getContainerView());
+    }
+
+    private Component getContainerView() {
+        return containerViewComponent.getContainerView();
+    }
+
+    public void showAdminTaskView() {
+        setMainView(getAdminTaskView());
+    }
+
+    private AdminTaskView adminTaskView;
+
+    private AdminTaskView getAdminTaskView() {
+        return adminTaskView;
     }
 }

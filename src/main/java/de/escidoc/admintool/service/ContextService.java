@@ -3,7 +3,9 @@ package de.escidoc.admintool.service;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -18,55 +20,46 @@ import com.google.common.collect.Multimap;
 import de.escidoc.admintool.app.AppConstants;
 import de.escidoc.admintool.domain.ContextFactory;
 import de.escidoc.core.client.ContextHandlerClient;
+import de.escidoc.core.client.TransportProtocol;
+import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
+import de.escidoc.core.client.interfaces.ContextHandlerClientInterface;
 import de.escidoc.core.resources.common.Filter;
 import de.escidoc.core.resources.common.TaskParam;
 import de.escidoc.core.resources.om.context.AdminDescriptors;
 import de.escidoc.core.resources.om.context.Context;
 import de.escidoc.core.resources.om.context.OrganizationalUnitRefs;
 
-@SuppressWarnings("serial")
 public class ContextService implements Serializable {
-    // NOPMD by CHH on 9/17/10 10:20 AM
 
     private static final Logger log = LoggerFactory
         .getLogger(ContextService.class);
 
-    // TODO separate Model/Cache and Service
-    // TODO use blackboard / Event Bus to publish AddContextEvent,
-    // EditContextEvent,DeleteContextEvent. Let the View subscribe to these
-    // events and update itself with the changes.
+    private ContextHandlerClientInterface client;
 
-    // NOPMD by CHH on 9/17/10 10:20 AM ContextService is not a Bean.
-    private final ContextHandlerClient client;
-
-    // NOPMD by CHH on 9/17/10 10:20 AM @See above
     private final Map<String, Context> contextById =
         new ConcurrentHashMap<String, Context>();
 
-    // NOPMD by CHH on 9/17/10 10:20 AM @See above
     private final Multimap<String, Context> contextByTitle = HashMultimap
         .create();
 
     private final String eSciDocUri;
 
-    public ContextService(final String eSciDocUri, final String authentication)
-        throws EscidocException, TransportException, InternalClientException {
+    private final String handle;
 
+    public ContextService(final String eSciDocUri, final String handle)
+        throws InternalClientException {
         this.eSciDocUri = eSciDocUri;
-        client = initClient(authentication);
+        this.handle = handle;
+        initClient();
     }
 
-    private ContextHandlerClient initClient(final String handle)
-        throws EscidocException, TransportException, InternalClientException {
-
-        final ContextHandlerClient client = new ContextHandlerClient();
+    private void initClient() throws InternalClientException {
+        client = new ContextHandlerClient(eSciDocUri);
+        client.setTransport(TransportProtocol.REST);
         client.setHandle(handle);
-        client.setServiceAddress(eSciDocUri);
-
-        return client;
     }
 
     @SuppressWarnings("deprecation")
@@ -102,7 +95,7 @@ public class ContextService implements Serializable {
     }
 
     private TaskParam createdBySysAdmin() {
-        final Collection<Filter> filters = TaskParam.filtersFactory();
+        final Set<Filter> filters = new HashSet<Filter>();
         filters.add(getFilter(AppConstants.CREATED_BY_FILTER,
             AppConstants.SYSADMIN_OBJECT_ID, null));
 
@@ -135,14 +128,8 @@ public class ContextService implements Serializable {
         final String newDescription, final String newType,
         final OrganizationalUnitRefs orgUnitRefs, // NOPMD by CHH on 9/17/10
                                                   // 10:23 AM
-        final AdminDescriptors newAdminDescriptors) throws EscidocException, // NOPMD
-                                                                             // by
-                                                                             // CHH
-                                                                             // on
-                                                                             // 9/17/10
-                                                                             // 10:23
-                                                                             // AM
-        InternalClientException, TransportException {
+        final AdminDescriptors newAdminDescriptors)
+        throws EscidocClientException {
 
         assert !(objectId == null || newName == null || newDescription == null || newType == null) : "Neither objectId nor newName nor newDescription parameters can be null.";
         assert !newName.isEmpty() : "Name can not be empty.";
@@ -236,8 +223,7 @@ public class ContextService implements Serializable {
         contextById.put(objectId, updatedContext);
     }
 
-    public void delete(final String objectId) throws EscidocException,
-        InternalClientException, TransportException {
+    public void delete(final String objectId) throws EscidocClientException {
         client.delete(objectId);
         contextById.remove(objectId);
     }

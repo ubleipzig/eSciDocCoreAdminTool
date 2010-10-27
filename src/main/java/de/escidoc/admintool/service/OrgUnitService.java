@@ -1,24 +1,28 @@
 package de.escidoc.admintool.service;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.escidoc.admintool.app.AppConstants;
 import de.escidoc.admintool.exception.ResourceNotFoundException;
 import de.escidoc.core.client.OrganizationalUnitHandlerClient;
 import de.escidoc.core.client.TransportProtocol;
+import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
+import de.escidoc.core.client.interfaces.OrganizationalUnitHandlerClientInterface;
 import de.escidoc.core.resources.common.Filter;
 import de.escidoc.core.resources.common.TaskParam;
 import de.escidoc.core.resources.oum.OrganizationalUnit;
@@ -27,40 +31,31 @@ import de.escidoc.core.resources.oum.Predecessor;
 
 public class OrgUnitService {
 
-    private static final Logger log = LoggerFactory // NOPMD by CHH on 9/17/10
-                                                    // 10:29 AM
+    private static final Logger log = LoggerFactory
         .getLogger(OrgUnitService.class);
 
-    private final Map<String, String> objectIdByTitle = // NOPMD by CHH on
-        new HashMap<String, String>(); // 9/17/10 10:29 AM
+    private OrganizationalUnitHandlerClientInterface client;
 
-    // TODO re-factor orgUnit- and ContextService: @See ContextService.java
-    private final OrganizationalUnitHandlerClient client;
-
-    private Collection<OrganizationalUnit> orgUnits;
+    private final Map<String, String> objectIdByTitle =
+        new HashMap<String, String>();
 
     private final String eSciDocUri;
 
-    public OrgUnitService(final String eSciDocUri,
-        final OrganizationalUnitHandlerClient client) {
+    private final String handle;
+
+    private Collection<OrganizationalUnit> orgUnits;
+
+    public OrgUnitService(final String eSciDocUri, final String handle)
+        throws InternalClientException {
         this.eSciDocUri = eSciDocUri;
-        this.client = client;
+        this.handle = handle;
+        initClient();
     }
 
-    public OrgUnitService(final String eSciDocUri, final String token)
-        throws InternalClientException {
-
-        this.eSciDocUri = eSciDocUri;
-        client = createOuClient(token);
-    }
-
-    private OrganizationalUnitHandlerClient createOuClient(final String token)
-        throws InternalClientException {
-        final OrganizationalUnitHandlerClient client =
-            new OrganizationalUnitHandlerClient();
-        client.setHandle(token);
-        client.setServiceAddress(eSciDocUri);
-        return client;
+    private void initClient() throws InternalClientException {
+        client = new OrganizationalUnitHandlerClient(eSciDocUri);
+        client.setTransport(TransportProtocol.REST);
+        client.setHandle(handle);
     }
 
     private final Map<String, OrganizationalUnit> orgUnitById =
@@ -111,7 +106,7 @@ public class OrgUnitService {
 
     // FIXME duplicate method in ContextService
     private TaskParam emptyFilter() {
-        final Collection<Filter> filters = TaskParam.filtersFactory();
+        final Set<Filter> filters = new HashSet<Filter>();
         filters.add(getFilter(AppConstants.CREATED_BY_FILTER,
             AppConstants.SYSADMIN_OBJECT_ID, null));
 
@@ -154,7 +149,7 @@ public class OrgUnitService {
     }
 
     public OrganizationalUnit update(final OrganizationalUnit orgUnit)
-        throws EscidocException, InternalClientException, TransportException {
+        throws EscidocClientException {
         final OrganizationalUnit old = orgUnit;
         final OrganizationalUnit updatedOrgUnit = client.update(orgUnit);
         orgUnitById.remove(old.getObjid());
@@ -163,7 +158,7 @@ public class OrgUnitService {
     }
 
     public void delete(final OrganizationalUnit orgUnit)
-        throws EscidocException, InternalClientException, TransportException {
+        throws EscidocClientException {
         final OrganizationalUnit old = orgUnit;
         client.delete(orgUnit.getObjid());
         orgUnitById.remove(old.getObjid());
@@ -267,7 +262,7 @@ public class OrgUnitService {
     }
 
     private TaskParam createTaskParamWithTopLevelFilter() {
-        final Collection<Filter> filters = TaskParam.filtersFactory();
+        final Set<Filter> filters = new HashSet<Filter>();
         filters.add(createTopLevelFilter());
         final TaskParam taskParam = new TaskParam();
         taskParam.setFilters(filters);

@@ -36,7 +36,7 @@ public class PropertyId {
 
     public static final String ACTIVE = "properties.active";
 
-    public static final String ASSIGN_ON = "grantProperties.assignedOn.objid";
+    public static final String ASSIGN_ON = "grantProperties.assignedOn.xLinkTitle";
 
     public static final String GRANT_ROLE_OBJECT_ID =
         "grantProperties.role.objid";

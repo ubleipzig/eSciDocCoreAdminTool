@@ -45,7 +45,7 @@ import de.escidoc.core.client.exceptions.TransportException;
 import de.escidoc.core.client.exceptions.application.notfound.RoleNotFoundException;
 import de.escidoc.core.resources.aa.role.Role;
 import de.escidoc.core.resources.aa.useraccount.UserAccount;
-import de.escidoc.core.resources.common.reference.RoleRef;
+import de.escidoc.core.resources.common.reference.ContextRef;
 import de.escidoc.core.resources.om.context.Context;
 
 public class RoleView extends CustomComponent {
@@ -298,7 +298,6 @@ public class RoleView extends CustomComponent {
 
         private void onSaveClick() {
             // TODO add validation
-            showNotification();
             assignRole();
         }
 
@@ -347,15 +346,11 @@ public class RoleView extends CustomComponent {
             return new Role();
         }
 
-        private Set<RoleRef> getSelectedResources() {
+        private Set<ContextRef> getSelectedResources() {
             final Object value = resouceResult.getValue();
-            if (value instanceof Set) {
-                final Set<RoleRef> toBeScopes = (Set<RoleRef>) value;
-                mainWindow.showNotification(toBeScopes.toString());
-                return toBeScopes;
-            }
-            else if (value instanceof RoleRef) {
-                return Collections.singleton((RoleRef) value);
+            if (value instanceof Context) {
+                return Collections.singleton(new ContextRef(((Context) value)
+                    .getObjid()));
             }
             return Collections.emptySet();
         }

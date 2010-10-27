@@ -171,8 +171,7 @@ public class OrgUnitFactory {
 
     public OrgUnitFactory city(final String city) {
         final Element element =
-            doc.createElementNS(AppConstants.ESCIDOC_METADATA_TERMS_NS,
-                "city");
+            doc.createElementNS(AppConstants.ESCIDOC_METADATA_TERMS_NS, "city");
         element.setPrefix("eterms");
         element.setTextContent(city);
         mpdlMdRecord.appendChild(element);
