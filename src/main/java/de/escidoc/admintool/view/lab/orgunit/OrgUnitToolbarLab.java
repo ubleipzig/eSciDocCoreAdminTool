@@ -12,9 +12,7 @@ import com.vaadin.ui.Window;
 import de.escidoc.admintool.view.ErrorMessage;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.admintool.view.context.PublicStatus;
-import de.escidoc.core.client.exceptions.EscidocException;
-import de.escidoc.core.client.exceptions.InternalClientException;
-import de.escidoc.core.client.exceptions.TransportException;
+import de.escidoc.core.client.exceptions.EscidocClientException;
 
 public class OrgUnitToolbarLab extends CustomComponent {
 
@@ -101,17 +99,7 @@ public class OrgUnitToolbarLab extends CustomComponent {
             try {
                 orgUnitViewLab.deleteOrgUnit();
             }
-            catch (final EscidocException e) {
-                log.error("An unexpected error occured! See log for details.",
-                    e);
-                ErrorMessage.show(mainWindow, e);
-            }
-            catch (final InternalClientException e) {
-                log.error("An unexpected error occured! See log for details.",
-                    e);
-                ErrorMessage.show(mainWindow, e);
-            }
-            catch (final TransportException e) {
+            catch (final EscidocClientException e) {
                 log.error("An unexpected error occured! See log for details.",
                     e);
                 ErrorMessage.show(mainWindow, e);

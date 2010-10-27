@@ -124,31 +124,24 @@ public class OrgUnitAddViewLab extends AbstractOrgUnitViewLab {
         }
         catch (final ClassNotFoundException e) {
             log.error("An unexpected error occured! See log for details.", e);
-
         }
         catch (final InstantiationException e) {
             log.error("An unexpected error occured! See log for details.", e);
-
         }
         catch (final IllegalAccessException e) {
             log.error("An unexpected error occured! See log for details.", e);
-
         }
         catch (final SecurityException e) {
             log.error("An unexpected error occured! See log for details.", e);
-
         }
         catch (final NoSuchMethodException e) {
             log.error("An unexpected error occured! See log for details.", e);
-
         }
         catch (final IllegalArgumentException e) {
             log.error("An unexpected error occured! See log for details.", e);
-
         }
         catch (final InvocationTargetException e) {
             log.error("An unexpected error occured! See log for details.", e);
-
         }
     }
 
@@ -156,6 +149,31 @@ public class OrgUnitAddViewLab extends AbstractOrgUnitViewLab {
     protected void saveClicked(final ClickEvent event) {
         removeComponentErrors();
         updateView(storeInRepository(createOrgUnit()));
+        resetFields();
+    }
+
+    private void resetFields() {
+        titleField.setValue("");
+        descriptionField.setValue("");
+        alternativeField.setValue("");
+        identifierField.setValue("");
+        orgTypeField.setValue("");
+        cityField.setValue("");
+        countryField.setValue("");
+        coordinatesField.setValue("");
+        parentList.removeAllItems();
+        predecessorTypeSelect.setValue("");
+
+        titleField.setComponentError(null);
+        descriptionField.setComponentError(null);
+        alternativeField.setComponentError(null);
+        identifierField.setComponentError(null);
+        orgTypeField.setComponentError(null);
+        cityField.setComponentError(null);
+        countryField.setComponentError(null);
+        coordinatesField.setComponentError(null);
+        parentList.setComponentError(null);
+        predecessorTypeSelect.setComponentError(null);
     }
 
     private OrganizationalUnit createOrgUnit() {
@@ -254,7 +272,7 @@ public class OrgUnitAddViewLab extends AbstractOrgUnitViewLab {
 
     @Override
     protected void cancelClicked(final ClickEvent event) {
-        throw new UnsupportedOperationException("not yet implemented");
+        resetFields();
     }
 
     @Override

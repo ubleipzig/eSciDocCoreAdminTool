@@ -6,7 +6,7 @@ public class ViewConstants {
 
     public static final int VISIBLE_PARENTS = 7;
 
-    public static final int SPLIT_POSITION_IN_PERCENT = 25;
+    public static final int SPLIT_POSITION_IN_PERCENT = 40;
 
     public static final String IDENTIFIER_LABEL = Messages
         .getString("ViewConstants.0"); //$NON-NLS-1$
@@ -226,7 +226,9 @@ public class ViewConstants {
     public static final String EDIT_USER_VIEW_CAPTION = "Edit User Account";
 
     public static final String[] ROLE_COLUMN_HEADERS = new String[] { "Title",
-        "Role", "Asssigned On" };
+    // "Role",
+    // "Asssigned On"
+        };
 
     public static final String REQUESTED_ROLE_HAS_NO_SCOPE_DEFINITIONS =
         "Requested role has no scope-definitions";
@@ -267,4 +269,20 @@ public class ViewConstants {
     public static final String WELCOMING_MESSAGE = "Welcome to eSciDoc";
 
     public static final String ESCIDOC_URL_TEXTFIELD = "eSciDoc URL ";
+
+    public static final String ERROR = "Error";
+
+    public static final String CONTAINER = "Container";
+
+    public static final String ADMIN_TASK = "Admin Task";
+
+    public static final String LOAD_EXAMPLES = "Load Examples";
+
+    public static final String SHOW_REPOSITORY_INFO = "Show repository info.";
+
+    public static final String RETRIEVE = "Retrieve";
+
+    public static final String PURGE = "Purge";
+
+    public static final String NO_RESULT = "No result";
 }

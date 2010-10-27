@@ -6,6 +6,7 @@ import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.SplitPanel;
 
 import de.escidoc.admintool.view.ViewConstants;
+import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
@@ -77,8 +78,7 @@ public class OrgUnitViewLab extends CustomComponent {
         orgUnitEditViewLab.close(comment);
     }
 
-    public void deleteOrgUnit() throws EscidocException,
-        InternalClientException, TransportException {
+    public void deleteOrgUnit() throws EscidocClientException {
         final OrganizationalUnit deletedOrgUnit =
             orgUnitEditViewLab.deleteOrgUnit();
         removeFromTreeView(deletedOrgUnit);

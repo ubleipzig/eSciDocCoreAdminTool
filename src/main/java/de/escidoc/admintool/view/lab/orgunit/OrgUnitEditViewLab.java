@@ -21,6 +21,7 @@ import com.vaadin.ui.Window;
 import de.escidoc.admintool.app.PropertyId;
 import de.escidoc.admintool.domain.MetadataExtractor;
 import de.escidoc.admintool.domain.OrgUnitFactory;
+import de.escidoc.admintool.exception.ResourceNotFoundException;
 import de.escidoc.admintool.messages.Messages;
 import de.escidoc.admintool.service.OrgUnitService;
 import de.escidoc.admintool.view.ResourceRefDisplay;
@@ -35,6 +36,7 @@ import de.escidoc.admintool.view.orgunit.predecessor.SpinOffPredecessorView;
 import de.escidoc.admintool.view.util.Converter;
 import de.escidoc.admintool.view.util.LayoutHelper;
 import de.escidoc.admintool.view.util.dialog.ErrorDialog;
+import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
@@ -275,16 +277,24 @@ public class OrgUnitEditViewLab extends AbstractOrgUnitViewLab {
                 .getPredecessorRef()) {
 
                 final String predecessorObjectId = predecessor.getObjid();
-                log.info("predecessor found: " + predecessorObjectId);
+                log.debug("predecessor found: " + predecessorObjectId);
 
-                final String predecessorTitle = getTitle(predecessorObjectId);
-                log.info("predecessor found: " + predecessorTitle);
+                try {
+                    final String predecessorTitle =
+                        getTitle(predecessorObjectId);
+                    log.debug("predecessor found: " + predecessorTitle);
 
-                final PredecessorForm predecessorForm = predecessor.getForm();
-                log.info("predecessor found: " + predecessorForm);
+                    final PredecessorForm predecessorForm =
+                        predecessor.getForm();
+                    log.debug("predecessor found: " + predecessorForm);
 
-                showPredecessorView(predecessorForm, predecessorObjectId,
-                    predecessorTitle);
+                    showPredecessorView(predecessorForm, predecessorObjectId,
+                        predecessorTitle);
+                }
+                catch (final ResourceNotFoundException e) {
+                    mainWindow.addWindow(new ErrorDialog(mainWindow,
+                        "Org Unit does not exists.", e.getMessage()));
+                }
             }
         }
         else {
@@ -304,9 +314,9 @@ public class OrgUnitEditViewLab extends AbstractOrgUnitViewLab {
             && predecessors.getPredecessorRef().size() > 0;
     }
 
-    private String getTitle(final String predecessorObjectId) {
+    private String getTitle(final String objectId) {
         try {
-            return service.findOrgUnitTitleById(predecessorObjectId);
+            return service.findOrgUnitTitleById(objectId);
         }
         catch (final EscidocException e) {
             mainWindow.addWindow(new ErrorDialog(mainWindow, Messages
@@ -515,21 +525,23 @@ public class OrgUnitEditViewLab extends AbstractOrgUnitViewLab {
         }
         catch (final ParserConfigurationException e) {
             log.error("An unexpected error occured! See log for details.", e);
+            mainWindow.addWindow(new ErrorDialog(mainWindow,
+                ViewConstants.ERROR, e.getMessage()));
         }
         catch (final SAXException e) {
             log.error("An unexpected error occured! See log for details.", e);
+            mainWindow.addWindow(new ErrorDialog(mainWindow,
+                ViewConstants.ERROR, e.getMessage()));
         }
         catch (final IOException e) {
             log.error("An unexpected error occured! See log for details.", e);
+            mainWindow.addWindow(new ErrorDialog(mainWindow,
+                ViewConstants.ERROR, e.getMessage()));
         }
-        catch (final EscidocException e) {
+        catch (final EscidocClientException e) {
             log.error("An unexpected error occured! See log for details.", e);
-        }
-        catch (final InternalClientException e) {
-            log.error("An unexpected error occured! See log for details.", e);
-        }
-        catch (final TransportException e) {
-            log.error("An unexpected error occured! See log for details.", e);
+            mainWindow.addWindow(new ErrorDialog(mainWindow,
+                ViewConstants.ERROR, e.getMessage()));
         }
 
         return backedOrgUnit;
@@ -597,8 +609,7 @@ public class OrgUnitEditViewLab extends AbstractOrgUnitViewLab {
         return service.close(getSelectedOrgUnitId(), comment);
     }
 
-    public OrganizationalUnit deleteOrgUnit() throws EscidocException,
-        InternalClientException, TransportException {
+    public OrganizationalUnit deleteOrgUnit() throws EscidocClientException {
         final OrganizationalUnit fromCache = getFromCache();
         service.delete(fromCache);
         return fromCache;

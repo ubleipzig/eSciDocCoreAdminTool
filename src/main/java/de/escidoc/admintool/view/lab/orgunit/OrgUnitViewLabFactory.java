@@ -35,6 +35,7 @@ public class OrgUnitViewLabFactory {
         InternalClientException, TransportException {
         this.orgUnitService = orgUnitService;
         this.mainWindow = mainWindow;
+
         createContainerFactory();
         createOrgUnitContainer();
         createOrgUnitTreeViewFactory();
