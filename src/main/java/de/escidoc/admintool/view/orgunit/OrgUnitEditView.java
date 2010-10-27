@@ -22,8 +22,8 @@ import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.app.PropertyId;
 import de.escidoc.admintool.domain.MetadataExtractor;
 import de.escidoc.admintool.domain.OrgUnitFactory;
-import de.escidoc.admintool.messages.Messages;
 import de.escidoc.admintool.service.OrgUnitService;
+import de.escidoc.admintool.view.ErrorMessage;
 import de.escidoc.admintool.view.ResourceRefDisplay;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.admintool.view.context.PublicStatus;
@@ -35,6 +35,7 @@ import de.escidoc.admintool.view.orgunit.predecessor.SpinOffPredecessorView;
 import de.escidoc.admintool.view.util.Converter;
 import de.escidoc.admintool.view.util.LayoutHelper;
 import de.escidoc.admintool.view.util.dialog.ErrorDialog;
+import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
@@ -74,6 +75,8 @@ public class OrgUnitEditView extends AbstractOrgUnitView {
 
     private Item item;
 
+    private final Window mainWindow;
+
     public OrgUnitEditView(final AdminToolApplication app,
         final OrgUnitService service) throws EscidocException,
         InternalClientException, TransportException {
@@ -81,6 +84,7 @@ public class OrgUnitEditView extends AbstractOrgUnitView {
         middleInit();
         postInit();
         titleField.setWriteThrough(false);
+        mainWindow = app.getMainWindow();
     }
 
     private void middleInit() {
@@ -140,21 +144,20 @@ public class OrgUnitEditView extends AbstractOrgUnitView {
         }
         catch (final ParserConfigurationException e) {
             log.error("An unexpected error occured! See log for details.", e);
+            ErrorMessage.show(mainWindow, e);
         }
         catch (final SAXException e) {
             log.error("An unexpected error occured! See log for details.", e);
+            ErrorMessage.show(mainWindow, e);
         }
         catch (final IOException e) {
             log.error("An unexpected error occured! See log for details.", e);
+            ErrorMessage.show(mainWindow, e);
         }
-        catch (final EscidocException e) {
+
+        catch (final EscidocClientException e) {
             log.error("An unexpected error occured! See log for details.", e);
-        }
-        catch (final InternalClientException e) {
-            log.error("An unexpected error occured! See log for details.", e);
-        }
-        catch (final TransportException e) {
-            log.error("An unexpected error occured! See log for details.", e);
+            ErrorMessage.show(mainWindow, e);
         }
 
         return backedOrgUnit;
@@ -241,16 +244,19 @@ public class OrgUnitEditView extends AbstractOrgUnitView {
                         parent.getObjid(), parentName));
                 }
                 catch (final EscidocException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
+                    log.error(
+                        "An unexpected error occured! See log for details.", e);
+                    ErrorMessage.show(mainWindow, e);
                 }
                 catch (final InternalClientException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
+                    log.error(
+                        "An unexpected error occured! See log for details.", e);
+                    ErrorMessage.show(mainWindow, e);
                 }
                 catch (final TransportException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
+                    log.error(
+                        "An unexpected error occured! See log for details.", e);
+                    ErrorMessage.show(mainWindow, e);
                 }
 
             }
@@ -287,16 +293,19 @@ public class OrgUnitEditView extends AbstractOrgUnitView {
                     coordinatesField.setValue(coordinate);
                 }
                 catch (final EscidocException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
+                    log.error(
+                        "An unexpected error occured! See log for details.", e);
+                    ErrorMessage.show(mainWindow, e);
                 }
                 catch (final InternalClientException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
+                    log.error(
+                        "An unexpected error occured! See log for details.", e);
+                    ErrorMessage.show(mainWindow, e);
                 }
                 catch (final TransportException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
+                    log.error(
+                        "An unexpected error occured! See log for details.", e);
+                    ErrorMessage.show(mainWindow, e);
                 }
 
             }
@@ -339,19 +348,16 @@ public class OrgUnitEditView extends AbstractOrgUnitView {
             return service.findOrgUnitTitleById(predecessorObjectId);
         }
         catch (final EscidocException e) {
-            app.getMainWindow().addWindow(
-                new ErrorDialog(app.getMainWindow(), Messages
-                    .getString("AdminToolApplication.15"), e.getMessage())); //$NON-NLS-1$
+            log.error("An unexpected error occured! See log for details.", e);
+            ErrorMessage.show(mainWindow, e);
         }
         catch (final InternalClientException e) {
-            app.getMainWindow().addWindow(
-                new ErrorDialog(app.getMainWindow(), Messages
-                    .getString("AdminToolApplication.15"), e.getMessage())); //$NON-NLS-1$
+            log.error("An unexpected error occured! See log for details.", e);
+            ErrorMessage.show(mainWindow, e);
         }
         catch (final TransportException e) {
-            app.getMainWindow().addWindow(
-                new ErrorDialog(app.getMainWindow(), Messages
-                    .getString("AdminToolApplication.15"), e.getMessage())); //$NON-NLS-1$
+            log.error("An unexpected error occured! See log for details.", e);
+            ErrorMessage.show(mainWindow, e);
         }
         return ViewConstants.EMPTY_STRING;
     }
@@ -512,23 +518,23 @@ public class OrgUnitEditView extends AbstractOrgUnitView {
         }
         catch (final ClassNotFoundException e) {
             log.error("An unexpected error occured! See log for details.", e);
-
+            ErrorMessage.show(mainWindow, e);
         }
         catch (final InstantiationException e) {
             log.error("An unexpected error occured! See log for details.", e);
-
+            ErrorMessage.show(mainWindow, e);
         }
         catch (final IllegalAccessException e) {
             log.error("An unexpected error occured! See log for details.", e);
-
+            ErrorMessage.show(mainWindow, e);
         }
         catch (final SecurityException e) {
             log.error("An unexpected error occured! See log for details.", e);
-
+            ErrorMessage.show(mainWindow, e);
         }
         catch (final NoSuchMethodException e) {
             log.error("An unexpected error occured! See log for details.", e);
-
+            ErrorMessage.show(mainWindow, e);
         }
         catch (final IllegalArgumentException e) {
             log.error("An unexpected error occured! See log for details.", e);
@@ -562,6 +568,10 @@ public class OrgUnitEditView extends AbstractOrgUnitView {
         catch (final TransportException e) {
             log.error("An unexpected error occured! See log for details.", e);
         }
+        catch (final EscidocClientException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
     public OrganizationalUnit open(final String comment)
@@ -593,18 +603,18 @@ public class OrgUnitEditView extends AbstractOrgUnitView {
             return service.find(getSelectedOrgUnitId());
         }
         catch (final EscidocException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            log.error("An unexpected error occured! See log for details.", e);
+            ErrorMessage.show(mainWindow, e);
         }
         catch (final InternalClientException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            log.error("An unexpected error occured! See log for details.", e);
+            ErrorMessage.show(mainWindow, e);
         }
         catch (final TransportException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            log.error("An unexpected error occured! See log for details.", e);
+            ErrorMessage.show(mainWindow, e);
         }
-        return null;
+        return new OrganizationalUnit();
     }
 
     public OrganizationalUnit close(final String comment)
