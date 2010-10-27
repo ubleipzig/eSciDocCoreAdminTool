@@ -24,6 +24,12 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
+			<groupId>org.escidoc.core</groupId>
+			<artifactId>client-1.2</artifactId>
+			<version>0.8-SNAPSHOT</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
 			<version>r07</version>
@@ -44,12 +50,6 @@
 			<version>1.6.1</version>
 		</dependency>
 		<dependency>
-			<groupId>org.escidoc.core</groupId>
-			<artifactId>client-1.2</artifactId>
-			<version>0.8-SNAPSHOT</version>
-			<type>jar</type>
-		</dependency>
-		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.8.1</version>
@@ -60,9 +60,8 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<vaadin-version>6.4.6</vaadin-version>
-		<jibx-version>1.2.2</jibx-version>
 		<jetty.port>8081</jetty.port>
-		<jetty.scan.sec>1</jetty.scan.sec>
+		<jetty.scan.sec>5</jetty.scan.sec>
 		<vaadin-widgets-dir>src/main/webapp/VAADIN/widgetsets
 		</vaadin-widgets-dir>
 	</properties>
@@ -99,7 +98,6 @@
 				<artifactId>maven-war-plugin</artifactId>
 				<version>2.1</version>
 				<configuration>
-					<!-- replace with your own local settings -->
 					<webXml>src/main/webapp/WEB-INF/web.xml</webXml>
 				</configuration>
 			</plugin>
@@ -144,11 +142,6 @@
 				<version>1.0.1</version>
 				<executions>
 					<execution>
-						<configuration>
-
-							<!-- if you don't specify any modules, the plugin will find them -->
-							<!-- <modules> <module>${package}.gwt.MyWidgetSet</module> </modules> -->
-						</configuration>
 						<goals>
 							<goal>update-widgetset</goal>
 						</goals>
@@ -161,7 +154,6 @@
 				<configuration>
 					<filesets>
 						<fileset>
-							<!-- also delete the generated vaadin web content -->
 							<directory>${vaadin-widgets-dir}</directory>
 						</fileset>
 					</filesets>
@@ -266,4 +258,4 @@ org unit, context, user accounts and roles.</description>
 			</releases>
 		</pluginRepository>
 	</pluginRepositories>
-</project>  
+</project>
