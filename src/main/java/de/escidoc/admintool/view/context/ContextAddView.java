@@ -180,19 +180,24 @@ public class ContextAddView extends CustomComponent implements ClickListener {
         return footer;
     }
 
+    private void resetFields() {
+
+        nameField.setValue("");
+        nameField.setComponentError(null);
+        descriptionField.setValue("");
+        descriptionField.setComponentError(null);
+        typeField.setValue("");
+        typeField.setComponentError(null);
+        orgUnitList.removeAllItems();
+        orgUnitList.setComponentError(null);
+        adminDescriptorAccordion.removeAllComponents();
+    }
+
     @Override
     public void buttonClick(final ClickEvent event) {
         final Button source = event.getButton();
         if (source == cancel) {
-            nameField.setValue("");
-            nameField.setComponentError(null);
-            descriptionField.setValue("");
-            descriptionField.setComponentError(null);
-            typeField.setValue("");
-            typeField.setComponentError(null);
-            orgUnitList.removeAllItems();
-            orgUnitList.setComponentError(null);
-            adminDescriptorAccordion.removeAllComponents();
+            resetFields();
         }
         else if (source == save) {
             boolean valid = true;
@@ -231,6 +236,7 @@ public class ContextAddView extends CustomComponent implements ClickListener {
                             selectedOrgUnitRefs, adminDescriptors);
                     contextListView.addContext(newContext);
                     contextListView.sort();
+                    resetFields();
                     contextListView.select(newContext);
                 }
                 catch (final EscidocException e) {

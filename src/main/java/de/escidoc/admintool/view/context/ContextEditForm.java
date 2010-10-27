@@ -20,7 +20,6 @@ import com.google.common.base.Preconditions;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.terminal.SystemError;
-import com.vaadin.terminal.UserError;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -49,6 +48,7 @@ import de.escidoc.admintool.view.util.Converter;
 import de.escidoc.admintool.view.util.LayoutHelper;
 import de.escidoc.admintool.view.util.dialog.ErrorDialog;
 import de.escidoc.admintool.view.validator.EmptyFieldValidator;
+import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
@@ -60,8 +60,6 @@ import de.escidoc.core.resources.om.context.OrganizationalUnitRefs;
 
 @SuppressWarnings("serial")
 public class ContextEditForm extends CustomComponent implements ClickListener {
-    private static final String ERROR = "Error";
-
     private static final Logger log = LoggerFactory
         .getLogger(ContextEditForm.class);
 
@@ -298,26 +296,16 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
                     "root cause: " + ExceptionUtils.getRootCauseMessage(e), e);
                 app.getMainWindow()
                     .addWindow(
-                        new ErrorDialog(app.getMainWindow(), ERROR, e
+                        new ErrorDialog(app.getMainWindow(), ViewConstants.ERROR, e
                             .getMessage()));
             }
-            catch (final InternalClientException e) {
-                log.error("An unexpected error occured! See log for details.",
-                    e);
-                setComponentError(new UserError(e.getMessage()));
+            catch (final EscidocClientException e) {
+                log.error(
+                    "root cause: " + ExceptionUtils.getRootCauseMessage(e), e);
                 app.getMainWindow()
                     .addWindow(
-                        new ErrorDialog(app.getMainWindow(), ERROR, e
+                        new ErrorDialog(app.getMainWindow(), ViewConstants.ERROR, e
                             .getMessage()));
-            }
-            catch (final TransportException e) {
-                log.error("An unexpected error occured! See log for details.",
-                    e);
-                app.getMainWindow()
-                    .addWindow(
-                        new ErrorDialog(app.getMainWindow(), ERROR, e
-                            .getMessage()));
-                setComponentError(new UserError(e.getMessage()));
             }
         }
     }
@@ -380,7 +368,7 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
                     e);
                 app.getMainWindow()
                     .addWindow(
-                        new ErrorDialog(app.getMainWindow(), ERROR, e
+                        new ErrorDialog(app.getMainWindow(), ViewConstants.ERROR, e
                             .getMessage()));
                 setComponentError(new SystemError(e.getMessage()));
             }
@@ -389,7 +377,7 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
                     e);
                 app.getMainWindow()
                     .addWindow(
-                        new ErrorDialog(app.getMainWindow(), ERROR, e
+                        new ErrorDialog(app.getMainWindow(), ViewConstants.ERROR, e
                             .getMessage()));
                 setComponentError(new SystemError(e.getMessage()));
             }
@@ -398,7 +386,7 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
                     e);
                 app.getMainWindow()
                     .addWindow(
-                        new ErrorDialog(app.getMainWindow(), ERROR, e
+                        new ErrorDialog(app.getMainWindow(), ViewConstants.ERROR, e
                             .getMessage()));
                 setComponentError(new SystemError(e.getMessage()));
             }
@@ -511,7 +499,7 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
                 .error("root cause: " + ExceptionUtils.getRootCauseMessage(e),
                     e);
             app.getMainWindow().addWindow(
-                new ErrorDialog(app.getMainWindow(), ERROR,
+                new ErrorDialog(app.getMainWindow(), ViewConstants.ERROR,
                     "Organizational Unit does not exist anymore."
                         + e.getMessage()));
         }
@@ -521,21 +509,21 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
                 .error("root cause: " + ExceptionUtils.getRootCauseMessage(e),
                     e);
             app.getMainWindow().addWindow(
-                new ErrorDialog(app.getMainWindow(), ERROR, e.getMessage()));
+                new ErrorDialog(app.getMainWindow(), ViewConstants.ERROR, e.getMessage()));
         }
         catch (final InternalClientException e) {
             log
                 .error("root cause: " + ExceptionUtils.getRootCauseMessage(e),
                     e);
             app.getMainWindow().addWindow(
-                new ErrorDialog(app.getMainWindow(), ERROR, e.getMessage()));
+                new ErrorDialog(app.getMainWindow(), ViewConstants.ERROR, e.getMessage()));
         }
         catch (final TransportException e) {
             log
                 .error("root cause: " + ExceptionUtils.getRootCauseMessage(e),
                     e);
             app.getMainWindow().addWindow(
-                new ErrorDialog(app.getMainWindow(), ERROR, e.getMessage()));
+                new ErrorDialog(app.getMainWindow(), ViewConstants.ERROR, e.getMessage()));
 
         }
         return "Organization does exist, please remove.";
@@ -617,14 +605,10 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
             contextList.removeContext(selected);
             app.showContextView();
         }
-        catch (final EscidocException e) {
+        catch (final EscidocClientException e) {
             log.error("An unexpected error occured! See log for details.", e);
-        }
-        catch (final InternalClientException e) {
-            log.error("An unexpected error occured! See log for details.", e);
-        }
-        catch (final TransportException e) {
-            log.error("An unexpected error occured! See log for details.", e);
+            app.getMainWindow().addWindow(
+                new ErrorDialog(app.getMainWindow(), ViewConstants.ERROR, e.getMessage()));
         }
     }
 }
