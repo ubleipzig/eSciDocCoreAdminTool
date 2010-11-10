@@ -40,4 +40,10 @@ public class ContainerService
         InternalClientException, TransportException {
         throw new UnsupportedOperationException("Not yet implemented");
     }
+
+    @Override
+    public Collection<? extends Resource> filterUsingInput(final String query)
+        throws EscidocException, InternalClientException, TransportException {
+        return getClient().retrieveContainersAsList(userInputToFilter(query));
+    }
 }

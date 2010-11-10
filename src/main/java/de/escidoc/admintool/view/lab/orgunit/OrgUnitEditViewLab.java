@@ -3,7 +3,7 @@ package de.escidoc.admintool.view.lab.orgunit;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Set;
+import java.util.Collection;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
+import com.google.common.base.Preconditions;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.ui.Button.ClickEvent;
@@ -24,7 +25,6 @@ import de.escidoc.admintool.domain.OrgUnitFactory;
 import de.escidoc.admintool.exception.ResourceNotFoundException;
 import de.escidoc.admintool.messages.Messages;
 import de.escidoc.admintool.service.OrgUnitService;
-import de.escidoc.admintool.view.ResourceRefDisplay;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.admintool.view.context.PublicStatus;
 import de.escidoc.admintool.view.orgunit.PredecessorType;
@@ -33,6 +33,7 @@ import de.escidoc.admintool.view.orgunit.predecessor.AbstractPredecessorView;
 import de.escidoc.admintool.view.orgunit.predecessor.AffiliationPredecessorView;
 import de.escidoc.admintool.view.orgunit.predecessor.BlankPredecessorView;
 import de.escidoc.admintool.view.orgunit.predecessor.SpinOffPredecessorView;
+import de.escidoc.admintool.view.resource.ResourceRefDisplay;
 import de.escidoc.admintool.view.util.Converter;
 import de.escidoc.admintool.view.util.LayoutHelper;
 import de.escidoc.admintool.view.util.dialog.ErrorDialog;
@@ -40,6 +41,8 @@ import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
+import de.escidoc.core.client.exceptions.application.invalid.InvalidStatusException;
+import de.escidoc.core.client.exceptions.application.violated.OrganizationalUnitHierarchyViolationException;
 import de.escidoc.core.resources.oum.OrganizationalUnit;
 import de.escidoc.core.resources.oum.Parent;
 import de.escidoc.core.resources.oum.Parents;
@@ -79,6 +82,8 @@ public class OrgUnitEditViewLab extends AbstractOrgUnitViewLab {
 
     private final OrgUnitContainerFactory orgUnitContainerFactory;
 
+    private OrganizationalUnit orgUnit;
+
     public OrgUnitEditViewLab(final OrgUnitService service,
         final Window mainWindow,
         final OrgUnitContainerFactory orgUnitContainerFactory) {
@@ -108,148 +113,257 @@ public class OrgUnitEditViewLab extends AbstractOrgUnitViewLab {
     }
 
     public void setOrgUnit(final Item item) {
+        Preconditions.checkNotNull(item, "item is null: %s", item);
         this.item = item;
-        if (item != null) {
-            final Property publicStatusProperty =
-                item.getItemProperty(PropertyId.PUBLIC_STATUS);
-            assert publicStatusProperty != null : "status can not be null";
-            final String status = (String) publicStatusProperty.getValue();
-            assert status != null : "status can not be null";
-            publicStatus.setPropertyDataSource(publicStatusProperty);
-            final PublicStatus publicStatus =
-                PublicStatus.valueOf(status.toUpperCase());
-            switch (publicStatus) {
-                case CREATED: {
-                    setFormReadOnly(false);
-                    footer.setVisible(true);
-                    break;
-                }
-                case OPENED: {
-                    setFormReadOnly(false);
-                    footer.setVisible(true);
-                    break;
-                }
-                case CLOSED: {
-                    setFormReadOnly(true);
-                    footer.setVisible(false);
-                    break;
-                }
-                default: {
-                    throw new IllegalArgumentException("Unknown status");
-                }
+        bindViewWithItem();
+    }
+
+    private void bindViewWithItem() {
+        bindPublicStatus();
+        adaptView();
+        bindGeneralProperties();
+        bindParents();
+        bindPredecessor();
+        bindPubManMetadata();
+        adaptToolbar();
+    }
+
+    private void adaptToolbar() {
+        toolbar.changeState(getPublicStatusFromItem());
+    }
+
+    private void bindGeneralProperties() {
+        titleField.setPropertyDataSource(item.getItemProperty(PropertyId.NAME));
+
+        descriptionField.setPropertyDataSource(item
+            .getItemProperty(PropertyId.DESCRIPTION));
+
+        objIdField.setPropertyDataSource(item
+            .getItemProperty(PropertyId.OBJECT_ID));
+        objIdField.setValue(item.getItemProperty(PropertyId.OBJECT_ID));
+
+        modifiedOn.setCaption(Converter
+            .dateTimeToString((org.joda.time.DateTime) item.getItemProperty(
+                PropertyId.LAST_MODIFICATION_DATE).getValue()));
+
+        modifiedBy.setPropertyDataSource(item
+            .getItemProperty(PropertyId.MODIFIED_BY));
+
+        createdOn.setCaption(Converter
+            .dateTimeToString((org.joda.time.DateTime) item.getItemProperty(
+                PropertyId.CREATED_ON).getValue()));
+
+        createdBy.setPropertyDataSource(item
+            .getItemProperty(PropertyId.CREATED_BY));
+
+        publicStatusComment.setPropertyDataSource(item
+            .getItemProperty(PropertyId.PUBLIC_STATUS_COMMENT));
+    }
+
+    private PublicStatus getPublicStatusFromItem() {
+        final Property publicStatusProperty =
+            item.getItemProperty(PropertyId.PUBLIC_STATUS);
+        assert publicStatusProperty != null : "status can not be null";
+
+        final String status = (String) publicStatusProperty.getValue();
+        assert status != null : "status can not be null";
+
+        return PublicStatus.valueOf(((String) item.getItemProperty(
+            PropertyId.PUBLIC_STATUS).getValue()).toUpperCase());
+    }
+
+    private void bindPublicStatus() {
+        final Property publicStatusProperty =
+            item.getItemProperty(PropertyId.PUBLIC_STATUS);
+        assert publicStatusProperty != null : "status can not be null";
+
+        final String status = (String) publicStatusProperty.getValue();
+        assert status != null : "status can not be null";
+
+        publicStatus.setPropertyDataSource(publicStatusProperty);
+    }
+
+    private void adaptView() {
+        switch (getPublicStatusFromItem()) {
+            case CREATED: {
+                setFormReadOnly(false);
+                footer.setVisible(true);
+                break;
             }
-            titleField.setPropertyDataSource(item
-                .getItemProperty(PropertyId.NAME));
-
-            descriptionField.setPropertyDataSource(item
-                .getItemProperty(PropertyId.DESCRIPTION));
-
-            objIdField.setPropertyDataSource(item
-                .getItemProperty(PropertyId.OBJECT_ID));
-            objIdField.setValue(item.getItemProperty(PropertyId.OBJECT_ID));
-
-            modifiedOn.setCaption(Converter
-                .dateTimeToString((org.joda.time.DateTime) item
-                    .getItemProperty(PropertyId.LAST_MODIFICATION_DATE)
-                    .getValue()));
-
-            modifiedBy.setPropertyDataSource(item
-                .getItemProperty(PropertyId.MODIFIED_BY));
-
-            createdOn.setCaption(Converter
-                .dateTimeToString((org.joda.time.DateTime) item
-                    .getItemProperty(PropertyId.CREATED_ON).getValue()));
-
-            createdBy.setPropertyDataSource(item
-                .getItemProperty(PropertyId.CREATED_BY));
-
-            publicStatusComment.setPropertyDataSource(item
-                .getItemProperty(PropertyId.PUBLIC_STATUS_COMMENT));
-
-            final Parents parents =
-                (Parents) item.getItemProperty(PropertyId.PARENTS).getValue();
-
-            if (parents != null && parents.getParentRef() != null
-                && parents.getParentRef().iterator() != null
-                && parents.getParentRef().iterator().hasNext()) {
-                final Parent parent = parents.getParentRef().iterator().next();
-
-                String parentName;
-                try {
-                    parentName =
-                        service
-                            .find(parent.getObjid()).getProperties().getName();
-                    parentList.removeAllItems();
-                    parentList.addItem(new ResourceRefDisplay(
-                        parent.getObjid(), parentName));
-                }
-                catch (final EscidocException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-                catch (final InternalClientException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-                catch (final TransportException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-
+            case OPENED: {
+                setFormReadOnly(false);
+                footer.setVisible(true);
+                break;
             }
-            else {
-                parentList.removeAllItems();
+            case CLOSED: {
+                setFormReadOnly(true);
+                footer.setVisible(false);
+                break;
             }
-            // Predecessor
-            bindPredecessor();
-            if (publicStatus != PublicStatus.CLOSED) {
-                final String objectId =
-                    (String) item
-                        .getItemProperty(PropertyId.OBJECT_ID).getValue();
-                log.info("objectId: " + objectId);
-
-                OrganizationalUnit orgUnit;
-                try {
-                    orgUnit = service.find(objectId);
-                    assert orgUnit != null : "org Unit can not be null";
-                    final MetadataExtractor metadataExtractor =
-                        new MetadataExtractor(orgUnit);
-                    final String alternative =
-                        metadataExtractor.get("dcterms:alternative");
-                    final String identifier =
-                        metadataExtractor.get("dc:identifier");
-                    final String orgType =
-                        metadataExtractor.get("eterms:organization-type");
-                    final String country =
-                        metadataExtractor.get("eterms:country");
-                    final String city = metadataExtractor.get("eterms:city");
-                    final String coordinate =
-                        metadataExtractor.get("kml:coordinates");
-
-                    alternativeField.setValue(alternative);
-                    identifierField.setValue(identifier);
-                    orgTypeField.setValue(orgType);
-                    countryField.setValue(country);
-                    cityField.setValue(city);
-                    coordinatesField.setValue(coordinate);
-                }
-                catch (final EscidocException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-                catch (final InternalClientException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-                catch (final TransportException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-
+            default: {
+                throw new IllegalArgumentException("Unknown status");
             }
-            toolbar.changeState(PublicStatus.valueOf(status.toUpperCase()));
+        }
+    }
+
+    private void bindPubManMetadata() {
+        if (getPublicStatusFromItem() == PublicStatus.CLOSED) {
+            return;
         }
 
+        final String objectId =
+            (String) item.getItemProperty(PropertyId.OBJECT_ID).getValue();
+        log.info("objectId: " + objectId);
+
+        final OrganizationalUnit orgUnit = findById(objectId);
+        assert orgUnit != null : "org Unit can not be null";
+        final MetadataExtractor metadataExtractor =
+            new MetadataExtractor(orgUnit);
+        final String alternative = metadataExtractor.get("dcterms:alternative");
+        final String identifier = metadataExtractor.get("dc:identifier");
+        final String orgType =
+            metadataExtractor.get("eterms:organization-type");
+        final String country = metadataExtractor.get("eterms:country");
+        final String city = metadataExtractor.get("eterms:city");
+        final String coordinate = metadataExtractor.get("kml:coordinates");
+
+        alternativeField.setValue(alternative);
+        identifierField.setValue(identifier);
+        orgTypeField.setValue(orgType);
+        countryField.setValue(country);
+        cityField.setValue(city);
+        coordinatesField.setValue(coordinate);
+    }
+
+    private OrganizationalUnit findById(final String objectId) {
+        try {
+            return service.find(objectId);
+        }
+        catch (final EscidocException e) {
+            log.error("An unexpected error occured! See log for details.", e);
+            mainWindow.addWindow(new ErrorDialog(mainWindow,
+                ViewConstants.ERROR, e.getMessage()));
+        }
+        catch (final InternalClientException e) {
+            log.error("An unexpected error occured! See log for details.", e);
+            mainWindow.addWindow(new ErrorDialog(mainWindow,
+                ViewConstants.ERROR, e.getMessage()));
+        }
+        catch (final TransportException e) {
+            log.error("An unexpected error occured! See log for details.", e);
+            mainWindow.addWindow(new ErrorDialog(mainWindow,
+                ViewConstants.ERROR, e.getMessage()));
+        }
+        return new OrganizationalUnit();
+    }
+
+    private void bindParents() {
+        if (isRoot()) {
+            parentList.removeAllItems();
+        }
+        else {
+            // update parent list with its parent(only one);
+            final Collection<Parent> parentRef =
+                getParentsFromItem().getParentRef();
+            if (getParentsFromItem().getParentRef() != null) {
+                boolean hasParent = false;
+                for (final Parent parent : parentRef) {
+                    if (parent != null) {
+                        hasParent = true;
+                        final String parentName =
+                            findById(parent.getObjid())
+                                .getProperties().getName();
+                        parentList.addItem(new ResourceRefDisplay(parent
+                            .getObjid(), parentName));
+                    }
+                }
+                if (!hasParent) {
+                    parentList.removeAllItems();
+                }
+            }
+        }
+    }
+
+    private boolean isRoot() {
+        final Parents parents = getParentsFromItem();
+
+        if (parents == null) {
+            return true;
+        }
+        else {
+            final Collection<Parent> parentRef = parents.getParentRef();
+            if (parentRef == null) {
+                return true;
+            }
+            else {
+                for (final Parent parent : parentRef) {
+                    if (parent != null) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    // private void bindParents() {
+    //
+    // Parents parents = null;
+    // if (orgUnit != null) {
+    // parents = orgUnit.getParents();
+    // }
+    // else {
+    // parents = getParentsFromItem();
+    // }
+    //
+    // if (parents == null || parents.getParentRef() == null) {
+    //
+    // // || parents.getParentRef().isEmpty()
+    //
+    // final Collection<Parent> parentRef = parents.getParentRef();
+    // if (parents.getParentRef() != null) {
+    // boolean hasParent = false;
+    // for (final Parent parent : parentRef) {
+    // if (parent != null) {
+    // hasParent = true;
+    // final String parentName =
+    // findById(parent.getObjid())
+    // .getProperties().getName();
+    // parentList.addItem(new ResourceRefDisplay(parent
+    // .getObjid(), parentName));
+    // }
+    // }
+    // if (!hasParent) {
+    // parentList.removeAllItems();
+    // }
+    // }
+    // }
+    // else if (parents != null && parents.getParentRef() != null
+    // && parents.getParentRef().iterator() != null
+    // && parents.getParentRef().iterator().hasNext()) {
+    //
+    // final Parent parent = parents.getParentRef().iterator().next();
+    // parentList.removeAllItems();
+    // final String parentName =
+    // findById(parent.getObjid()).getProperties().getName();
+    // parentList.addItem(new ResourceRefDisplay(parent.getObjid(),
+    // parentName));
+    // }
+    // else {
+    // parentList.removeAllItems();
+    // }
+    // }
+
+    private Parents getParentsFromItem() {
+        final Object value =
+            item.getItemProperty(PropertyId.PARENTS).getValue();
+        if (value instanceof Parents) {
+            return (Parents) item
+                .getItemProperty(PropertyId.PARENTS).getValue();
+        }
+        else {
+            return new Parents();
+        }
     }
 
     private void setFormReadOnly(final boolean isReadOnly) {
@@ -467,62 +581,68 @@ public class OrgUnitEditViewLab extends AbstractOrgUnitViewLab {
         }
         catch (final ClassNotFoundException e) {
             log.error("An unexpected error occured! See log for details.", e);
-
+            mainWindow.addWindow(new ErrorDialog(mainWindow,
+                ViewConstants.ERROR, e.getMessage()));
         }
         catch (final InstantiationException e) {
             log.error("An unexpected error occured! See log for details.", e);
+            mainWindow.addWindow(new ErrorDialog(mainWindow,
+                ViewConstants.ERROR, e.getMessage()));
         }
         catch (final IllegalAccessException e) {
             log.error("An unexpected error occured! See log for details.", e);
+            mainWindow.addWindow(new ErrorDialog(mainWindow,
+                ViewConstants.ERROR, e.getMessage()));
         }
         catch (final SecurityException e) {
             log.error("An unexpected error occured! See log for details.", e);
+            mainWindow.addWindow(new ErrorDialog(mainWindow,
+                ViewConstants.ERROR, e.getMessage()));
         }
         catch (final NoSuchMethodException e) {
             log.error("An unexpected error occured! See log for details.", e);
+            mainWindow.addWindow(new ErrorDialog(mainWindow,
+                ViewConstants.ERROR, e.getMessage()));
         }
         catch (final IllegalArgumentException e) {
             log.error("An unexpected error occured! See log for details.", e);
+            mainWindow.addWindow(new ErrorDialog(mainWindow,
+                ViewConstants.ERROR, e.getMessage()));
         }
         catch (final InvocationTargetException e) {
             log.error("An unexpected error occured! See log for details.", e);
+            mainWindow.addWindow(new ErrorDialog(mainWindow,
+                ViewConstants.ERROR, e.getMessage()));
         }
     }
 
     @Override
     protected void saveClicked(final ClickEvent event) {
-        final OrganizationalUnit updateOrgUnit = updateOrgUnit();
+        update();
     }
 
-    private OrganizationalUnit updateOrgUnit() {
-        final Set<String> parents = getSelectedParents();
-        // TODO update Predecessors;
-        final Set<String> predecessors = null;
-        OrganizationalUnit backedOrgUnit = null;
+    private void update() {
         try {
-            final OrganizationalUnit oldOrgUnit =
-                service.find((String) objIdField.getValue());
-            backedOrgUnit =
-                new OrgUnitFactory()
-                    .update(oldOrgUnit, (String) titleField.getValue(),
-                        (String) descriptionField.getValue())
-                    .alternative((String) alternativeField.getValue())
-                    .identifier((String) identifierField.getValue())
-                    .orgType((String) orgTypeField.getValue())
-                    .country((String) countryField.getValue())
-                    .city((String) cityField.getValue())
-                    .coordinates((String) coordinatesField.getValue())
-                    .parents(parents).build();
-            service.update(backedOrgUnit);
-            titleField.setComponentError(null);
-            descriptionField.setComponentError(null);
-            titleField.commit();
-            descriptionField.commit();
-            if (parentList.isModified() && parents != null
-                && !parents.isEmpty()) {
-                updateParent(backedOrgUnit);
-            }
+            showInEditView(updateOrgUnit());
         }
+        catch (final InvalidStatusException e) {
+            log.warn("An unexpected error occured! See log for details.", e);
+            mainWindow.addWindow(new ErrorDialog(mainWindow,
+                ViewConstants.ERROR,
+                "Organizational Unit is not in status CREATE anymore."));
+        }
+        catch (final OrganizationalUnitHierarchyViolationException e) {
+            log.warn("An unexpected error occured! See log for details.", e);
+            mainWindow.addWindow(new ErrorDialog(mainWindow,
+                ViewConstants.ERROR,
+                "OrganizationalUnitHierarchyViolationException"));
+        }
+        catch (final EscidocClientException e) {
+            log.error("An unexpected error occured! See log for details.", e);
+            mainWindow.addWindow(new ErrorDialog(mainWindow,
+                ViewConstants.ERROR, e.getMessage()));
+        }
+
         catch (final ParserConfigurationException e) {
             log.error("An unexpected error occured! See log for details.", e);
             mainWindow.addWindow(new ErrorDialog(mainWindow,
@@ -538,25 +658,89 @@ public class OrgUnitEditViewLab extends AbstractOrgUnitViewLab {
             mainWindow.addWindow(new ErrorDialog(mainWindow,
                 ViewConstants.ERROR, e.getMessage()));
         }
-        catch (final EscidocClientException e) {
-            log.error("An unexpected error occured! See log for details.", e);
-            mainWindow.addWindow(new ErrorDialog(mainWindow,
-                ViewConstants.ERROR, e.getMessage()));
-        }
-
-        return backedOrgUnit;
     }
 
-    private void updateParent(final OrganizationalUnit updateOrgUnit)
+    private OrganizationalUnit updateOrgUnit() throws EscidocClientException,
+        ParserConfigurationException, SAXException, IOException {
+        final OrganizationalUnit model =
+            updateModel(findOrgUnitBeforeUpdated());
+        orgUnit = service.update(model);
+        updateView(model);
+        return orgUnit;
+    }
+
+    private void updateView(final OrganizationalUnit backedOrgUnit)
+        throws EscidocException, InternalClientException, TransportException {
+        titleField.setComponentError(null);
+        descriptionField.setComponentError(null);
+        titleField.commit();
+        descriptionField.commit();
+        parentList.commit();
+        updateParent(backedOrgUnit);
+    }
+
+    private OrganizationalUnit updateModel(final OrganizationalUnit oldOrgUnit)
+        throws ParserConfigurationException, SAXException, IOException {
+        return new OrgUnitFactory()
+            .update(oldOrgUnit, (String) titleField.getValue(),
+                (String) descriptionField.getValue())
+            .alternative((String) alternativeField.getValue())
+            .identifier((String) identifierField.getValue())
+            .orgType((String) orgTypeField.getValue())
+            .country((String) countryField.getValue())
+            .city((String) cityField.getValue())
+            .coordinates((String) coordinatesField.getValue())
+            .parents(getSelectedParents()).build();
+    }
+
+    private OrganizationalUnit findOrgUnitBeforeUpdated() {
+        return findById((String) objIdField.getValue());
+    }
+
+    private void updateParent(final OrganizationalUnit orgUnit)
         throws EscidocException, InternalClientException, TransportException {
 
-        final OrganizationalUnit parentOrgUnit = getParentOrgUnit();
+        if (shouldBeRoot()) {
+            makeRoot(orgUnit);
+        }
+        else {
+            assignParent(orgUnit);
+        }
+    }
 
-        final Item child = orgUnitContainerFactory.getItem(updateOrgUnit);
-        final Item parent = orgUnitContainerFactory.getItem(parentOrgUnit);
-        orgUnitContainerFactory.create().setParent(child, parent);
-        final Item addedItem = orgUnitContainerFactory.getItem(updateOrgUnit);
-        orgUnitViewLab.showEditView(addedItem);
+    private void assignParent(final OrganizationalUnit updateOrgUnit)
+        throws EscidocException, InternalClientException, TransportException {
+        final OrganizationalUnit parentOrgUnit = getParentOrgUnit();
+        final boolean isSuccesful =
+            orgUnitContainerFactory.create().setParent(updateOrgUnit,
+                parentOrgUnit);
+        if (!isSuccesful) {
+            mainWindow.addWindow(new ErrorDialog(mainWindow, Messages
+                .getString("AdminToolApplication.15"), "Can not make "
+                + updateOrgUnit.getXLinkTitle()
+                + " as top level organizational unit"));
+        }
+    }
+
+    private void showInEditView(final OrganizationalUnit updateOrgUnit) {
+        final Item updatedItem = orgUnitContainerFactory.getItem(updateOrgUnit);
+        orgUnitViewLab.showEditView(updatedItem);
+    }
+
+    private void makeRoot(final OrganizationalUnit updateOrgUnit)
+        throws EscidocException, InternalClientException, TransportException {
+        final boolean isSuccesful =
+            orgUnitContainerFactory.create().setParent(updateOrgUnit, null);
+        if (!isSuccesful) {
+            mainWindow.addWindow(new ErrorDialog(mainWindow, Messages
+                .getString("AdminToolApplication.15"), "Can not make "
+                + updateOrgUnit.getXLinkTitle()
+                + " as top level organizational unit"));
+        }
+    }
+
+    private boolean shouldBeRoot() {
+        return getSelectedParents() != null && getSelectedParents().isEmpty();
     }
 
     private OrganizationalUnit getParentOrgUnit() throws EscidocException,

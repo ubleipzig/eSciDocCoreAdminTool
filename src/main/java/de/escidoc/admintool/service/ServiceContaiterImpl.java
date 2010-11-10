@@ -23,4 +23,19 @@ public class ServiceContaiterImpl implements ServiceContainer {
         return (ResourceService) services.get(ContainerService.class);
     }
 
+    @Override
+    public ResourceService getItemService() {
+        return (ResourceService) services.get(ItemService.class);
+    }
+
+    @Override
+    public ResourceService getContextService() {
+        return (ResourceService) services.get(ContextServiceLab.class);
+    }
+
+    @Override
+    public ResourceService getOrgUnitService() {
+        return (ResourceService) services.get(OrgUnitServiceLab.class);
+    }
+
 }

@@ -3,6 +3,7 @@
  */
 package de.escidoc.admintool.view.context;
 
+import com.google.common.base.Preconditions;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -21,6 +22,11 @@ public class NewAdminDescriptorListener implements ClickListener {
 
     public NewAdminDescriptorListener(final Window mainWindow,
         final Accordion adminDescriptorAccordion) {
+        Preconditions.checkNotNull(mainWindow,
+            "mainWindow can not be null: %s", mainWindow);
+        Preconditions.checkNotNull(adminDescriptorAccordion,
+            "adminDescriptorAccordion can not be null: %s",
+            adminDescriptorAccordion);
         this.mainWindow = mainWindow;
         this.adminDescriptorAccordion = adminDescriptorAccordion;
     }

@@ -6,9 +6,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.escidoc.admintool.service.OrgUnitService;
-import de.escidoc.admintool.view.ResourceRefDisplay;
 import de.escidoc.admintool.view.orgunit.predecessor.AbstractPredecessorView;
 import de.escidoc.admintool.view.orgunit.predecessor.AffiliationPredecessorView;
+import de.escidoc.admintool.view.resource.ResourceRefDisplay;
 import de.escidoc.admintool.view.util.dialog.ErrorDialog;
 
 public class AffiliationPredecessorEditor extends AbstractPredecessorEditor {

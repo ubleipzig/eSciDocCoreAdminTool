@@ -3,6 +3,9 @@ package de.escidoc.admintool.view.admintask;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Window.Notification;
@@ -15,6 +18,9 @@ import de.escidoc.core.resources.Resource;
 import de.escidoc.core.resources.adm.MessagesStatus;
 
 final class PurgeResourcesListener implements ClickListener {
+
+    private static final Logger log = LoggerFactory
+        .getLogger(PurgeResourcesListener.class);
 
     private final ShowFilterResultCommandImpl command;
 
@@ -48,8 +54,7 @@ final class PurgeResourcesListener implements ClickListener {
 
             final Set<String> objectIds = new HashSet<String>();
             for (final Resource resource : selectedResources) {
-                FilterResourceView.log.debug("Purging: "
-                    + resource.getXLinkTitle());
+                log.debug("Purging: " + resource.getXLinkTitle());
                 objectIds.add(resource.getObjid());
             }
             tryPurge(objectIds);
@@ -69,15 +74,15 @@ final class PurgeResourcesListener implements ClickListener {
             }
         }
         catch (final EscidocException e) {
-            FilterResourceView.log.warn("Unexpected error: " + e);
+            log.warn("Unexpected error: " + e);
             ErrorMessage.show(command.filterResourceView.mainWindow, e);
         }
         catch (final InternalClientException e) {
-            FilterResourceView.log.warn("Unexpected error: " + e);
+            log.warn("Unexpected error: " + e);
             ErrorMessage.show(command.filterResourceView.mainWindow, e);
         }
         catch (final TransportException e) {
-            FilterResourceView.log.warn("Unexpected error: " + e);
+            log.warn("Unexpected error: " + e);
             ErrorMessage.show(command.filterResourceView.mainWindow, e);
         }
     }

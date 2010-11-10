@@ -10,9 +10,9 @@ import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.Window;
 
 import de.escidoc.admintool.service.OrgUnitService;
-import de.escidoc.admintool.view.ResourceRefDisplay;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.admintool.view.context.OrgUnitTree;
+import de.escidoc.admintool.view.resource.ResourceRefDisplay;
 import de.escidoc.admintool.view.util.LayoutHelper;
 
 @SuppressWarnings("serial")

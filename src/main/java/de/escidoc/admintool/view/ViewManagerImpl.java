@@ -12,6 +12,14 @@ public class ViewManagerImpl implements ViewManager {
 
     private ComponentContainer mainView;
 
+    private ComponentContainer resoucesView;
+
+    private ComponentContainer reindexView;
+
+    public void setReindexView(final ComponentContainer reindexView) {
+        this.reindexView = reindexView;
+    }
+
     public ViewManagerImpl(final Window mainWindow) {
         this.mainWindow = mainWindow;
     }
@@ -40,4 +48,8 @@ public class ViewManagerImpl implements ViewManager {
         ((MainView) mainView).setSecondComponent(component);
     }
 
+    @Override
+    public void showReindexView(final ComponentContainer reindexView) {
+        setSecondComponent(reindexView);
+    }
 }

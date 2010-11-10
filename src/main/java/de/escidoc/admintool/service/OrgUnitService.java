@@ -14,6 +14,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.base.Preconditions;
+
 import de.escidoc.admintool.app.AppConstants;
 import de.escidoc.admintool.exception.ResourceNotFoundException;
 import de.escidoc.core.client.OrganizationalUnitHandlerClient;
@@ -47,6 +49,11 @@ public class OrgUnitService {
 
     public OrgUnitService(final String eSciDocUri, final String handle)
         throws InternalClientException {
+        Preconditions.checkNotNull(eSciDocUri,
+            "eSciDocUri can not be null: %s", eSciDocUri);
+        Preconditions
+            .checkNotNull(handle, "handle can not be null: %s", handle);
+
         this.eSciDocUri = eSciDocUri;
         this.handle = handle;
         initClient();

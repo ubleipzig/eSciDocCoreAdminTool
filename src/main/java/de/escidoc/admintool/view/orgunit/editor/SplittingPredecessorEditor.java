@@ -16,12 +16,12 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 import de.escidoc.admintool.service.OrgUnitService;
-import de.escidoc.admintool.view.ResourceRefDisplay;
 import de.escidoc.admintool.view.context.OrgUnitTree;
 import de.escidoc.admintool.view.lab.orgunit.AbstractOrgUnitViewLab;
 import de.escidoc.admintool.view.orgunit.AbstractOrgUnitView;
 import de.escidoc.admintool.view.orgunit.PredecessorType;
 import de.escidoc.admintool.view.orgunit.predecessor.SplittingPredeccesorView;
+import de.escidoc.admintool.view.resource.ResourceRefDisplay;
 import de.escidoc.admintool.view.util.LayoutHelper;
 import de.escidoc.admintool.view.util.dialog.ErrorDialog;
 

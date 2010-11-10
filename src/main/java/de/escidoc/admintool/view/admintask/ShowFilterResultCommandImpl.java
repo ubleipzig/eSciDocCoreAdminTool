@@ -63,14 +63,14 @@ final class ShowFilterResultCommandImpl implements ShowFilterResultCommand {
     private void createFilterResultView(final Set<Resource> filteredResources) {
         filteredResourcesContainer =
             new POJOContainer<Resource>(filteredResources,
-                PropertyId.OBJECT_ID, PropertyId.NAME);
+                PropertyId.OBJECT_ID, PropertyId.XLINK_TITLE);
 
         filteredList =
-            new Table("Filtered Resources", filteredResourcesContainer);
+            new Table(ViewConstants.FILTERED_RESOURCES, filteredResourcesContainer);
 
-        filteredList.setVisibleColumns(new Object[] { PropertyId.NAME });
-        filteredList
-            .setColumnHeader(PropertyId.NAME, ViewConstants.TITLE_LABEL);
+        filteredList.setVisibleColumns(new Object[] { PropertyId.XLINK_TITLE });
+        filteredList.setColumnHeader(PropertyId.XLINK_TITLE,
+            ViewConstants.TITLE_LABEL);
 
         filteredList.setSelectable(true);
         filteredList.setMultiSelect(true);

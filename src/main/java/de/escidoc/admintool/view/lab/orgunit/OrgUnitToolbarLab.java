@@ -99,6 +99,14 @@ public class OrgUnitToolbarLab extends CustomComponent {
             try {
                 orgUnitViewLab.deleteOrgUnit();
             }
+            catch (final de.escidoc.core.client.exceptions.application.violated.OrganizationalUnitHasChildrenException e) {
+                log
+                    .debug(
+                        "The Organizational Unit has children therefore can not be deleted.",
+                        e);
+                ErrorMessage.show(mainWindow,
+                    "has children therefore can not be deleted.");
+            }
             catch (final EscidocClientException e) {
                 log.error("An unexpected error occured! See log for details.",
                     e);

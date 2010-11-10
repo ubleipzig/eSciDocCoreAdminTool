@@ -17,13 +17,13 @@ public class OrgUnitViewLab extends CustomComponent {
 
     private final SplitPanel splitPanel = new SplitPanel();
 
-    private final OrgUnitTreeViewLab orgUnitTreeViewLab;
+    private final OrgUnitTreeView orgUnitTreeViewLab;
 
     private final OrgUnitAddViewLab orgUnitAddViewLab;
 
     private final OrgUnitEditViewLab orgUnitEditViewLab;
 
-    public OrgUnitViewLab(final OrgUnitTreeViewLab orgUnitTreeViewLab,
+    public OrgUnitViewLab(final OrgUnitTreeView orgUnitTreeViewLab,
         final OrgUnitAddViewLab orgUnitAddViewLab,
         final OrgUnitEditViewLab orgUnitEditViewLab) throws EscidocException,
         InternalClientException, TransportException {

@@ -33,9 +33,9 @@ import com.vaadin.ui.TextField;
 import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.service.ContextService;
 import de.escidoc.admintool.service.OrgUnitService;
-import de.escidoc.admintool.view.ResourceRefDisplay;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.admintool.view.orgunit.OrgUnitEditor;
+import de.escidoc.admintool.view.resource.ResourceRefDisplay;
 import de.escidoc.admintool.view.util.LayoutHelper;
 import de.escidoc.admintool.view.util.dialog.ErrorDialog;
 import de.escidoc.admintool.view.validator.EmptyFieldValidator;
@@ -305,7 +305,6 @@ public class ContextAddView extends CustomComponent implements ClickListener {
                     new ErrorDialog(app.getMainWindow(), "Error", e
                         .getMessage()));
                 setComponentError(new SystemError(e.getMessage()));
-                ;
             }
             catch (final SAXException e) {
                 log.error("An unexpected error occured! See log for details.",

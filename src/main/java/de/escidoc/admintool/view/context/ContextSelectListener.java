@@ -6,9 +6,9 @@ import com.vaadin.data.Item;
 import com.vaadin.ui.VerticalLayout;
 
 import de.escidoc.admintool.app.AdminToolApplication;
-import de.escidoc.admintool.view.AbstractResourceSelectListener;
 import de.escidoc.admintool.view.ErrorMessage;
-import de.escidoc.admintool.view.ResourceView;
+import de.escidoc.admintool.view.resource.AbstractResourceSelectListener;
+import de.escidoc.admintool.view.resource.ResourceView;
 import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;

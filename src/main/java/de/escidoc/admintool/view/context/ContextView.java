@@ -12,8 +12,8 @@ import com.vaadin.ui.SplitPanel;
 import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.exception.ResourceNotFoundException;
 import de.escidoc.admintool.view.ErrorMessage;
-import de.escidoc.admintool.view.ResourceView;
 import de.escidoc.admintool.view.ViewConstants;
+import de.escidoc.admintool.view.resource.ResourceView;
 
 @SuppressWarnings("serial")
 public class ContextView extends SplitPanel implements ResourceView {

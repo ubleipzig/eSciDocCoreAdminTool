@@ -11,6 +11,8 @@ import org.slf4j.LoggerFactory;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.POJOContainer;
 import com.vaadin.terminal.SystemError;
+import com.vaadin.ui.AbstractComponent;
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -22,6 +24,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.Reindeer;
 
@@ -33,6 +36,7 @@ import de.escidoc.admintool.view.ErrorMessage;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.admintool.view.role.RevokeGrantCommand;
 import de.escidoc.admintool.view.role.RevokeGrantWindow;
+import de.escidoc.admintool.view.util.Constants;
 import de.escidoc.admintool.view.util.Converter;
 import de.escidoc.admintool.view.util.LayoutHelper;
 import de.escidoc.admintool.view.validator.EmptyFieldValidator;
@@ -51,9 +55,7 @@ public class UserEditForm extends CustomComponent implements ClickListener {
     private static final Logger log = LoggerFactory
         .getLogger(UserEditForm.class);
 
-    private static final int ROLE_LIST_HEIGHT = 100;
-
-    private static final String ROLE_LIST_WIDTH = "400px";
+    private static final int ROLE_LIST_HEIGHT = 200;
 
     private static final int LABEL_WIDTH = 100;
 
@@ -62,8 +64,6 @@ public class UserEditForm extends CustomComponent implements ClickListener {
     private final Panel panel = new Panel();
 
     private final FormLayout form = new FormLayout();
-
-    private final Table roleTable = new Table();
 
     private final HorizontalLayout footer = new HorizontalLayout();
 
@@ -90,6 +90,8 @@ public class UserEditForm extends CustomComponent implements ClickListener {
     private final Label modifiedBy = new Label();
 
     private final HorizontalLayout header = new HorizontalLayout();
+
+    private final Table roleTable = new Table();
 
     private final AdminToolApplication app;
 
@@ -130,13 +132,13 @@ public class UserEditForm extends CustomComponent implements ClickListener {
         panel.addComponent(createHeader());
 
         nameField = new TextField();
-        nameField.setWidth(ROLE_LIST_WIDTH);
+        nameField.setWidth(ViewConstants.FIELD_WIDTH);
         nameField.setWriteThrough(false);
         panel.addComponent(LayoutHelper.create(ViewConstants.NAME_LABEL,
             nameField, LABEL_WIDTH, true));
 
         loginNameField = new TextField();
-        loginNameField.setWidth(ROLE_LIST_WIDTH);
+        loginNameField.setWidth(ViewConstants.FIELD_WIDTH);
         loginNameField.setReadOnly(true);
         panel.addComponent(LayoutHelper.create(ViewConstants.LOGIN_NAME_LABEL,
             loginNameField, LABEL_WIDTH, false));
@@ -172,13 +174,68 @@ public class UserEditForm extends CustomComponent implements ClickListener {
 
     private void initRoleComponent() {
         initRoleTable();
-        panel.addComponent(LayoutHelper.create(ViewConstants.ROLES_LABEL,
-            roleTable, LABEL_WIDTH, ROLE_LIST_HEIGHT, false, new Button[] {
-                addRoleButton, removeRoleButton }));
+        panel.addComponent(createLayout(ViewConstants.ROLES_LABEL, roleTable,
+            LABEL_WIDTH, ROLE_LIST_HEIGHT, false, new Button[] { addRoleButton,
+                removeRoleButton }));
+    }
+
+    private VerticalLayout createLayout(
+        final String rolesLabel, final Table table, final int labelWidth,
+        final int roleListHeight, final boolean b, final Button[] buttons) {
+
+        final HorizontalLayout hLayout = new HorizontalLayout();
+        hLayout.setHeight(roleListHeight + Constants.PX);
+        hLayout.addComponent(new Label(" "));
+
+        final Label label =
+            new Label(Constants.P_ALIGN_RIGHT + rolesLabel + Constants.P,
+                Label.CONTENT_XHTML);
+        label.setSizeUndefined();
+        label.setWidth(labelWidth + Constants.PX);
+        hLayout.addComponent(label);
+        hLayout.setComponentAlignment(label, Alignment.MIDDLE_RIGHT);
+
+        hLayout.addComponent(new Label("&nbsp;&nbsp;", Label.CONTENT_XHTML));
+        hLayout.addComponent(table);
+        hLayout.setComponentAlignment(table, Alignment.MIDDLE_RIGHT);
+        hLayout.addComponent(new Label(" &nbsp; ", Label.CONTENT_XHTML));
+
+        final VerticalLayout vLayout = new VerticalLayout();
+        vLayout.addComponent(hLayout);
+
+        final HorizontalLayout hl = new HorizontalLayout();
+        final Label la = new Label("&nbsp;", Label.CONTENT_XHTML);
+        la.setSizeUndefined();
+        la.setWidth(labelWidth + Constants.PX);
+        hl.addComponent(la);
+
+        for (final Button button : buttons) {
+            hl.addComponent(button);
+        }
+        vLayout.addComponent(hl);
+        hLayout.setSpacing(false);
+
+        return vLayout;
+    }
+
+    private FormLayout onwLayout(
+        final AbstractComponent table, final Button[] buttons) {
+        final FormLayout roleLayout = new FormLayout();
+
+        table.setCaption(ViewConstants.ROLES_LABEL);
+        roleLayout.addComponent(table);
+
+        final HorizontalLayout roleButtons = new HorizontalLayout();
+        for (final Button button : buttons) {
+            roleButtons.addComponent(button);
+        }
+        roleLayout.addComponent(roleButtons);
+        return roleLayout;
     }
 
     private void initRoleTable() {
-        roleTable.setWidth(ROLE_LIST_WIDTH);
+        roleTable.setHeight(200, UNITS_PIXELS);
+        roleTable.setWidth(ViewConstants.FIELD_WIDTH);
         roleTable.setSelectable(true);
         roleTable.setNullSelectionAllowed(true);
         roleTable.setMultiSelect(true);

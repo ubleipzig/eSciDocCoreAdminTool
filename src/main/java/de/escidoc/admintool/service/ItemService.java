@@ -18,14 +18,14 @@ public class ItemService
     }
 
     @Override
-    protected final Collection<? extends Resource> findPublicOrReleseadResourcesUsingOldFilter()
-        throws EscidocException, InternalClientException, TransportException {
-        return getClient().retrieveItems(withEmptyTaskParam()).getItems();
+    protected final ItemHandlerClientInterface getClient() {
+        return ((ItemHandlerClientInterface) client);
     }
 
     @Override
-    protected final ItemHandlerClientInterface getClient() {
-        return ((ItemHandlerClientInterface) client);
+    protected final Collection<? extends Resource> findPublicOrReleseadResourcesUsingOldFilter()
+        throws EscidocException, InternalClientException, TransportException {
+        return getClient().retrieveItems(withEmptyTaskParam()).getItems();
     }
 
     @Override
@@ -38,6 +38,11 @@ public class ItemService
     public Resource create(final Resource resource) throws EscidocException,
         InternalClientException, TransportException {
         return getClient().create((Item) resource);
+    }
 
+    @Override
+    public Collection<? extends Resource> filterUsingInput(final String query)
+        throws EscidocException, InternalClientException, TransportException {
+        return getClient().retrieveItemsAsList(userInputToFilter(query));
     }
 }

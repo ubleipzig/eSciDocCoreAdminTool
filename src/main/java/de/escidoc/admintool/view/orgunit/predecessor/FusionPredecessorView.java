@@ -7,8 +7,8 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
 
-import de.escidoc.admintool.view.ResourceRefDisplay;
 import de.escidoc.admintool.view.ViewConstants;
+import de.escidoc.admintool.view.resource.ResourceRefDisplay;
 
 public class FusionPredecessorView extends AbstractPredecessorView {
 

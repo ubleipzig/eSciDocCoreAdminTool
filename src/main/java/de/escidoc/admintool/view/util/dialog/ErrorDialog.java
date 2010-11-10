@@ -1,5 +1,6 @@
 package de.escidoc.admintool.view.util.dialog;
 
+import com.google.common.base.Preconditions;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.FormLayout;
@@ -51,13 +52,25 @@ public class ErrorDialog extends Window implements Button.ClickListener {
      */
     public ErrorDialog(final Window mainWindow, final String caption,
         final String errorMessage, final int width, final int height) {
+
+        Preconditions.checkNotNull(mainWindow,
+            "mainWindow can not be null: %s", mainWindow);
+        Preconditions.checkNotNull(caption, "caption can not be null: %s",
+            caption);
+        Preconditions.checkNotNull(mainWindow,
+            "errorMessage can not be null: %s", errorMessage);
+
         this.mainWindow = mainWindow;
         super.setWidth(width + "px");
         super.setHeight(height + "px");
         super.setCaption(caption);
         super.setModal(true);
-        layout.addComponent(LayoutHelper.create("", new Label(errorMessage),
-            10, false));
+
+        final Label errorMassageLabel = new Label(errorMessage);
+        layout.addComponent(errorMassageLabel);
+        layout.setExpandRatio(errorMassageLabel, 1);
+        // layout.addComponent(LayoutHelper.create("", new Label(errorMessage),
+        // 10, false));
         final Button button = new Button("OK");
         layout.addComponent(LayoutHelper.create("", button, 10, false));
         button.addListener(this);

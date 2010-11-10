@@ -1,8 +1,8 @@
 package de.escidoc.admintool.view.orgunit;
 
 import de.escidoc.admintool.app.AdminToolApplication;
-import de.escidoc.admintool.view.AbstractResourceSelectListener;
-import de.escidoc.admintool.view.ResourceView;
+import de.escidoc.admintool.view.resource.AbstractResourceSelectListener;
+import de.escidoc.admintool.view.resource.ResourceView;
 
 public class OrgUnitSelectListener extends AbstractResourceSelectListener {
     private static final long serialVersionUID = 771573406912843328L;

@@ -1,6 +1,8 @@
 package de.escidoc.admintool.domain;
 
 import java.io.IOException;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -200,14 +202,17 @@ public class OrgUnitFactory {
     }
 
     public OrgUnitFactory parents(final Set<String> parentObjectIds) {
-
-        if (parentObjectIds == null || parentObjectIds.isEmpty()) {
-            return this;
-        }
-
         final Parents parents = new Parents();
-        for (final String parentObjectId : parentObjectIds) {
-            parents.addParentRef(new Parent(parentObjectId));
+
+        if (parentObjectIds != null && !parentObjectIds.isEmpty()) {
+            for (final String parentObjectId : parentObjectIds) {
+                parents.addParentRef(new Parent(parentObjectId));
+            }
+        }
+        else {
+            final Collection<Parent> emptyParents = new HashSet<Parent>();
+            parents.setParentRef(emptyParents);
+            // orgUnit.getParents().
         }
 
         orgUnit.setParents(parents);

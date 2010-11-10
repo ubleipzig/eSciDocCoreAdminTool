@@ -3,13 +3,15 @@ package de.escidoc.admintool.view.context;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TabSheet.Tab;
+import com.vaadin.ui.Window;
 
 @SuppressWarnings("serial")
 public class AdminDescriptorEditView extends AdminDescriptorView {
 
-    public AdminDescriptorEditView(final Accordion adminDescriptorAccordion,
-        final String name, final String content) {
-        super(adminDescriptorAccordion, name, content);
+    public AdminDescriptorEditView(final Window mainWindow,
+        final Accordion adminDescriptorAccordion, final String name,
+        final String content) {
+        super(mainWindow, adminDescriptorAccordion, name, content);
     }
 
     @Override

@@ -10,4 +10,9 @@ public class ErrorMessage {
         mainWindow.addWindow(new ErrorDialog(mainWindow,
             ViewConstants.SERVER_INTERNAL_ERROR, e.getMessage()));
     }
+
+    public static void show(final Window mainWindow, final String errorMessage) {
+        mainWindow.addWindow(new ErrorDialog(mainWindow,
+            ViewConstants.SERVER_INTERNAL_ERROR, errorMessage));
+    }
 }

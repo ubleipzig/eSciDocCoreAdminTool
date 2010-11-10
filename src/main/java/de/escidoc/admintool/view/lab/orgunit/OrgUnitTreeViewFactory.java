@@ -11,7 +11,7 @@ import de.escidoc.core.client.exceptions.TransportException;
 
 public class OrgUnitTreeViewFactory {
 
-    private OrgUnitTreeViewLab orgUnitTreeView;
+    private OrgUnitTreeView orgUnitTreeView;
 
     private final OrgUnitService orgUnitService;
 
@@ -27,7 +27,7 @@ public class OrgUnitTreeViewFactory {
         this.orgUnitContainer = orgUnitContainer;
     }
 
-    public OrgUnitTreeViewLab getOrgUnitTreeView() throws EscidocException,
+    public OrgUnitTreeView getOrgUnitTreeView() throws EscidocException,
         InternalClientException, TransportException {
         if (isNotInitialized()) {
             initOrgUnitView();
@@ -46,8 +46,8 @@ public class OrgUnitTreeViewFactory {
                 new OrgUnitContainerFactory(orgUnitService)));
     }
 
-    private OrgUnitTreeViewLab create(
+    private OrgUnitTreeView create(
         final HierarchicalContainer container, final Command command) {
-        return new OrgUnitTreeViewLab(container, command);
+        return new OrgUnitTreeView(container, command);
     }
 }

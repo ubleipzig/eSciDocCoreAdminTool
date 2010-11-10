@@ -1,3 +1,0 @@
-2010-11-10 10:56:46,206 - DEBUG [ConfigurationProvider] Load properties from file 'client.default.properties' with path '/'.
-2010-11-10 10:56:46,208 - DEBUG [ConfigurationProvider] Failed to load properties from file 'client.properties' with path '/'.
-2010-11-10 10:56:46,210 - DEBUG [ConfigurationProvider] Failed to load properties from file 'chh.properties' with path '/'.

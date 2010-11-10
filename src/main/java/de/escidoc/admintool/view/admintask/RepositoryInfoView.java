@@ -2,18 +2,12 @@ package de.escidoc.admintool.view.admintask;
 
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.vaadin.ui.Button;
 
 import de.escidoc.admintool.view.ViewConstants;
 
 public class RepositoryInfoView extends AbstractCustomView {
     private static final long serialVersionUID = -7206908685980457887L;
-
-    private static final Logger log = LoggerFactory
-        .getLogger(RepositoryInfoView.class);
 
     private final Button repoInfoButton = new Button(
         ViewConstants.SHOW_REPOSITORY_INFO);
@@ -31,6 +25,7 @@ public class RepositoryInfoView extends AbstractCustomView {
     }
 
     private void addGetRepositoryInfoButton() {
+        repoInfoButton.setWidth(150, UNITS_PIXELS);
         getViewLayout().addComponent(repoInfoButton);
         addListener();
     }

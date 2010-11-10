@@ -4,8 +4,8 @@ import com.vaadin.data.Item;
 import com.vaadin.ui.SplitPanel;
 
 import de.escidoc.admintool.app.AdminToolApplication;
-import de.escidoc.admintool.view.ResourceView;
 import de.escidoc.admintool.view.ViewConstants;
+import de.escidoc.admintool.view.resource.ResourceView;
 import de.escidoc.core.resources.aa.useraccount.UserAccount;
 
 @SuppressWarnings("serial")

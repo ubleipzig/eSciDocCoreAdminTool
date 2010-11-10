@@ -1,2 +1,8 @@
 build/*
+bin/*
 target/*
+reports/*
+bin
+*.log*
+*.snapshot
+

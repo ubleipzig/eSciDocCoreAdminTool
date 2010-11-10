@@ -12,9 +12,9 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 import de.escidoc.admintool.service.OrgUnitService;
-import de.escidoc.admintool.view.ResourceRefDisplay;
 import de.escidoc.admintool.view.lab.orgunit.AbstractOrgUnitViewLab;
 import de.escidoc.admintool.view.orgunit.AbstractOrgUnitView;
+import de.escidoc.admintool.view.resource.ResourceRefDisplay;
 
 public class BlankPredecessorEditor extends CustomComponent
     implements IPredecessorEditor {

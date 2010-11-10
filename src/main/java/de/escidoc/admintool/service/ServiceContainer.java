@@ -8,4 +8,10 @@ public interface ServiceContainer {
 
     ResourceService getContainerService();
 
+    ResourceService getItemService();
+
+    ResourceService getContextService();
+
+    ResourceService getOrgUnitService();
+
 }

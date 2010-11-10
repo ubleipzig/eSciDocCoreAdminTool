@@ -6,6 +6,8 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.base.Preconditions;
+
 import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
@@ -75,5 +77,28 @@ public class AdminServiceImpl implements AdminService {
     public MessagesStatus retrievePurgeStatus() throws EscidocException,
         InternalClientException, TransportException {
         return getClient().getPurgeStatus();
+    }
+
+    @Override
+    public MessagesStatus reindexAll(final boolean shouldClearIndex)
+        throws EscidocException, InternalClientException, TransportException {
+        return getClient().reindexAll(shouldClearIndex);
+    }
+
+    @Override
+    public MessagesStatus retrieveReindexStatus() throws EscidocException,
+        InternalClientException, TransportException {
+        return getClient().getReindexStatus();
+    }
+
+    @Override
+    public MessagesStatus reindex(
+        final boolean shouldClearIndex, final String indexNamePrefix)
+        throws EscidocException, InternalClientException, TransportException {
+        Preconditions.checkNotNull(indexNamePrefix,
+            "indexNamePrefix can not be null: %s", indexNamePrefix);
+        Preconditions.checkArgument(!indexNamePrefix.isEmpty(),
+            "indexNamePrefix can not be empty: %s", indexNamePrefix);
+        return getClient().reindex(shouldClearIndex, indexNamePrefix);
     }
 }

@@ -2,9 +2,6 @@ package de.escidoc.admintool.view.login;
 
 import java.util.Arrays;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.vaadin.ui.AbstractSelect.Filtering;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -19,13 +16,7 @@ import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.view.ViewConstants;
 
 public class WelcomePage extends CustomComponent {
-
-    private static final Logger log = LoggerFactory
-        .getLogger(WelcomePage.class);
-
-    private static final String LOGIN = "Login";
-
-    private static final String GUEST_LOGIN = "Guest";
+    private static final long serialVersionUID = 5514330045540866939L;
 
     private final VerticalLayout viewLayout = new VerticalLayout();
 
@@ -61,7 +52,7 @@ public class WelcomePage extends CustomComponent {
         viewLayout.addComponent(panel);
         viewLayout.setComponentAlignment(panel, Alignment.MIDDLE_CENTER);
 
-        panel.setWidth("400px");
+        panel.setWidth(ViewConstants.FIELD_WIDTH);
         panel.setCaption(ViewConstants.WELCOMING_MESSAGE);
 
         addComboBox();
@@ -74,7 +65,6 @@ public class WelcomePage extends CustomComponent {
         footer.setWidth(100, UNITS_PERCENTAGE);
         footer.setMargin(true);
         fLayout.addComponent(footer);
-        addLoginAsGuestButton();
         addLoginButton();
     }
 
@@ -92,20 +82,11 @@ public class WelcomePage extends CustomComponent {
         fLayout.addComponent(escidocComboBox);
     }
 
-    private void addLoginAsGuestButton() {
-        okButton = new Button(GUEST_LOGIN);
-        okButton.addListener(new GuestButtonListener(escidocComboBox, app));
-
-        footer.addComponent(okButton);
-        footer.setComponentAlignment(okButton, Alignment.BOTTOM_RIGHT);
-    }
-
     private void addLoginButton() {
-        loginButton = new Button(LOGIN);
+        loginButton = new Button(ViewConstants.LOGIN);
         loginButton.addListener(new LoginButtonListenerImpl(escidocComboBox,
             app));
 
         footer.addComponent(loginButton);
-        // footer.setComponentAlignment(loginButton, Alignment.BOTTOM_RIGHT);
     }
 }

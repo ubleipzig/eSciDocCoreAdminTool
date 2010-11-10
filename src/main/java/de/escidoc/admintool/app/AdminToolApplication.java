@@ -1,33 +1,42 @@
 package de.escidoc.admintool.app;
 
+import java.util.Set;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Preconditions;
 import com.vaadin.Application;
+import com.vaadin.data.Container;
+import com.vaadin.service.ApplicationContext.TransactionListener;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.Notification;
 
+import de.escidoc.admintool.domain.ResourceToContainerCoverterImpl;
 import de.escidoc.admintool.messages.Messages;
 import de.escidoc.admintool.service.AdminService;
 import de.escidoc.admintool.service.ContextService;
+import de.escidoc.admintool.service.ContextServiceLab;
 import de.escidoc.admintool.service.EscidocService;
+import de.escidoc.admintool.service.ItemService;
 import de.escidoc.admintool.service.OrgUnitService;
+import de.escidoc.admintool.service.ResourceService;
 import de.escidoc.admintool.service.RoleService;
 import de.escidoc.admintool.service.ServiceContainer;
 import de.escidoc.admintool.service.ServiceContaiterImpl;
+import de.escidoc.admintool.service.ServiceFactory;
 import de.escidoc.admintool.service.UserService;
 import de.escidoc.admintool.view.ErrorMessage;
 import de.escidoc.admintool.view.MainView;
-import de.escidoc.admintool.view.StartPage;
-import de.escidoc.admintool.view.UserViewComponent;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.admintool.view.ViewManager;
 import de.escidoc.admintool.view.ViewManagerImpl;
 import de.escidoc.admintool.view.admintask.AdminTaskView;
 import de.escidoc.admintool.view.admintask.AdminTaskViewImpl;
+import de.escidoc.admintool.view.admintask.ReindexView;
 import de.escidoc.admintool.view.context.ContextAddView;
 import de.escidoc.admintool.view.context.ContextEditForm;
 import de.escidoc.admintool.view.context.ContextListView;
@@ -38,12 +47,17 @@ import de.escidoc.admintool.view.orgunit.OrgUnitAddView;
 import de.escidoc.admintool.view.orgunit.OrgUnitEditView;
 import de.escidoc.admintool.view.orgunit.OrgUnitListView;
 import de.escidoc.admintool.view.orgunit.OrgUnitView;
+import de.escidoc.admintool.view.resource.ResouceViewComponentImpl;
+import de.escidoc.admintool.view.resource.ResourceViewComponent;
 import de.escidoc.admintool.view.role.RoleView;
 import de.escidoc.admintool.view.user.UserAddView;
 import de.escidoc.admintool.view.user.UserView;
+import de.escidoc.admintool.view.user.UserViewComponent;
+import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
+import de.escidoc.core.resources.Resource;
 import de.escidoc.core.resources.aa.useraccount.UserAccount;
 
 @SuppressWarnings("serial")
@@ -55,6 +69,8 @@ public class AdminToolApplication extends Application {
         ViewConstants.MAIN_WINDOW_TITLE);
 
     private final ViewManager viewManager = new ViewManagerImpl(mainWindow);
+
+    private final ServiceContainer services = new ServiceContaiterImpl();
 
     private final VerticalLayout appLayout = new VerticalLayout();
 
@@ -84,25 +100,36 @@ public class AdminToolApplication extends Application {
 
     private RoleView roleView;
 
+    private AdminTaskView adminTaskView;
+
     private OrgUnitViewLabFactory orgUnitViewFactory;
 
-    private static String eSciDocUri;
+    // FIXME: read from login.
+    private static final String ESCIDOC_URI = "http://localhost:8080";
 
     public static String escidocLoginUrl;
 
-    public String escidocLogoutUrl;
+    public static String escidocLogoutUrl;
 
     private WelcomePage welcomePage;
 
     private EscidocService containerService;
 
-    private final StartPage startPage = new StartPage();
+    private ItemService itemService;
+
+    private final TransactionListener listener =
+        new AdminToolTransactionListener(this, mainWindow);
 
     @Override
     public void init() {
         setMainWindowAndTheme();
+        // addTransactionListener();
         setFullSize();
         addParameterHandler();
+    }
+
+    private void addTransactionListener() {
+        getContext().addTransactionListener(listener);
     }
 
     private void setMainWindowAndTheme() {
@@ -127,6 +154,7 @@ public class AdminToolApplication extends Application {
                 Notification.TYPE_ERROR_MESSAGE);
         }
         else {
+            // FIXME: Write to static field from instance method.
             escidocLoginUrl = eSciDocUri + "/aa/login?target=";
             escidocLogoutUrl = eSciDocUri + "/aa/logout?target=";
             assert escidocLoginUrl != null && escidocLogoutUrl != null : "LoginUrl and Logout url can not be null.";
@@ -134,46 +162,51 @@ public class AdminToolApplication extends Application {
     }
 
     private void addParameterHandler() {
-        mainWindow.addParameterHandler(new ParamaterHandlerImpl(mainWindow,
-            this));
+        final ParamaterHandlerImpl handler =
+            new ParamaterHandlerImpl(mainWindow, this);
+        mainWindow.addParameterHandler(handler);
     }
 
-    public void authenticate(final String token)
-        throws InternalClientException, EscidocException, TransportException {
+    public void authenticate(final String token) throws EscidocClientException {
         loadProtectedResources(token);
     }
 
     private void loadProtectedResources(final String token)
-        throws InternalClientException, EscidocException, TransportException {
+        throws EscidocClientException {
         initServices(token);
-        initFactories();
         buildMainLayout();
-
-        createUserViewComponent();
-        createContainerViewComponent();
-        createAdminTaskView();
+        createViews();
     }
-
-    private final ServiceContainer services = new ServiceContaiterImpl();
 
     private void initServices(final String token)
         throws InternalClientException, EscidocException, TransportException {
         final ServiceFactory serviceFactory =
-            new ServiceFactory(eSciDocUri, token);
+            new ServiceFactory(ESCIDOC_URI, token);
 
         orgUnitService = serviceFactory.createOrgService();
 
         userService = serviceFactory.createUserService();
 
+        final ContextServiceLab contextServiceLab =
+            serviceFactory.createContextServiceLab();
+        services.add(contextServiceLab);
+
         contextService = serviceFactory.createContextService();
 
         roleService = serviceFactory.createRoleService();
 
+        // TODO refactor this.
         containerService = serviceFactory.createContainerService();
         services.add(containerService);
 
+        itemService = serviceFactory.createItemService();
+        services.add(itemService);
+
         adminService = serviceFactory.createAdminService();
         services.add(adminService);
+
+        orgUnitServiceLab = serviceFactory.createOrgUnitService();
+        services.add(orgUnitServiceLab);
 
         final AdminService adminService = services.getAdminService();
         Preconditions.checkNotNull(adminService,
@@ -181,15 +214,15 @@ public class AdminToolApplication extends Application {
         assert adminService != null : "can not get AdminService from service container";
     }
 
-    private void initFactories() throws EscidocException,
-        InternalClientException, TransportException {
-        orgUnitViewFactory =
-            new OrgUnitViewLabFactory(orgUnitService, mainWindow);
-    }
-
     private void buildMainLayout() {
         viewManager.setMainView(new MainView(this));
         viewManager.showMainView();
+    }
+
+    private void createViews() throws EscidocClientException {
+        createContainerViewComponent();
+        createUserViewComponent();
+        createAdminTaskView();
     }
 
     private void createUserViewComponent() {
@@ -200,13 +233,22 @@ public class AdminToolApplication extends Application {
 
     private AdminService adminService;
 
-    private void createContainerViewComponent() {
-        containerViewComponent =
-            new ContainerViewComponent(this, containerService);
+    private ResourceService orgUnitServiceLab;
+
+    private void createContainerViewComponent() throws EscidocClientException {
+        final Set<Resource> all = getResouces();
+        final Container resouceContainer =
+            ResourceToContainerCoverterImpl.toContainer(all);
+        containerViewComponent = new ResouceViewComponentImpl(resouceContainer);
+    }
+
+    private Set<Resource> getResouces() throws EscidocClientException {
+        return (orgUnitServiceLab).findAll();
     }
 
     private void createAdminTaskView() {
         adminTaskView = new AdminTaskViewImpl(mainWindow, services);
+        reindexView = new ReindexView(services, mainWindow);
     }
 
     private void setMainView(final Component component) {
@@ -257,7 +299,8 @@ public class AdminToolApplication extends Application {
         if (contextView == null) {
             contextList = new ContextListView(this, contextService);
             contextForm =
-                new ContextEditForm(this, contextService, orgUnitService);
+                new ContextEditForm(this, mainWindow, contextService,
+                    orgUnitService);
             contextForm.setContextList(contextList);
             final ContextAddView contextAddView =
                 new ContextAddView(this, contextList, contextService,
@@ -342,6 +385,10 @@ public class AdminToolApplication extends Application {
     }
 
     private Component getOrgUnitViewLab() {
+        if (orgUnitViewFactory == null) {
+            createOrgUnitFactory();
+        }
+
         assert (orgUnitViewFactory != null) : "orgUnitViewFactory can not be null.";
         try {
             return orgUnitViewFactory.getOrgUnitViewLab();
@@ -358,6 +405,25 @@ public class AdminToolApplication extends Application {
         return new VerticalLayout();
     }
 
+    private void createOrgUnitFactory() {
+        try {
+            orgUnitViewFactory =
+                new OrgUnitViewLabFactory(orgUnitService, mainWindow);
+        }
+        catch (final EscidocException e) {
+            ErrorMessage.show(mainWindow, e);
+            log.error(ViewConstants.SERVER_INTERNAL_ERROR, e);
+        }
+        catch (final InternalClientException e) {
+            ErrorMessage.show(mainWindow, e);
+            log.error(ViewConstants.SERVER_INTERNAL_ERROR, e);
+        }
+        catch (final TransportException e) {
+            ErrorMessage.show(mainWindow, e);
+            log.error(ViewConstants.SERVER_INTERNAL_ERROR, e);
+        }
+    }
+
     public void showContainerView() {
         setMainView(getContainerView());
     }
@@ -370,9 +436,15 @@ public class AdminToolApplication extends Application {
         setMainView(getAdminTaskView());
     }
 
-    private AdminTaskView adminTaskView;
-
     private AdminTaskView getAdminTaskView() {
         return adminTaskView;
+    }
+
+    private ComponentContainer reindexView;
+
+    public void showReindexView() {
+        Preconditions.checkNotNull(reindexView, "reindexView is null: %s",
+            reindexView);
+        viewManager.showReindexView(reindexView);
     }
 }

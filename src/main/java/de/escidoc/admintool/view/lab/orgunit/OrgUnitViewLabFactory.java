@@ -1,5 +1,6 @@
 package de.escidoc.admintool.view.lab.orgunit;
 
+import com.google.common.base.Preconditions;
 import com.vaadin.data.util.HierarchicalContainer;
 import com.vaadin.ui.Window;
 
@@ -20,7 +21,7 @@ public class OrgUnitViewLabFactory {
 
     private OrgUnitViewLab orgUnitViewLab;
 
-    private OrgUnitTreeViewLab orgUnitTreeViewLab;
+    private OrgUnitTreeView orgUnitTreeViewLab;
 
     private OrgUnitAddViewLab orgUnitAddViewLab;
 
@@ -33,6 +34,9 @@ public class OrgUnitViewLabFactory {
     public OrgUnitViewLabFactory(final OrgUnitService orgUnitService,
         final Window mainWindow) throws EscidocException,
         InternalClientException, TransportException {
+
+        checkForNull(orgUnitService, mainWindow);
+
         this.orgUnitService = orgUnitService;
         this.mainWindow = mainWindow;
 
@@ -41,6 +45,14 @@ public class OrgUnitViewLabFactory {
         createOrgUnitTreeViewFactory();
         createOrgUnitAddViewFactory();
         createOrgUnitEditViewFactory();
+    }
+
+    private void checkForNull(
+        final OrgUnitService orgUnitService, final Window mainWindow) {
+        Preconditions.checkNotNull(orgUnitService,
+            "orgUnitService can not be null. %s", orgUnitService);
+        Preconditions.checkNotNull(mainWindow,
+            "mainWindow can not be null. %s", mainWindow);
     }
 
     private void createContainerFactory() {

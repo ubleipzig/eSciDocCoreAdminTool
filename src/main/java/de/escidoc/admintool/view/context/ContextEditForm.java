@@ -41,9 +41,9 @@ import de.escidoc.admintool.app.PropertyId;
 import de.escidoc.admintool.exception.ResourceNotFoundException;
 import de.escidoc.admintool.service.ContextService;
 import de.escidoc.admintool.service.OrgUnitService;
-import de.escidoc.admintool.view.ResourceRefDisplay;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.admintool.view.orgunit.OrgUnitEditor;
+import de.escidoc.admintool.view.resource.ResourceRefDisplay;
 import de.escidoc.admintool.view.util.Converter;
 import de.escidoc.admintool.view.util.LayoutHelper;
 import de.escidoc.admintool.view.util.dialog.ErrorDialog;
@@ -66,8 +66,6 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
     private static final String EDIT_USER_ACCOUNT = "Edit Context";
 
     private static final int LABEL_WIDTH = 140;
-
-    private static final String FIELD_WIDTH = "400px";
 
     private final List<Field> fields = new ArrayList<Field>();
 
@@ -126,15 +124,22 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
 
     private Item item;
 
+    private final Window mainWindow;
+
     public ContextEditForm(final AdminToolApplication app,
-        final ContextService contextService, final OrgUnitService orgUnitService) {
+        final Window mainWindow, final ContextService contextService,
+        final OrgUnitService orgUnitService) {
+        Preconditions.checkNotNull(mainWindow,
+            "mainWindow can not be null: %s", mainWindow);
         Preconditions
             .checkNotNull(app, "AdminToolApplication can not be null.");
         Preconditions.checkNotNull(contextService,
             "ContextService can not be null.");
         Preconditions.checkNotNull(orgUnitService,
             "OrgUnitService can not be null.");
+
         this.app = app;
+        this.mainWindow = mainWindow;
         this.contextService = contextService;
         this.orgUnitService = orgUnitService;
         init();
@@ -149,13 +154,13 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
         form.addComponent(editToolbar);
 
         // name
-        nameField.setWidth(FIELD_WIDTH);
+        nameField.setWidth(ViewConstants.FIELD_WIDTH);
         nameField.setWriteThrough(false);
         form.addComponent(LayoutHelper.create(ViewConstants.NAME_LABEL,
             nameField, LABEL_WIDTH, true));
 
         // Desc
-        descriptionField.setWidth(FIELD_WIDTH);
+        descriptionField.setWidth(ViewConstants.FIELD_WIDTH);
         descriptionField.setRows(3);
         fields.add(descriptionField);
         form.addComponent(LayoutHelper.create(ViewConstants.DESCRIPTION_LABEL,
@@ -178,14 +183,14 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
             false));
 
         // Type
-        typeField.setWidth(FIELD_WIDTH);
+        typeField.setWidth(ViewConstants.FIELD_WIDTH);
         fields.add(typeField);
         form.addComponent(LayoutHelper.create("Type", typeField, LABEL_WIDTH,
             false));
 
         // OrgUnit
         orgUnitList.setRows(5);
-        orgUnitList.setWidth(FIELD_WIDTH);
+        orgUnitList.setWidth(ViewConstants.FIELD_WIDTH);
         orgUnitList.setNullSelectionAllowed(true);
         orgUnitList.setMultiSelect(true);
         orgUnitList.setWriteThrough(false);
@@ -199,15 +204,14 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
 
         // AdminDescriptor
         adminDescriptorAccordion = new Accordion();
-        adminDescriptorAccordion.setWidth(FIELD_WIDTH);
+        adminDescriptorAccordion.setWidth(ViewConstants.FIELD_WIDTH);
         adminDescriptorAccordion.setSizeFull();
 
         final Panel accordionPanel = new Panel();
         accordionPanel.setContent(adminDescriptorAccordion);
         accordionPanel.setSizeFull();
-        accordionPanel.setWidth(FIELD_WIDTH);
+        accordionPanel.setWidth(ViewConstants.FIELD_WIDTH);
 
-        final Window mainWindow = app.getMainWindow();
         addAdminDescButton.addListener(new NewAdminDescriptorListener(
             mainWindow, adminDescriptorAccordion));
         editAdminDescButton.addListener(new EditAdminDescriptorListener(
@@ -294,18 +298,14 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
             catch (final EscidocException e) {
                 log.error(
                     "root cause: " + ExceptionUtils.getRootCauseMessage(e), e);
-                app.getMainWindow()
-                    .addWindow(
-                        new ErrorDialog(app.getMainWindow(), ViewConstants.ERROR, e
-                            .getMessage()));
+                mainWindow.addWindow(new ErrorDialog(mainWindow,
+                    ViewConstants.ERROR, e.getMessage()));
             }
             catch (final EscidocClientException e) {
                 log.error(
                     "root cause: " + ExceptionUtils.getRootCauseMessage(e), e);
-                app.getMainWindow()
-                    .addWindow(
-                        new ErrorDialog(app.getMainWindow(), ViewConstants.ERROR, e
-                            .getMessage()));
+                mainWindow.addWindow(new ErrorDialog(mainWindow,
+                    ViewConstants.ERROR, e.getMessage()));
             }
         }
     }
@@ -366,28 +366,22 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
             catch (final ParserConfigurationException e) {
                 log.error("An unexpected error occured! See log for details.",
                     e);
-                app.getMainWindow()
-                    .addWindow(
-                        new ErrorDialog(app.getMainWindow(), ViewConstants.ERROR, e
-                            .getMessage()));
+                mainWindow.addWindow(new ErrorDialog(mainWindow,
+                    ViewConstants.ERROR, e.getMessage()));
                 setComponentError(new SystemError(e.getMessage()));
             }
             catch (final SAXException e) {
                 log.error("An unexpected error occured! See log for details.",
                     e);
-                app.getMainWindow()
-                    .addWindow(
-                        new ErrorDialog(app.getMainWindow(), ViewConstants.ERROR, e
-                            .getMessage()));
+                mainWindow.addWindow(new ErrorDialog(mainWindow,
+                    ViewConstants.ERROR, e.getMessage()));
                 setComponentError(new SystemError(e.getMessage()));
             }
             catch (final IOException e) {
                 log.error("An unexpected error occured! See log for details.",
                     e);
-                app.getMainWindow()
-                    .addWindow(
-                        new ErrorDialog(app.getMainWindow(), ViewConstants.ERROR, e
-                            .getMessage()));
+                mainWindow.addWindow(new ErrorDialog(mainWindow,
+                    ViewConstants.ERROR, e.getMessage()));
                 setComponentError(new SystemError(e.getMessage()));
             }
         }
@@ -498,8 +492,8 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
             log
                 .error("root cause: " + ExceptionUtils.getRootCauseMessage(e),
                     e);
-            app.getMainWindow().addWindow(
-                new ErrorDialog(app.getMainWindow(), ViewConstants.ERROR,
+            mainWindow
+                .addWindow(new ErrorDialog(mainWindow, ViewConstants.ERROR,
                     "Organizational Unit does not exist anymore."
                         + e.getMessage()));
         }
@@ -508,22 +502,22 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
             log
                 .error("root cause: " + ExceptionUtils.getRootCauseMessage(e),
                     e);
-            app.getMainWindow().addWindow(
-                new ErrorDialog(app.getMainWindow(), ViewConstants.ERROR, e.getMessage()));
+            mainWindow.addWindow(new ErrorDialog(mainWindow,
+                ViewConstants.ERROR, e.getMessage()));
         }
         catch (final InternalClientException e) {
             log
                 .error("root cause: " + ExceptionUtils.getRootCauseMessage(e),
                     e);
-            app.getMainWindow().addWindow(
-                new ErrorDialog(app.getMainWindow(), ViewConstants.ERROR, e.getMessage()));
+            mainWindow.addWindow(new ErrorDialog(mainWindow,
+                ViewConstants.ERROR, e.getMessage()));
         }
         catch (final TransportException e) {
             log
                 .error("root cause: " + ExceptionUtils.getRootCauseMessage(e),
                     e);
-            app.getMainWindow().addWindow(
-                new ErrorDialog(app.getMainWindow(), ViewConstants.ERROR, e.getMessage()));
+            mainWindow.addWindow(new ErrorDialog(mainWindow,
+                ViewConstants.ERROR, e.getMessage()));
 
         }
         return "Organization does exist, please remove.";
@@ -607,8 +601,8 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
         }
         catch (final EscidocClientException e) {
             log.error("An unexpected error occured! See log for details.", e);
-            app.getMainWindow().addWindow(
-                new ErrorDialog(app.getMainWindow(), ViewConstants.ERROR, e.getMessage()));
+            mainWindow.addWindow(new ErrorDialog(mainWindow,
+                ViewConstants.ERROR, e.getMessage()));
         }
     }
 }

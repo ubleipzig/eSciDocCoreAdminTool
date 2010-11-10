@@ -5,6 +5,7 @@ import java.util.Collection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.base.Preconditions;
 import com.vaadin.data.util.POJOContainer;
 import com.vaadin.data.util.POJOItem;
 import com.vaadin.ui.Table;
@@ -35,13 +36,19 @@ public class ContextListView extends Table {
     public ContextListView(final AdminToolApplication app,
         final ContextService contextService) throws EscidocException,
         InternalClientException, TransportException {
-        assert app != null : "app must not be null.";
-        assert contextService != null : "contextService must not be null.";
+        checkForNull(app, contextService);
         this.app = app;
         this.contextService = contextService;
         buildView();
         findAllContexts();
         bindDataSource();
+    }
+
+    private void checkForNull(
+        final AdminToolApplication app, final ContextService contextService) {
+        Preconditions.checkNotNull(app, " app can not be null: %s", app);
+        Preconditions.checkNotNull(contextService,
+            " contextService can not be null: %s", contextService);
     }
 
     private void buildView() {

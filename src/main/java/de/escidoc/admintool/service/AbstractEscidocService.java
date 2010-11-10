@@ -29,6 +29,8 @@ public abstract class AbstractEscidocService<T extends HandlerServiceInterface>
         this.client = client;
     }
 
+    abstract T getClient();
+
     @Override
     public void loginWith(final String handle) throws InternalClientException {
         client.setHandle(handle);
@@ -37,19 +39,19 @@ public abstract class AbstractEscidocService<T extends HandlerServiceInterface>
     @Override
     public Set<Resource> findAll() throws EscidocClientException {
 
-        Collection<? extends Resource> items;
+        Collection<? extends Resource> resources;
         try {
-            items = findPublicOrReleasedResources();
+            resources = findPublicOrReleasedResources();
         }
         catch (final EscidocException e) {
             if (e instanceof InvalidSearchQueryException) {
-                items = findPublicOrReleseadResourcesUsingOldFilter();
+                resources = findPublicOrReleseadResourcesUsingOldFilter();
             }
             else {
                 throw e;
             }
         }
-        return Collections.unmodifiableSet(new HashSet<Resource>(items));
+        return Collections.unmodifiableSet(new HashSet<Resource>(resources));
     }
 
     protected TaskParam withEmptyTaskParam() {
@@ -60,12 +62,20 @@ public abstract class AbstractEscidocService<T extends HandlerServiceInterface>
         return new SearchRetrieveRequestType();
     }
 
-    abstract T getClient();
-
     abstract Collection<? extends Resource> findPublicOrReleseadResourcesUsingOldFilter()
         throws EscidocException, InternalClientException, TransportException,
         EscidocClientException;
 
     abstract Collection<? extends Resource> findPublicOrReleasedResources()
         throws EscidocException, InternalClientException, TransportException;
+
+    public abstract Collection<? extends Resource> filterUsingInput(String query)
+        throws EscidocException, InternalClientException, TransportException;
+
+    protected SearchRetrieveRequestType userInputToFilter(final String query) {
+        final SearchRetrieveRequestType filter =
+            new SearchRetrieveRequestType();
+        filter.setQuery(query);
+        return filter;
+    }
 }

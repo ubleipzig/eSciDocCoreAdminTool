@@ -1,5 +1,6 @@
 package de.escidoc.admintool.service;
 
+import java.util.Collection;
 import java.util.Set;
 
 import de.escidoc.core.client.exceptions.EscidocClientException;
@@ -17,4 +18,6 @@ public interface ResourceService extends EscidocService {
     Resource create(Resource resource) throws EscidocException,
         InternalClientException, TransportException;
 
+    Collection<? extends Resource> filterUsingInput(final String query)
+        throws EscidocException, InternalClientException, TransportException;
 }

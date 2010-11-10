@@ -1,5 +1,8 @@
 package de.escidoc.admintool.view;
 
+import java.util.Arrays;
+import java.util.List;
+
 import de.escidoc.admintool.messages.Messages;
 
 public class ViewConstants {
@@ -278,11 +281,75 @@ public class ViewConstants {
 
     public static final String LOAD_EXAMPLES = "Load Examples";
 
-    public static final String SHOW_REPOSITORY_INFO = "Show repository info.";
+    public static final String SHOW_REPOSITORY_INFO = "Show repository info";
 
-    public static final String RETRIEVE = "Retrieve";
+    public static final String FILTER_RESOURCES = "Filter Resources";
 
     public static final String PURGE = "Purge";
 
     public static final String NO_RESULT = "No result";
+
+    public static final String LOGIN = "Login";
+
+    public static final String REINDEX = "Reindex";
+
+    public static final String CLEAR_INDEX = "Clear Index";
+
+    public static final String INDEX_NAME = "Index Name";
+
+    public static final String FILTERED_RESOURCES = "Filtered Resources";
+
+    public static final String LOAD_EXAMPLE_TITLE = "<h4>Load Example</h4>";
+
+    public static final String FILTER_TEXT =
+        "<p>Filters work on all resources, independent from their status in object lifecycle and existing access restrictions. Access policies are evaluated for each resource in the answer set. The answer set will only contain those resources the user has access to. Result sets consist of full object representations, support paging and sorting of results. Similar to searches, filter methods are based on the SRU standard, so queries are formulated in CQL. Filter methods are not provided by a dedicated service. Instead, they belong to the APIs of the respective resource services. They always retrieve resources of the same type, i.e. the filter method of the Item service will always retrieve Item representations exclusively. An exception to this rule are the retrieveMembers() methods in the Context and Container service: the result list may contain both Items and Containers.</p>";
+
+    public static final String REPO_INFO_TEXT =
+        "<p>Provides public configuration properties of the eSciDoc Infrastructure and the earliest creation date of eSciDoc repository objects.</p>";
+
+    public static final String REINDEX_TEXT =
+        "<p>Reinitialize the search index. The initialization runs asynchronously and returns some useful information to the user, e.g. the total number of objects found.</p>";
+
+    public static final String ADMIN_TASK_VIEW_TITLE = "Welcome to eSciDoc";
+
+    public static final String REINDEX_RESOURCES_TITLE = "Reindex Resources";
+
+    public static final String LOAD_EXAMPLES_TITLE = "Load Examples";
+
+    public static final String REPOSITORY_INFORMATION_TITLE =
+        "Repository Information";
+
+    public static final String FILTERING_RESOURCES_TITLE =
+        "Filtering Resources";
+
+    public static final String PLEASE_SELECT_A_RESOURCE_TYPE =
+        "Please select a resource type";
+
+    public static final String EMPTY = "Empty";
+
+    static final String LOGOUT = "Logout";
+
+    public static final int DESCRIPTION_ROWS = 3;
+
+    public static final String RESOURCES = "Resources";
+
+    public static final String SHOW_STATUS = "Show status";
+
+    public static final String REINDEX_ESCIDOC_OAI_PMH = "escidocoaipmh";
+
+    public static final String REINDEX_ESCIDOC_OU = "escidocou";
+
+    public static final String REINDEX_ESCIDOC = "escidoc";
+
+    public static final String REINDEX_ALL = "all";
+
+    public static final List<String> INDEX_NAMES = Arrays.asList(new String[] {
+        REINDEX_ALL, REINDEX_ESCIDOC, REINDEX_ESCIDOC_OU,
+        REINDEX_ESCIDOC_OAI_PMH });
+
+    public static final String[] RESOURCES_NODE = { ORGANIZATIONAL_UNIT,
+        CONTEXT, USERS, ROLE };
+
+    public static final String[] ADMIN_TASKS_NODE = { LOAD_EXAMPLES_TITLE,
+        FILTERING_RESOURCES_TITLE, SHOW_REPOSITORY_INFO, REINDEX };
 }

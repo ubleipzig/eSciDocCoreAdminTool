@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
+import com.google.common.base.Preconditions;
 import com.vaadin.terminal.SystemError;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Button;
@@ -47,17 +48,36 @@ public abstract class AdminDescriptorView extends Window {
 
     protected String content;
 
-    private Window mainWindow;
+    protected final Window mainWindow;
 
     public AdminDescriptorView(final Window mainWindow,
         final Accordion adminDescriptorAccordion) {
+
+        Preconditions.checkNotNull(mainWindow,
+            "mainWindow can not be null: %s", mainWindow);
+        Preconditions.checkNotNull(adminDescriptorAccordion,
+            "adminDescriptorAccordion can not be null: %s",
+            adminDescriptorAccordion);
+
         this.mainWindow = mainWindow;
         this.adminDescriptorAccordion = adminDescriptorAccordion;
         buildMainLayout();
     }
 
-    public AdminDescriptorView(final Accordion adminDescriptorAccordion,
-        final String name, final String content) {
+    public AdminDescriptorView(final Window mainWindow,
+        final Accordion adminDescriptorAccordion, final String name,
+        final String content) {
+
+        Preconditions.checkNotNull(mainWindow,
+            "mainWindow can not be null: %s", mainWindow);
+        Preconditions.checkNotNull(adminDescriptorAccordion,
+            "adminDescriptorAccordion can not be null: %s",
+            adminDescriptorAccordion);
+        Preconditions.checkNotNull(name, "name can not be null: %s", name);
+        Preconditions.checkNotNull(adminDescriptorAccordion,
+            "content can not be null: %s", content);
+
+        this.mainWindow = mainWindow;
         this.adminDescriptorAccordion = adminDescriptorAccordion;
         this.name = name;
         this.content = content;
@@ -145,10 +165,9 @@ public abstract class AdminDescriptorView extends Window {
         }
         catch (final ParserConfigurationException e) {
             log.error("An unexpected error occured! See log for details.", e);
-            mainWindow.addWindow(new ErrorDialog(mainWindow, "Error", e
-                .getMessage()));
+            getApplication().getMainWindow().addWindow(
+                new ErrorDialog(mainWindow, "Error", e.getMessage()));
             setComponentError(new SystemError(e.getMessage()));
-
             return false;
         }
         catch (final SAXException e) {
@@ -156,19 +175,20 @@ public abstract class AdminDescriptorView extends Window {
                 new ErrorDialog(mainWindow, "Error", "XML is not well formed.");
             errorDialog.setWidth("400px");
             errorDialog.setWidth("300px");
-            mainWindow.addWindow(errorDialog);
+
+            assert getApplication().getMainWindow() != null : "MainWindow can not be null.";
+
+            getApplication().getMainWindow().addWindow(errorDialog);
             log.error("An unexpected error occured! See log for details.", e);
             setComponentError(new SystemError(e.getMessage()));
-
             return false;
 
         }
         catch (final IOException e) {
             log.error("An unexpected error occured! See log for details.", e);
-            mainWindow.addWindow(new ErrorDialog(mainWindow, "Error", e
-                .getMessage()));
+            getApplication().getMainWindow().addWindow(
+                new ErrorDialog(mainWindow, "Error", e.getMessage()));
             setComponentError(new SystemError(e.getMessage()));
-
             return false;
         }
     }

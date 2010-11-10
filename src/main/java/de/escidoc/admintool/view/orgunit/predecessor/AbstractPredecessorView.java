@@ -9,8 +9,8 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.themes.Reindeer;
 
-import de.escidoc.admintool.view.ResourceRefDisplay;
 import de.escidoc.admintool.view.ViewConstants;
+import de.escidoc.admintool.view.resource.ResourceRefDisplay;
 
 public class AbstractPredecessorView extends CustomComponent {
     private static final long serialVersionUID = 1279873768615689377L;
