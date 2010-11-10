@@ -549,6 +549,11 @@ div.v-app-loading {
 	background: #333;
 	color: #fff;
 }
+
+.v-datefield-calendarpanel-day-focused {
+	outline: 1px dotted black;
+}
+
 .v-datefield-time {
 	white-space: nowrap;
 }
@@ -1869,7 +1874,9 @@ textarea.v-textarea-readonly:focus {
 	width: 24.5%;
 	margin-right: 2px;
 }
-
+.v-richtextarea-readonly {
+	border: none;
+}
 .v-tree {
 	text-align: left; /* Force default alignment */
 	overflow: hidden;
@@ -2784,6 +2791,9 @@ div.v-window-header {
 	background: transparent;
 }
 
+input.v-textfield-readonly:focus{
+	background-color: transparent;	
+}
 .v-datefield-calendarpanel {
 	border-collapse: collapse;
 	margin: 0;
