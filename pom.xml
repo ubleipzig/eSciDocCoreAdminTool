@@ -29,7 +29,7 @@
 			<version>0.8-SNAPSHOT</version>
 			<type>jar</type>
 		</dependency>
-			<dependency>
+		<dependency>
 			<groupId>org.vaadin.addons</groupId>
 			<artifactId>browsercookies</artifactId>
 			<version>1.0.3</version>
@@ -61,7 +61,7 @@
 			<scope>test</scope>
 			<optional>true</optional>
 		</dependency>
-			<dependency>
+		<dependency>
 			<groupId>org.hamcrest</groupId>
 			<artifactId>hamcrest-all</artifactId>
 			<version>1.1</version>
@@ -70,9 +70,9 @@
 	</dependencies>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<vaadin-version>6.4.6</vaadin-version>
+		<vaadin-version>6.4.7</vaadin-version>
 		<jetty.port>8081</jetty.port>
-		<jetty.scan.sec>5</jetty.scan.sec>
+		<jetty.scan.sec>10</jetty.scan.sec>
 		<vaadin-widgets-dir>src/main/webapp/VAADIN/widgetsets
 		</vaadin-widgets-dir>
 	</properties>
@@ -90,6 +90,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
+				<version>2.1.2</version>
 				<executions>
 					<execution>
 						<id>attach-sources</id>
@@ -132,25 +133,11 @@
 					</systemProperties>
 				</configuration>
 			</plugin>
-			<!-- Compiles your custom GWT components with the GWT compiler -->
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>gwt-maven-plugin</artifactId>
-				<version>1.3-SNAPSHOT</version>
-				<configuration>
-					<webappDirectory>${vaadin-widgets-dir}</webappDirectory>
-					<extraJvmArgs>-Dgwt.style=PRETTY -Xmx512M -Xss1024k</extraJvmArgs>
-				</configuration>
-				<executions>
-					<execution>
-						<goals>
-							<goal>resources</goal>
-							<goal>compile</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<!-- Updates Vaadin 6.2+ widgetset definitions based on project dependencies -->
+			<!-- <plugin> <groupId>org.codehaus.mojo</groupId> <artifactId>gwt-maven-plugin</artifactId> 
+				<version>1.3-SNAPSHOT</version> <configuration> <webappDirectory>${vaadin-widgets-dir}</webappDirectory> 
+				<extraJvmArgs>-Dgwt.style=PRETTY -Xmx512M -Xss1024k</extraJvmArgs> </configuration> 
+				<executions> <execution> <goals> <goal>resources</goal> <goal>compile</goal> 
+				</goals> </execution> </executions> </plugin> -->
 			<plugin>
 				<groupId>com.vaadin</groupId>
 				<artifactId>vaadin-maven-plugin</artifactId>

@@ -2,6 +2,7 @@ package de.escidoc.admintool.view.admintask;
 
 import java.util.Set;
 
+import com.google.common.base.Preconditions;
 import com.vaadin.data.util.POJOContainer;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.FormLayout;
@@ -17,18 +18,29 @@ final class ShowFilterResultCommandImpl implements ShowFilterResultCommand {
 
     private final FormLayout formLayout = new FormLayout();
 
+    private final Button showStatusButton = new Button(
+        ViewConstants.SHOW_STATUS);
+
+    private final Label statusLabel = new Label(ViewConstants.STATUS);
+
+    private final ShowPurgeStatusListener showPurgeStatusListener;
+
     final FilterResourceView filterResourceView;
 
     Table filteredList;
 
     POJOContainer<Resource> filteredResourcesContainer;
 
-    /**
-     * @param filterResourceView
-     */
     public ShowFilterResultCommandImpl(
         final FilterResourceView filterResourceView) {
+
+        Preconditions.checkNotNull(filterResourceView,
+            "filterResourceView is null: %s", filterResourceView);
+
         this.filterResourceView = filterResourceView;
+        showPurgeStatusListener =
+            new ShowPurgeStatusListener(filterResourceView.adminService,
+                filterResourceView.mainWindow, statusLabel);
     }
 
     @Override
@@ -66,9 +78,13 @@ final class ShowFilterResultCommandImpl implements ShowFilterResultCommand {
                 PropertyId.OBJECT_ID, PropertyId.XLINK_TITLE);
 
         filteredList =
-            new Table(ViewConstants.FILTERED_RESOURCES, filteredResourcesContainer);
+            new Table(ViewConstants.FILTERED_RESOURCES,
+                filteredResourcesContainer);
 
-        filteredList.setVisibleColumns(new Object[] { PropertyId.XLINK_TITLE });
+        filteredList.setVisibleColumns(new Object[] { PropertyId.OBJECT_ID,
+            PropertyId.XLINK_TITLE });
+        filteredList.setColumnHeader(PropertyId.OBJECT_ID,
+            ViewConstants.OBJECT_ID_LABEL);
         filteredList.setColumnHeader(PropertyId.XLINK_TITLE,
             ViewConstants.TITLE_LABEL);
 
@@ -79,11 +95,25 @@ final class ShowFilterResultCommandImpl implements ShowFilterResultCommand {
     private void showFilterResultView() {
         formLayout.addComponent(filteredList);
         addPurgeButton();
+        addShowPurgeStatusButton();
+        addStatusLabel();
     }
 
     private void addPurgeButton() {
         final Button purgeBtn = new Button(ViewConstants.PURGE);
+        purgeBtn.setWidth("150px");
         formLayout.addComponent(purgeBtn);
         purgeBtn.addListener(new PurgeResourcesListener(this));
+
+    }
+
+    private void addStatusLabel() {
+        formLayout.addComponent(statusLabel);
+    }
+
+    private void addShowPurgeStatusButton() {
+        showStatusButton.setWidth("150px");
+        formLayout.addComponent(showStatusButton);
+        showStatusButton.addListener(showPurgeStatusListener);
     }
 }

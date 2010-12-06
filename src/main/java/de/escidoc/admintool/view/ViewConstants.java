@@ -7,6 +7,7 @@ import de.escidoc.admintool.messages.Messages;
 
 public class ViewConstants {
 
+    // TODO move these to an extra file.
     public static final int VISIBLE_PARENTS = 7;
 
     public static final int SPLIT_POSITION_IN_PERCENT = 40;
@@ -74,14 +75,12 @@ public class ViewConstants {
     public static final String IS_ACTIVE_LABEL = Messages
         .getString("ViewConstants.21"); //$NON-NLS-1$
 
-    public static final String CREATED_ON_LABEL = Messages
-        .getString("ViewConstants.22"); //$NON-NLS-1$
+    public static final String CREATED_ON_LABEL = "Created on";
 
     public static final String CREATED_BY_LABEL = Messages
         .getString("ViewConstants.23"); //$NON-NLS-1$
 
-    public static final String MODIFIED_ON_LABEL = Messages
-        .getString("ViewConstants.24"); //$NON-NLS-1$
+    public static final String MODIFIED_ON_LABEL = "Modified on";
 
     public static final String MODIFIED_BY_LABEL = Messages
         .getString("ViewConstants.25"); //$NON-NLS-1$
@@ -92,8 +91,7 @@ public class ViewConstants {
     public static final String DESCRIPTION_LABEL = Messages
         .getString("ViewConstants.27"); //$NON-NLS-1$
 
-    public static final String ALTERNATIVE_LABEL = Messages
-        .getString("ViewConstants.28"); //$NON-NLS-1$
+    public static final String ALTERNATIVE_LABEL = "Alternative Title";
 
     public static final String TYPE_ID = Messages.getString("ViewConstants.29"); //$NON-NLS-1$
 
@@ -139,8 +137,7 @@ public class ViewConstants {
     public static final String PREDECESSORS_TYPE_ID = Messages
         .getString("ViewConstants.43"); //$NON-NLS-1$
 
-    public static final String CONTEXTS_LABEL = Messages
-        .getString("ViewConstants.44"); //$NON-NLS-1$
+    public static final String CONTEXTS_LABEL = "Contexts";
 
     public static final String ORGANIZATION_UNITS_ID = Messages
         .getString("ViewConstants.45"); //$NON-NLS-1$
@@ -211,11 +208,11 @@ public class ViewConstants {
     public static final String ORGANIZATIONAL_UNIT = Messages
         .getString("NavigationTree.0"); //$NON-NLS-1$
 
-    public static final String CONTEXT = Messages.getString("NavigationTree.1"); //$NON-NLS-1$
+    public static final String CONTEXTS = "Contexts";
 
     public static final String USERS = Messages.getString("NavigationTree.2"); //$NON-NLS-1$
 
-    public static final String ROLE = "Role";
+    public static final String ROLE = "Roles";
 
     public static final String COMMENT = "Comment:";
 
@@ -228,10 +225,7 @@ public class ViewConstants {
 
     public static final String EDIT_USER_VIEW_CAPTION = "Edit User Account";
 
-    public static final String[] ROLE_COLUMN_HEADERS = new String[] { "Title",
-    // "Role",
-    // "Asssigned On"
-        };
+    public static final String[] ROLE_COLUMN_HEADERS = new String[] { "Title" };
 
     public static final String REQUESTED_ROLE_HAS_NO_SCOPE_DEFINITIONS =
         "Requested role has no scope-definitions";
@@ -265,7 +259,7 @@ public class ViewConstants {
     public static final String ROLES_LABEL = "Roles";
 
     public static final String AN_UNEXPECTED_ERROR_OCCURED_SEE_LOG_FOR_DETAILS =
-        "An unexpected error occured! See log for details.";
+        "An unexpected error occured! See LOG for details.";
 
     public static final int LABEL_WIDTH = 140;
 
@@ -277,11 +271,11 @@ public class ViewConstants {
 
     public static final String CONTAINER = "Container";
 
-    public static final String ADMIN_TASK = "Admin Task";
+    public static final String ADMIN_TASKS_LABEL = "Admin Tasks";
 
     public static final String LOAD_EXAMPLES = "Load Examples";
 
-    public static final String SHOW_REPOSITORY_INFO = "Show repository info";
+    public static final String SHOW_REPOSITORY_INFO = "Repository Information";
 
     public static final String FILTER_RESOURCES = "Filter Resources";
 
@@ -289,7 +283,7 @@ public class ViewConstants {
 
     public static final String NO_RESULT = "No result";
 
-    public static final String LOGIN = "Login";
+    public static final String LOGIN_LABEL = "Login";
 
     public static final String REINDEX = "Reindex";
 
@@ -331,8 +325,6 @@ public class ViewConstants {
 
     public static final int DESCRIPTION_ROWS = 3;
 
-    public static final String RESOURCES = "Resources";
-
     public static final String SHOW_STATUS = "Show status";
 
     public static final String REINDEX_ESCIDOC_OAI_PMH = "escidocoaipmh";
@@ -347,9 +339,68 @@ public class ViewConstants {
         REINDEX_ALL, REINDEX_ESCIDOC, REINDEX_ESCIDOC_OU,
         REINDEX_ESCIDOC_OAI_PMH });
 
-    public static final String[] RESOURCES_NODE = { ORGANIZATIONAL_UNIT,
-        CONTEXT, USERS, ROLE };
+    public static final String LAB = "Organizational Units";
+
+    public static final String[] RESOURCES_NODE =
+        { LAB, CONTEXTS, USERS, ROLE };
 
     public static final String[] ADMIN_TASKS_NODE = { LOAD_EXAMPLES_TITLE,
         FILTERING_RESOURCES_TITLE, SHOW_REPOSITORY_INFO, REINDEX };
+
+    public static final String _100_PERCENT = "100%";
+
+    public static final String ADD_PARENT = "Add Parent";
+
+    public static final String SELECT_A_PARENT_ORGANIZATIONAL_UNIT =
+        "Select a parent organizational unit";
+
+    public static final int FILTER_AREA_WIDTH = 800;
+
+    public static final String STATUS = "Status";
+
+    public static final String EXAMPLE_QUERY =
+        "\"/properties/created-by/id\"=escidoc:exuser1";
+
+    public static final String METADATA_LABEL = "Metadata";
+
+    public static final String PUB_MAN_METADATA = "PubMan Metadata";
+
+    public static final String RAW_XML = "Raw XML";
+
+    public static final String RAW_METADATA = "Raw Metadata";
+
+    public static final String FREE_FORM = "Free Form";
+
+    public static final String REMOVE = "Remove";
+
+    public static final String LOAD_EXAMPLE_TEXT =
+        "<p>Loads a set of example objects into the framework.</p>";
+
+    public static final String ADD_A_NEW_CONTEXT = "Add a new Context";
+
+    public static final String EDIT_LABEL = "Edit";
+
+    public static final String MODAL_DIALOG_HEIGHT = "650px";
+
+    public static final String MODAL_DIALOG_WIDTH = "550px";
+
+    public static final String SELECT_ORGANIZATIONAL_UNIT =
+        "Select organizational unit.";
+
+    public static final String EDIT_USER_ACCOUNT = "Edit Context";
+
+    public static final String TOOLBAR_INVERT = "toolbar-invert";
+
+    public static final String ADD_RESOURCE = "Add Resource";
+
+    public static final String THIN_SPLIT = "small blue white";
+
+    public static final String EDIT_ORG_UNIT = "Edit Organizational Unit";
+
+    public static final String ADD_ORG_UNIT = "Add a new Organizational Unit";
+
+    public static final String RESOURCES = "Resources";
+
+    public static final String LOGIN_WINDOW_WIDTH = "430px";
+
 }

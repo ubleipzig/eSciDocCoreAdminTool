@@ -25,13 +25,15 @@ public class NavigationTreeImpl extends CustomComponent
 
     private void init() {
         setCompositionRoot(tree);
-
-        tree.setSelectable(true);
-        tree.setNullSelectionAllowed(true);
-        tree.addListener(new NavigationClickListener(app));
-
+        configureTree();
         addResourcesNode();
         addAdminTaskNode();
+    }
+
+    private void configureTree() {
+        tree.setSelectable(true);
+        tree.setNullSelectionAllowed(true);
+        tree.addListener(new NavigationTreeClickListener(app));
     }
 
     private void addResourcesNode() {
@@ -57,7 +59,7 @@ public class NavigationTreeImpl extends CustomComponent
     }
 
     private void addAdminTaskNode() {
-        addRoot(ViewConstants.ADMIN_TASK);
-        addChildren(ViewConstants.ADMIN_TASK, ViewConstants.ADMIN_TASKS_NODE);
+        addRoot(ViewConstants.ADMIN_TASKS_LABEL);
+        addChildren(ViewConstants.ADMIN_TASKS_LABEL, ViewConstants.ADMIN_TASKS_NODE);
     }
 }

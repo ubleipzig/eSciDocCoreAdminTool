@@ -14,7 +14,7 @@ import de.escidoc.admintool.view.util.dialog.ErrorDialog;
 public class SpinOffPPredecessorEditor extends AbstractPredecessorEditor
     implements IPredecessorEditor {
 
-    private static final Logger log = LoggerFactory
+    private static final Logger LOG = LoggerFactory
         .getLogger(SpinOffPPredecessorEditor.class);
 
     private static final String EDITOR_DESCRIPTION =
@@ -56,7 +56,7 @@ public class SpinOffPPredecessorEditor extends AbstractPredecessorEditor
     private AbstractPredecessorView createPredecessorView(
         final List<ResourceRefDisplay> selectedPredecessors) {
         for (final ResourceRefDisplay resourceRefDisplay : selectedPredecessors) {
-            log.info("selected: " + resourceRefDisplay);
+            LOG.info("selected: " + resourceRefDisplay);
         }
         final AbstractPredecessorView addedPredecessorView =
             new SpinOffPredecessorView(selectedPredecessors.get(0).getTitle(),

@@ -1,27 +1,38 @@
 package de.escidoc.admintool.view.lab.orgunit;
 
+import java.util.Collection;
+
 import com.google.common.base.Preconditions;
+import com.vaadin.data.Item;
 import com.vaadin.data.util.HierarchicalContainer;
 import com.vaadin.ui.Window;
 
 import de.escidoc.admintool.service.OrgUnitService;
+import de.escidoc.admintool.service.OrgUnitServiceLab;
+import de.escidoc.admintool.view.ViewConstants;
+import de.escidoc.admintool.view.resource.AddChildrenCommandImpl;
+import de.escidoc.admintool.view.resource.FolderHeader;
+import de.escidoc.admintool.view.resource.FolderHeaderImpl;
+import de.escidoc.admintool.view.resource.ResourceContainer;
+import de.escidoc.admintool.view.resource.ResourceContainerImpl;
+import de.escidoc.admintool.view.resource.ResourceTreeView;
+import de.escidoc.admintool.view.resource.ShowEditResourceView;
 import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
+import de.escidoc.core.resources.oum.OrganizationalUnit;
 
 public class OrgUnitViewLabFactory {
-
-    private OrgUnitTreeViewFactory orgUnitTreeViewFactory;
 
     final OrgUnitService orgUnitService;
 
     final Window mainWindow;
 
-    private OrgUnitAddViewFactory OrgUnitAddViewFactory;
+    private OrgUnitAddViewFactory orgUnitAddViewFactory;
 
     private OrgUnitViewLab orgUnitViewLab;
 
-    private OrgUnitTreeView orgUnitTreeViewLab;
+    private ResourceTreeView resourceTreeView;
 
     private OrgUnitAddViewLab orgUnitAddViewLab;
 
@@ -31,18 +42,21 @@ public class OrgUnitViewLabFactory {
 
     private OrgUnitContainerFactory orgUnitContainerFactory;
 
+    private final OrgUnitServiceLab resourceService;
+
     public OrgUnitViewLabFactory(final OrgUnitService orgUnitService,
-        final Window mainWindow) throws EscidocException,
-        InternalClientException, TransportException {
+        final OrgUnitServiceLab resourceService, final Window mainWindow)
+        throws EscidocException, InternalClientException, TransportException {
 
         checkForNull(orgUnitService, mainWindow);
 
         this.orgUnitService = orgUnitService;
+        this.resourceService = resourceService;
         this.mainWindow = mainWindow;
+        resourceContainer = createResourceContainer();
 
         createContainerFactory();
         createOrgUnitContainer();
-        createOrgUnitTreeViewFactory();
         createOrgUnitAddViewFactory();
         createOrgUnitEditViewFactory();
     }
@@ -64,22 +78,17 @@ public class OrgUnitViewLabFactory {
         container = orgUnitContainerFactory.create();
     }
 
-    private void createOrgUnitTreeViewFactory() {
-        orgUnitTreeViewFactory =
-            new OrgUnitTreeViewFactory(orgUnitService, container);
-    }
-
     private void createOrgUnitAddViewFactory() throws EscidocException,
         InternalClientException, TransportException {
-        OrgUnitAddViewFactory =
+        orgUnitAddViewFactory =
             new OrgUnitAddViewFactory(mainWindow, orgUnitService, container,
-                orgUnitContainerFactory);
+                orgUnitContainerFactory, resourceService, resourceContainer);
     }
 
     private void createOrgUnitEditViewFactory() {
         orgUnitEditViewLab =
             new OrgUnitEditViewLab(orgUnitService, mainWindow,
-                orgUnitContainerFactory);
+                orgUnitContainerFactory, resourceService, resourceContainer);
     }
 
     public OrgUnitViewLab getOrgUnitViewLab() throws EscidocException,
@@ -88,17 +97,47 @@ public class OrgUnitViewLabFactory {
             createOrgUnitViewLab();
         }
         orgUnitAddViewLab.setOrgUnitView(orgUnitViewLab);
-        orgUnitTreeViewLab.setOrgUnitView(orgUnitViewLab);
         orgUnitEditViewLab.setOrgUnitView(orgUnitViewLab);
         return orgUnitViewLab;
     }
 
+    private final FolderHeader header = new FolderHeaderImpl(
+        ViewConstants.ORGANIZATIONAL_UNIT_LABEL);
+
+    private final ResourceContainer resourceContainer;
+
+    private ShowEditResourceView showEditResourceView;
+
     private void createOrgUnitViewLab() throws EscidocException,
         InternalClientException, TransportException {
-        orgUnitTreeViewLab = orgUnitTreeViewFactory.getOrgUnitTreeView();
-        orgUnitAddViewLab = OrgUnitAddViewFactory.getOrgUnitAddView();
+        resourceTreeView =
+            new ResourceTreeView(mainWindow, header, resourceContainer);
+        showEditResourceView = new ShowEditResourceView() {
+
+            @Override
+            public void execute(final Item item) {
+                orgUnitViewLab.select(item);
+            }
+        };
+        resourceTreeView.setEditView(showEditResourceView);
+        resourceTreeView.setCommand(new AddChildrenCommandImpl(resourceService,
+            resourceContainer));
+        resourceTreeView.addResourceNodeExpandListener();
+        resourceTreeView.addResourceNodeClickedListener();
+
+        orgUnitAddViewLab = orgUnitAddViewFactory.getOrgUnitAddView();
         orgUnitViewLab =
-            new OrgUnitViewLab(orgUnitTreeViewLab, orgUnitAddViewLab,
+            new OrgUnitViewLab(resourceTreeView, orgUnitAddViewLab,
                 orgUnitEditViewLab);
+    }
+
+    private ResourceContainer createResourceContainer()
+        throws EscidocException, InternalClientException, TransportException {
+        return new ResourceContainerImpl(getTopLevelOrgUnits());
+    }
+
+    private Collection<OrganizationalUnit> getTopLevelOrgUnits()
+        throws EscidocException, InternalClientException, TransportException {
+        return resourceService.getTopLevelOrgUnits();
     }
 }

@@ -23,7 +23,7 @@ import de.escidoc.core.resources.oum.Predecessors;
 
 public class OrgUnitContainerFactory {
 
-    private final static HierarchicalContainer container =
+    private final static HierarchicalContainer CONTAINER =
         new HierarchicalContainer();
 
     private final OrgUnitService orgUnitService;
@@ -36,41 +36,32 @@ public class OrgUnitContainerFactory {
 
     public HierarchicalContainer create() throws EscidocException,
         InternalClientException, TransportException {
-        if (container == null || container.getItemIds().isEmpty()) {
-            container.addContainerProperty(PropertyId.OBJECT_ID, String.class,
+        if (CONTAINER.getItemIds().isEmpty()) {
+            CONTAINER.addContainerProperty(PropertyId.OBJECT_ID, String.class,
                 null);
-            container.addContainerProperty(PropertyId.NAME, String.class, null);
-            container.addContainerProperty(PropertyId.DESCRIPTION,
+            CONTAINER.addContainerProperty(PropertyId.NAME, String.class, null);
+            CONTAINER.addContainerProperty(PropertyId.DESCRIPTION,
                 String.class, null);
-            container.addContainerProperty(PropertyId.CREATED_ON,
+            CONTAINER.addContainerProperty(PropertyId.CREATED_ON,
                 DateTime.class, null);
-            container.addContainerProperty(PropertyId.CREATED_BY, String.class,
+            CONTAINER.addContainerProperty(PropertyId.CREATED_BY, String.class,
                 null);
-            container.addContainerProperty(PropertyId.LAST_MODIFICATION_DATE,
+            CONTAINER.addContainerProperty(PropertyId.LAST_MODIFICATION_DATE,
                 DateTime.class, null);
-            container.addContainerProperty(PropertyId.MODIFIED_BY,
+            CONTAINER.addContainerProperty(PropertyId.MODIFIED_BY,
                 String.class, null);
-            container.addContainerProperty(PropertyId.PUBLIC_STATUS,
+            CONTAINER.addContainerProperty(PropertyId.PUBLIC_STATUS,
                 String.class, null);
-            container.addContainerProperty(PropertyId.PUBLIC_STATUS_COMMENT,
+            CONTAINER.addContainerProperty(PropertyId.PUBLIC_STATUS_COMMENT,
                 String.class, null);
-            container.addContainerProperty(PropertyId.PARENTS, Parents.class,
+            CONTAINER.addContainerProperty(PropertyId.PARENTS, Parents.class,
                 null);
-            container.addContainerProperty(PropertyId.PREDECESSORS,
+            CONTAINER.addContainerProperty(PropertyId.PREDECESSORS,
                 Predecessors.class, null);
             addTopLevelOrgUnits();
         }
 
-        return container;
-    }
-
-    public void addChildren(final OrganizationalUnit parent)
-        throws EscidocException, InternalClientException, TransportException {
-        if (parent == null) {
-            throw new IllegalArgumentException("Parent can not be null.");
-        }
-        final Collection<OrganizationalUnit> children = getChildren(parent);
-        buildTree(children, parent);
+        return CONTAINER;
     }
 
     private void addTopLevelOrgUnits() throws EscidocException,
@@ -92,6 +83,15 @@ public class OrgUnitContainerFactory {
         }
     }
 
+    public void addChildren(final OrganizationalUnit parent)
+        throws EscidocException, InternalClientException, TransportException {
+        if (parent == null) {
+            throw new IllegalArgumentException("Parent can not be null.");
+        }
+        final Collection<OrganizationalUnit> children = getChildren(parent);
+        buildTree(children, parent);
+    }
+
     private void buildTree(
         final Collection<OrganizationalUnit> topLevelOrgUnit,
         final OrganizationalUnit parent) throws EscidocException,
@@ -108,7 +108,7 @@ public class OrgUnitContainerFactory {
         final OrganizationalUnit orgUnit, final OrganizationalUnit parent)
         throws EscidocException, InternalClientException, TransportException {
         assert (orgUnit != null) : "orgUnit org unit is null";
-        final Item item = container.addItem(orgUnit);
+        final Item item = CONTAINER.addItem(orgUnit);
         bind(item, orgUnit);
         markAsLeafIfNecessary(orgUnit);
         setParentIfAny(parent, orgUnit);
@@ -118,26 +118,25 @@ public class OrgUnitContainerFactory {
         final OrganizationalUnit parent, final OrganizationalUnit orgUnit)
         throws EscidocException, InternalClientException, TransportException {
         if (parent != null) {
-            container.setParent(orgUnit, parent);
+            CONTAINER.setParent(orgUnit, parent);
         }
         else if (hasParent(orgUnit)) {
             final OrganizationalUnit p = getParent(orgUnit);
-            container.setChildrenAllowed(p, true);
-            container.setParent(orgUnit, p);
+            CONTAINER.setChildrenAllowed(p, true);
+            CONTAINER.setParent(orgUnit, p);
         }
     }
 
     private OrganizationalUnit getParent(final OrganizationalUnit createdOrgUnit)
         throws EscidocException, InternalClientException, TransportException {
-        final List<Parent> parentRef =
-            (List<Parent>) createdOrgUnit.getParents().getParentRef();
+        final List<Parent> parentRef = createdOrgUnit.getParents();
         return orgUnitService.find(parentRef.get(0).getObjid());
     }
 
     private boolean hasParent(final OrganizationalUnit createdOrgUnit) {
         return createdOrgUnit.getParents() != null
-            && createdOrgUnit.getParents().getParentRef() != null
-            && !createdOrgUnit.getParents().getParentRef().isEmpty();
+            && createdOrgUnit.getParents() != null
+            && !createdOrgUnit.getParents().isEmpty();
     }
 
     private Collection<OrganizationalUnit> getChildren(
@@ -173,7 +172,7 @@ public class OrgUnitContainerFactory {
 
     private void markAsLeafIfNecessary(final OrganizationalUnit root)
         throws EscidocException, InternalClientException, TransportException {
-        container.setChildrenAllowed(root, hasChildren(root));
+        CONTAINER.setChildrenAllowed(root, hasChildren(root));
     }
 
     private boolean hasChildren(final OrganizationalUnit root)
@@ -189,10 +188,10 @@ public class OrgUnitContainerFactory {
         if (list == null) {
             return Collections.emptyList();
         }
-        return list.getOrganizationalUnits();
+        return list;
     }
 
     public Item getItem(final OrganizationalUnit createdOrgUnit) {
-        return container.getItem(createdOrgUnit);
+        return CONTAINER.getItem(createdOrgUnit);
     }
 }

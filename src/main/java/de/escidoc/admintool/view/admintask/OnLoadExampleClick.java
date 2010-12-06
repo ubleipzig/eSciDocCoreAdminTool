@@ -7,8 +7,8 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Window;
 
 import de.escidoc.admintool.service.AdminService;
-import de.escidoc.admintool.view.ErrorMessage;
-import de.escidoc.admintool.view.admintask.LoadExampleViewImpl.ShowResultCommand;
+import de.escidoc.admintool.view.ModalDialog;
+import de.escidoc.admintool.view.admintask.LoadExampleResourceViewImpl.ShowResultCommand;
 import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
@@ -35,13 +35,13 @@ public class OnLoadExampleClick implements ClickListener {
             command.execute(loadedExamples);
         }
         catch (final EscidocException e) {
-            ErrorMessage.show(mainWindow, e);
+            ModalDialog.show(mainWindow, e);
         }
         catch (final InternalClientException e) {
-            ErrorMessage.show(mainWindow, e);
+            ModalDialog.show(mainWindow, e);
         }
         catch (final TransportException e) {
-            ErrorMessage.show(mainWindow, e);
+            ModalDialog.show(mainWindow, e);
         }
     }
 

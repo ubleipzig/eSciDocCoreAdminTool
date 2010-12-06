@@ -22,12 +22,14 @@ import de.escidoc.admintool.app.AdminToolApplication;
 
 public abstract class LoginButtonListener implements ClickListener {
 
+    private static final int FIVE_SECONDS = 5000;
+
     private static final long serialVersionUID = -7482204166398806832L;
 
-    private final static Logger log = LoggerFactory
+    private final static Logger LOG = LoggerFactory
         .getLogger(LoginButtonListener.class);
 
-    private final AdminToolApplication app;
+    protected final AdminToolApplication app;
 
     private final ComboBox escidocComboBox;
 
@@ -49,8 +51,6 @@ public abstract class LoginButtonListener implements ClickListener {
         try {
             escidocUriField.validate();
             if (validateConnection(escidocUriField)) {
-                mainWindow.showNotification("eSciDoc instance on: "
-                    + escidocUriField.getValue() + " is up and running");
                 login();
             }
             else {
@@ -67,7 +67,7 @@ public abstract class LoginButtonListener implements ClickListener {
 
     private void login() {
         final String enteredEscidocUri = getUserInput();
-        log.debug("login as " + getClass() + " to " + enteredEscidocUri);
+        LOG.debug("login as " + getClass() + " to " + enteredEscidocUri);
         app.setEscidocUri(enteredEscidocUri);
         loginMe();
     }
@@ -83,19 +83,20 @@ public abstract class LoginButtonListener implements ClickListener {
         URLConnection connection;
         try {
             connection = new URL(strUrl).openConnection();
+            connection.setConnectTimeout(FIVE_SECONDS);
             connection.connect();
             final int responseCode =
                 ((HttpURLConnection) connection).getResponseCode();
             return responseCode == 200;
         }
         catch (final MalformedURLException e) {
-            log.warn("Malformed URL: " + e);
+            LOG.warn("Malformed URL: " + e);
             mainWindow.showNotification(new Notification(e.getMessage(),
                 Notification.TYPE_ERROR_MESSAGE));
             return false;
         }
         catch (final IOException e) {
-            log.warn("IOException: " + e);
+            LOG.warn("IOException: " + e);
             mainWindow.showNotification(new Notification(e.getMessage(),
                 Notification.TYPE_ERROR_MESSAGE));
             return false;

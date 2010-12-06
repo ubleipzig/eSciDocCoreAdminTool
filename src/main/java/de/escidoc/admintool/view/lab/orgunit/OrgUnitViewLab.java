@@ -1,11 +1,13 @@
 package de.escidoc.admintool.view.lab.orgunit;
 
 import com.google.common.base.Preconditions;
+
 import com.vaadin.data.Item;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.SplitPanel;
 
 import de.escidoc.admintool.view.ViewConstants;
+import de.escidoc.admintool.view.resource.ResourceFolderView;
 import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
@@ -17,17 +19,17 @@ public class OrgUnitViewLab extends CustomComponent {
 
     private final SplitPanel splitPanel = new SplitPanel();
 
-    private final OrgUnitTreeView orgUnitTreeViewLab;
-
     private final OrgUnitAddViewLab orgUnitAddViewLab;
 
     private final OrgUnitEditViewLab orgUnitEditViewLab;
 
-    public OrgUnitViewLab(final OrgUnitTreeView orgUnitTreeViewLab,
+    private final ResourceFolderView resourceTreeView;
+
+    public OrgUnitViewLab(final ResourceFolderView resourceTreeView,
         final OrgUnitAddViewLab orgUnitAddViewLab,
         final OrgUnitEditViewLab orgUnitEditViewLab) throws EscidocException,
         InternalClientException, TransportException {
-        this.orgUnitTreeViewLab = orgUnitTreeViewLab;
+        this.resourceTreeView = resourceTreeView;
         this.orgUnitAddViewLab = orgUnitAddViewLab;
         this.orgUnitEditViewLab = orgUnitEditViewLab;
         checkForNull();
@@ -36,7 +38,7 @@ public class OrgUnitViewLab extends CustomComponent {
     }
 
     private void checkForNull() {
-        Preconditions.checkNotNull(orgUnitTreeViewLab,
+        Preconditions.checkNotNull(resourceTreeView,
             "orgUnitTreeViewLab can not be null");
         Preconditions.checkNotNull(orgUnitAddViewLab,
             "orgUnitAddViewLab can not be null");
@@ -50,7 +52,7 @@ public class OrgUnitViewLab extends CustomComponent {
         setSizeFull();
         splitPanel.setSplitPosition(ViewConstants.SPLIT_POSITION_IN_PERCENT);
         splitPanel.setOrientation(SplitPanel.ORIENTATION_HORIZONTAL);
-        splitPanel.setFirstComponent(orgUnitTreeViewLab);
+        splitPanel.setFirstComponent(resourceTreeView);
         showAddView();
     }
 
@@ -64,7 +66,6 @@ public class OrgUnitViewLab extends CustomComponent {
     }
 
     public void select(final Item item) {
-        orgUnitTreeViewLab.select(item);
         showEditView(item);
     }
 
@@ -86,6 +87,6 @@ public class OrgUnitViewLab extends CustomComponent {
     }
 
     private void removeFromTreeView(final OrganizationalUnit orgUnit) {
-        orgUnitTreeViewLab.delete(orgUnit);
+        throw new UnsupportedOperationException("not implemented");
     }
 }

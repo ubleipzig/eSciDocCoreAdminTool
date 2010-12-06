@@ -33,7 +33,7 @@ import de.escidoc.core.resources.oum.Predecessor;
 
 public class OrgUnitService {
 
-    private static final Logger log = LoggerFactory
+    private static final Logger LOG = LoggerFactory
         .getLogger(OrgUnitService.class);
 
     private OrganizationalUnitHandlerClientInterface client;
@@ -99,10 +99,7 @@ public class OrgUnitService {
 
     public Collection<OrganizationalUnit> findAll() throws EscidocException,
         InternalClientException, TransportException {
-        orgUnits =
-            client
-                .retrieveOrganizationalUnits(emptyFilter())
-                .getOrganizationalUnits();
+        orgUnits = client.retrieveOrganizationalUnits(emptyFilter());
 
         for (final OrganizationalUnit orgUnit : orgUnits) {
             orgUnitById.put(orgUnit.getObjid(), orgUnit);
@@ -139,7 +136,7 @@ public class OrgUnitService {
         assert createdOrgUnit != null : "Got null reference from the server.";
         assert createdOrgUnit.getObjid() != null : "ObjectID can not be null.";
         assert orgUnitById != null : "orgUnitById is null";
-        log
+        LOG
             .debug("Succesfully stored a new Organizational Unit with the Object ID: "
                 + createdOrgUnit.getObjid());
         final int sizeBefore = orgUnitById.size();
@@ -294,6 +291,6 @@ public class OrgUnitService {
             return Collections.emptyList();
         }
 
-        return childList.getOrganizationalUnits();
+        return childList;
     }
 }

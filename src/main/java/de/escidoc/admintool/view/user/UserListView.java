@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.vaadin.data.util.POJOContainer;
+import com.vaadin.data.util.POJOItem;
 import com.vaadin.ui.Table;
 
 import de.escidoc.admintool.app.AdminToolApplication;
@@ -20,7 +21,7 @@ import de.escidoc.core.resources.aa.useraccount.UserAccount;
 @SuppressWarnings("serial")
 public class UserListView extends Table {
 
-    private static final Logger log = LoggerFactory
+    private static final Logger LOG = LoggerFactory
         .getLogger(UserListView.class);
 
     private final AdminToolApplication app;
@@ -49,6 +50,7 @@ public class UserListView extends Table {
         setImmediate(true);
         addListener(new UserSelectListener(app));
         setNullSelectionAllowed(false);
+        setColumnHeaderMode(Table.COLUMN_HEADER_MODE_HIDDEN);
     }
 
     private void findAllUsers() {
@@ -58,8 +60,8 @@ public class UserListView extends Table {
         catch (final EscidocClientException e) {
             app.getMainWindow().addWindow(
                 new ErrorDialog(app.getMainWindow(), "Error",
-                    "An unexpected error occured! See log for details."));
-            log.error("An unexpected error occured! See log for details.", e);
+                    "An unexpected error occured! See LOG for details."));
+            LOG.error("An unexpected error occured! See LOG for details.", e);
 
         }
     }
@@ -93,9 +95,11 @@ public class UserListView extends Table {
         assert removeItem == true : "Failed to remove user account from the container";
     }
 
-    public void addUser(final UserAccount createdUserAccount) {
-        userContainer.addItem(createdUserAccount);
+    public POJOItem<UserAccount> addUser(final UserAccount createdUserAccount) {
+        final POJOItem<UserAccount> item =
+            userContainer.addItem(createdUserAccount);
         sort(new Object[] { PropertyId.LAST_MODIFICATION_DATE },
             new boolean[] { true });
+        return item;
     }
 }

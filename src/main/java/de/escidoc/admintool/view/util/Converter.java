@@ -15,7 +15,7 @@ import org.joda.time.DateTime;
  * @author ASP
  * 
  */
-public class Converter {
+public final class Converter {
 
     private Converter() {
         // Utility classes should not have a public or default constructor.

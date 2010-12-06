@@ -7,4 +7,8 @@ public interface ResourceEditView extends Component {
 
     void bind(Item item);
 
+    void setFormReadOnly(boolean b);
+
+    void setFooterVisible(boolean b);
+
 }

@@ -9,7 +9,7 @@ import com.vaadin.ui.Window;
 import de.escidoc.admintool.service.AdminService;
 import de.escidoc.admintool.view.ViewConstants;
 
-public class LoadExampleViewImpl extends AbstractCustomView
+public class LoadExampleResourceViewImpl extends AbstractCustomView
     implements LoadExampleView {
 
     private static final long serialVersionUID = -2478541354753165293L;
@@ -22,7 +22,7 @@ public class LoadExampleViewImpl extends AbstractCustomView
 
     private final Window mainWindow;
 
-    public LoadExampleViewImpl(final Window mainWindow,
+    public LoadExampleResourceViewImpl(final Window mainWindow,
         final AdminService adminService) {
         checkForNull(mainWindow, adminService);
         this.mainWindow = mainWindow;

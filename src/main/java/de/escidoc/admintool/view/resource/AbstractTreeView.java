@@ -5,7 +5,6 @@ import com.vaadin.ui.AbstractSelect;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Tree;
-import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.Reindeer;
 
 import de.escidoc.admintool.app.AdminToolApplication;
@@ -40,23 +39,14 @@ public class AbstractTreeView extends CustomComponent
 
     private void buildUI() {
         setCompositionRoot(treePanel);
-
         setSizeFull();
         treePanel.setSizeFull();
         treePanel.setStyleName(Reindeer.PANEL_LIGHT);
         treePanel.addComponent(tree);
         tree.setSizeFull();
-
         tree.setContainerDataSource(container);
-        // tree.addListener(new NodeExpandListener());
-        // tree.addListener(new NodeClickedListener());
         tree.setItemCaptionMode(AbstractSelect.ITEM_CAPTION_MODE_PROPERTY);
         tree.setItemCaptionPropertyId(PropertyId.NAME);
 
     }
-
-    private Window getMainWindow() {
-        return app.getMainWindow();
-    }
-
 }

@@ -15,6 +15,6 @@ public interface ViewManager {
 
     void setSecondComponent(Component component);
 
-    void showReindexView(ComponentContainer reindexView);
+    void showView(Component filterResourceView);
 
 }

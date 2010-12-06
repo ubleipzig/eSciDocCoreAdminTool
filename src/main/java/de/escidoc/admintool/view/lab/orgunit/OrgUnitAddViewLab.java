@@ -1,5 +1,19 @@
 package de.escidoc.admintool.view.lab.orgunit;
 
+import com.google.common.base.Preconditions;
+
+import com.vaadin.data.Item;
+import com.vaadin.data.util.HierarchicalContainer;
+import com.vaadin.data.util.ObjectProperty;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Component;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.Window;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.xml.sax.SAXException;
+
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -9,26 +23,15 @@ import java.util.Set;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.xml.sax.SAXException;
-
-import com.google.common.base.Preconditions;
-import com.vaadin.data.Item;
-import com.vaadin.data.util.HierarchicalContainer;
-import com.vaadin.data.util.ObjectProperty;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Component;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.Window;
-
-import de.escidoc.admintool.domain.OrgUnitFactory;
+import de.escidoc.admintool.domain.OrgUnitBuilder;
 import de.escidoc.admintool.service.OrgUnitService;
-import de.escidoc.admintool.view.ErrorMessage;
+import de.escidoc.admintool.service.OrgUnitServiceLab;
+import de.escidoc.admintool.view.ModalDialog;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.admintool.view.orgunit.PredecessorType;
 import de.escidoc.admintool.view.orgunit.editor.IPredecessorEditor;
 import de.escidoc.admintool.view.orgunit.predecessor.AbstractPredecessorView;
+import de.escidoc.admintool.view.resource.ResourceContainer;
 import de.escidoc.admintool.view.resource.ResourceRefDisplay;
 import de.escidoc.admintool.view.util.dialog.ErrorDialog;
 import de.escidoc.core.client.exceptions.EscidocClientException;
@@ -40,7 +43,7 @@ import de.escidoc.core.resources.oum.PredecessorForm;
 
 public class OrgUnitAddViewLab extends AbstractOrgUnitViewLab {
 
-    private static final Logger log = LoggerFactory
+    private static final Logger LOG = LoggerFactory
         .getLogger(OrgUnitAddViewLab.class);
 
     private final ObjectProperty titleProperty = new ObjectProperty("",
@@ -57,9 +60,10 @@ public class OrgUnitAddViewLab extends AbstractOrgUnitViewLab {
 
     public OrgUnitAddViewLab(final OrgUnitService orgUnitService,
         final HierarchicalContainer container, final Window mainWindow,
-        final OrgUnitContainerFactory orgUnitContainerFactory) {
-        super(orgUnitService, mainWindow);
-        super.postInit();
+        final OrgUnitContainerFactory orgUnitContainerFactory,
+        OrgUnitServiceLab orgUnitServiceLab, ResourceContainer resourceContainer) {
+        super(orgUnitService, mainWindow, orgUnitServiceLab, resourceContainer);
+        // super.postInit();
         Preconditions.checkNotNull(container);
         this.container = container;
         this.orgUnitContainerFactory = orgUnitContainerFactory;
@@ -123,25 +127,25 @@ public class OrgUnitAddViewLab extends AbstractOrgUnitViewLab {
             }
         }
         catch (final ClassNotFoundException e) {
-            log.error("An unexpected error occured! See log for details.", e);
+            LOG.error("An unexpected error occured! See LOG for details.", e);
         }
         catch (final InstantiationException e) {
-            log.error("An unexpected error occured! See log for details.", e);
+            LOG.error("An unexpected error occured! See LOG for details.", e);
         }
         catch (final IllegalAccessException e) {
-            log.error("An unexpected error occured! See log for details.", e);
+            LOG.error("An unexpected error occured! See LOG for details.", e);
         }
         catch (final SecurityException e) {
-            log.error("An unexpected error occured! See log for details.", e);
+            LOG.error("An unexpected error occured! See LOG for details.", e);
         }
         catch (final NoSuchMethodException e) {
-            log.error("An unexpected error occured! See log for details.", e);
+            LOG.error("An unexpected error occured! See LOG for details.", e);
         }
         catch (final IllegalArgumentException e) {
-            log.error("An unexpected error occured! See log for details.", e);
+            LOG.error("An unexpected error occured! See LOG for details.", e);
         }
         catch (final InvocationTargetException e) {
-            log.error("An unexpected error occured! See log for details.", e);
+            LOG.error("An unexpected error occured! See LOG for details.", e);
         }
     }
 
@@ -178,30 +182,30 @@ public class OrgUnitAddViewLab extends AbstractOrgUnitViewLab {
 
     private OrganizationalUnit createOrgUnit() {
         try {
-            return new OrgUnitFactory()
-                .create((String) titleField.getValue(),
+            return new OrgUnitBuilder()
+                .with((String) titleField.getValue(),
                     (String) descriptionField.getValue())
                 .parents(getSelectedParents())
                 .predecessors(getSelectedPredecessors(),
                     getSelectedPredecessorForm())
                 .identifier((String) identifierField.getValue())
                 .alternative((String) alternativeField.getValue())
-                .orgType((String) orgTypeField.getValue())
+                .type((String) orgTypeField.getValue())
                 .country((String) countryField.getValue())
                 .city((String) cityField.getValue())
                 .coordinates((String) coordinatesField.getValue()).build();
         }
         catch (final ParserConfigurationException e) {
-            log.error("An unexpected error occured! See log for details.", e);
-            ErrorMessage.show(mainWindow, e);
+            LOG.error("An unexpected error occured! See LOG for details.", e);
+            ModalDialog.show(mainWindow, e);
         }
         catch (final SAXException e) {
-            log.error("An unexpected error occured! See log for details.", e);
-            ErrorMessage.show(mainWindow, e);
+            LOG.error("An unexpected error occured! See LOG for details.", e);
+            ModalDialog.show(mainWindow, e);
         }
         catch (final IOException e) {
-            log.error("An unexpected error occured! See log for details.", e);
-            ErrorMessage.show(mainWindow, e);
+            LOG.error("An unexpected error occured! See LOG for details.", e);
+            ModalDialog.show(mainWindow, e);
         }
         return null;
     }
@@ -217,16 +221,16 @@ public class OrgUnitAddViewLab extends AbstractOrgUnitViewLab {
             return service.create(orgUnit);
         }
         catch (final EscidocException e) {
-            log.error("An unexpected error occured! See log for details.", e);
-            ErrorMessage.show(mainWindow, e);
+            LOG.error("An unexpected error occured! See LOG for details.", e);
+            ModalDialog.show(mainWindow, e);
         }
         catch (final InternalClientException e) {
-            log.error("An unexpected error occured! See log for details.", e);
-            ErrorMessage.show(mainWindow, e);
+            LOG.error("An unexpected error occured! See LOG for details.", e);
+            ModalDialog.show(mainWindow, e);
         }
         catch (final TransportException e) {
-            log.error("An unexpected error occured! See log for details.", e);
-            ErrorMessage.show(mainWindow, e);
+            LOG.error("An unexpected error occured! See LOG for details.", e);
+            ModalDialog.show(mainWindow, e);
         }
         return orgUnit;
     }
@@ -240,12 +244,12 @@ public class OrgUnitAddViewLab extends AbstractOrgUnitViewLab {
                 final List<ResourceRefDisplay> resourceRefList =
                     predecessorResult.getResourceRefList();
                 for (final ResourceRefDisplay ref : resourceRefList) {
-                    log.info("saving: " + ref.getTitle());
+                    LOG.info("saving: " + ref.getTitle());
                     predecessors.add(ref.getObjectId());
                 }
             }
             else {
-                log.info("saving: " + resourceRefDisplay.getTitle());
+                LOG.info("saving: " + resourceRefDisplay.getTitle());
                 predecessors.add(resourceRefDisplay.getObjectId());
             }
         }
@@ -291,16 +295,16 @@ public class OrgUnitAddViewLab extends AbstractOrgUnitViewLab {
             orgUnitView.showEditView(addedItem);
         }
         catch (final EscidocException e) {
-            log.error("An unexpected error occured! See log for details.", e);
-            ErrorMessage.show(mainWindow, e);
+            LOG.error("An unexpected error occured! See LOG for details.", e);
+            ModalDialog.show(mainWindow, e);
         }
         catch (final InternalClientException e) {
-            log.error("An unexpected error occured! See log for details.", e);
-            ErrorMessage.show(mainWindow, e);
+            LOG.error("An unexpected error occured! See LOG for details.", e);
+            ModalDialog.show(mainWindow, e);
         }
         catch (final TransportException e) {
-            log.error("An unexpected error occured! See log for details.", e);
-            ErrorMessage.show(mainWindow, e);
+            LOG.error("An unexpected error occured! See LOG for details.", e);
+            ModalDialog.show(mainWindow, e);
         }
     }
 }

@@ -23,11 +23,15 @@ import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.Reindeer;
 
 import de.escidoc.admintool.service.OrgUnitService;
+import de.escidoc.admintool.service.OrgUnitServiceLab;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.admintool.view.orgunit.OrgUnitEditor;
 import de.escidoc.admintool.view.orgunit.PredecessorType;
 import de.escidoc.admintool.view.orgunit.predecessor.AbstractPredecessorView;
 import de.escidoc.admintool.view.orgunit.predecessor.BlankPredecessorView;
+import de.escidoc.admintool.view.resource.EditParentListener;
+import de.escidoc.admintool.view.resource.ModalWindow;
+import de.escidoc.admintool.view.resource.ResourceContainer;
 import de.escidoc.admintool.view.resource.ResourceRefDisplay;
 import de.escidoc.admintool.view.util.LayoutHelper;
 import de.escidoc.admintool.view.validator.EmptyFieldValidator;
@@ -88,13 +92,33 @@ public abstract class AbstractOrgUnitViewLab extends CustomComponent
 
     protected final Window mainWindow;
 
+    private final Button editParentButton = new Button("Edit");
+
+    protected OrgUnitServiceLab orgUnitServiceLab;
+
+    private ResourceContainer resourceContainer;
+
+    ModalWindow orgUnitSelectDialog;
+
     public AbstractOrgUnitViewLab(final OrgUnitService service,
-        final Window mainWindow) {
+        final Window mainWindow, final OrgUnitServiceLab orgUnitServiceLab,
+        final ResourceContainer resourceContainer) {
         assert service != null : "Service must not be null.";
         assert mainWindow != null : "MainWindow must not be null.";
         this.service = service;
         this.mainWindow = mainWindow;
+        this.orgUnitServiceLab = orgUnitServiceLab;
+        this.resourceContainer = resourceContainer;
+
         preInit();
+    }
+
+    public void setOrgUnitServiceLab(final OrgUnitServiceLab orgUnitServiceLab) {
+        this.orgUnitServiceLab = orgUnitServiceLab;
+    }
+
+    public void setResourceContainer(final ResourceContainer resourceContainer) {
+        this.resourceContainer = resourceContainer;
     }
 
     protected abstract String getViewCaption();
@@ -158,11 +182,17 @@ public abstract class AbstractOrgUnitViewLab extends CustomComponent
         parentList.setNullSelectionAllowed(true);
         parentList.setMultiSelect(true);
         parentList.setImmediate(true);
-        form.addComponent(LayoutHelper.create(ViewConstants.PARENTS_LABEL,
+        orgUnitSelectDialog =
+            new ModalWindow(resourceContainer, orgUnitServiceLab, mainWindow);
+
+        final OrgUnitEditor orgUnitEditor =
             new OrgUnitEditor(ViewConstants.ADD_PARENT_LABEL, parentList,
-                addOrgUnitButton, removeOrgUnitButton, service),
-            ViewConstants.LABEL_WIDTH, 100, false, new Button[] {
-                addOrgUnitButton, removeOrgUnitButton }));
+                addOrgUnitButton, removeOrgUnitButton, editParentButton,
+                service,
+                new EditParentListener(mainWindow, orgUnitSelectDialog));
+        form.addComponent(LayoutHelper.create(ViewConstants.PARENTS_LABEL,
+            orgUnitEditor, ViewConstants.LABEL_WIDTH, 100, false, new Button[] {
+                addOrgUnitButton, removeOrgUnitButton, editParentButton }));
     }
 
     private void addPredecessorField() {
@@ -213,9 +243,6 @@ public abstract class AbstractOrgUnitViewLab extends CustomComponent
         }
         else if (source == cancelButton) {
             cancelClicked(event);
-        }
-        else {
-            throw new RuntimeException("Unknown button.");
         }
     }
 

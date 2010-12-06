@@ -12,7 +12,7 @@ import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.view.context.PublicStatus;
 
 public class OrgUnitToolbar extends CustomComponent {
-    private final Logger log = LoggerFactory.getLogger(OrgUnitToolbar.class);
+    private final Logger LOG = LoggerFactory.getLogger(OrgUnitToolbar.class);
 
     private static final long serialVersionUID = 6227479076006945485L;
 

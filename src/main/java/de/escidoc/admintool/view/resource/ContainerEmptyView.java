@@ -3,7 +3,6 @@ package de.escidoc.admintool.view.resource;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
-
 import de.escidoc.admintool.view.ViewConstants;
 
 public class ContainerEmptyView extends CustomComponent

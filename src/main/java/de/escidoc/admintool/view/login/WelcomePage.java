@@ -31,8 +31,6 @@ public class WelcomePage extends CustomComponent {
 
     private final HorizontalLayout footer = new HorizontalLayout();
 
-    private Button okButton;
-
     private final AdminToolApplication app;
 
     private Button loginButton;
@@ -52,7 +50,7 @@ public class WelcomePage extends CustomComponent {
         viewLayout.addComponent(panel);
         viewLayout.setComponentAlignment(panel, Alignment.MIDDLE_CENTER);
 
-        panel.setWidth(ViewConstants.FIELD_WIDTH);
+        panel.setWidth(ViewConstants.LOGIN_WINDOW_WIDTH);
         panel.setCaption(ViewConstants.WELCOMING_MESSAGE);
 
         addComboBox();
@@ -83,10 +81,11 @@ public class WelcomePage extends CustomComponent {
     }
 
     private void addLoginButton() {
-        loginButton = new Button(ViewConstants.LOGIN);
+        loginButton = new Button(ViewConstants.LOGIN_LABEL);
         loginButton.addListener(new LoginButtonListenerImpl(escidocComboBox,
             app));
 
         footer.addComponent(loginButton);
+        footer.setComponentAlignment(loginButton, Alignment.MIDDLE_RIGHT);
     }
 }

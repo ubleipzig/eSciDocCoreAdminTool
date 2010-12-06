@@ -13,6 +13,7 @@ import com.vaadin.ui.Window;
 
 import de.escidoc.admintool.app.PropertyId;
 import de.escidoc.admintool.service.AdminService;
+import de.escidoc.admintool.service.ServiceContainer;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.core.resources.Resource;
 
@@ -20,36 +21,45 @@ public class FilterResourceView extends AbstractCustomView {
 
     private static final long serialVersionUID = -1412202753685048760L;
 
-    private static final String EXAMPLE_QUERY =
-        "\"/properties/created-by/id\"=escidoc:exuser1";
-
-    private final Button filterResourceBtn = new Button(
-        ViewConstants.FILTERED_RESOURCES);
-
     private final OptionGroup resourceOption = new OptionGroup(
         ViewConstants.PLEASE_SELECT_A_RESOURCE_TYPE);
 
-    private final ShowFilterResultCommandImpl command =
-        new ShowFilterResultCommandImpl(this);
+    private final TextField rawFilterTextArea = new TextField();
+
+    private final Button filterResourceBtn = new Button(
+        ViewConstants.FILTER_RESOURCES);
+
+    private final ShowFilterResultCommandImpl command;
 
     final AdminService adminService;
 
-    private final FilterResourceListener listener;
-
     final Window mainWindow;
 
-    private final TextField rawFilterTextArea = new TextField();
+    private final FilterResourceListener listener;
 
-    public FilterResourceView(final FilterResourceListener listener,
-        final AdminService adminService, final Window mainWindow) {
-        checkForNull(listener, adminService, mainWindow);
-        this.listener = listener;
-        this.adminService = adminService;
+    public FilterResourceView(final ServiceContainer serviceContainer,
+        final Window mainWindow) {
         this.mainWindow = mainWindow;
+        adminService = serviceContainer.getAdminService();
+        listener = new FilterResourceListener(mainWindow, serviceContainer);
+        command = new ShowFilterResultCommandImpl(this);
+
         init();
     }
 
-    private void checkForNull(
+    // TODO: DELETE_ME
+    public FilterResourceView(final FilterResourceListener listener,
+        final AdminService adminService, final Window mainWindow) {
+        preconditions(listener, adminService, mainWindow);
+        this.listener = listener;
+        this.adminService = adminService;
+        this.mainWindow = mainWindow;
+        command = new ShowFilterResultCommandImpl(this);
+
+        init();
+    }
+
+    private void preconditions(
         final FilterResourceListener listener, final AdminService adminService,
         final Window mainWindow) {
         Preconditions.checkNotNull(listener, "Listener can not be null.");
@@ -59,18 +69,20 @@ public class FilterResourceView extends AbstractCustomView {
     }
 
     private void init() {
-        addOptionGroup();
-        addTextArea();
+        getViewLayout().setSizeFull();
+
+        addResourceTypeOption();
+        addFilterQueryTexField();
         addFilterButton();
     }
 
-    private void addTextArea() {
+    private void addFilterQueryTexField() {
         rawFilterTextArea.setWidth(800, UNITS_PIXELS);
-        rawFilterTextArea.setValue(EXAMPLE_QUERY);
+        rawFilterTextArea.setValue(ViewConstants.EXAMPLE_QUERY);
         getViewLayout().addComponent(rawFilterTextArea);
     }
 
-    private void addOptionGroup() {
+    private void addResourceTypeOption() {
         final List<ResourceType> list = Arrays.asList(ResourceType.values());
 
         resourceOption
@@ -83,7 +95,6 @@ public class FilterResourceView extends AbstractCustomView {
     private void addFilterButton() {
         filterResourceBtn.setWidth(150, UNITS_PIXELS);
         getViewLayout().addComponent(filterResourceBtn);
-
         addListener();
     }
 

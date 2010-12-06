@@ -25,7 +25,9 @@ public abstract class AbstractResourceView extends CustomComponent
         setSizeFull();
         getSplitPanel().setSizeFull();
         setCompositionRoot(getSplitPanel());
-        getSplitPanel().setSplitPosition(ViewConstants.SPLIT_POSITION_IN_PERCENT);
+
+        getSplitPanel().setSplitPosition(
+            ViewConstants.SPLIT_POSITION_IN_PERCENT);
         getSplitPanel().setOrientation(SplitPanel.ORIENTATION_HORIZONTAL);
         getSplitPanel().setFirstComponent(resourceListView);
     }

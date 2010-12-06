@@ -23,7 +23,7 @@ import de.escidoc.core.resources.common.TaskParam;
 
 public class RoleService {
 
-    private static final Logger log = LoggerFactory
+    private static final Logger LOG = LoggerFactory
         .getLogger(RoleService.class);
 
     private RoleHandlerClientInterface client;
@@ -58,9 +58,9 @@ public class RoleService {
     public Collection<Role> findAll() throws EscidocClientException {
         allRoles = client.retrieveRoles(emptyFilter()).getRoles();
         for (final Role r : allRoles) {
-            log.info("role name: " + r.getProperties().getName());
-            log.info("role des: " + r.getProperties().getDescription());
-            log.info("role id: " + r.getObjid());
+            LOG.info("role name: " + r.getProperties().getName());
+            LOG.info("role des: " + r.getProperties().getDescription());
+            LOG.info("role id: " + r.getObjid());
             roleById.put(r.getObjid(), r);
         }
         return allRoles;

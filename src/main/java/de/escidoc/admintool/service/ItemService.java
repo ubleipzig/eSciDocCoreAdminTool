@@ -2,6 +2,7 @@ package de.escidoc.admintool.service;
 
 import java.util.Collection;
 
+import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
@@ -44,5 +45,17 @@ public class ItemService
     public Collection<? extends Resource> filterUsingInput(final String query)
         throws EscidocException, InternalClientException, TransportException {
         return getClient().retrieveItemsAsList(userInputToFilter(query));
+    }
+
+    @Override
+    public Resource findById(final String objid) throws EscidocClientException {
+        return getClient().retrieve(objid);
+    }
+
+    @Override
+    public void update(final Resource resource) throws EscidocClientException {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Not yet implemented");
+
     }
 }

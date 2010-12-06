@@ -46,4 +46,16 @@ public class ContainerService
         throws EscidocException, InternalClientException, TransportException {
         return getClient().retrieveContainersAsList(userInputToFilter(query));
     }
+
+    @Override
+    public Resource findById(final String objid) throws EscidocClientException {
+        return getClient().retrieve(objid);
+    }
+
+    @Override
+    public void update(final Resource resource) throws EscidocClientException {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Not yet implemented");
+
+    }
 }

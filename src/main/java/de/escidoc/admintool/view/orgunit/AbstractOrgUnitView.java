@@ -184,9 +184,8 @@ public abstract class AbstractOrgUnitView extends CustomComponent
         parentList.setImmediate(true);
 
         form.addComponent(LayoutHelper.create(ViewConstants.PARENTS_LABEL,
-            new OrgUnitEditor(ADD_PARENT_LABEL, parentList, addOrgUnitButton,
-                removeOrgUnitButton, service), LABEL_WIDTH, 100, false,
-            new Button[] { addOrgUnitButton, removeOrgUnitButton }));
+            null, LABEL_WIDTH, 100, false, new Button[] { addOrgUnitButton,
+                removeOrgUnitButton }));
 
         // Predecessor Type
         predecessorTypeSelect.setRows(1);
@@ -240,7 +239,7 @@ public abstract class AbstractOrgUnitView extends CustomComponent
             cancelClicked(event);
         }
         else {
-            throw new RuntimeException("Unknown button.");
+            throw new UnsupportedOperationException("Unknown button.");
         }
     }
 

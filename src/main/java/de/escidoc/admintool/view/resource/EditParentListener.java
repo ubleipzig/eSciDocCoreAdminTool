@@ -1,0 +1,37 @@
+package de.escidoc.admintool.view.resource;
+
+import com.vaadin.data.Item;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.Window;
+
+public class EditParentListener implements ClickListener {
+
+    private static final long serialVersionUID = 5088260302217401646L;
+
+    private final Window mainWindow;
+
+    private final ModalWindow orgUnitSelectDialog;
+
+    private Item item;
+
+    public EditParentListener(final Window mainWindow,
+        final ModalWindow orgUnitSelectDialog) {
+        this.mainWindow = mainWindow;
+        this.orgUnitSelectDialog = orgUnitSelectDialog;
+    }
+
+    @Override
+    public void buttonClick(final ClickEvent event) {
+        showOrgUnitSelectionDialog();
+    }
+
+    private void showOrgUnitSelectionDialog() {
+        mainWindow.addWindow(orgUnitSelectDialog);
+    }
+
+    public void bind(final Item item) {
+        this.item = item;
+        orgUnitSelectDialog.bind(item);
+    }
+}

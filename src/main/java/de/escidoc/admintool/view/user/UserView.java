@@ -1,7 +1,9 @@
 package de.escidoc.admintool.view.user;
 
 import com.vaadin.data.Item;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.SplitPanel;
+import com.vaadin.ui.VerticalLayout;
 
 import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.view.ViewConstants;
@@ -28,7 +30,19 @@ public class UserView extends SplitPanel implements ResourceView {
     private void buildUI() {
         setSplitPosition(ViewConstants.SPLIT_POSITION_IN_PERCENT);
         setOrientation(ORIENTATION_HORIZONTAL);
-        setFirstComponent(userList);
+
+        final VerticalLayout vLayout = new VerticalLayout();
+        vLayout.setHeight(100, UNITS_PERCENTAGE);
+        final Label foo =
+            new Label("<b>User Accounts</b>", Label.CONTENT_XHTML);
+        vLayout.addComponent(foo);
+        userList.setSizeFull();
+
+        vLayout.addComponent(userList);
+        vLayout.setExpandRatio(userList, 1.0f);
+        setFirstComponent(vLayout);
+
+        setFirstComponent(vLayout);
     }
 
     public UserListView getUserList() {

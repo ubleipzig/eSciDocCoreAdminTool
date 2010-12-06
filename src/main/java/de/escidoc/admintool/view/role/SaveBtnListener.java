@@ -18,7 +18,7 @@
 //
 //public class SaveBtnListener implements ClickListener {
 //
-//    private static final Logger log =
+//    private static final Logger LOG =
 //        LoggerFactory.getLogger(SaveBtnListener.class);
 //
 //    private final RoleView roleView;
@@ -78,8 +78,8 @@
 //            app.getMainWindow().addWindow(
 //                new ErrorDialog(app.getMainWindow(),
 //                    ViewConstants.ERROR_DIALOG_CAPTION,
-//                    "An unexpected error occured! See log for details."));
-//            log.error("An unexpected error occured! See log for details.", e);
+//                    "An unexpected error occured! See LOG for details."));
+//            LOG.error("An unexpected error occured! See LOG for details.", e);
 //        }
 //    }
 //

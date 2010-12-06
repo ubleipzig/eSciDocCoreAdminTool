@@ -1,8 +1,5 @@
 package de.escidoc.admintool.view.lab.orgunit;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.vaadin.data.Item;
 import com.vaadin.data.util.HierarchicalContainer;
 import com.vaadin.ui.AbstractSelect;
@@ -11,14 +8,18 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.themes.Reindeer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import de.escidoc.admintool.app.Command;
 import de.escidoc.admintool.app.PropertyId;
 import de.escidoc.core.resources.oum.OrganizationalUnit;
 
-@SuppressWarnings("serial")
 public class OrgUnitTreeView extends CustomComponent {
 
-    private static final Logger log = LoggerFactory
+    private static final long serialVersionUID = -9114535418069718149L;
+
+    private static final Logger LOG = LoggerFactory
         .getLogger(OrgUnitTreeView.class);
 
     final Tree tree = new Tree();

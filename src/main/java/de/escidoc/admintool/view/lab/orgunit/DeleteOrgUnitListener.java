@@ -7,12 +7,12 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Window;
 
-import de.escidoc.admintool.view.ErrorMessage;
+import de.escidoc.admintool.view.ModalDialog;
 import de.escidoc.core.client.exceptions.EscidocClientException;
 
 public class DeleteOrgUnitListener implements ClickListener {
 
-    private static final Logger log = LoggerFactory
+    private static final Logger LOG = LoggerFactory
         .getLogger(DeleteOrgUnitListener.class);
 
     private static final long serialVersionUID = -290305308440696149L;
@@ -34,8 +34,8 @@ public class DeleteOrgUnitListener implements ClickListener {
             orgUnitViewLab.deleteOrgUnit();
         }
         catch (final EscidocClientException e) {
-            log.error("An unexpected error occured! See log for details.", e);
-            ErrorMessage.show(mainWindow, e);
+            LOG.error("An unexpected error occured! See LOG for details.", e);
+            ModalDialog.show(mainWindow, e);
         }
     }
 }

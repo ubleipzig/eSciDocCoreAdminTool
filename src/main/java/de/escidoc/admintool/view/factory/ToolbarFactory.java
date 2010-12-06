@@ -35,7 +35,7 @@ public class ToolbarFactory {
     private Button[] buttons;
 
     public ToolbarFactory() {
-
+        // do not init
     }
 
     public GridLayout createToolbar(final Button[] buttons) {

@@ -34,6 +34,8 @@ public class ReindexResourceViewImpl extends AbstractCustomView
     private final ReindexButtonListener listener = new ReindexButtonListener(
         this, clearIndexBox, indexNameSelect);
 
+    final Label statusLabel = new Label(ViewConstants.STATUS);
+
     final AdminService adminService;
 
     final Window mainWindow;
@@ -42,13 +44,13 @@ public class ReindexResourceViewImpl extends AbstractCustomView
 
     public ReindexResourceViewImpl(final AdminService adminService,
         final Window mainWindow) {
-        checkForNull(adminService, mainWindow);
+        preconditions(adminService, mainWindow);
         this.adminService = adminService;
         this.mainWindow = mainWindow;
         init();
     }
 
-    private void checkForNull(
+    private void preconditions(
         final AdminService adminService, final Window mainWindow) {
         Preconditions.checkNotNull(adminService,
             "adminService can not be null: %s", adminService);
@@ -75,8 +77,6 @@ public class ReindexResourceViewImpl extends AbstractCustomView
     private void addStatusLabel() {
         getViewLayout().addComponent(statusLabel);
     }
-
-    final Label statusLabel = new Label("Status");
 
     private void createShowStatusCommand() {
         showStatusCommand = new ShowStatusCommand() {
@@ -110,7 +110,6 @@ public class ReindexResourceViewImpl extends AbstractCustomView
     }
 
     private void addListener() {
-        listener.setCommand(showStatusCommand);
 
         reindexResourceBtn.addListener(listener);
         showStatusButton.addListener(showStatusListener);

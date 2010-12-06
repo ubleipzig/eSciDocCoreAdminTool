@@ -51,9 +51,9 @@ public class UserViewComponent {
             setUserListView(new UserListView(app, userService));
             setUserEditForm(new UserEditForm(app, userService));
             setUserEditView(new UserEditView(getUserEditForm()));
+
             setUserView(new UserView(app, getUserListView(), getUserEditView()));
         }
-        // showAddView();
         return userView;
     }
 

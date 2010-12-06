@@ -16,8 +16,7 @@ public class LoginButtonListenerImpl extends LoginButtonListener {
 
     @Override
     protected void loginMe() {
-        redirectTo(AdminToolApplication.escidocLoginUrl
-            + super.getApplication().getURL());
+        redirectTo(super.app.escidocLoginUrl + super.getApplication().getURL());
     }
 
     private void redirectTo(final String url) {

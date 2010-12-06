@@ -15,7 +15,7 @@ import de.escidoc.core.resources.oum.Parent;
 
 public class OrgUnitTreeFactory {
 
-    private static final Logger log = LoggerFactory
+    private static final Logger LOG = LoggerFactory
         .getLogger(OrgUnitTreeFactory.class);
 
     private final Tree orgUnitTree; // NOPMD by CHH on 9/17/10 10:35 AM
@@ -100,14 +100,13 @@ public class OrgUnitTreeFactory {
     // We assume, org unit has only one parent
     private Parent getParent(final OrganizationalUnit orgUnit) {
         if (getParentRef(orgUnit).size() > 1) {
-            log.warn("Org unit has more than one parent.");
+            LOG.warn("Org unit has more than one parent.");
         }
         return getParentRef(orgUnit).get(0);
     }
 
     private List<Parent> getParentRef(final OrganizationalUnit orgUnit) {
-        final List<Parent> parentRef =
-            (List<Parent>) orgUnit.getParents().getParentRef();
+        final List<Parent> parentRef = orgUnit.getParents();
         return parentRef;
     }
 

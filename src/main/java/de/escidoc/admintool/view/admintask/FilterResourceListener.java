@@ -14,14 +14,14 @@ import com.vaadin.ui.Window;
 
 import de.escidoc.admintool.service.ResourceService;
 import de.escidoc.admintool.service.ServiceContainer;
-import de.escidoc.admintool.view.ErrorMessage;
+import de.escidoc.admintool.view.ModalDialog;
 import de.escidoc.admintool.view.admintask.FilterResourceView.ShowFilterResultCommand;
 import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.resources.Resource;
 
 public class FilterResourceListener implements ClickListener {
 
-    private static final Logger log = LoggerFactory
+    private static final Logger LOG = LoggerFactory
         .getLogger(FilterResourceListener.class);
 
     private static final long serialVersionUID = 2859820395161737640L;
@@ -41,13 +41,13 @@ public class FilterResourceListener implements ClickListener {
     public FilterResourceListener(final Window mainWindow,
         final ServiceContainer serviceContainer) {
 
-        checkForNull(mainWindow, serviceContainer);
+        preconditions(mainWindow, serviceContainer);
 
         this.mainWindow = mainWindow;
         this.serviceContainer = serviceContainer;
     }
 
-    private void checkForNull(
+    private void preconditions(
         final Window mainWindow, final ServiceContainer serviceContainer) {
         Preconditions.checkNotNull(mainWindow, "mainWindow can not be null.");
         Preconditions.checkNotNull(serviceContainer,
@@ -70,12 +70,14 @@ public class FilterResourceListener implements ClickListener {
             if (filterFieldIsEmpty(resourceService)) {
                 command.execute(resourceService.findAll());
             }
-            command.execute(new HashSet<Resource>(resourceService
-                .filterUsingInput(getRawFilter())));
+            else {
+                command.execute(new HashSet<Resource>(resourceService
+                    .filterUsingInput(getRawFilter())));
+            }
         }
         catch (final EscidocClientException e) {
-            log.warn("EscidocClientException, show error to user", e);
-            ErrorMessage.show(mainWindow, e);
+            LOG.warn("EscidocClientException, show error to user", e);
+            ModalDialog.show(mainWindow, e);
         }
     }
 
@@ -126,8 +128,8 @@ public class FilterResourceListener implements ClickListener {
     private String getRawFilter() {
         final Object value = rawFilterTextArea.getValue();
         if (value instanceof String) {
-            // return "\"/properties/created-by/id\"=" + "escidoc:exuser1";
-            return (String) value;
+            final String trim = ((String) value).trim();
+            return trim;
         }
         else {
             return "";

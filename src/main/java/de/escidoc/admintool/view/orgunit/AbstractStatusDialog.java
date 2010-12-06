@@ -20,7 +20,7 @@ public abstract class AbstractStatusDialog extends CustomComponent {
 
     private static final long serialVersionUID = 7257217308593700424L;
 
-    private static final Logger log = LoggerFactory
+    private static final Logger LOG = LoggerFactory
         .getLogger(AbstractStatusDialog.class);
 
     protected final OrgUnitEditView orgUnitEditView;
@@ -129,15 +129,15 @@ public abstract class AbstractStatusDialog extends CustomComponent {
             }
             // FIXME: show error message to user.
             catch (final EscidocException e) {
-                log.error("An unexpected error occured! See log for details.",
+                LOG.error("An unexpected error occured! See LOG for details.",
                     e);
             }
             catch (final InternalClientException e) {
-                log.error("An unexpected error occured! See log for details.",
+                LOG.error("An unexpected error occured! See LOG for details.",
                     e);
             }
             catch (final TransportException e) {
-                log.error("An unexpected error occured! See log for details.",
+                LOG.error("An unexpected error occured! See LOG for details.",
                     e);
             }
         }

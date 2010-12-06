@@ -13,7 +13,7 @@ import de.escidoc.admintool.view.util.dialog.ErrorDialog;
 
 public class FusionPredecessorEditor extends AbstractPredecessorEditor {
 
-    private static final Logger log = LoggerFactory
+    private static final Logger LOG = LoggerFactory
         .getLogger(FusionPredecessorEditor.class);
 
     private static final String EDITOR_DESCRIPTION =
@@ -48,7 +48,7 @@ public class FusionPredecessorEditor extends AbstractPredecessorEditor {
     private AbstractPredecessorView createPredecessorView(
         final List<ResourceRefDisplay> selectedPredecessors) {
         for (final ResourceRefDisplay resourceRefDisplay : selectedPredecessors) {
-            log.info("selected: " + resourceRefDisplay);
+            LOG.info("selected: " + resourceRefDisplay);
         }
         final AbstractPredecessorView addedPredecessorView =
             new FusionPredecessorView(selectedPredecessors,

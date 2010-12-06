@@ -34,13 +34,13 @@ import de.escidoc.admintool.view.util.interfaces.IMenuItem;
  * @author ASP
  * 
  */
-public class LayoutHelper {
+public final class LayoutHelper {
 
     private LayoutHelper() {
         // Utility classes should not have a public or default constructor.
     }
 
-    private final static Map<String, List<Field>> attachedFieldsMap =
+    private final static Map<String, List<Field>> ATTACHED_FIELD_MAP =
         new HashMap<String, List<Field>>();
 
     /**
@@ -186,7 +186,7 @@ public class LayoutHelper {
      *            The label in front of the control.
      * @param comp
      *            The component to display.
-     * @param width
+     * @param labelWidth
      *            the fixed size of the label. The parameter has to be in CSS
      *            style, i.e. 400px for instance.
      * @param height
@@ -197,59 +197,52 @@ public class LayoutHelper {
      *         afterwards is inserted.
      */
     public static synchronized VerticalLayout create(
-        final String label, final Component comp, final int width,
+        final String label, final Component comp, final int labelWidth,
         final int height, final boolean required, final Button[] buttons) {
-        final HorizontalLayout hor = new HorizontalLayout();
-        hor.setHeight(height + Constants.PX);
-        hor.addComponent(new Label(" "));
-        final String text = Constants.P_ALIGN_RIGHT + label + Constants.P;
-        Label l;
-        hor.addComponent(l = new Label(text, Label.CONTENT_XHTML));
-        l.setSizeUndefined();
-        l.setWidth(width + Constants.PX);
-        hor.setComponentAlignment(l, Alignment.MIDDLE_RIGHT);
+
+        final HorizontalLayout hLayout = new HorizontalLayout();
+        hLayout.setSpacing(false);
+        hLayout.setHeight(height + Constants.PX);
+        hLayout.addComponent(new Label(" "));
+        final Label textLabel =
+            new Label(Constants.P_ALIGN_RIGHT + label + Constants.P,
+                Label.CONTENT_XHTML);
+        hLayout.addComponent(textLabel);
+        textLabel.setSizeUndefined();
+        textLabel.setWidth(labelWidth + Constants.PX);
+        hLayout.setComponentAlignment(textLabel, Alignment.MIDDLE_RIGHT);
 
         if (required) {
-            hor
+            hLayout
                 .addComponent(new Label(
                     "&nbsp;<span style=\"color:red; position:relative; top:"
                         + (height / 2 - 13) + "px;\">*</span>",
                     Label.CONTENT_XHTML));
         }
         else {
-            hor.addComponent(new Label("&nbsp;&nbsp;", Label.CONTENT_XHTML));
+            hLayout
+                .addComponent(new Label("&nbsp;&nbsp;", Label.CONTENT_XHTML));
         }
-        hor.addComponent(comp);
-        hor.setComponentAlignment(comp, Alignment.MIDDLE_RIGHT);
-        hor.addComponent(new Label(" &nbsp; ", Label.CONTENT_XHTML));
+        hLayout.addComponent(comp);
+        hLayout.setComponentAlignment(comp, Alignment.MIDDLE_RIGHT);
+        hLayout.addComponent(new Label(" &nbsp; ", Label.CONTENT_XHTML));
 
-        final VerticalLayout vl = new VerticalLayout();
-        vl.addComponent(hor);
-        // VerticalLayout vl = new VerticalLayout();
-        // int count = buttons.length;
-        // TODO: Place the buttons centered ....
-        // int numberOfElements = height / 22;
-        // int indent = (numberOfElements - count) / 2;
-        // indent++;
-        // for (int i = 0; i < indent; i++) {
-        // vl.addComponent(new Label("&nbsp;", Label.CONTENT_XHTML));
-        // // vl.addComponent(new Label(" ", Label.CONTENT_XHTML));
-        // }
-        // for (Button b : buttons) {
-        // vl.addComponent(b);
-        // }
-        // hor.addComponent(vl);
-        final HorizontalLayout hl = new HorizontalLayout();
+        final VerticalLayout vLayout = new VerticalLayout();
+        vLayout.addComponent(hLayout);
+
+        final HorizontalLayout buttonLayout = new HorizontalLayout();
+        vLayout.addComponent(buttonLayout);
+
         final Label la = new Label("&nbsp;", Label.CONTENT_XHTML);
         la.setSizeUndefined();
-        la.setWidth(width + Constants.PX);
-        hl.addComponent(la);
+        la.setWidth(labelWidth + 7 + Constants.PX);
+
+        buttonLayout.addComponent(la);
         for (final Button b : buttons) {
-            hl.addComponent(b);
+            buttonLayout.addComponent(b);
         }
-        vl.addComponent(hl);
-        hor.setSpacing(false);
-        return vl;
+
+        return vLayout;
     }
 
     /**
@@ -549,10 +542,10 @@ public class LayoutHelper {
             ((TextField) comp).setWriteThrough(false);
             ((TextField) comp).setPropertyDataSource(item
                 .getItemProperty(propertyName));
-            List<Field> attachedFields = attachedFieldsMap.get(className);
+            List<Field> attachedFields = ATTACHED_FIELD_MAP.get(className);
             if (attachedFields == null) {
                 attachedFields = new ArrayList<Field>();
-                attachedFieldsMap.put(className, attachedFields);
+                ATTACHED_FIELD_MAP.put(className, attachedFields);
             }
             attachedFields.add((Field) comp);
         }
@@ -584,10 +577,10 @@ public class LayoutHelper {
             ((Select) comp).setWriteThrough(false);
             ((Select) comp).setPropertyDataSource(item
                 .getItemProperty(propertyName));
-            List<Field> attachedFields = attachedFieldsMap.get(className);
+            List<Field> attachedFields = ATTACHED_FIELD_MAP.get(className);
             if (attachedFields == null) {
                 attachedFields = new ArrayList<Field>();
-                attachedFieldsMap.put(className, attachedFields);
+                ATTACHED_FIELD_MAP.put(className, attachedFields);
             }
             attachedFields.add((Field) comp);
         }
@@ -619,10 +612,10 @@ public class LayoutHelper {
             ((Select) comp).setWriteThrough(false);
             ((Select) comp).setPropertyDataSource(item
                 .getItemProperty(propertyName));
-            List<Field> attachedFields = attachedFieldsMap.get(className);
+            List<Field> attachedFields = ATTACHED_FIELD_MAP.get(className);
             if (attachedFields == null) {
                 attachedFields = new ArrayList<Field>();
-                attachedFieldsMap.put(className, attachedFields);
+                ATTACHED_FIELD_MAP.put(className, attachedFields);
             }
             attachedFields.add((Field) comp);
         }
@@ -654,10 +647,10 @@ public class LayoutHelper {
             ((Select) comp).setWriteThrough(false);
             ((Select) comp).setPropertyDataSource(item
                 .getItemProperty(propertyName));
-            List<Field> attachedFields = attachedFieldsMap.get(className);
+            List<Field> attachedFields = ATTACHED_FIELD_MAP.get(className);
             if (attachedFields == null) {
                 attachedFields = new ArrayList<Field>();
-                attachedFieldsMap.put(className, attachedFields);
+                ATTACHED_FIELD_MAP.put(className, attachedFields);
             }
             attachedFields.add((Field) comp);
         }
@@ -679,10 +672,10 @@ public class LayoutHelper {
         ((ListSelect) comp).setPropertyDataSource(item
             .getItemProperty(propertyName));
         ((ListSelect) comp).setWriteThrough(false);
-        List<Field> attachedFields = attachedFieldsMap.get(className);
+        List<Field> attachedFields = ATTACHED_FIELD_MAP.get(className);
         if (attachedFields == null) {
             attachedFields = new ArrayList<Field>();
-            attachedFieldsMap.put(className, attachedFields);
+            ATTACHED_FIELD_MAP.put(className, attachedFields);
         }
         attachedFields.add((Field) comp);
         return comp;
@@ -711,10 +704,10 @@ public class LayoutHelper {
             ((DateField) comp).setWriteThrough(false);
             ((DateField) comp).setPropertyDataSource(item
                 .getItemProperty(propertyName));
-            List<Field> attachedFields = attachedFieldsMap.get(className);
+            List<Field> attachedFields = ATTACHED_FIELD_MAP.get(className);
             if (attachedFields == null) {
                 attachedFields = new ArrayList<Field>();
-                attachedFieldsMap.put(className, attachedFields);
+                ATTACHED_FIELD_MAP.put(className, attachedFields);
             }
             attachedFields.add((Field) comp);
         }
@@ -737,10 +730,10 @@ public class LayoutHelper {
         ((CheckBox) comp).setWriteThrough(false);
         ((CheckBox) comp).setPropertyDataSource(item
             .getItemProperty(propertyName));
-        List<Field> attachedFields = attachedFieldsMap.get(className);
+        List<Field> attachedFields = ATTACHED_FIELD_MAP.get(className);
         if (attachedFields == null) {
             attachedFields = new ArrayList<Field>();
-            attachedFieldsMap.put(className, attachedFields);
+            ATTACHED_FIELD_MAP.put(className, attachedFields);
         }
         attachedFields.add((Field) comp);
         return comp;
@@ -806,7 +799,7 @@ public class LayoutHelper {
      * @return
      */
     public static List<Field> getAttachedFields(final String className) {
-        return attachedFieldsMap.get(className);
+        return ATTACHED_FIELD_MAP.get(className);
     }
 
 }

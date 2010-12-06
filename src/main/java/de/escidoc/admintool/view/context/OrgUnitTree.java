@@ -20,7 +20,7 @@ import de.escidoc.core.resources.oum.OrganizationalUnit;
 public class OrgUnitTree extends CustomComponent {
     private static final long serialVersionUID = 671280566874568107L;
 
-    private final Logger log = LoggerFactory.getLogger(OrgUnitTree.class);
+    private final Logger LOG = LoggerFactory.getLogger(OrgUnitTree.class);
 
     private Tree tree = new Tree();
 
@@ -58,13 +58,13 @@ public class OrgUnitTree extends CustomComponent {
             tree = orgUnitTreeFactory.create();
         }
         catch (final InternalClientException e) {
-            log.error("An unexpected error occured! See log for details.", e);
+            LOG.error("An unexpected error occured! See LOG for details.", e);
         }
         catch (final TransportException e) {
-            log.error("An unexpected error occured! See log for details.", e);
+            LOG.error("An unexpected error occured! See LOG for details.", e);
         }
         catch (final EscidocException e) {
-            log.error("An unexpected error occured! See log for details.", e);
+            LOG.error("An unexpected error occured! See LOG for details.", e);
         }
     }
 

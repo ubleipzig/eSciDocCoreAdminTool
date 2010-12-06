@@ -13,7 +13,7 @@ import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.Notification;
 
 import de.escidoc.admintool.messages.Messages;
-import de.escidoc.admintool.view.ErrorMessage;
+import de.escidoc.admintool.view.ModalDialog;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.client.exceptions.EscidocException;
@@ -25,7 +25,7 @@ final class AdminToolTransactionListener implements TransactionListener {
 
     private static final Cookie EMPTY_COOKIE = new Cookie("", "");
 
-    private static final Logger log = LoggerFactory
+    private static final Logger LOG = LoggerFactory
         .getLogger(AdminToolTransactionListener.class);
 
     private static final String ESCIDOC_COOKIE_NAME = "escidocCookie";
@@ -47,7 +47,6 @@ final class AdminToolTransactionListener implements TransactionListener {
 
     public void transactionStart(
         final Application application, final Object transactionData) {
-        final Application app = application;
         final HttpServletRequest request = (HttpServletRequest) transactionData;
         final Cookie escidocCookie = findEscidocCookie(request);
 
@@ -67,9 +66,6 @@ final class AdminToolTransactionListener implements TransactionListener {
                 if (isEscidocCookie(cookie)) {
                     final Cookie escidocCookie = cookie;
                     final String escidocHandle = escidocCookie.getValue();
-
-                    System.out.println(escidocHandle);
-
                     return cookie;
                 }
             }
@@ -80,44 +76,59 @@ final class AdminToolTransactionListener implements TransactionListener {
 
     void setToken(final Cookie cookie) throws EscidocClientException {
         if (isEmpty(cookie)) {
-            System.out.println("the user does not provide any token.");
-            // app.showLandingView();
-            tryAuthenticate(cookie);
+            mainWindow.showNotification("the user does not provide any token.");
+
+            LOG.debug("the user does not provide any token.");
+            app.showLandingView();
 
         }
         else {
-            log.debug("the user has a token.");
+
+            LOG.debug("the user has a token.");
+            mainWindow.showNotification("the user has a token.");
             tryAuthenticate(cookie);
+
         }
+
+        // if (isEmpty(cookie)) {
+        // System.out.println("the user does not provide any token.");
+        // // app.showLandingView();
+        // tryAuthenticate(cookie);
+        //
+        // } else {
+        // LOG.debug("the user has a token.");
+        // tryAuthenticate(cookie);
+        // }
     }
 
     private void tryAuthenticate(final Cookie token)
         throws EscidocClientException {
         try {
-            app.authenticate(token.getValue());
+            app.loadProtectedResources(token.getValue());
         }
         catch (final AuthenticationException e) {
             mainWindow.showNotification(new Notification(
                 ViewConstants.WRONG_TOKEN_MESSAGE, e.getMessage(),
                 Notification.TYPE_ERROR_MESSAGE));
-            log.error(Messages.getString("AdminToolApplication.3"), e); //$NON-NLS-1$
+            LOG.error(Messages.getString("AdminToolApplication.3"), e); //$NON-NLS-1$
         }
         catch (final EscidocException e) {
-            ErrorMessage.show(mainWindow, e);
-            log.error(ViewConstants.SERVER_INTERNAL_ERROR, e);
+            ModalDialog.show(mainWindow, e);
+            LOG.error(ViewConstants.SERVER_INTERNAL_ERROR, e);
         }
         catch (final InternalClientException e) {
-            ErrorMessage.show(mainWindow, e);
-            log.error(ViewConstants.SERVER_INTERNAL_ERROR, e);
+            ModalDialog.show(mainWindow, e);
+            LOG.error(ViewConstants.SERVER_INTERNAL_ERROR, e);
         }
         catch (final TransportException e) {
-            ErrorMessage.show(mainWindow, e);
-            log.error(ViewConstants.SERVER_INTERNAL_ERROR, e);
+            ModalDialog.show(mainWindow, e);
+            LOG.error(ViewConstants.SERVER_INTERNAL_ERROR, e);
         }
     }
 
     private boolean isEmpty(final Cookie cookie) {
-        return EMPTY_COOKIE.equals(cookie);
+        return "".equals(cookie.getValue());
+        // return EMPTY_COOKIE.equals(cookie);
     }
 
     private boolean isEscidocCookie(final Cookie cookie) {

@@ -15,10 +15,9 @@ import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.HorizontalLayout;
 
 import de.escidoc.admintool.app.AdminToolApplication;
+import de.escidoc.admintool.view.ModalDialog;
 import de.escidoc.admintool.view.context.workflow.AbstractState;
-import de.escidoc.core.client.exceptions.EscidocException;
-import de.escidoc.core.client.exceptions.InternalClientException;
-import de.escidoc.core.client.exceptions.TransportException;
+import de.escidoc.core.client.exceptions.EscidocClientException;
 
 /**
  * @author ASP
@@ -27,7 +26,7 @@ import de.escidoc.core.client.exceptions.TransportException;
 public class ContextToolbar extends CustomComponent {
     private static final long serialVersionUID = -4522925443822439322L;
 
-    private final Logger log = LoggerFactory.getLogger(ContextToolbar.class);
+    private final Logger LOG = LoggerFactory.getLogger(ContextToolbar.class);
 
     private final HorizontalLayout header = new HorizontalLayout();
 
@@ -80,25 +79,25 @@ public class ContextToolbar extends CustomComponent {
             workflowState.changeState();
         }
         catch (final InstantiationException e) {
-            log.error("An unexpected error occured! See log for details.", e);
+            LOG.error("An unexpected error occured! See LOG for details.", e);
         }
         catch (final IllegalAccessException e) {
-            log.error("An unexpected error occured! See log for details.", e);
+            LOG.error("An unexpected error occured! See LOG for details.", e);
         }
         catch (final IllegalArgumentException e) {
-            log.error("An unexpected error occured! See log for details.", e);
+            LOG.error("An unexpected error occured! See LOG for details.", e);
         }
         catch (final InvocationTargetException e) {
-            log.error("An unexpected error occured! See log for details.", e);
+            LOG.error("An unexpected error occured! See LOG for details.", e);
         }
         catch (final ClassNotFoundException e) {
-            log.error("An unexpected error occured! See log for details.", e);
+            LOG.error("An unexpected error occured! See LOG for details.", e);
         }
         catch (final SecurityException e) {
-            log.error("An unexpected error occured! See log for details.", e);
+            LOG.error("An unexpected error occured! See LOG for details.", e);
         }
         catch (final NoSuchMethodException e) {
-            log.error("An unexpected error occured! See log for details.", e);
+            LOG.error("An unexpected error occured! See LOG for details.", e);
         }
     }
 
@@ -132,19 +131,8 @@ public class ContextToolbar extends CustomComponent {
             try {
                 app.getContextView().showAddView();
             }
-            catch (final EscidocException e) {
-                log.error("An unexpected error occured! See log for details.",
-                    e);
-
-            }
-            catch (final InternalClientException e) {
-                log.error("An unexpected error occured! See log for details.",
-                    e);
-
-            }
-            catch (final TransportException e) {
-                log.error("An unexpected error occured! See log for details.",
-                    e);
+            catch (final EscidocClientException e) {
+                ModalDialog.show(app.getMainWindow(), e);
             }
         }
     }

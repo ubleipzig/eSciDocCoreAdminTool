@@ -58,7 +58,7 @@ public class AdminTaskViewImpl extends CustomComponent implements AdminTaskView 
         mainLayout.setStyleName(Reindeer.LAYOUT_WHITE);
 
         margin.setMargin(true);
-        margin.setWidth("100%");
+        margin.setWidth(ViewConstants._100_PERCENT);
         mainLayout.addComponent(margin);
 
         final H1 title = new H1(ViewConstants.ADMIN_TASK_VIEW_TITLE);
@@ -67,7 +67,7 @@ public class AdminTaskViewImpl extends CustomComponent implements AdminTaskView 
 
         final HorizontalLayout texts = new HorizontalLayout();
         texts.setSpacing(true);
-        texts.setWidth("100%");
+        texts.setWidth(ViewConstants._100_PERCENT);
         texts.setMargin(false, false, true, false);
         margin.addComponent(texts);
 
@@ -89,7 +89,7 @@ public class AdminTaskViewImpl extends CustomComponent implements AdminTaskView 
         margin.addComponent(text);
 
         final HorizontalLayout hLayout = new HorizontalLayout();
-        hLayout.setWidth("100%");
+        hLayout.setWidth(ViewConstants._100_PERCENT);
         hLayout.setHeight("250px");
         final ReindexResourceView reindexResourceView =
             new ReindexResourceViewImpl(services.getAdminService(), mainWindow);
@@ -103,18 +103,16 @@ public class AdminTaskViewImpl extends CustomComponent implements AdminTaskView 
         text.setContentMode(Label.CONTENT_XHTML);
         margin.addComponent(text);
         margin.addComponent(new Ruler());
-        text =
-            new Label(
-                "<p>Loads a set of example objects into the framework.</p>",
-                Label.CONTENT_XHTML);
+        text = new Label(ViewConstants.LOAD_EXAMPLE_TEXT, Label.CONTENT_XHTML);
         margin.addComponent(text);
 
         final HorizontalLayout hLayout = new HorizontalLayout();
-        hLayout.setWidth("100%");
+        hLayout.setWidth(ViewConstants._100_PERCENT);
         hLayout.setHeight("250px");
 
         final Component loadExampleView =
-            new LoadExampleViewImpl(mainWindow, services.getAdminService());
+            new LoadExampleResourceViewImpl(mainWindow,
+                services.getAdminService());
         hLayout.addComponent(loadExampleView);
         margin.addComponent(hLayout);
     }
@@ -130,7 +128,7 @@ public class AdminTaskViewImpl extends CustomComponent implements AdminTaskView 
         margin.addComponent(text);
 
         final HorizontalLayout hLayout = new HorizontalLayout();
-        hLayout.setWidth("100%");
+        hLayout.setWidth(ViewConstants._100_PERCENT);
         hLayout.setHeight(500, UNITS_PIXELS);
 
         final FilterResourceListener listener =
@@ -154,7 +152,7 @@ public class AdminTaskViewImpl extends CustomComponent implements AdminTaskView 
         margin.addComponent(text);
 
         final HorizontalLayout hLayout = new HorizontalLayout();
-        hLayout.setWidth("100%");
+        hLayout.setWidth(ViewConstants._100_PERCENT);
         hLayout.setHeight("250px");
         margin.addComponent(hLayout);
 

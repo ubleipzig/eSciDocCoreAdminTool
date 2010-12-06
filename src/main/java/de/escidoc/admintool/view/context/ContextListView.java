@@ -20,10 +20,11 @@ import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
 import de.escidoc.core.resources.om.context.Context;
 
-@SuppressWarnings("serial")
 public class ContextListView extends Table {
 
-    private final Logger log = LoggerFactory.getLogger(ContextListView.class);
+    private static final long serialVersionUID = -4845557717329696071L;
+
+    private final Logger LOG = LoggerFactory.getLogger(ContextListView.class);
 
     private final AdminToolApplication app;
 
@@ -81,7 +82,7 @@ public class ContextListView extends Table {
         sort(new Object[] { PropertyId.LAST_MODIFICATION_DATE },
             new boolean[] { false });
         setVisibleColumns(new Object[] { PropertyId.NAME });
-        setColumnHeader(PropertyId.NAME, ViewConstants.TITLE_LABEL);
+        setColumnHeaderMode(Table.COLUMN_HEADER_MODE_HIDDEN);
     }
 
     private void findAllContexts() {
@@ -91,24 +92,24 @@ public class ContextListView extends Table {
         catch (final EscidocException e) {
             app.getMainWindow().addWindow(
                 new ErrorDialog(app.getMainWindow(), "Error",
-                    "An unexpected error occured! See log for details."));
-            log.error("An unexpected error occured! See log for details.", e);
+                    "An unexpected error occured! See LOG for details."));
+            LOG.error("An unexpected error occured! See LOG for details.", e);
         }
         catch (final InternalClientException e) {
             app.getMainWindow().addWindow(
                 new ErrorDialog(app.getMainWindow(), "Error",
-                    "An unexpected error occured! See log for details."));
-            log.error("An unexpected error occured! See log for details.", e);
+                    "An unexpected error occured! See LOG for details."));
+            LOG.error("An unexpected error occured! See LOG for details.", e);
         }
         catch (final TransportException e) {
             app.getMainWindow().addWindow(
                 new ErrorDialog(app.getMainWindow(), "Error",
-                    "An unexpected error occured! See log for details."));
-            log.error("An unexpected error occured! See log for details.", e);
+                    "An unexpected error occured! See LOG for details."));
+            LOG.error("An unexpected error occured! See LOG for details.", e);
         }
     }
 
-    public void addContext(final Context context) {
+    public POJOItem<Context> addContext(final Context context) {
         assert context != null : "context must not be null.";
         if (contextContainer == null) {
             findAllContexts();
@@ -117,6 +118,7 @@ public class ContextListView extends Table {
         final POJOItem<Context> addedItem = contextContainer.addItem(context);
         assert addedItem != null : "Adding context to the list failed.";
         sort();
+        return addedItem;
     }
 
     @Override

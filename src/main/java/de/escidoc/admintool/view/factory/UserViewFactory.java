@@ -38,5 +38,4 @@ public class UserViewFactory {
         final UserEditView userEditView = new UserEditView(userEditForm);
         return new UserView(app, userListView, userEditView);
     }
-
 }

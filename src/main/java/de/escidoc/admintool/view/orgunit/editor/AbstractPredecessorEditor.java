@@ -34,7 +34,7 @@ import de.escidoc.admintool.view.resource.ResourceRefDisplay;
 public abstract class AbstractPredecessorEditor extends CustomComponent
     implements IPredecessorEditor {
 
-    private static final Logger log = LoggerFactory
+    private static final Logger LOG = LoggerFactory
         .getLogger(AbstractPredecessorEditor.class);
 
     private static final long serialVersionUID = -9122833046327977836L;
@@ -54,8 +54,6 @@ public abstract class AbstractPredecessorEditor extends CustomComponent
     private ListSelect select;
 
     protected HorizontalLayout predecessorLayout;
-
-    // protected OrgUnitAddView orgUnitAddView;
 
     private String orgUnitName;
 
@@ -153,7 +151,7 @@ public abstract class AbstractPredecessorEditor extends CustomComponent
         parent.removeWindow(modalWindow);
     }
 
-    public HorizontalLayout addFooter() {
+    private HorizontalLayout addFooter() {
         footer.addComponent(okButton);
         footer.addComponent(cancelButton);
         return footer;

@@ -34,7 +34,7 @@ import de.escidoc.core.resources.om.context.OrganizationalUnitRefs;
 
 public class ContextService implements Serializable {
 
-    private static final Logger log = LoggerFactory
+    private static final Logger LOG = LoggerFactory
         .getLogger(ContextService.class);
 
     private ContextHandlerClientInterface client;
@@ -65,7 +65,7 @@ public class ContextService implements Serializable {
     @SuppressWarnings("deprecation")
     public Collection<Context> findAll() throws EscidocException,
         InternalClientException, TransportException {
-        log.info("Retrieving Context from repository...");
+        LOG.info("Retrieving Context from repository...");
 
         final Collection<Context> contexts =
             client.retrieveContexts(createdBySysAdmin()).getContexts();
@@ -75,12 +75,12 @@ public class ContextService implements Serializable {
         }
 
         for (final Context context : contexts) {
-            // FIXME: create only one cache/Map for both
+            // FIXME: createContextView only one cache/Map for both
             contextById.put(context.getObjid(), context);
             contextByTitle.put(context.getProperties().getName(), context);
         }
 
-        log
+        LOG
             .info("Retrieval is finished, got: " + contexts.size()
                 + " contexts");
         return contexts;
@@ -126,8 +126,7 @@ public class ContextService implements Serializable {
     public Context update(
         final String objectId, final String newName,
         final String newDescription, final String newType,
-        final OrganizationalUnitRefs orgUnitRefs, // NOPMD by CHH on 9/17/10
-                                                  // 10:23 AM
+        final OrganizationalUnitRefs orgUnitRefs,
         final AdminDescriptors newAdminDescriptors)
         throws EscidocClientException {
 
@@ -246,9 +245,8 @@ public class ContextService implements Serializable {
     public Context create(
         final String name, final String description, final String contextType,
         final OrganizationalUnitRefs orgUnitRefs,
-        final AdminDescriptors adminDescriptors) throws EscidocException,
-        InternalClientException, TransportException,
-        ParserConfigurationException {
+        final AdminDescriptors adminDescriptors)
+        throws ParserConfigurationException, EscidocClientException {
 
         assert !(name == null || name.isEmpty()) : "name can not be null or empty";
         assert !(description == null || description.isEmpty()) : "description name can not be null or empty";
@@ -257,10 +255,10 @@ public class ContextService implements Serializable {
         assert (orgUnitRefs.size() > 0) : "orgUnitRefs can not be empty";
 
         final Context backedContext =
-            new ContextFactory()
-                .create(name, description, contextType, orgUnitRefs)
-                .adminDescriptors(adminDescriptors).build();
+            createContextDTO(name, description, contextType, orgUnitRefs,
+                adminDescriptors).build();
         final Context createdContext = client.create(backedContext);
+
         assert createdContext != null : "Got null reference from the server.";
         assert createdContext.getObjid() != null : "ObjectID can not be null.";
         final int sizeBefore = contextById.size();
@@ -268,5 +266,14 @@ public class ContextService implements Serializable {
         final int sizeAfter = contextById.size();
         assert sizeAfter > sizeBefore : "context is not added to map.";
         return createdContext;
+    }
+
+    private ContextFactory createContextDTO(
+        final String name, final String description, final String contextType,
+        final OrganizationalUnitRefs orgUnitRefs,
+        final AdminDescriptors adminDescriptors)
+        throws ParserConfigurationException {
+        return new ContextFactory().create(name, description, contextType,
+            orgUnitRefs).adminDescriptors(adminDescriptors);
     }
 }

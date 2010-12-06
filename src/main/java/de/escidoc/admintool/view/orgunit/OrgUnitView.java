@@ -16,7 +16,7 @@ import de.escidoc.core.client.exceptions.TransportException;
 public class OrgUnitView extends SplitPanel implements ResourceView {
     private static final long serialVersionUID = -2179646235525092542L;
 
-    private final Logger log = LoggerFactory.getLogger(OrgUnitView.class);
+    private final Logger LOG = LoggerFactory.getLogger(OrgUnitView.class);
 
     private final AdminToolApplication app;
 
@@ -41,13 +41,13 @@ public class OrgUnitView extends SplitPanel implements ResourceView {
             setSecondComponent(app.newOrgUnitAddView());
         }
         catch (final EscidocException e) {
-            log.error("An unexpected error occured! See log for details.", e);
+            LOG.error("An unexpected error occured! See LOG for details.", e);
         }
         catch (final InternalClientException e) {
-            log.error("An unexpected error occured! See log for details.", e);
+            LOG.error("An unexpected error occured! See LOG for details.", e);
         }
         catch (final TransportException e) {
-            log.error("An unexpected error occured! See log for details.", e);
+            LOG.error("An unexpected error occured! See LOG for details.", e);
         }
     }
 

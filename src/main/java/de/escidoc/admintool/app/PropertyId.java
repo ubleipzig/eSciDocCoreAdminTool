@@ -8,7 +8,7 @@ public class PropertyId {
 
     public static final String PARENTS = "parents";
 
-    public static final String MODIFIED_BY = "properties.modifiedBy.objid";
+    public static final String MODIFIED_BY = "properties.modifiedBy.xLinkTitle";
 
     public static final String LAST_MODIFICATION_DATE = "lastModificationDate";
 

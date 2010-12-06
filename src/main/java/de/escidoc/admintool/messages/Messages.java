@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 
 public final class Messages {
 
-    private static final Logger log = LoggerFactory.getLogger(Messages.class); // NOPMD
+    private static final Logger LOG = LoggerFactory.getLogger(Messages.class); // NOPMD
                                                                                // by
                                                                                // CHH
                                                                                // on
@@ -30,7 +30,7 @@ public final class Messages {
                                                    // 10:19 AM
         }
         catch (final MissingResourceException e) {
-            log.error("Label for " + key + " could not be found", e);
+            LOG.error("Label for " + key + " could not be found", e);
             return '!' + key + '!';
         }
     }

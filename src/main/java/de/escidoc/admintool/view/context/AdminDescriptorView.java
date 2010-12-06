@@ -24,7 +24,7 @@ import de.escidoc.core.resources.om.context.AdminDescriptor;
 
 @SuppressWarnings("serial")
 public abstract class AdminDescriptorView extends Window {
-    private final Logger log = LoggerFactory
+    private final Logger LOG = LoggerFactory
         .getLogger(AdminDescriptorView.class);
 
     protected static final String EDIT_ADMIN_DESCRIPTOR =
@@ -84,7 +84,7 @@ public abstract class AdminDescriptorView extends Window {
         buildMainLayout();
     }
 
-    protected void buildMainLayout() {
+    private void buildMainLayout() {
         setWindowCaption();
         setModal(true);
         setWidth("600px");
@@ -164,7 +164,7 @@ public abstract class AdminDescriptorView extends Window {
             return true;
         }
         catch (final ParserConfigurationException e) {
-            log.error("An unexpected error occured! See log for details.", e);
+            LOG.error("An unexpected error occured! See LOG for details.", e);
             getApplication().getMainWindow().addWindow(
                 new ErrorDialog(mainWindow, "Error", e.getMessage()));
             setComponentError(new SystemError(e.getMessage()));
@@ -179,13 +179,13 @@ public abstract class AdminDescriptorView extends Window {
             assert getApplication().getMainWindow() != null : "MainWindow can not be null.";
 
             getApplication().getMainWindow().addWindow(errorDialog);
-            log.error("An unexpected error occured! See log for details.", e);
+            LOG.error("An unexpected error occured! See LOG for details.", e);
             setComponentError(new SystemError(e.getMessage()));
             return false;
 
         }
         catch (final IOException e) {
-            log.error("An unexpected error occured! See log for details.", e);
+            LOG.error("An unexpected error occured! See LOG for details.", e);
             getApplication().getMainWindow().addWindow(
                 new ErrorDialog(mainWindow, "Error", e.getMessage()));
             setComponentError(new SystemError(e.getMessage()));

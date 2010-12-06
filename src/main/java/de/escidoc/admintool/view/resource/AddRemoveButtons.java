@@ -6,15 +6,17 @@ import com.vaadin.ui.HorizontalLayout;
 
 public class AddRemoveButtons extends CustomComponent {
 
-  private final HorizontalLayout hLayout = new HorizontalLayout();
-  private final Button cancelBtn = new Button("+");
-  private final Button okBtn = new Button("-");
+    private final HorizontalLayout hLayout = new HorizontalLayout();
 
-  public AddRemoveButtons() {
-    setCompositionRoot(hLayout);
-    hLayout.addComponent(cancelBtn);
-    cancelBtn.addStyleName("small");
-    okBtn.addStyleName("small");
-    hLayout.addComponent(okBtn);
-  }
+    private final Button cancelBtn = new Button("+");
+
+    private final Button okBtn = new Button("-");
+
+    public AddRemoveButtons() {
+        setCompositionRoot(hLayout);
+        hLayout.addComponent(cancelBtn);
+        cancelBtn.addStyleName("small");
+        okBtn.addStyleName("small");
+        hLayout.addComponent(okBtn);
+    }
 }

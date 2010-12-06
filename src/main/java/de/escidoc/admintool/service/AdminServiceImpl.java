@@ -21,7 +21,7 @@ import de.escidoc.core.resources.common.TaskParam;
 
 public class AdminServiceImpl implements AdminService {
 
-    private static final Logger log = LoggerFactory
+    private static final Logger LOG = LoggerFactory
         .getLogger(AdminServiceImpl.class);
 
     private final HandlerServiceInterface client;
@@ -51,7 +51,7 @@ public class AdminServiceImpl implements AdminService {
         final RepositoryInfo repositoryInfo = getClient().getRepositoryInfo();
 
         for (final String val : repositoryInfo.values()) {
-            log.debug("" + val);
+            LOG.debug("" + val);
 
         }
 

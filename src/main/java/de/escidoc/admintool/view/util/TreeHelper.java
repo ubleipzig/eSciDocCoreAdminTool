@@ -6,7 +6,7 @@ import com.vaadin.ui.Tree;
  * @author ASP
  * 
  */
-public class TreeHelper {
+public final class TreeHelper {
 
     private TreeHelper() {
         // Utility classes should not have a public or default constructor.
@@ -26,7 +26,7 @@ public class TreeHelper {
      *            otherwise.
      * @return the appended child.
      */
-    public static synchronized Object addChildren(
+    public static Object addChildren(
         final Tree tree, final Object parent, final Object child,
         final boolean childrenAllowed) {
         tree.addItem(child);
@@ -49,7 +49,7 @@ public class TreeHelper {
      * @deprecated does the same as addRoot. Somebody copied it.
      */
     @Deprecated
-    public static synchronized Object addChildren(
+    public static Object addChildren(
         final Tree tree, final Object child, final boolean childrenAllowed) {
         tree.addItem(child);
         tree.setChildrenAllowed(child, childrenAllowed);
@@ -67,7 +67,7 @@ public class TreeHelper {
      *            are children under this node allowed.
      * @return the root node.
      */
-    public static synchronized Object addRoot(
+    public static Object addRoot(
         final Tree tree, final Object child, final boolean childrenAllowed) {
         tree.addItem(child);
         tree.setChildrenAllowed(child, childrenAllowed);
@@ -87,7 +87,7 @@ public class TreeHelper {
      *            are children under this node allowed.
      * @return the child.
      */
-    public static synchronized Object addChildrenNotExpand(
+    public static Object addChildrenNotExpand(
         final Tree tree, final Object parent, final Object child,
         final boolean childrenAllowed) {
         tree.addItem(child);

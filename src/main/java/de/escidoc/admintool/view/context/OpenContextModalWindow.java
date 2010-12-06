@@ -17,7 +17,7 @@ import de.escidoc.core.client.exceptions.TransportException;
 
 public class OpenContextModalWindow extends VerticalLayout {
 
-    private static final Logger log = LoggerFactory
+    private static final Logger LOG = LoggerFactory
         .getLogger(OpenContextModalWindow.class);
 
     private static final long serialVersionUID = -6815586703714340558L;
@@ -58,15 +58,15 @@ public class OpenContextModalWindow extends VerticalLayout {
                 subwindow.getParent().removeWindow(subwindow);
             }
             catch (final EscidocException e) {
-                log.error("An unexpected error occured! See log for details.",
+                LOG.error("An unexpected error occured! See LOG for details.",
                     e);
             }
             catch (final InternalClientException e) {
-                log.error("An unexpected error occured! See log for details.",
+                LOG.error("An unexpected error occured! See LOG for details.",
                     e);
             }
             catch (final TransportException e) {
-                log.error("An unexpected error occured! See log for details.",
+                LOG.error("An unexpected error occured! See LOG for details.",
                     e);
             }
         }

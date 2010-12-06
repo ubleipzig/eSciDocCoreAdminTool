@@ -63,6 +63,7 @@ public class MainView extends CustomComponent {
         logoutButton.setStyleName(Reindeer.BUTTON_SMALL);
         app.setLogoutURL(app.escidocLogoutUrl + app.getURL());
         logoutButton.addListener(new Button.ClickListener() {
+            private static final long serialVersionUID = 6434716782391206321L;
 
             @Override
             public void buttonClick(final ClickEvent event) {
@@ -71,16 +72,12 @@ public class MainView extends CustomComponent {
         });
     }
 
-    private boolean isLoggedIn() {
-        return !(app.escidocLogoutUrl == null || app.escidocLogoutUrl.isEmpty());
-    }
-
     private void createAndAddNavigationTree() {
         appLayout.addComponent(horizontalSplit);
         appLayout.setExpandRatio(horizontalSplit, 1);
         horizontalSplit.setSplitPosition(
             ViewConstants.SPLIT_POSITION_FROM_LEFT, SplitPanel.UNITS_PIXELS);
-        horizontalSplit.addStyleName("small blue white");
+        horizontalSplit.addStyleName(ViewConstants.THIN_SPLIT);
 
         navigation = new NavigationTreeImpl(app);
         horizontalSplit.setFirstComponent(navigation);

@@ -21,10 +21,11 @@ import com.vaadin.ui.Window;
 
 import de.escidoc.admintool.app.PropertyId;
 import de.escidoc.admintool.domain.MetadataExtractor;
-import de.escidoc.admintool.domain.OrgUnitFactory;
+import de.escidoc.admintool.domain.OrgUnitBuilder;
 import de.escidoc.admintool.exception.ResourceNotFoundException;
 import de.escidoc.admintool.messages.Messages;
 import de.escidoc.admintool.service.OrgUnitService;
+import de.escidoc.admintool.service.OrgUnitServiceLab;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.admintool.view.context.PublicStatus;
 import de.escidoc.admintool.view.orgunit.PredecessorType;
@@ -33,6 +34,7 @@ import de.escidoc.admintool.view.orgunit.predecessor.AbstractPredecessorView;
 import de.escidoc.admintool.view.orgunit.predecessor.AffiliationPredecessorView;
 import de.escidoc.admintool.view.orgunit.predecessor.BlankPredecessorView;
 import de.escidoc.admintool.view.orgunit.predecessor.SpinOffPredecessorView;
+import de.escidoc.admintool.view.resource.ResourceContainer;
 import de.escidoc.admintool.view.resource.ResourceRefDisplay;
 import de.escidoc.admintool.view.util.Converter;
 import de.escidoc.admintool.view.util.LayoutHelper;
@@ -54,7 +56,7 @@ public class OrgUnitEditViewLab extends AbstractOrgUnitViewLab {
 
     private static final long serialVersionUID = -584963284131407616L;
 
-    private static final Logger log = LoggerFactory
+    private static final Logger LOG = LoggerFactory
         .getLogger(OrgUnitEditViewLab.class);
 
     // TODO move this to constant, rename variable to a more meaningful name.
@@ -86,8 +88,10 @@ public class OrgUnitEditViewLab extends AbstractOrgUnitViewLab {
 
     public OrgUnitEditViewLab(final OrgUnitService service,
         final Window mainWindow,
-        final OrgUnitContainerFactory orgUnitContainerFactory) {
-        super(service, mainWindow);
+        final OrgUnitContainerFactory orgUnitContainerFactory,
+        final OrgUnitServiceLab orgUnitServiceLab,
+        final ResourceContainer resourceContainer) {
+        super(service, mainWindow, orgUnitServiceLab, resourceContainer);
 
         this.orgUnitContainerFactory = orgUnitContainerFactory;
         middleInit();
@@ -213,7 +217,7 @@ public class OrgUnitEditViewLab extends AbstractOrgUnitViewLab {
 
         final String objectId =
             (String) item.getItemProperty(PropertyId.OBJECT_ID).getValue();
-        log.info("objectId: " + objectId);
+        LOG.info("objectId: " + objectId);
 
         final OrganizationalUnit orgUnit = findById(objectId);
         assert orgUnit != null : "org Unit can not be null";
@@ -240,17 +244,17 @@ public class OrgUnitEditViewLab extends AbstractOrgUnitViewLab {
             return service.find(objectId);
         }
         catch (final EscidocException e) {
-            log.error("An unexpected error occured! See log for details.", e);
+            LOG.error("An unexpected error occured! See LOG for details.", e);
             mainWindow.addWindow(new ErrorDialog(mainWindow,
                 ViewConstants.ERROR, e.getMessage()));
         }
         catch (final InternalClientException e) {
-            log.error("An unexpected error occured! See log for details.", e);
+            LOG.error("An unexpected error occured! See LOG for details.", e);
             mainWindow.addWindow(new ErrorDialog(mainWindow,
                 ViewConstants.ERROR, e.getMessage()));
         }
         catch (final TransportException e) {
-            log.error("An unexpected error occured! See log for details.", e);
+            LOG.error("An unexpected error occured! See LOG for details.", e);
             mainWindow.addWindow(new ErrorDialog(mainWindow,
                 ViewConstants.ERROR, e.getMessage()));
         }
@@ -258,14 +262,14 @@ public class OrgUnitEditViewLab extends AbstractOrgUnitViewLab {
     }
 
     private void bindParents() {
+        orgUnitSelectDialog.bind(item);
         if (isRoot()) {
             parentList.removeAllItems();
         }
         else {
             // update parent list with its parent(only one);
-            final Collection<Parent> parentRef =
-                getParentsFromItem().getParentRef();
-            if (getParentsFromItem().getParentRef() != null) {
+            final Collection<Parent> parentRef = getParentsFromItem();
+            if (getParentsFromItem() != null) {
                 boolean hasParent = false;
                 for (final Parent parent : parentRef) {
                     if (parent != null) {
@@ -291,68 +295,14 @@ public class OrgUnitEditViewLab extends AbstractOrgUnitViewLab {
             return true;
         }
         else {
-            final Collection<Parent> parentRef = parents.getParentRef();
-            if (parentRef == null) {
-                return true;
-            }
-            else {
-                for (final Parent parent : parentRef) {
-                    if (parent != null) {
-                        return false;
-                    }
+            for (final Parent parent : parents) {
+                if (parent != null) {
+                    return false;
                 }
             }
         }
         return false;
     }
-
-    // private void bindParents() {
-    //
-    // Parents parents = null;
-    // if (orgUnit != null) {
-    // parents = orgUnit.getParents();
-    // }
-    // else {
-    // parents = getParentsFromItem();
-    // }
-    //
-    // if (parents == null || parents.getParentRef() == null) {
-    //
-    // // || parents.getParentRef().isEmpty()
-    //
-    // final Collection<Parent> parentRef = parents.getParentRef();
-    // if (parents.getParentRef() != null) {
-    // boolean hasParent = false;
-    // for (final Parent parent : parentRef) {
-    // if (parent != null) {
-    // hasParent = true;
-    // final String parentName =
-    // findById(parent.getObjid())
-    // .getProperties().getName();
-    // parentList.addItem(new ResourceRefDisplay(parent
-    // .getObjid(), parentName));
-    // }
-    // }
-    // if (!hasParent) {
-    // parentList.removeAllItems();
-    // }
-    // }
-    // }
-    // else if (parents != null && parents.getParentRef() != null
-    // && parents.getParentRef().iterator() != null
-    // && parents.getParentRef().iterator().hasNext()) {
-    //
-    // final Parent parent = parents.getParentRef().iterator().next();
-    // parentList.removeAllItems();
-    // final String parentName =
-    // findById(parent.getObjid()).getProperties().getName();
-    // parentList.addItem(new ResourceRefDisplay(parent.getObjid(),
-    // parentName));
-    // }
-    // else {
-    // parentList.removeAllItems();
-    // }
-    // }
 
     private Parents getParentsFromItem() {
         final Object value =
@@ -391,16 +341,16 @@ public class OrgUnitEditViewLab extends AbstractOrgUnitViewLab {
                 .getPredecessorRef()) {
 
                 final String predecessorObjectId = predecessor.getObjid();
-                log.debug("predecessor found: " + predecessorObjectId);
+                LOG.debug("predecessor found: " + predecessorObjectId);
 
                 try {
                     final String predecessorTitle =
                         getTitle(predecessorObjectId);
-                    log.debug("predecessor found: " + predecessorTitle);
+                    LOG.debug("predecessor found: " + predecessorTitle);
 
                     final PredecessorForm predecessorForm =
                         predecessor.getForm();
-                    log.debug("predecessor found: " + predecessorForm);
+                    LOG.debug("predecessor found: " + predecessorForm);
 
                     showPredecessorView(predecessorForm, predecessorObjectId,
                         predecessorTitle);
@@ -491,7 +441,7 @@ public class OrgUnitEditViewLab extends AbstractOrgUnitViewLab {
                 return addedPredecessorView;
 
             }
-                // TODO create appropriate view
+                // TODO createContextView appropriate view
             case SPLITTING: {
                 // select predecessor type in combo box.
                 predecessorTypeSelect.select(PredecessorType.SPLITTING);
@@ -504,7 +454,7 @@ public class OrgUnitEditViewLab extends AbstractOrgUnitViewLab {
                 // TODO add "remove" predecessor button
                 return addedPredecessorView;
             }
-                // TODO create appropriate view
+                // TODO createContextView appropriate view
             case FUSION: {
                 // select predecessor type in combo box.
                 predecessorTypeSelect.select(PredecessorType.FUSION);
@@ -531,7 +481,8 @@ public class OrgUnitEditViewLab extends AbstractOrgUnitViewLab {
                 return addedPredecessorView;
             }
             default:
-                throw new RuntimeException("Unsupported predecessor form");
+                throw new UnsupportedOperationException(
+                    "Unsupported predecessor form");
         }
     }
 
@@ -580,37 +531,37 @@ public class OrgUnitEditViewLab extends AbstractOrgUnitViewLab {
             }
         }
         catch (final ClassNotFoundException e) {
-            log.error("An unexpected error occured! See log for details.", e);
+            LOG.error("An unexpected error occured! See LOG for details.", e);
             mainWindow.addWindow(new ErrorDialog(mainWindow,
                 ViewConstants.ERROR, e.getMessage()));
         }
         catch (final InstantiationException e) {
-            log.error("An unexpected error occured! See log for details.", e);
+            LOG.error("An unexpected error occured! See LOG for details.", e);
             mainWindow.addWindow(new ErrorDialog(mainWindow,
                 ViewConstants.ERROR, e.getMessage()));
         }
         catch (final IllegalAccessException e) {
-            log.error("An unexpected error occured! See log for details.", e);
+            LOG.error("An unexpected error occured! See LOG for details.", e);
             mainWindow.addWindow(new ErrorDialog(mainWindow,
                 ViewConstants.ERROR, e.getMessage()));
         }
         catch (final SecurityException e) {
-            log.error("An unexpected error occured! See log for details.", e);
+            LOG.error("An unexpected error occured! See LOG for details.", e);
             mainWindow.addWindow(new ErrorDialog(mainWindow,
                 ViewConstants.ERROR, e.getMessage()));
         }
         catch (final NoSuchMethodException e) {
-            log.error("An unexpected error occured! See log for details.", e);
+            LOG.error("An unexpected error occured! See LOG for details.", e);
             mainWindow.addWindow(new ErrorDialog(mainWindow,
                 ViewConstants.ERROR, e.getMessage()));
         }
         catch (final IllegalArgumentException e) {
-            log.error("An unexpected error occured! See log for details.", e);
+            LOG.error("An unexpected error occured! See LOG for details.", e);
             mainWindow.addWindow(new ErrorDialog(mainWindow,
                 ViewConstants.ERROR, e.getMessage()));
         }
         catch (final InvocationTargetException e) {
-            log.error("An unexpected error occured! See log for details.", e);
+            LOG.error("An unexpected error occured! See LOG for details.", e);
             mainWindow.addWindow(new ErrorDialog(mainWindow,
                 ViewConstants.ERROR, e.getMessage()));
         }
@@ -626,35 +577,35 @@ public class OrgUnitEditViewLab extends AbstractOrgUnitViewLab {
             showInEditView(updateOrgUnit());
         }
         catch (final InvalidStatusException e) {
-            log.warn("An unexpected error occured! See log for details.", e);
+            LOG.warn("An unexpected error occured! See LOG for details.", e);
             mainWindow.addWindow(new ErrorDialog(mainWindow,
                 ViewConstants.ERROR,
                 "Organizational Unit is not in status CREATE anymore."));
         }
         catch (final OrganizationalUnitHierarchyViolationException e) {
-            log.warn("An unexpected error occured! See log for details.", e);
+            LOG.warn("An unexpected error occured! See LOG for details.", e);
             mainWindow.addWindow(new ErrorDialog(mainWindow,
                 ViewConstants.ERROR,
                 "OrganizationalUnitHierarchyViolationException"));
         }
         catch (final EscidocClientException e) {
-            log.error("An unexpected error occured! See log for details.", e);
+            LOG.error("An unexpected error occured! See LOG for details.", e);
             mainWindow.addWindow(new ErrorDialog(mainWindow,
                 ViewConstants.ERROR, e.getMessage()));
         }
 
         catch (final ParserConfigurationException e) {
-            log.error("An unexpected error occured! See log for details.", e);
+            LOG.error("An unexpected error occured! See LOG for details.", e);
             mainWindow.addWindow(new ErrorDialog(mainWindow,
                 ViewConstants.ERROR, e.getMessage()));
         }
         catch (final SAXException e) {
-            log.error("An unexpected error occured! See log for details.", e);
+            LOG.error("An unexpected error occured! See LOG for details.", e);
             mainWindow.addWindow(new ErrorDialog(mainWindow,
                 ViewConstants.ERROR, e.getMessage()));
         }
         catch (final IOException e) {
-            log.error("An unexpected error occured! See log for details.", e);
+            LOG.error("An unexpected error occured! See LOG for details.", e);
             mainWindow.addWindow(new ErrorDialog(mainWindow,
                 ViewConstants.ERROR, e.getMessage()));
         }
@@ -681,12 +632,12 @@ public class OrgUnitEditViewLab extends AbstractOrgUnitViewLab {
 
     private OrganizationalUnit updateModel(final OrganizationalUnit oldOrgUnit)
         throws ParserConfigurationException, SAXException, IOException {
-        return new OrgUnitFactory()
+        return new OrgUnitBuilder()
             .update(oldOrgUnit, (String) titleField.getValue(),
                 (String) descriptionField.getValue())
             .alternative((String) alternativeField.getValue())
             .identifier((String) identifierField.getValue())
-            .orgType((String) orgTypeField.getValue())
+            .type((String) orgTypeField.getValue())
             .country((String) countryField.getValue())
             .city((String) cityField.getValue())
             .coordinates((String) coordinatesField.getValue())

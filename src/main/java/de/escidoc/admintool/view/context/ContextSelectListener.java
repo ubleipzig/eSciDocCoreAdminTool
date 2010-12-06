@@ -6,12 +6,10 @@ import com.vaadin.data.Item;
 import com.vaadin.ui.VerticalLayout;
 
 import de.escidoc.admintool.app.AdminToolApplication;
-import de.escidoc.admintool.view.ErrorMessage;
+import de.escidoc.admintool.view.ModalDialog;
 import de.escidoc.admintool.view.resource.AbstractResourceSelectListener;
 import de.escidoc.admintool.view.resource.ResourceView;
-import de.escidoc.core.client.exceptions.EscidocException;
-import de.escidoc.core.client.exceptions.InternalClientException;
-import de.escidoc.core.client.exceptions.TransportException;
+import de.escidoc.core.client.exceptions.EscidocClientException;
 
 public class ContextSelectListener extends AbstractResourceSelectListener {
 
@@ -28,14 +26,8 @@ public class ContextSelectListener extends AbstractResourceSelectListener {
         try {
             return app.getContextView();
         }
-        catch (final EscidocException e) {
-            ErrorMessage.show(app.getMainWindow(), e);
-        }
-        catch (final InternalClientException e) {
-            ErrorMessage.show(app.getMainWindow(), e);
-        }
-        catch (final TransportException e) {
-            ErrorMessage.show(app.getMainWindow(), e);
+        catch (final EscidocClientException e) {
+            ModalDialog.show(app.getMainWindow(), e);
         }
         return new EmptyView();
     }

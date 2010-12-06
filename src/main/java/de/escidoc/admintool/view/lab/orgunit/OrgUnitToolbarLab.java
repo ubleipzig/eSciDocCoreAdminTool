@@ -9,14 +9,14 @@ import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Window;
 
-import de.escidoc.admintool.view.ErrorMessage;
+import de.escidoc.admintool.view.ModalDialog;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.admintool.view.context.PublicStatus;
 import de.escidoc.core.client.exceptions.EscidocClientException;
 
 public class OrgUnitToolbarLab extends CustomComponent {
 
-    private final Logger log = LoggerFactory.getLogger(OrgUnitToolbarLab.class);
+    private final Logger LOG = LoggerFactory.getLogger(OrgUnitToolbarLab.class);
 
     private static final long serialVersionUID = 6227479076006945485L;
 
@@ -100,17 +100,17 @@ public class OrgUnitToolbarLab extends CustomComponent {
                 orgUnitViewLab.deleteOrgUnit();
             }
             catch (final de.escidoc.core.client.exceptions.application.violated.OrganizationalUnitHasChildrenException e) {
-                log
+                LOG
                     .debug(
                         "The Organizational Unit has children therefore can not be deleted.",
                         e);
-                ErrorMessage.show(mainWindow,
+                ModalDialog.show(mainWindow,
                     "has children therefore can not be deleted.");
             }
             catch (final EscidocClientException e) {
-                log.error("An unexpected error occured! See log for details.",
+                LOG.error("An unexpected error occured! See LOG for details.",
                     e);
-                ErrorMessage.show(mainWindow, e);
+                ModalDialog.show(mainWindow, e);
             }
         }
     }

@@ -4,7 +4,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.vaadin.data.util.ObjectProperty;
+import com.vaadin.data.util.POJOItem;
 import com.vaadin.terminal.UserError;
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -13,6 +15,7 @@ import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.Reindeer;
 
 import de.escidoc.admintool.app.AdminToolApplication;
@@ -30,7 +33,7 @@ public class UserAddView extends CustomComponent implements ClickListener {
 
     private static final long serialVersionUID = 3007285643463919742L;
 
-    private static final Logger log = LoggerFactory
+    private static final Logger LOG = LoggerFactory
         .getLogger(UserAddView.class);
 
     private static final String USER_ADD_VIEW_CAPTION =
@@ -64,9 +67,12 @@ public class UserAddView extends CustomComponent implements ClickListener {
 
     private ObjectProperty loginNameProperty;
 
+    private final AdminToolApplication app;
+
     public UserAddView(final AdminToolApplication app,
         final UserListView userListView, final UserService userService,
         final OrgUnitService orgUnitService) {
+        this.app = app;
         this.userListView = userListView;
         this.userService = userService;
         this.orgUnitService = orgUnitService;
@@ -75,11 +81,14 @@ public class UserAddView extends CustomComponent implements ClickListener {
 
     public void init() {
         setCompositionRoot(panel);
-        setStyleName("view");
+
         panel.setStyleName(Reindeer.PANEL_LIGHT);
-        panel.setContent(form);
-        form.setSpacing(false);
         panel.setCaption(USER_ADD_VIEW_CAPTION);
+
+        panel.setContent(form);
+
+        form.setSpacing(false);
+        form.setWidth(75, UNITS_PERCENTAGE);
 
         // Name
         panel.addComponent(LayoutHelper.create(ViewConstants.NAME_LABEL,
@@ -94,15 +103,23 @@ public class UserAddView extends CustomComponent implements ClickListener {
         loginNameProperty = new ObjectProperty("", String.class);
         loginNameField.setPropertyDataSource(loginNameProperty);
         loginNameField.setWidth(FIELD_WIDTH);
-        panel.addComponent(addFooter());
+
+        addFooter();
     }
 
-    private HorizontalLayout addFooter() {
+    private void addFooter() {
         footer.setSpacing(true);
-        footer.addComponent(LayoutHelper.create(save));
-        footer.addComponent(LayoutHelper.create(cancel));
+        footer.setMargin(true);
         footer.setVisible(true);
-        return footer;
+
+        footer.addComponent(save);
+        footer.addComponent(cancel);
+
+        final VerticalLayout verticalLayout = new VerticalLayout();
+        verticalLayout.addComponent(footer);
+        verticalLayout.setComponentAlignment(footer, Alignment.MIDDLE_RIGHT);
+
+        panel.addComponent(verticalLayout);
     }
 
     @Override
@@ -126,9 +143,11 @@ public class UserAddView extends CustomComponent implements ClickListener {
                         userService.create((String) nameProperty.getValue(),
                             (String) loginNameProperty.getValue());
 
-                    userListView.addUser(createdUserAccount);
+                    final POJOItem<UserAccount> item =
+                        userListView.addUser(createdUserAccount);
                     resetFields();
                     userListView.select(createdUserAccount);
+                    showInEditView(item);
                 }
                 catch (final EscidocException e) {
                     final String error =
@@ -136,21 +155,22 @@ public class UserAddView extends CustomComponent implements ClickListener {
                             + (String) nameProperty.getValue()
                             + " already exist.";
                     loginNameField.setComponentError(new UserError(error));
-                    ;
-                    log.error(error, e);
+                    LOG.error(error, e);
                 }
                 catch (final InternalClientException e) {
-                    log.error(
-                        "An unexpected error occured! See log for details.", e);
-                    ;
+                    LOG.error(
+                        "An unexpected error occured! See LOG for details.", e);
                 }
                 catch (final TransportException e) {
-                    log.error(
-                        "An unexpected error occured! See log for details.", e);
-                    ;
+                    LOG.error(
+                        "An unexpected error occured! See LOG for details.", e);
                 }
             }
         }
+    }
+
+    private void showInEditView(final POJOItem<UserAccount> item) {
+        app.getUserView().showEditView(item);
     }
 
     private void resetFields() {

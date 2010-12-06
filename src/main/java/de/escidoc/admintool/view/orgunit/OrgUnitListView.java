@@ -21,7 +21,7 @@ import de.escidoc.core.resources.oum.OrganizationalUnit;
 @SuppressWarnings("serial")
 public class OrgUnitListView extends Table {
 
-    private static final Logger log = LoggerFactory
+    private static final Logger LOG = LoggerFactory
         .getLogger(OrgUnitListView.class);
 
     private Collection<OrganizationalUnit> allOrgUnits;
@@ -64,22 +64,22 @@ public class OrgUnitListView extends Table {
         catch (final EscidocException e) {
             app.getMainWindow().addWindow(
                 new ErrorDialog(app.getMainWindow(), "Error",
-                    "An unexpected error occured! See log for details."));
-            log.error("An unexpected error occured! See log for details.", e);
+                    "An unexpected error occured! See LOG for details."));
+            LOG.error("An unexpected error occured! See LOG for details.", e);
 
         }
         catch (final InternalClientException e) {
             app.getMainWindow().addWindow(
                 new ErrorDialog(app.getMainWindow(), "Error",
-                    "An unexpected error occured! See log for details."));
-            log.error("An unexpected error occured! See log for details.", e);
+                    "An unexpected error occured! See LOG for details."));
+            LOG.error("An unexpected error occured! See LOG for details.", e);
 
         }
         catch (final TransportException e) {
             app.getMainWindow().addWindow(
                 new ErrorDialog(app.getMainWindow(), "Error",
-                    "An unexpected error occured! See log for details."));
-            log.error("An unexpected error occured! See log for details.", e);
+                    "An unexpected error occured! See LOG for details."));
+            LOG.error("An unexpected error occured! See LOG for details.", e);
 
         }
     }

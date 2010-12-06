@@ -8,16 +8,18 @@ import com.google.common.base.Preconditions;
 import com.vaadin.data.Item;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.SplitPanel;
+import com.vaadin.ui.VerticalLayout;
 
 import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.exception.ResourceNotFoundException;
-import de.escidoc.admintool.view.ErrorMessage;
+import de.escidoc.admintool.view.ModalDialog;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.admintool.view.resource.ResourceView;
 
 @SuppressWarnings("serial")
 public class ContextView extends SplitPanel implements ResourceView {
-    private final Logger log = LoggerFactory.getLogger(ContextView.class);
+
+    private final Logger LOG = LoggerFactory.getLogger(ContextView.class);
 
     private final ContextListView contextList;
 
@@ -29,6 +31,7 @@ public class ContextView extends SplitPanel implements ResourceView {
         final ContextListView contextList,
         final ContextEditForm contextEditForm,
         final ContextAddView contextAddView) {
+
         Preconditions.checkNotNull(app, "App can not be null");
         Preconditions.checkNotNull(contextList, "contextList can not be null");
         Preconditions.checkNotNull(contextEditForm,
@@ -40,8 +43,17 @@ public class ContextView extends SplitPanel implements ResourceView {
         this.contextList = contextList;
         this.contextEditForm = contextEditForm;
 
-        addStyleName("view");
-        setFirstComponent(contextList);
+        final VerticalLayout vLayout = new VerticalLayout();
+        vLayout.setHeight(100, UNITS_PERCENTAGE);
+        final Label text =
+            new Label("<b>" + "Contexts" + "</b>", Label.CONTENT_XHTML);
+        vLayout.addComponent(text);
+        contextList.setSizeFull();
+
+        vLayout.addComponent(contextList);
+        vLayout.setExpandRatio(contextList, 1.0f);
+        setFirstComponent(vLayout);
+
         setSplitPosition(ViewConstants.SPLIT_POSITION_IN_PERCENT);
         setOrientation(ORIENTATION_HORIZONTAL);
         setSecondComponent(new Label("Place holder for creating new context."));
@@ -61,10 +73,10 @@ public class ContextView extends SplitPanel implements ResourceView {
             contextEditForm.setSelected(item);
         }
         catch (final ResourceNotFoundException e) {
-            log
+            LOG
                 .error("root cause: " + ExceptionUtils.getRootCauseMessage(e),
                     e);
-            ErrorMessage.show(app.getMainWindow(), e);
+            ModalDialog.show(app.getMainWindow(), e);
         }
     }
 

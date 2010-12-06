@@ -22,4 +22,19 @@ public class AppConstants {
 
     public static final String TOP_LEVEL_ORGANIZATIONAL_UNITS =
         "top-level-organizational-units";
+
+    public static final String DC_IDENTIFIER = "dc:identifier";
+
+    public static final String DCTERMS_ALTERNATIVE = "dcterms:alternative";
+
+    public static final String ETERMS_COUNTRY = "eterms:country";
+
+    public static final String ETERMS_CITY = "eterms:city";
+
+    public static final String KML_COORDINATES = "kml:coordinates";
+
+    public static final String TYPE = "";
+
+    public static final String ETERMS_ORGANIZATION_TYPE =
+        "eterms:organization-type";
 }

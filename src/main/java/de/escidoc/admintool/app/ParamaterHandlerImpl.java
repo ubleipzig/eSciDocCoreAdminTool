@@ -13,7 +13,7 @@ import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.Notification;
 
 import de.escidoc.admintool.messages.Messages;
-import de.escidoc.admintool.view.ErrorMessage;
+import de.escidoc.admintool.view.ModalDialog;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.client.exceptions.application.security.AuthenticationException;
@@ -22,7 +22,7 @@ public class ParamaterHandlerImpl implements ParameterHandler {
 
     private static final long serialVersionUID = 6392830954652643671L;
 
-    private static final Logger log = LoggerFactory
+    private static final Logger LOG = LoggerFactory
         .getLogger(ParamaterHandlerImpl.class);
 
     private final Window mainWindow;
@@ -43,63 +43,65 @@ public class ParamaterHandlerImpl implements ParameterHandler {
 
     @Override
     public void handleParameters(final Map<String, String[]> parameters) {
-
         if (isTokenExist(parameters)) {
-            log.debug("the user has a token.");
-            tryToAutentificate(parseAndDecodeToken(parameters));
+            LOG.debug("the user has a token.");
+            tryToLoadProtectedSource(parseAndDecodeToken(parameters));
         }
         else {
-            log.debug("the user does not provide any token.");
+            LOG.debug("the user does not provide any token.");
             app.showLandingView();
         }
-
-        // try {
-        // final String token = parseAndDecodeToken(parameters);
-        // if (isEmpty(token)) {
-        // log.debug("the user does not provide any token.");
-        // app.showLandingView();
-        // }
-        // else {
-        // log.debug("the user has a token.");
-        // tryToAutentificate(token);
-        // }
-        // }
-        // catch (final IllegalArgumentException e) {
-        // mainWindow.showNotification(
-        // ViewConstants.INVALID_TOKEN_ERROR_MESSAGE,
-        // Notification.TYPE_HUMANIZED_MESSAGE);
-        // app.showLandingView();
-        // }
     }
 
     private boolean isTokenExist(final Map<String, String[]> parameters) {
         return parameters.containsKey(AppConstants.ESCIDOC_USER_HANDLE);
     }
 
-    private String parseAndDecodeToken(final Map<String, String[]> parameters) {
-        final String parameter =
-            parameters.get(AppConstants.ESCIDOC_USER_HANDLE)[0];
-        return Base64Coder.decodeString(parameter);
-    }
-
-    private boolean isEmpty(final String token) {
-        return token == null || token.isEmpty();
-    }
-
-    private void tryToAutentificate(final String token) {
+    private void tryToLoadProtectedSource(final String token) {
         try {
-            app.authenticate(token);
+            app.loadProtectedResources(token);
+        }
+        catch (final IllegalArgumentException e) {
+            LOG.error(Messages.getString("AdminToolApplication.3"), e);
+            mainWindow.showNotification(new Notification(
+                ViewConstants.WRONG_TOKEN_MESSAGE, "Wrong token",
+                Notification.TYPE_ERROR_MESSAGE));
+            app.showLandingView();
         }
         catch (final AuthenticationException e) {
+            LOG.error(Messages.getString("AdminToolApplication.3"), e);
             mainWindow.showNotification(new Notification(
                 ViewConstants.WRONG_TOKEN_MESSAGE, e.getMessage(),
                 Notification.TYPE_ERROR_MESSAGE));
-            log.error(Messages.getString("AdminToolApplication.3"), e); //$NON-NLS-1$
+            app.showLandingView();
+
         }
         catch (final EscidocClientException e) {
-            ErrorMessage.show(mainWindow, e);
-            log.error(ViewConstants.SERVER_INTERNAL_ERROR, e);
+            LOG.error(ViewConstants.SERVER_INTERNAL_ERROR, e);
+            ModalDialog.show(mainWindow, e);
+            app.showLandingView();
         }
+    }
+
+    private String parseAndDecodeToken(final Map<String, String[]> parameters) {
+        final String parameter =
+            parameters.get(AppConstants.ESCIDOC_USER_HANDLE)[0];
+        return tryToDecode(parameter);
+    }
+
+    private String tryToDecode(final String parameter) {
+        try {
+            return Base64Coder.decodeString(parameter);
+        }
+        catch (final IllegalArgumentException e) {
+            LOG.error(Messages.getString("AdminToolApplication.3"), e);
+            app.showLandingView();
+
+            mainWindow.showNotification(new Notification(
+                ViewConstants.WRONG_TOKEN_MESSAGE, "Wrong token",
+                Notification.TYPE_ERROR_MESSAGE));
+        }
+        return "";
     }
 
 }

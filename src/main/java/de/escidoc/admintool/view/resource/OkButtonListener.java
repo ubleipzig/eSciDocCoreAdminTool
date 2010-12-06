@@ -1,11 +1,11 @@
 package de.escidoc.admintool.view.resource;
 
-import java.util.Collection;
-
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.Window;
+
+import java.util.Collection;
 
 public class OkButtonListener implements ClickListener {
 

@@ -1,8 +1,6 @@
 package de.escidoc.admintool.domain;
 
 import java.io.IOException;
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -27,48 +25,51 @@ import de.escidoc.core.resources.oum.PredecessorForm;
 import de.escidoc.core.resources.oum.Predecessors;
 import de.escidoc.core.resources.oum.Properties;
 
-public class OrgUnitFactory {
+public class OrgUnitBuilder {
 
-    private static final Logger log = LoggerFactory
-        .getLogger(OrgUnitFactory.class);
+    private static final Logger LOG = LoggerFactory
+        .getLogger(OrgUnitBuilder.class);
 
-    private OrganizationalUnit orgUnit;
+    private OrganizationalUnit oldOrgUnit;
 
-    public OrgUnitFactory update(
-        final OrganizationalUnit orgUnit, final String title, // NOPMD by CHH on
-                                                              // 9/16/10 6:41 PM
+    public OrgUnitBuilder(final OrganizationalUnit orgUnit) {
+        oldOrgUnit = orgUnit;
+    }
+
+    public OrgUnitBuilder() {
+        // default constructor
+    }
+
+    public OrgUnitBuilder update(
+        final OrganizationalUnit orgUnit, final String title,
         final String description) throws ParserConfigurationException,
         SAXException, IOException {
-        this.orgUnit = orgUnit;
 
-        // add mdRecord to set
+        oldOrgUnit = orgUnit;
         final MetadataRecords mdRecords = new MetadataRecords();
         mdRecords.add(eSciDocMdRecord(title, description));
-
-        // add metadata-records to OU
-        this.orgUnit.setMetadataRecords(mdRecords);
+        oldOrgUnit.setMetadataRecords(mdRecords);
 
         return this;
     }
 
-    public OrgUnitFactory create(final String title, final String description)
+    public OrgUnitBuilder with(final String title, final String description)
         throws ParserConfigurationException, SAXException, IOException {
-        orgUnit = new OrganizationalUnit();
 
-        orgUnit.setProperties(new Properties());
+        oldOrgUnit.setProperties(new Properties());
 
         // add mdRecord to set
         final MetadataRecords mdRecords = new MetadataRecords();
         mdRecords.add(eSciDocMdRecord(title, description));
 
         // add metadata-records to OU
-        orgUnit.setMetadataRecords(mdRecords);
+        oldOrgUnit.setMetadataRecords(mdRecords);
 
         return this;
     }
 
     public OrganizationalUnit build() {
-        return orgUnit;
+        return oldOrgUnit;
     }
 
     private Document doc;
@@ -127,7 +128,7 @@ public class OrgUnitFactory {
         return mpdlMdRecord;
     }
 
-    public OrgUnitFactory identifier(final String identifier) {
+    public OrgUnitBuilder identifier(final String identifier) {
         if (isNotSet(identifier)) {
             return this; // NOPMD by CHH on 9/16/10 6:41 PM
         }
@@ -147,7 +148,7 @@ public class OrgUnitFactory {
         return identifier == null || identifier.isEmpty();
     }
 
-    public OrgUnitFactory alternative(final String alternative) {
+    public OrgUnitBuilder alternative(final String alternative) {
         final Element identifierElmt =
             doc.createElementNS("http://purl.org/dc/terms/", "alternative");
         identifierElmt.setPrefix("dcterms");
@@ -161,7 +162,7 @@ public class OrgUnitFactory {
         assert !value.isEmpty() : "Empty string";
     }
 
-    public OrgUnitFactory country(final String country) {
+    public OrgUnitBuilder country(final String country) {
         final Element element =
             doc.createElementNS(AppConstants.ESCIDOC_METADATA_TERMS_NS,
                 "country");
@@ -171,7 +172,7 @@ public class OrgUnitFactory {
         return this;
     }
 
-    public OrgUnitFactory city(final String city) {
+    public OrgUnitBuilder city(final String city) {
         final Element element =
             doc.createElementNS(AppConstants.ESCIDOC_METADATA_TERMS_NS, "city");
         element.setPrefix("eterms");
@@ -180,7 +181,7 @@ public class OrgUnitFactory {
         return this;
     }
 
-    public OrgUnitFactory orgType(final String orgType) {
+    public OrgUnitBuilder type(final String orgType) {
         final Element element =
             doc.createElementNS(AppConstants.ESCIDOC_METADATA_TERMS_NS,
                 "organization-type");
@@ -190,7 +191,7 @@ public class OrgUnitFactory {
         return this;
     }
 
-    public OrgUnitFactory coordinates(final String coordinates) {
+    public OrgUnitBuilder coordinates(final String coordinates) {
         final Element element =
             doc
                 .createElementNS("http://www.opengis.net/kml/2.2",
@@ -201,30 +202,25 @@ public class OrgUnitFactory {
         return this;
     }
 
-    public OrgUnitFactory parents(final Set<String> parentObjectIds) {
+    public OrgUnitBuilder parents(final Set<String> parentObjectIds) {
         final Parents parents = new Parents();
 
         if (parentObjectIds != null && !parentObjectIds.isEmpty()) {
             for (final String parentObjectId : parentObjectIds) {
-                parents.addParentRef(new Parent(parentObjectId));
+                parents.add(new Parent(parentObjectId));
             }
         }
-        else {
-            final Collection<Parent> emptyParents = new HashSet<Parent>();
-            parents.setParentRef(emptyParents);
-            // orgUnit.getParents().
-        }
 
-        orgUnit.setParents(parents);
+        oldOrgUnit.setParents(parents);
         return this;
     }
 
-    public OrgUnitFactory predecessors(
+    public OrgUnitBuilder predecessors(
         final Set<String> predecessorsObjectIds,
         final PredecessorForm predecessorType) {
 
         if (predecessorsObjectIds == null || predecessorsObjectIds.isEmpty()) {
-            log.info("empty predecessor.");
+            LOG.info("empty predecessor.");
             return this;
         }
 
@@ -234,7 +230,7 @@ public class OrgUnitFactory {
                 predecessorType));
         }
 
-        orgUnit.setPredecessors(predecessor);
+        oldOrgUnit.setPredecessors(predecessor);
         return this;
     }
 }

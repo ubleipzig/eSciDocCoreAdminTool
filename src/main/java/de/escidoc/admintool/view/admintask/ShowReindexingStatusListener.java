@@ -3,7 +3,7 @@ package de.escidoc.admintool.view.admintask;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 
-import de.escidoc.admintool.view.ErrorMessage;
+import de.escidoc.admintool.view.ModalDialog;
 import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
@@ -25,26 +25,25 @@ final class ShowReindexingStatusListener implements Button.ClickListener {
         showStatus(getStatus());
     }
 
+    private void showStatus(final MessagesStatus messageStatus) {
+        reindexResourceViewImpl.statusLabel.setValue(toString(messageStatus));
+    }
+
     private MessagesStatus getStatus() {
         try {
             return reindexResourceViewImpl.adminService.retrieveReindexStatus();
         }
         catch (final EscidocException e) {
-            ErrorMessage.show(reindexResourceViewImpl.mainWindow, e);
+            ModalDialog.show(reindexResourceViewImpl.mainWindow, e);
         }
         catch (final InternalClientException e) {
-            ErrorMessage.show(reindexResourceViewImpl.mainWindow, e);
+            ModalDialog.show(reindexResourceViewImpl.mainWindow, e);
         }
         catch (final TransportException e) {
-            ErrorMessage.show(reindexResourceViewImpl.mainWindow, e);
+            ModalDialog.show(reindexResourceViewImpl.mainWindow, e);
         }
         return new MessagesStatus(new Result(),
             MessagesStatus.STATUS_INVALID_RESULT);
-    }
-
-    private void showStatus(final MessagesStatus messageStatus) {
-        reindexResourceViewImpl.statusLabel.setValue(toString(messageStatus));
-
     }
 
     private String toString(final MessagesStatus messagesStatus) {

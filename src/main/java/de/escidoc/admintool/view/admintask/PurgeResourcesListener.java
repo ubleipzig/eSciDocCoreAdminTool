@@ -10,7 +10,7 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Window.Notification;
 
-import de.escidoc.admintool.view.ErrorMessage;
+import de.escidoc.admintool.view.ModalDialog;
 import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
@@ -19,14 +19,11 @@ import de.escidoc.core.resources.adm.MessagesStatus;
 
 final class PurgeResourcesListener implements ClickListener {
 
-    private static final Logger log = LoggerFactory
+    private static final Logger LOG = LoggerFactory
         .getLogger(PurgeResourcesListener.class);
 
     private final ShowFilterResultCommandImpl command;
 
-    /**
-     * @param command
-     */
     PurgeResourcesListener(final ShowFilterResultCommandImpl command) {
         this.command = command;
     }
@@ -54,7 +51,7 @@ final class PurgeResourcesListener implements ClickListener {
 
             final Set<String> objectIds = new HashSet<String>();
             for (final Resource resource : selectedResources) {
-                log.debug("Purging: " + resource.getXLinkTitle());
+                LOG.debug("Purging: " + resource.getXLinkTitle());
                 objectIds.add(resource.getObjid());
             }
             tryPurge(objectIds);
@@ -67,31 +64,29 @@ final class PurgeResourcesListener implements ClickListener {
             pollStatus();
             if (status.getStatusCode() == MessagesStatus.STATUS_FINISHED) {
                 removeResourcesFromContainer();
-                showMessage();
+                // showMessage();
             }
             else {
                 showErrorMessage();
             }
         }
         catch (final EscidocException e) {
-            log.warn("Unexpected error: " + e);
-            ErrorMessage.show(command.filterResourceView.mainWindow, e);
+            LOG.warn("Unexpected error: " + e);
+            ModalDialog.show(command.filterResourceView.mainWindow, e);
         }
         catch (final InternalClientException e) {
-            log.warn("Unexpected error: " + e);
-            ErrorMessage.show(command.filterResourceView.mainWindow, e);
+            LOG.warn("Unexpected error: " + e);
+            ModalDialog.show(command.filterResourceView.mainWindow, e);
         }
         catch (final TransportException e) {
-            log.warn("Unexpected error: " + e);
-            ErrorMessage.show(command.filterResourceView.mainWindow, e);
+            LOG.warn("Unexpected error: " + e);
+            ModalDialog.show(command.filterResourceView.mainWindow, e);
         }
     }
 
     private void startPurging(final Set<String> objectIds)
         throws EscidocException, InternalClientException, TransportException {
         status = command.filterResourceView.adminService.purge(objectIds);
-        command.filterResourceView.mainWindow.showNotification(status
-            .getStatusMessage());
     }
 
     private void pollStatus() throws EscidocException, InternalClientException,
@@ -104,11 +99,6 @@ final class PurgeResourcesListener implements ClickListener {
     private void retrievePurgeStatus() throws EscidocException,
         InternalClientException, TransportException {
         status = command.filterResourceView.adminService.retrievePurgeStatus();
-    }
-
-    private void showMessage() {
-        command.filterResourceView.mainWindow.showNotification(status
-            .getStatusMessage());
     }
 
     private void removeResourcesFromContainer() {
