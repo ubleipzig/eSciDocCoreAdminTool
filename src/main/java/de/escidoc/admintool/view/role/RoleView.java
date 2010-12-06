@@ -98,7 +98,7 @@ public class RoleView extends CustomComponent {
 
     private final VerticalLayout resourceContainer = new VerticalLayout();
 
-    private final TextField searchBox = new TextField("Resource Title: ");
+    final TextField searchBox = new TextField("Resource Title: ");
 
     private final Button searchButton = new Button(SEARCH_LABEL);
 
@@ -202,6 +202,9 @@ public class RoleView extends CustomComponent {
     private void addResourceSelection() {
         resouceResult.setSizeFull();
         resouceResult.setHeight(RESOURCE_SELECTION_HEIGHT);
+        resouceResult.setImmediate(true);
+
+        resouceResult.addListener(new ResourceSelectionListener(this));
         resourceContainer.setStyleName(Reindeer.PANEL_LIGHT);
         resourceContainer.setWidth(Integer
             .toString(3 / 2 * COMPONENT_WIDTH_IN_INTEGER) + "px");
@@ -211,7 +214,6 @@ public class RoleView extends CustomComponent {
 
     private void addFooter() {
         footer.addComponent(saveBtn);
-        // footer.addComponent(cancelBtn);
 
         final VerticalLayout verticalLayout = new VerticalLayout();
         verticalLayout.addComponent(footer);
