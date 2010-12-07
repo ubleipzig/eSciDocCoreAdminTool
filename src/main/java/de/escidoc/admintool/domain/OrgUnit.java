@@ -4,8 +4,6 @@ import java.util.Set;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.escidoc.admintool.builder.RawXmlMetadata;
-
 import de.escidoc.core.resources.common.MetadataRecord;
 import de.escidoc.core.resources.common.MetadataRecords;
 import de.escidoc.core.resources.oum.OrganizationalUnit;

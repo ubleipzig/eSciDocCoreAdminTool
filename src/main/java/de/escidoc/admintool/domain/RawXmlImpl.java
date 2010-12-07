@@ -1,4 +1,4 @@
-package org.escidoc.admintool.builder;
+package de.escidoc.admintool.domain;
 
 import java.io.IOException;
 import java.io.StringReader;
