@@ -1,4 +1,4 @@
-package org.escidoc.admintool.builder;
+package de.escidoc.admintool.builder;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;

@@ -1,4 +1,4 @@
-package org.escidoc.admintool.builder;
+package de.escidoc.admintool.builder;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.equalToIgnoringCase;
@@ -14,6 +14,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import de.escidoc.admintool.TestConstants;
 import de.escidoc.admintool.app.AppConstants;
 import de.escidoc.admintool.domain.MetadataExtractor;
 import de.escidoc.admintool.domain.OrgUnit;

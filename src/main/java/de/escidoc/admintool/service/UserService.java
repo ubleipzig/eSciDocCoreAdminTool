@@ -8,6 +8,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.joda.time.DateTime;
 
+import com.google.common.base.Preconditions;
+
 import de.escidoc.admintool.app.AppConstants;
 import de.escidoc.admintool.domain.UserAccountFactory;
 import de.escidoc.core.client.TransportProtocol;
@@ -190,8 +192,15 @@ public class UserService {
         return userAccountById.remove(objectId);
     }
 
-    public UserAccount getUserById(final String objectId) {
+    public UserAccount getUserById(final String objectId)
+        throws EscidocClientException {
+
+        if (userAccounts == null) {
+            findAll();
+        }
+
         userAccountById.containsKey(objectId);
+
         return userAccountById.get(objectId);
     }
 
@@ -256,5 +265,59 @@ public class UserService {
         tp.setLastModificationDate(grant.getLastModificationDate());
         tp.setComment(comment);
         client.revokeGrant(userId, grant.getObjid(), tp);
+    }
+
+    public void updatePassword(final UserAccount user, final String newPassword)
+        throws EscidocClientException {
+
+        preconditions(user, newPassword);
+        client.updatePassword(user.getObjid(), with(user, newPassword));
+    }
+
+    public void updatePassword(
+        final String userId, final String newPassword,
+        final DateTime lastModificationDate) throws EscidocClientException {
+        preconditions(userId, newPassword, lastModificationDate);
+
+        final TaskParam taskParam = new TaskParam();
+        taskParam.setLastModificationDate(lastModificationDate);
+        taskParam.setPassword(newPassword);
+
+        client.updatePassword(userId, taskParam);
+    }
+
+    private void preconditions(
+        final String userId, final String newPassword,
+        final DateTime lastModificationDate) {
+
+        Preconditions.checkNotNull(userId, "userId is null: %s", userId);
+        Preconditions.checkNotNull(newPassword, "newPassword is null: %s",
+            newPassword);
+        Preconditions.checkNotNull(lastModificationDate,
+            "lastModificationDate is null: %s", lastModificationDate);
+
+        Preconditions.checkArgument(!userId.isEmpty(), "userId is empty: %s",
+            userId);
+        Preconditions.checkArgument(!newPassword.isEmpty(),
+            "newPassword is empty: %s", newPassword);
+    }
+
+    private TaskParam with(final UserAccount user, final String newPassword) {
+        final TaskParam taskParam = new TaskParam();
+        taskParam.setLastModificationDate(user.getLastModificationDate());
+        taskParam.setPassword(newPassword);
+        return taskParam;
+    }
+
+    private void preconditions(final UserAccount user, final String newPassword) {
+
+        Preconditions.checkNotNull(user, "user is null: %s", user);
+        Preconditions.checkNotNull(newPassword, "newPassword is null: %s",
+            newPassword);
+
+        Preconditions.checkNotNull(user.getObjid(),
+            "user.getObjid() is null: %s", user.getObjid());
+        Preconditions.checkArgument(!newPassword.isEmpty(),
+            "newPassword is empty: %s", newPassword);
     }
 }
