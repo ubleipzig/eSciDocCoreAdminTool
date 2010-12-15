@@ -5,7 +5,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.escidoc.admintool.TestConstants;
+import de.escidoc.admintool.Constants;
 import de.escidoc.core.client.Authentication;
 import de.escidoc.core.client.UserAccountHandlerClient;
 import de.escidoc.core.client.exceptions.application.security.AuthenticationException;
@@ -25,9 +25,9 @@ public class UpdateUserPasswordTest {
 
     private void createUserService() throws Exception {
         service =
-            new UserService(TestConstants.DEFAULT_SERVICE_URL,
-                new Authentication(TestConstants.DEFAULT_SERVICE_URL,
-                    TestConstants.SYSADMIN_LOGIN_NAME, SYSADMIN_PASSWORD)
+            new UserService(Constants.DEFAULT_SERVICE_URL,
+                new Authentication(Constants.DEFAULT_SERVICE_URL,
+                    Constants.SYSADMIN_LOGIN_NAME, SYSADMIN_PASSWORD)
                     .getHandle());
     }
 
@@ -37,8 +37,8 @@ public class UpdateUserPasswordTest {
 
         // Given:
         final Authentication wrongAuth =
-            new Authentication(TestConstants.DEFAULT_SERVICE_URL,
-                TestConstants.SYSADMIN_LOGIN_NAME, TestConstants.WRONG_PASSWORD);
+            new Authentication(Constants.DEFAULT_SERVICE_URL,
+                Constants.SYSADMIN_LOGIN_NAME, Constants.WRONG_PASSWORD);
 
         // When:
         final UserAccountHandlerClientInterface client =
@@ -58,7 +58,7 @@ public class UpdateUserPasswordTest {
 
         // Then ensure that
         final Authentication authentication =
-            new Authentication(TestConstants.DEFAULT_SERVICE_URL, user
+            new Authentication(Constants.DEFAULT_SERVICE_URL, user
                 .getProperties().getLoginName(), newPassword);
         final String handle = authentication.getHandle();
         assertTrue("Handle is empty", !handle.isEmpty());

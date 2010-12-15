@@ -14,7 +14,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.escidoc.admintool.TestConstants;
+import de.escidoc.admintool.Constants;
 import de.escidoc.admintool.app.AppConstants;
 import de.escidoc.admintool.domain.MetadataExtractor;
 import de.escidoc.admintool.domain.OrgUnit;
@@ -42,8 +42,8 @@ public class CreateOrgUnitUsingBuilderTest {
     @Before
     public void setUp() throws Exception {
         authentication =
-            new Authentication(TestConstants.DEFAULT_SERVICE_URL,
-                TestConstants.SYSTEM_ADMIN_USER, "eSciDoc");
+            new Authentication(Constants.DEFAULT_SERVICE_URL,
+                Constants.SYSTEM_ADMIN_USER, "eSciDoc");
         service = new OrgUnitServiceLab(authentication);
         service.login();
     }
@@ -56,20 +56,20 @@ public class CreateOrgUnitUsingBuilderTest {
     @Test
     public void shouldCreateSimpleOrgUnit() throws Exception {
         final OrganizationalUnit build =
-            new OrgUnit.BuilderImpl(TestConstants.NAME,
-                TestConstants.DESCRIPTION).build();
+            new OrgUnit.BuilderImpl(Constants.NAME,
+                Constants.DESCRIPTION).build();
         final OrganizationalUnit created =
             (OrganizationalUnit) service.create(build);
         assertThat(created.getProperties().getName(),
-            equalTo(TestConstants.NAME));
+            equalTo(Constants.NAME));
     }
 
     @Test
     public void shouldCreateOrgUnitWithPubManMetadata() throws Exception {
         // given
         final OrganizationalUnit build =
-            new OrgUnit.BuilderImpl(TestConstants.NAME,
-                TestConstants.DESCRIPTION)
+            new OrgUnit.BuilderImpl(Constants.NAME,
+                Constants.DESCRIPTION)
                 .alternative(ALTERNATIVE).identifier(IDENTIFIER)
                 .country("germany").city("karlsruhe").coordinates("xyz")
                 .type("institute").build();
@@ -113,8 +113,8 @@ public class CreateOrgUnitUsingBuilderTest {
             new RawXmlMetadataImpl(metadataName, xml);
 
         final OrganizationalUnit build =
-            new OrgUnit.BuilderImpl(TestConstants.NAME,
-                TestConstants.DESCRIPTION).metadata(rawXmlMetadata).build();
+            new OrgUnit.BuilderImpl(Constants.NAME,
+                Constants.DESCRIPTION).metadata(rawXmlMetadata).build();
 
         // when
         final OrganizationalUnit created =
@@ -138,8 +138,8 @@ public class CreateOrgUnitUsingBuilderTest {
         };
 
         final OrganizationalUnit build =
-            new OrgUnit.BuilderImpl(TestConstants.NAME,
-                TestConstants.DESCRIPTION).parents(parents).build();
+            new OrgUnit.BuilderImpl(Constants.NAME,
+                Constants.DESCRIPTION).parents(parents).build();
 
         // when
         final OrganizationalUnit created =
