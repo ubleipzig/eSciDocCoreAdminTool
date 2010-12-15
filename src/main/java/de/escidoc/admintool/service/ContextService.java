@@ -68,7 +68,7 @@ public class ContextService implements Serializable {
         LOG.info("Retrieving Context from repository...");
 
         final Collection<Context> contexts =
-            client.retrieveContexts(createdBySysAdmin()).getContexts();
+            client.retrieveContexts(createdBySysAdmin());
 
         if (contexts == null || contexts.isEmpty()) {
             return Collections.emptySet(); // NOPMD by CHH on 9/17/10 10:23 AM

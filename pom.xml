@@ -10,7 +10,7 @@
 		<dependency>
 			<groupId>com.vaadin</groupId>
 			<artifactId>vaadin</artifactId>
-			<version>${vaadin-version}</version>
+			<version>6.4.8</version>
 		</dependency>
 		<dependency>
 			<groupId>org.vaadin.addons</groupId>
@@ -26,8 +26,14 @@
 		<dependency>
 			<groupId>org.escidoc.core</groupId>
 			<artifactId>client-1.2</artifactId>
-			<version>0.8-SNAPSHOT</version>
+			<version>0.8-beta1</version>
 			<type>jar</type>
+			<exclusions>
+				<exclusion>
+					<artifactId>escidoc-core</artifactId>
+					<groupId>org.escidoc</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.vaadin.addons</groupId>
@@ -57,7 +63,7 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.8.1</version>
+			<version>4.8.2</version>
 			<scope>test</scope>
 			<optional>true</optional>
 		</dependency>
@@ -67,6 +73,13 @@
 			<version>1.1</version>
 			<scope>test</scope>
 		</dependency>
+	<dependency>
+		<groupId>javax.servlet</groupId>
+		<artifactId>servlet-api</artifactId>
+		<version>2.3</version>
+		<scope>provided</scope>
+	</dependency>
+		
 	</dependencies>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -115,12 +128,13 @@
 				<version>2.1</version>
 				<configuration>
 					<webXml>src/main/webapp/WEB-INF/web.xml</webXml>
+					 <warSourceExcludes>WEB-INF/lib/servlet-api-2.3.jar</warSourceExcludes>
 				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.mortbay.jetty</groupId>
 				<artifactId>maven-jetty-plugin</artifactId>
-				<version>6.1.24</version>
+				<version>6.1.26</version>
 				<configuration>
 					<stopPort>9966</stopPort>
 					<stopKey>admintool</stopKey>
@@ -184,6 +198,7 @@
 		</plugins>
 		<finalName>${project.artifactId}</finalName>
 	</build>
+	
 	<name>eSciDoc Admin Tool with Vaadin</name>
 	<description>eSciDoc Admin Tool handles following eSciDoc resouces: 
 org unit, context, user accounts and roles.</description>
@@ -252,12 +267,11 @@ org unit, context, user accounts and roles.</description>
 	</scm>
 	<repositories>
 		<repository>
-			<id>escidoc.org</id>
-			<name>escidoc.org-snapshots</name>
-			<url>https://www.escidoc.org/artifactory/libs-snapshots-local</url>
-			<releases>
+			<id>org.escidoc.core</id>
+			<url>https://www.escidoc.org/artifactory/repo</url>
+			<snapshots>
 				<enabled>true</enabled>
-			</releases>
+			</snapshots>
 		</repository>
 		<repository>
 			<id>vaadin-addons</id>
@@ -280,4 +294,18 @@ org unit, context, user accounts and roles.</description>
 			</releases>
 		</pluginRepository>
 	</pluginRepositories>
+
+	<distributionManagement>
+		<repository>
+			<id>escidoc.org</id>
+			<name>escidoc.org-releases</name>
+			<url>https://www.escidoc.org/artifactory/libs-releases-local</url>
+		</repository>
+		<snapshotRepository>
+			<id>escidoc.org</id>
+			<name>escidoc.org-snapshots</name>
+			<url>https://www.escidoc.org/artifactory/libs-snapshots-local</url>
+		</snapshotRepository>
+	</distributionManagement>
+
 </project>

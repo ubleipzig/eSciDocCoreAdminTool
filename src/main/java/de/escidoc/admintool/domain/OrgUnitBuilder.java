@@ -23,7 +23,7 @@ import de.escidoc.core.resources.oum.Parents;
 import de.escidoc.core.resources.oum.Predecessor;
 import de.escidoc.core.resources.oum.PredecessorForm;
 import de.escidoc.core.resources.oum.Predecessors;
-import de.escidoc.core.resources.oum.Properties;
+import de.escidoc.core.resources.oum.OrganizationalUnitProperties;
 
 public class OrgUnitBuilder {
 
@@ -56,7 +56,7 @@ public class OrgUnitBuilder {
     public OrgUnitBuilder with(final String title, final String description)
         throws ParserConfigurationException, SAXException, IOException {
 
-        oldOrgUnit.setProperties(new Properties());
+        oldOrgUnit.setProperties(new OrganizationalUnitProperties());
 
         // add mdRecord to set
         final MetadataRecords mdRecords = new MetadataRecords();

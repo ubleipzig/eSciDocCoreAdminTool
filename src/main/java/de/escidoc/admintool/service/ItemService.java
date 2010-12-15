@@ -26,7 +26,7 @@ public class ItemService
     @Override
     protected final Collection<? extends Resource> findPublicOrReleseadResourcesUsingOldFilter()
         throws EscidocException, InternalClientException, TransportException {
-        return getClient().retrieveItems(withEmptyTaskParam()).getItems();
+        return getClient().retrieveItems(withEmptyTaskParam());
     }
 
     @Override

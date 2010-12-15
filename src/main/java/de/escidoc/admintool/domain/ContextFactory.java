@@ -5,7 +5,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import de.escidoc.core.resources.om.context.AdminDescriptors;
 import de.escidoc.core.resources.om.context.Context;
 import de.escidoc.core.resources.om.context.OrganizationalUnitRefs;
-import de.escidoc.core.resources.om.context.Properties;
+import de.escidoc.core.resources.om.context.ContextProperties;
 
 //TODO refactor this class, adapt to more appropriate pattern e.g. Builder
 public class ContextFactory {
@@ -15,7 +15,7 @@ public class ContextFactory {
     // http://stackoverflow.com/questions/589855/java-pmd-warning-on-non-transient-class-member
     private Context context;
 
-    private Properties properties;
+    private ContextProperties properties;
 
     public ContextFactory update(final Context context) {
         this.context = context;
@@ -30,7 +30,7 @@ public class ContextFactory {
         throws ParserConfigurationException {
         context = new Context();
 
-        properties = new Properties();
+        properties = new ContextProperties();
         properties.setName(name);
         properties.setDescription(description);
         properties.setType(contextType);

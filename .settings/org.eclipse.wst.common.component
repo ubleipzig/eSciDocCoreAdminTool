@@ -5,7 +5,7 @@
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
         <wb-resource deploy-path="/" source-path="/src/main/webapp"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/test/java"/>
-        <dependent-module deploy-path="/WEB-INF/lib" handle="module:/resource/org.escidoc.core.client-1.2-0.8-SNAPSHOT/org.escidoc.core.client-1.2-0.8-SNAPSHOT">
+        <dependent-module deploy-path="/WEB-INF/lib" handle="module:/resource/org.escidoc.core.client-1.2-0.8-beta1/org.escidoc.core.client-1.2-0.8-beta1">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <property name="context-root" value="AdminTool"/>

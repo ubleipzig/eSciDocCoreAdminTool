@@ -33,7 +33,7 @@ public class ContextServiceLab
     Collection<? extends Resource> findPublicOrReleseadResourcesUsingOldFilter()
         throws EscidocException, InternalClientException, TransportException,
         EscidocClientException {
-        return getClient().retrieveContexts(withEmptyTaskParam()).getContexts();
+        return getClient().retrieveContexts(withEmptyTaskParam());
     }
 
     @Override

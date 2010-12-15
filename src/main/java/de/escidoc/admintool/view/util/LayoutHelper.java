@@ -593,7 +593,7 @@ public final class LayoutHelper {
      * @param readOnly
      * @param propertyName
      * @param values
-     * @return
+     * @return AbstractComponent
      */
     public static synchronized AbstractComponent createSelectElement(
         final String className, final POJOItem<?> item, final boolean readOnly,
@@ -628,7 +628,7 @@ public final class LayoutHelper {
      * @param readOnly
      * @param propertyName
      * @param values
-     * @return
+     * @return AbstractComponent
      */
     public static synchronized AbstractComponent createSelectElement(
         final String className, final POJOItem<?> item, final boolean readOnly,
@@ -662,7 +662,7 @@ public final class LayoutHelper {
      * @param item
      * @param readOnly
      * @param propertyName
-     * @return
+     * @return AbstractComponent
      */
     public static synchronized AbstractComponent createListElement(
         final String className, final POJOItem<?> item, final boolean readOnly,
@@ -687,7 +687,7 @@ public final class LayoutHelper {
      * @param readOnly
      * @param propertyName
      * @param resolution
-     * @return
+     * @return AbstractComponent
      */
     public static synchronized AbstractComponent createDateElement(
         final String className, final POJOItem<?> item, final boolean readOnly,
@@ -720,7 +720,7 @@ public final class LayoutHelper {
      * @param readOnly
      * @param text
      * @param propertyName
-     * @return
+     * @return AbstractComponent
      */
     public static synchronized AbstractComponent createCheckBoxElement(
         final String className, final POJOItem<?> item, final boolean readOnly,
@@ -796,7 +796,7 @@ public final class LayoutHelper {
 
     /**
      * @param className
-     * @return
+     * @return List of Fields
      */
     public static List<Field> getAttachedFields(final String className) {
         return ATTACHED_FIELD_MAP.get(className);
