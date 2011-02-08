@@ -89,4 +89,13 @@ public class ContextView extends SplitPanel implements ResourceView {
     public void selectInFolderView(final Resource resource) {
         throw new UnsupportedOperationException("Not yet implemented");
     }
+
+    public void showFirstItemInEditView() {
+        Preconditions.checkNotNull(contextList, "contextList is null: %s",
+            contextList);
+
+        contextList.select(contextList.firstItemId());
+        showEditView(contextList.getContainerDataSource().getItem(
+            contextList.firstItemId()));
+    }
 }

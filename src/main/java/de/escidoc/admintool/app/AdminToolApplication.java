@@ -37,11 +37,11 @@ import de.escidoc.admintool.view.admintask.LoadExample;
 import de.escidoc.admintool.view.admintask.ReindexView;
 import de.escidoc.admintool.view.admintask.RepositoryInfoFooView;
 import de.escidoc.admintool.view.contentmodel.ContentModelAddView;
-import de.escidoc.admintool.view.context.AddOrgUnitToTheList;
 import de.escidoc.admintool.view.context.ContextAddView;
 import de.escidoc.admintool.view.context.ContextEditForm;
 import de.escidoc.admintool.view.context.ContextListView;
 import de.escidoc.admintool.view.context.ContextView;
+import de.escidoc.admintool.view.factory.ContextViewFactory;
 import de.escidoc.admintool.view.login.WelcomePage;
 import de.escidoc.admintool.view.resource.AddChildrenCommandImpl;
 import de.escidoc.admintool.view.resource.FolderHeaderImpl;
@@ -102,6 +102,8 @@ public class AdminToolApplication extends Application {
     private String eSciDocUri;
 
     private ResourceContainerFactory resourceContainerFactory;
+
+    private ContextViewFactory contextViewFactory;
 
     @Override
     public void init() {
@@ -178,6 +180,9 @@ public class AdminToolApplication extends Application {
     private void createFactories() {
         resourceContainerFactory =
             new ResourceContainerFactory(orgUnitServiceLab);
+        contextViewFactory =
+            new ContextViewFactory(this, mainWindow, orgUnitService,
+                contextService);
     }
 
     private void createServices() throws InternalClientException,
@@ -245,8 +250,6 @@ public class AdminToolApplication extends Application {
     private ContextListView contextList;
 
     private ContextEditForm contextForm;
-
-    private ResourceViewComponentImpl containterViewComponent;
 
     private ContentModelAddView contentModelAddView;
 
@@ -359,9 +362,8 @@ public class AdminToolApplication extends Application {
     }
 
     public ContextAddView newContextAddView() {
-        return new ContextAddView(this, mainWindow, getContextView()
-            .getContextList(), contextService, new AddOrgUnitToTheList(
-            mainWindow, createResourceTreeView()));
+        return contextViewFactory
+            .createContextAddView(createResourceTreeView());
     }
 
     public UserAddView newUserAddView() {
@@ -370,7 +372,10 @@ public class AdminToolApplication extends Application {
     }
 
     public void showContextView() {
-        setMainView(getContextView());
+        contextView =
+            contextViewFactory.createContextView(createResourceTreeView());
+        contextView.showFirstItemInEditView();
+        setMainView(contextView);
     }
 
     public void showRoleView() {
@@ -420,60 +425,8 @@ public class AdminToolApplication extends Application {
         return containerViewComponent.getResourceView();
     }
 
-    // Context
     public ContextView getContextView() {
-        // if (contextView == null) {
-        try {
-            contextList = new ContextListView(this, contextService);
-
-            final ResourceTreeView resourceTreeView = createResourceTreeView();
-
-            contextForm =
-                new ContextEditForm(this, mainWindow, contextService,
-                    orgUnitService, new AddOrgUnitToTheList(mainWindow,
-                        resourceTreeView));
-            contextForm.setContextList(contextList);
-
-            final ContextAddView contextAddView =
-                new ContextAddView(this, mainWindow, contextList,
-                    contextService, new AddOrgUnitToTheList(mainWindow,
-                        resourceTreeView));
-
-            contextView =
-                new ContextView(this, contextList, contextForm, contextAddView);
-            if (contextList.getContainerDataSource() != null
-                && contextList.getContainerDataSource().size() > 0) {
-                showFirstItemInEditView();
-            }
-            else {
-                contextView.showAddView();
-            }
-        }
-        catch (final EscidocException e) {
-            ModalDialog.show(mainWindow, e);
-            LOG.error(ViewConstants.SERVER_INTERNAL_ERROR, e);
-        }
-        catch (final InternalClientException e) {
-            ModalDialog.show(mainWindow, e);
-            LOG.error(ViewConstants.SERVER_INTERNAL_ERROR, e);
-        }
-        catch (final TransportException e) {
-            ModalDialog.show(mainWindow, e);
-            LOG.error(ViewConstants.SERVER_INTERNAL_ERROR, e);
-        }
-
-        // }
-
         return contextView;
-    }
-
-    private void showFirstItemInEditView() {
-        Preconditions.checkNotNull(contextList, "contextList is null: %s",
-            contextList);
-
-        contextList.select(contextList.firstItemId());
-        contextView.showEditView(contextList.getContainerDataSource().getItem(
-            contextList.firstItemId()));
     }
 
     // Content Model View
