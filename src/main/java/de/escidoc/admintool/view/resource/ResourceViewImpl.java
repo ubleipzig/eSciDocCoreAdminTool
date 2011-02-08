@@ -3,6 +3,7 @@ package de.escidoc.admintool.view.resource;
 import com.vaadin.data.Item;
 import com.vaadin.ui.Window;
 
+import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.service.ResourceService;
 import de.escidoc.core.resources.Resource;
 
@@ -20,18 +21,21 @@ public class ResourceViewImpl extends AbstractResourceView {
 
     private final ResourceContainer resourceContainer;
 
-    public ResourceViewImpl(final Window mainWindow,
-        final ResourceFolderView resourceListView,
+    private final AdminToolApplication app;
+
+    public ResourceViewImpl(final AdminToolApplication app,
+        final Window mainWindow, final ResourceFolderView resourceListView,
         final ResourceService resourceService,
         final ResourceContainer resourceContainer) {
 
         super(resourceListView);
+        this.app = app;
         this.mainWindow = mainWindow;
         this.resourceService = resourceService;
         this.resourceListView = resourceListView;
         this.resourceContainer = resourceContainer;
         resourceEditView =
-            new ResourceEditViewImpl(mainWindow, this, resourceService,
+            new ResourceEditViewImpl(app, mainWindow, this, resourceService,
                 resourceContainer);
 
     }

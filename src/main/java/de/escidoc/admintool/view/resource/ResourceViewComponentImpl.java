@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import com.vaadin.data.Item;
 import com.vaadin.ui.Window;
 
+import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.service.OrgUnitServiceLab;
 import de.escidoc.admintool.service.ResourceService;
 import de.escidoc.admintool.view.resource.ResourceTreeView.AddChildrenCommand;
@@ -28,8 +29,10 @@ public class ResourceViewComponentImpl implements ResourceViewComponent {
 
     private ResourceTreeView resourceTreeView;
 
-    public ResourceViewComponentImpl(final Window mainWindow,
-        final ResourceService resourceService,
+    private final AdminToolApplication app;
+
+    public ResourceViewComponentImpl(final AdminToolApplication app,
+        final Window mainWindow, final ResourceService resourceService,
         final ResourceContainer resourceContainer) {
         Preconditions.checkNotNull(mainWindow, "mainWindow is null: %s",
             mainWindow);
@@ -37,16 +40,16 @@ public class ResourceViewComponentImpl implements ResourceViewComponent {
             "resourceService is null: %s", resourceService);
         Preconditions.checkNotNull(resourceContainer,
             "resourceContainer is null: %s", resourceContainer);
+        this.app = app;
         this.mainWindow = mainWindow;
         this.resourceService = resourceService;
         this.resourceContainer = resourceContainer;
     }
 
     public void init() throws EscidocClientException {
-        // resourceContainer = getResourceContainer();
         addChildrenCommand = createAddChildrenCommand(resourceContainer);
         resourceView =
-            new ResourceViewImpl(mainWindow, createFolderView(),
+            new ResourceViewImpl(app, mainWindow, createFolderView(),
                 resourceService, resourceContainer);
     }
 
@@ -80,25 +83,6 @@ public class ResourceViewComponentImpl implements ResourceViewComponent {
         return new AddChildrenCommandImpl((OrgUnitServiceLab) resourceService,
             resourceContainer);
     }
-
-    // public ResourceContainer getResourceContainer() throws EscidocException,
-    // InternalClientException, TransportException {
-    // if (resourceContainer == null) {
-    // resourceContainer = createResourceContainer();
-    // }
-    // return resourceContainer;
-    // }
-
-    // public ResourceContainer createResourceContainer() throws
-    // EscidocException,
-    // InternalClientException, TransportException {
-    // return new ResourceContainerImpl(getTopLevelOrgUnits());
-    // }
-
-    // private Collection<OrganizationalUnit> getTopLevelOrgUnits()
-    // throws EscidocException, InternalClientException, TransportException {
-    // return ((OrgUnitServiceLab) resourceService).getTopLevelOrgUnits();
-    // }
 
     @Override
     public void showFirstItemInEditView() {

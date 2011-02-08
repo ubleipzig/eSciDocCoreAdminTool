@@ -7,6 +7,7 @@ import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Window;
 
+import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.app.PropertyId;
 import de.escidoc.admintool.service.ResourceService;
 import de.escidoc.admintool.view.ViewConstants;
@@ -42,8 +43,11 @@ public class ResourceToolbar extends CustomComponent {
 
     private Item item;
 
-    public ResourceToolbar(final ResourceViewImpl resourceViewImpl,
-        final Window mainWindow, final ResourceService resourceService,
+    private final AdminToolApplication app;
+
+    public ResourceToolbar(final AdminToolApplication app,
+        final ResourceViewImpl resourceViewImpl, final Window mainWindow,
+        final ResourceService resourceService,
         final ResourceContainer resourceContainer) {
         Preconditions.checkNotNull(resourceViewImpl,
             "resourceViewImpl is null: %s", resourceViewImpl);
@@ -53,7 +57,7 @@ public class ResourceToolbar extends CustomComponent {
             "resourceService is null: %s", resourceService);
         Preconditions.checkNotNull(resourceContainer,
             "resourceContainer is null: %s", resourceContainer);
-
+        this.app = app;
         this.resourceViewImpl = resourceViewImpl;
         this.mainWindow = mainWindow;
         this.resourceService = resourceService;
@@ -99,7 +103,7 @@ public class ResourceToolbar extends CustomComponent {
         closeBtn = new Button(ViewConstants.CLOSE, closeResourceListener);
 
         delResourceListener =
-            new DelResourceListener(mainWindow, resourceService,
+            new DelResourceListener(app, mainWindow, resourceService,
                 resourceContainer);
         delBtn = new Button(ViewConstants.DELETE, delResourceListener);
     }

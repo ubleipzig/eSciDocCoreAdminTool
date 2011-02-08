@@ -17,6 +17,7 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.Reindeer;
 
+import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.service.OrgUnitServiceLab;
 import de.escidoc.admintool.service.ResourceService;
 import de.escidoc.admintool.view.ViewConstants;
@@ -50,21 +51,23 @@ public class ResourceEditViewImpl extends CustomComponent
 
     private final ResourceView resourceView;
 
-    public ResourceEditViewImpl(final Window mainWindow,
-        final ResourceViewImpl resourceView,
+    private final AdminToolApplication app;
+
+    public ResourceEditViewImpl(final AdminToolApplication app,
+        final Window mainWindow, final ResourceViewImpl resourceView,
         final ResourceService orgUnitService,
         final ResourceContainer resourceContainer) {
 
         checkPreconditions(mainWindow, resourceView, orgUnitService,
             resourceContainer);
-
+        this.app = app;
         this.mainWindow = mainWindow;
         this.resourceView = resourceView;
         resourceService = orgUnitService;
         formLayout.setWidth(75, UNITS_PERCENTAGE);
 
         resourceToolbar =
-            new ResourceToolbar(resourceView, mainWindow, orgUnitService,
+            new ResourceToolbar(app, resourceView, mainWindow, orgUnitService,
                 resourceContainer);
         propertyFields =
             new PropertiesFieldsImpl(vLayout, formLayout, fieldByName);

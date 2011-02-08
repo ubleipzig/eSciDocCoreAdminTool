@@ -331,8 +331,8 @@ public class AdminToolApplication extends Application {
             final ResourceContainer resourceContainer = getResourceContainer();
 
             final ResourceViewComponent resourceViewComponent =
-                new ResourceViewComponentImpl(mainWindow, orgUnitServiceLab,
-                    resourceContainer);
+                new ResourceViewComponentImpl(this, mainWindow,
+                    orgUnitServiceLab, resourceContainer);
             resourceViewComponent.init();
             resourceTreeView =
                 new ResourceTreeView(mainWindow, header, resourceContainer);
@@ -416,7 +416,7 @@ public class AdminToolApplication extends Application {
 
     private void createResourceView() throws EscidocClientException {
         containerViewComponent =
-            new ResourceViewComponentImpl(mainWindow, orgUnitServiceLab,
+            new ResourceViewComponentImpl(this, mainWindow, orgUnitServiceLab,
                 getResourceContainer());
         containerViewComponent.init();
     }

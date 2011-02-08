@@ -12,9 +12,4 @@ public interface ResourceViewComponent {
 
     void showFirstItemInEditView();
 
-    // ResourceContainer getResourceContainer() throws EscidocException,
-    // InternalClientException, TransportException;
-
-    // ResourceContainer createResourceContainer() throws EscidocException,
-    // InternalClientException, TransportException;
 }
