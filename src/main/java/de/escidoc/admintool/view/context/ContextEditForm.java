@@ -286,6 +286,7 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
     private void addDescField() {
         descriptionField.setWidth(ViewConstants.FIELD_WIDTH);
         descriptionField.setRows(3);
+        descriptionField.setMaxLength(ViewConstants.MAX_DESC_LENGTH);
         fields.add(descriptionField);
         form.addComponent(LayoutHelper.create(ViewConstants.DESCRIPTION_LABEL,
             descriptionField, LABEL_WIDTH, 80, true));
@@ -294,6 +295,7 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
     private void addNameField() {
         nameField.setWidth(ViewConstants.FIELD_WIDTH);
         nameField.setWriteThrough(false);
+        nameField.setMaxLength(ViewConstants.MAX_TITLE_LENGTH);
         form.addComponent(LayoutHelper.create(ViewConstants.NAME_LABEL,
             nameField, LABEL_WIDTH, true));
     }
@@ -485,6 +487,7 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
             }
             case OPENED: {
                 setFormReadOnly(false);
+                footer.setVisible(true);
                 break;
             }
             case CLOSED: {

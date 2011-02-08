@@ -211,6 +211,7 @@ public class ContextAddView extends CustomComponent implements ClickListener {
         descriptionField = new TextField();
         descriptionField.setWidth(ViewConstants.FIELD_WIDTH);
         descriptionField.setRows(3);
+        descriptionField.setMaxLength(ViewConstants.MAX_DESC_LENGTH);
         panel.addComponent(LayoutHelper.create(ViewConstants.DESCRIPTION_LABEL,
             descriptionField, LABEL_WIDTH, 80, true));
         mapBinding("", descriptionField);
@@ -219,6 +220,7 @@ public class ContextAddView extends CustomComponent implements ClickListener {
     private void addNameField() {
         nameField = new TextField();
         nameField.setWidth(ViewConstants.FIELD_WIDTH);
+        nameField.setMaxLength(ViewConstants.MAX_TITLE_LENGTH);
 
         form.addComponent(LayoutHelper.create(ViewConstants.NAME_LABEL,
             nameField, LABEL_WIDTH, true));

@@ -13,8 +13,6 @@ public class EditParentListener implements ClickListener {
 
     private final AddOrEditParentModalWindow orgUnitSelectDialog;
 
-    private Item item;
-
     public EditParentListener(final Window mainWindow,
         final AddOrEditParentModalWindow orgUnitSelectDialog) {
         this.mainWindow = mainWindow;
@@ -31,7 +29,6 @@ public class EditParentListener implements ClickListener {
     }
 
     public void bind(final Item item) {
-        this.item = item;
         orgUnitSelectDialog.bind(item);
     }
 }

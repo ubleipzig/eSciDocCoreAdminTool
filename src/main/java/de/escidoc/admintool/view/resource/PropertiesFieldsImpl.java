@@ -96,6 +96,7 @@ public class PropertiesFieldsImpl extends CustomComponent
 
     private void addTitleField() {
         titleField.setWidth(ViewConstants.FIELD_WIDTH);
+        titleField.setMaxLength(ViewConstants.MAX_TITLE_LENGTH);
         configure(titleField);
         formLayout.addComponent(titleField);
         fieldByName.put("title", titleField);
@@ -104,6 +105,7 @@ public class PropertiesFieldsImpl extends CustomComponent
 
     private void addDescriptionField() {
         descField.setWidth(ViewConstants.FIELD_WIDTH);
+        descField.setMaxLength(ViewConstants.MAX_DESC_LENGTH);
         descField.setRows(ViewConstants.DESCRIPTION_ROWS);
 
         configure(descField);

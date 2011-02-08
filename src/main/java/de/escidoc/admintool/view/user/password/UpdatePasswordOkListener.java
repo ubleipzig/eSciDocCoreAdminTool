@@ -2,6 +2,7 @@ package de.escidoc.admintool.view.user.password;
 
 import com.google.common.base.Preconditions;
 import com.vaadin.terminal.UserError;
+import com.vaadin.ui.AbstractTextField;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.TextField;
@@ -14,17 +15,17 @@ import de.escidoc.core.client.exceptions.EscidocClientException;
 public final class UpdatePasswordOkListener implements Button.ClickListener {
     private static final long serialVersionUID = 8604187353382368999L;
 
-    private final TextField passwordField;
+    private final AbstractTextField passwordField;
 
-    private final TextField retypePasswordField;
+    private final AbstractTextField retypePasswordField;
 
     private Window mainWindow;
 
     private UpdatePasswordCommand command;
 
     // TODO make it builder
-    public UpdatePasswordOkListener(final TextField passwordField,
-        final TextField retypePasswordField) {
+    public UpdatePasswordOkListener(final AbstractTextField passwordField,
+        final AbstractTextField retypePasswordField) {
         this.passwordField = passwordField;
         this.retypePasswordField = retypePasswordField;
     }

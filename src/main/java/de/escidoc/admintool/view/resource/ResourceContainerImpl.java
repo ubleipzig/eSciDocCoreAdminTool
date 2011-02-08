@@ -237,10 +237,6 @@ public class ResourceContainerImpl implements ResourceContainer {
         return parent != null;
     }
 
-    private boolean hasNoChildren(final Resource oldParent) {
-        return !hasChildren(oldParent);
-    }
-
     @Override
     public void removeParent(final OrganizationalUnit child) {
         Preconditions.checkNotNull(child, "child is null: %s", child);

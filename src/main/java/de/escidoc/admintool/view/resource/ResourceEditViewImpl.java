@@ -57,7 +57,6 @@ public class ResourceEditViewImpl extends CustomComponent
         final Window mainWindow, final ResourceViewImpl resourceView,
         final ResourceService orgUnitService,
         final ResourceContainer resourceContainer) {
-
         checkPreconditions(mainWindow, resourceView, orgUnitService,
             resourceContainer);
         this.app = app;

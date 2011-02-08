@@ -272,6 +272,7 @@ public class UserEditForm extends CustomComponent implements ClickListener {
 
     private void addLoginNameField() {
         loginNameField = new TextField();
+        loginNameField.setMaxLength(ViewConstants.MAX_TITLE_LENGTH);
         loginNameField.setWidth(ViewConstants.FIELD_WIDTH);
         loginNameField.setReadOnly(true);
         panel.addComponent(LayoutHelper.create(ViewConstants.LOGIN_NAME_LABEL,
@@ -280,6 +281,7 @@ public class UserEditForm extends CustomComponent implements ClickListener {
 
     private void addNameField() {
         nameField = new TextField();
+        nameField.setMaxLength(ViewConstants.MAX_TITLE_LENGTH);
         nameField.setWidth(ViewConstants.FIELD_WIDTH);
         nameField.setWriteThrough(false);
         panel.addComponent(LayoutHelper.create(ViewConstants.NAME_LABEL,

@@ -2,7 +2,7 @@ package de.escidoc.admintool.view.user.password;
 
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.ComponentContainer;
-import com.vaadin.ui.TextField;
+import com.vaadin.ui.PasswordField;
 
 public interface PasswordView extends ComponentContainer {
 
@@ -16,9 +16,9 @@ public interface PasswordView extends ComponentContainer {
 
     void addOkButton(ClickListener updatePasswordOkListener);
 
-    TextField getPasswordField();
+    PasswordField getPasswordField();
 
-    TextField getRetypePasswordField();
+    PasswordField getRetypePasswordField();
 
     void addCancelButton(ClickListener cancelListener);
 

@@ -7,6 +7,7 @@ import com.google.common.base.Preconditions;
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.data.util.POJOItem;
 import com.vaadin.terminal.UserError;
+import com.vaadin.ui.AbstractTextField;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -100,28 +101,22 @@ public class UserAddView extends CustomComponent implements ClickListener {
         addNameField();
         addLoginField();
         addOrgUnitWidget();
-        // OLD:
-
-        // createAndAddPasswordFields();
-
-        // NEW:
         addPasswordFields();
-
         addFooter();
     }
 
     private void addPasswordFields() {
         createPasswordField();
 
-        panel.addComponent(foo(ViewConstants.PASSWORD_CAPTION,
+        panel.addComponent(createLayout(ViewConstants.PASSWORD_CAPTION,
             passwordView.getPasswordField(), LEFT_MARGIN, true));
 
-        panel.addComponent(foo(ViewConstants.RETYPE_PASSWORD_CAPTION,
+        panel.addComponent(createLayout(ViewConstants.RETYPE_PASSWORD_CAPTION,
             passwordView.getRetypePasswordField(), LEFT_MARGIN, true));
     }
 
-    private Component foo(
-        final String nameLabel, final TextField textField,
+    private Component createLayout(
+        final String nameLabel, final AbstractTextField textField,
         final int leftMargin, final boolean required) {
 
         final HorizontalLayout hor = new HorizontalLayout();
@@ -132,7 +127,6 @@ public class UserAddView extends CustomComponent implements ClickListener {
         Label l;
         hor.addComponent(l = new Label(text, Label.CONTENT_XHTML));
         l.setWidth(leftMargin + Constants.PX);
-        // hor.setComponentAlignment(l, Alignment.BOTTOM_RIGHT);
 
         if (required) {
             hor
@@ -148,11 +142,6 @@ public class UserAddView extends CustomComponent implements ClickListener {
         hor.addComponent(new Label(" "));
         hor.setSpacing(false);
         return hor;
-    }
-
-    private void createAndAddPasswordFields() {
-        createPasswordField();
-        addPasswordView();
     }
 
     // START: ORG UNIT
@@ -247,13 +236,10 @@ public class UserAddView extends CustomComponent implements ClickListener {
         passwordView.addMinCharValidator();
     }
 
-    private void addPasswordView() {
-        panel.addComponent(passwordView);
-    }
-
     private void addNameField() {
         panel.addComponent(LayoutHelper.create(ViewConstants.NAME_LABEL,
             nameField = new TextField(), LEFT_MARGIN, true));
+        nameField.setMaxLength(ViewConstants.MAX_TITLE_LENGTH);
         nameProperty =
             new ObjectProperty<String>(ViewConstants.EMPTY_STRING, String.class);
         nameField.setPropertyDataSource(nameProperty);
