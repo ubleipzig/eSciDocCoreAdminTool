@@ -35,7 +35,8 @@ public final class AddChildrenCommandImpl implements AddChildrenCommand {
             throw new IllegalArgumentException("Parent can not be null.");
         }
 
-        resourceContainer.addChildren(parent, getChildren(parent));
+        Collection<OrganizationalUnit> children = getChildren(parent);
+        resourceContainer.addChildren(parent, children);
     }
 
     private Collection<OrganizationalUnit> getChildren(final Resource parent)

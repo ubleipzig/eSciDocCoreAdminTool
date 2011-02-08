@@ -2,7 +2,9 @@ package de.escidoc.admintool.view.resource;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
+import java.util.Set;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -16,8 +18,11 @@ import com.vaadin.ui.Field;
 import com.vaadin.ui.Window;
 
 import de.escidoc.admintool.service.ResourceService;
+import de.escidoc.admintool.view.ErrorMessage;
 import de.escidoc.admintool.view.ModalDialog;
+import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.core.client.exceptions.EscidocClientException;
+import de.escidoc.core.client.exceptions.application.security.AuthorizationException;
 
 public abstract class AbstractResourceBtnListener
     implements ResourceBtnListener {
@@ -28,10 +33,11 @@ public abstract class AbstractResourceBtnListener
 
     protected AbstractResourceBtnListener(final Collection<Field> allFields,
         final Map<String, Field> fieldByName, final Window mainWindow,
-        final ResourceService resourceService) {
+        final ResourceView resourceView, final ResourceService resourceService) {
         data.allFields = allFields;
         data.fieldByName = fieldByName;
         data.mainWindow = mainWindow;
+        data.resourceView = resourceView;
         data.resourceService = resourceService;
     }
 
@@ -46,21 +52,15 @@ public abstract class AbstractResourceBtnListener
 
     @Override
     public void buttonClick(final ClickEvent event) {
-        if (validateAllFields()) {
-            saveToReposity();
-            if (isSuccessfull()) {
-                removeValidationErrors();
-                commitAllFields();
-                updateResourceContainer();
-                // updateItem();
-                // checkPostConditions(child);
-                showSuccessMessage();
-            }
-            else {
-                showErrorMessage();
-            }
+        if (validateAllFields() && saveToReposity()) {
+            removeValidationErrors();
+            commitAllFields();
+            updateResourceContainer();
+            showInEditView();
         }
     }
+
+    protected abstract void showInEditView();
 
     private void removeValidationErrors() {
         for (final Field field : data.allFields) {
@@ -82,46 +82,35 @@ public abstract class AbstractResourceBtnListener
         return true;
     }
 
-    private void showErrorMessage() {
-        throw new UnsupportedOperationException("not-yet-implemented.");
-
-    }
-
-    private boolean isSuccessfull() {
-        return true;
-    }
-
-    private void saveToReposity() {
+    private boolean saveToReposity() {
         try {
             updateModel();
             updatePersistence();
-            for (final Field field : data.allFields) {
-                field.commit();
-            }
+            return true;
+        }
+        catch (final AuthorizationException e) {
+            ErrorMessage.show(data.mainWindow, ViewConstants.NOT_AUTHORIZED, e);
+            return false;
         }
         catch (final EscidocClientException e) {
             ModalDialog.show(data.mainWindow, e);
+            return false;
         }
         catch (final ParserConfigurationException e) {
             ModalDialog.show(data.mainWindow, e);
+            return false;
         }
         catch (final SAXException e) {
             ModalDialog.show(data.mainWindow, e);
+            return false;
         }
         catch (final IOException e) {
             ModalDialog.show(data.mainWindow, e);
+            return false;
         }
     }
 
-    private void commitAllFields() {
-        for (final Field field : data.allFields) {
-            field.commit();
-        }
-    }
-
-    private void showSuccessMessage() {
-        data.mainWindow.showNotification(getSucessMessage());
-    }
+    protected abstract void commitAllFields();
 
     protected abstract void updateModel() throws ParserConfigurationException,
         SAXException, IOException, EscidocClientException;
@@ -162,5 +151,18 @@ public abstract class AbstractResourceBtnListener
 
     protected String getType() {
         return (String) getData().fieldByName.get("type").getValue();
+    }
+
+    protected Set<String> getParents() {
+        return Collections.singleton((String) getData().fieldByName.get(
+            "parents").getValue());
+    }
+
+    public ResourceView getResourceView() {
+        return getData().resourceView;
+    }
+
+    protected Field getParentField() {
+        return getData().fieldByName.get("parents");
     }
 }

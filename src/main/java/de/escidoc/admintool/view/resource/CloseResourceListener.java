@@ -1,5 +1,6 @@
 package de.escidoc.admintool.view.resource;
 
+import com.google.common.base.Preconditions;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Window;
@@ -19,6 +20,8 @@ public class CloseResourceListener extends AbstractUpdateable
         final ResourceContainer resourceContainer,
         final ResourceToolbar resourceToolbar) {
         super(mainWindow, orgUnitService, resourceContainer);
+        Preconditions.checkNotNull(resourceToolbar,
+            "resourceToolbar is null: %s", resourceToolbar);
         this.resourceToolbar = resourceToolbar;
     }
 

@@ -13,58 +13,63 @@ import de.escidoc.core.resources.common.MetadataRecords;
 
 public class MdRecord {
 
-  private static Element pubman;
-  private static Document doc;
+    private static Element pubman;
 
-  public static MetadataRecords createEscidocMdRecords(String name, String disc)
-      throws ParserConfigurationException {
+    private static Document doc;
 
-    final MetadataRecords mdRecords = new MetadataRecords();
-    final MetadataRecord escidocMdRecord = new MetadataRecord();
-    mdRecords.add(escidocMdRecord);
+    public static MetadataRecords createEscidocMdRecords(
+        String name, String disc) throws ParserConfigurationException {
 
-    escidocMdRecord.setName("escidoc");
-    buildNewDocument();
+        final MetadataRecords mdRecords = new MetadataRecords();
+        final MetadataRecord escidocMdRecord = new MetadataRecord();
+        mdRecords.add(escidocMdRecord);
 
-    pubman = doc.createElementNS(
-        "http://purl.org/escidoc/metadata/profiles/0.1/organizationalunit",
-        "organizational-unit");
-    pubman.setPrefix("mdou");
+        escidocMdRecord.setName("escidoc");
+        buildNewDocument();
 
-    escidocMdRecord.setContent(pubman);
+        pubman =
+            doc
+                .createElementNS(
+                    "http://purl.org/escidoc/metadata/profiles/0.1/organizationalunit",
+                    "organizational-unit");
+        pubman.setPrefix("mdou");
 
-    title(name);
-    description(disc);
+        escidocMdRecord.setContent(pubman);
 
-    return mdRecords;
-  }
+        title(name);
+        description(disc);
 
-  private static void buildNewDocument() throws ParserConfigurationException {
-    final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-    factory.setNamespaceAware(true);
-    factory.setCoalescing(true);
-    factory.setValidating(true);
-    final DocumentBuilder builder = factory.newDocumentBuilder();
-    doc = builder.newDocument();
-  }
+        return mdRecords;
+    }
 
-  // TODO refactor this: a lot of duplication
-  private static Node title(final String title) {
-    final Element titleElmt = doc.createElementNS(
-        "http://purl.org/dc/elements/1.1/", "title");
-    titleElmt.setPrefix("dc");
-    titleElmt.setTextContent(title);
-    pubman.appendChild(titleElmt);
-    return pubman;
-  }
+    private static void buildNewDocument() throws ParserConfigurationException {
+        final DocumentBuilderFactory factory =
+            DocumentBuilderFactory.newInstance();
+        factory.setNamespaceAware(true);
+        factory.setCoalescing(true);
+        factory.setValidating(true);
+        final DocumentBuilder builder = factory.newDocumentBuilder();
+        doc = builder.newDocument();
+    }
 
-  private static Node description(final String description) {
-    final Element descriptionElmt = doc.createElementNS(
-        "http://purl.org/dc/elements/1.1/", "description");
-    descriptionElmt.setPrefix("dc");
-    descriptionElmt.setTextContent(description);
-    pubman.appendChild(descriptionElmt);
-    return pubman;
-  }
+    // TODO refactor this: a lot of duplication
+    private static Node title(final String title) {
+        final Element titleElmt =
+            doc.createElementNS("http://purl.org/dc/elements/1.1/", "title");
+        titleElmt.setPrefix("dc");
+        titleElmt.setTextContent(title);
+        pubman.appendChild(titleElmt);
+        return pubman;
+    }
+
+    private static Node description(final String description) {
+        final Element descriptionElmt =
+            doc.createElementNS("http://purl.org/dc/elements/1.1/",
+                "description");
+        descriptionElmt.setPrefix("dc");
+        descriptionElmt.setTextContent(description);
+        pubman.appendChild(descriptionElmt);
+        return pubman;
+    }
 
 }

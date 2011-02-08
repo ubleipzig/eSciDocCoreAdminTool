@@ -67,7 +67,7 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
     private static final Logger LOG = LoggerFactory
         .getLogger(ContextEditForm.class);
 
-    private static final int LABEL_WIDTH = 100;
+    private static final int LABEL_WIDTH = 111;
 
     public static final int HEIGHT = 15;
 

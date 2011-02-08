@@ -26,8 +26,6 @@ public class ResourceToolbar extends CustomComponent {
 
     private final ResourceViewImpl resourceViewImpl;
 
-    private DelResourceListener delResourceListener;
-
     private final Window mainWindow;
 
     private final ResourceService resourceService;
@@ -39,6 +37,8 @@ public class ResourceToolbar extends CustomComponent {
     private OpenResourceListener openResourceListener;
 
     private CloseResourceListener closeResourceListener;
+
+    private DelResourceListener delResourceListener;
 
     private Item item;
 
@@ -81,7 +81,6 @@ public class ResourceToolbar extends CustomComponent {
         hLayout.setHeight(100, UNITS_PERCENTAGE);
         hLayout.setSpacing(true);
         hLayout.setMargin(true);
-        // hLayout.setMargin(true, true, true, true);
     }
 
     private void createButtonsAndListeners() {
@@ -91,7 +90,7 @@ public class ResourceToolbar extends CustomComponent {
 
         openResourceListener =
             new OpenResourceListener(mainWindow, resourceService,
-                resourceContainer);
+                resourceContainer, this);
         openBtn = new Button(ViewConstants.OPEN, openResourceListener);
 
         closeResourceListener =

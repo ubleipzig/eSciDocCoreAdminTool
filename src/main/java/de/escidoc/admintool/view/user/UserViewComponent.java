@@ -1,9 +1,13 @@
 package de.escidoc.admintool.view.user;
 
 import com.google.common.base.Preconditions;
+import com.vaadin.data.Item;
 
 import de.escidoc.admintool.app.AdminToolApplication;
+import de.escidoc.admintool.service.OrgUnitServiceLab;
+import de.escidoc.admintool.service.ResourceService;
 import de.escidoc.admintool.service.UserService;
+import de.escidoc.admintool.view.resource.ResourceTreeView;
 
 public class UserViewComponent {
 
@@ -19,13 +23,26 @@ public class UserViewComponent {
 
     private final UserService userService;
 
+    private UserListView listView;
+
+    private UserEditForm editForm;
+
+    private final OrgUnitServiceLab orgUnitService;
+
+    private final ResourceTreeView resourceTreeView;
+
     public UserViewComponent(final AdminToolApplication app,
-        final UserService userService) {
+        final UserService userService, final ResourceService orgUnitServiceLab,
+        final ResourceTreeView resourceTreeView) {
         Preconditions
             .checkNotNull(app, "AdminToolApplication can not be null.");
         Preconditions.checkNotNull(userService, "UserService can not be null.");
+        Preconditions.checkNotNull(orgUnitServiceLab,
+            "orgUnitService is null: %s", orgUnitServiceLab);
         this.app = app;
         this.userService = userService;
+        orgUnitService = (OrgUnitServiceLab) orgUnitServiceLab;
+        this.resourceTreeView = resourceTreeView;
     }
 
     /**
@@ -48,13 +65,25 @@ public class UserViewComponent {
      */
     public UserView getUserView() {
         if (userView == null) {
-            setUserListView(new UserListView(app, userService));
-            setUserEditForm(new UserEditForm(app, userService));
+            listView = new UserListView(app, userService);
+            setUserListView(listView);
+            editForm =
+                new UserEditForm(app, userService, orgUnitService,
+                    resourceTreeView);
+            setUserEditForm(editForm);
             setUserEditView(new UserEditView(getUserEditForm()));
-
-            setUserView(new UserView(app, getUserListView(), getUserEditView()));
+            userView = new UserView(app, getUserListView(), getUserEditView());
+            setUserView(userView);
+            showFirstItemInEditView();
         }
         return userView;
+    }
+
+    private void showFirstItemInEditView() {
+        final Item item =
+            listView.getContainerDataSource().getItem(listView.firstItemId());
+        listView.select(listView.firstItemId());
+        userView.showEditView(item);
     }
 
     /**

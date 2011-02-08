@@ -20,8 +20,7 @@ public class ContainerService
     @Override
     Collection<? extends Resource> findPublicOrReleseadResourcesUsingOldFilter()
         throws EscidocClientException {
-        return getClient()
-            .retrieveContainers(withEmptyTaskParam());
+        return getClient().retrieveContainers(withEmptyTaskParam());
     }
 
     @Override

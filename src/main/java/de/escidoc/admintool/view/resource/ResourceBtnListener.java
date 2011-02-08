@@ -6,8 +6,8 @@ import com.vaadin.ui.Button.ClickListener;
 
 public interface ResourceBtnListener extends ClickListener {
 
-  void buttonClick(final ClickEvent event);
+    void buttonClick(final ClickEvent event);
 
-  void bind(final Item item);
+    void bind(final Item item);
 
 }

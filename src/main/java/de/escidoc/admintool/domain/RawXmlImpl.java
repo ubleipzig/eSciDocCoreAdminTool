@@ -14,25 +14,27 @@ import org.xml.sax.SAXException;
 
 public class RawXmlImpl implements RawXml {
 
-  private final String xml;
-  private final Element element;
+    private final String xml;
 
-  public RawXmlImpl(String xml) throws SAXException, IOException,
-      ParserConfigurationException {
-    this.xml = xml;
-    element = toElement();
-  }
+    private final Element element;
 
-  public Element asElement() {
-    return element;
-  }
+    public RawXmlImpl(String xml) throws SAXException, IOException,
+        ParserConfigurationException {
+        this.xml = xml;
+        element = toElement();
+    }
 
-  private Element toElement() throws SAXException, IOException,
-      ParserConfigurationException {
-    final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-    final DocumentBuilder builder = factory.newDocumentBuilder();
-    final InputSource is = new InputSource(new StringReader(xml));
-    final Document d = builder.parse(is);
-    return d.getDocumentElement();
-  }
+    public Element asElement() {
+        return element;
+    }
+
+    private Element toElement() throws SAXException, IOException,
+        ParserConfigurationException {
+        final DocumentBuilderFactory factory =
+            DocumentBuilderFactory.newInstance();
+        final DocumentBuilder builder = factory.newDocumentBuilder();
+        final InputSource is = new InputSource(new StringReader(xml));
+        final Document d = builder.parse(is);
+        return d.getDocumentElement();
+    }
 }

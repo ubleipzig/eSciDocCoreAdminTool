@@ -56,20 +56,18 @@ public class CreateOrgUnitUsingBuilderTest {
     @Test
     public void shouldCreateSimpleOrgUnit() throws Exception {
         final OrganizationalUnit build =
-            new OrgUnit.BuilderImpl(Constants.NAME,
-                Constants.DESCRIPTION).build();
+            new OrgUnit.BuilderImpl(Constants.NAME, Constants.DESCRIPTION)
+                .build();
         final OrganizationalUnit created =
             (OrganizationalUnit) service.create(build);
-        assertThat(created.getProperties().getName(),
-            equalTo(Constants.NAME));
+        assertThat(created.getProperties().getName(), equalTo(Constants.NAME));
     }
 
     @Test
     public void shouldCreateOrgUnitWithPubManMetadata() throws Exception {
         // given
         final OrganizationalUnit build =
-            new OrgUnit.BuilderImpl(Constants.NAME,
-                Constants.DESCRIPTION)
+            new OrgUnit.BuilderImpl(Constants.NAME, Constants.DESCRIPTION)
                 .alternative(ALTERNATIVE).identifier(IDENTIFIER)
                 .country("germany").city("karlsruhe").coordinates("xyz")
                 .type("institute").build();
@@ -113,8 +111,8 @@ public class CreateOrgUnitUsingBuilderTest {
             new RawXmlMetadataImpl(metadataName, xml);
 
         final OrganizationalUnit build =
-            new OrgUnit.BuilderImpl(Constants.NAME,
-                Constants.DESCRIPTION).metadata(rawXmlMetadata).build();
+            new OrgUnit.BuilderImpl(Constants.NAME, Constants.DESCRIPTION)
+                .metadata(rawXmlMetadata).build();
 
         // when
         final OrganizationalUnit created =
@@ -138,8 +136,8 @@ public class CreateOrgUnitUsingBuilderTest {
         };
 
         final OrganizationalUnit build =
-            new OrgUnit.BuilderImpl(Constants.NAME,
-                Constants.DESCRIPTION).parents(parents).build();
+            new OrgUnit.BuilderImpl(Constants.NAME, Constants.DESCRIPTION)
+                .parents(parents).build();
 
         // when
         final OrganizationalUnit created =

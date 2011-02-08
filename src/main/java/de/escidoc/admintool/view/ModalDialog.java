@@ -20,4 +20,5 @@ public class ModalDialog {
         final Window mainWindow, final String caption, final String message) {
         mainWindow.addWindow(new ErrorDialog(mainWindow, caption, message));
     }
+
 }

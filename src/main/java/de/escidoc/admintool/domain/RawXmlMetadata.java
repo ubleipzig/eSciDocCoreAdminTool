@@ -4,8 +4,8 @@ import org.w3c.dom.Element;
 
 public interface RawXmlMetadata {
 
-  String name();
+    String name();
 
-  Element content();
+    Element content();
 
 }

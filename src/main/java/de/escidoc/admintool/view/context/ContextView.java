@@ -15,6 +15,7 @@ import de.escidoc.admintool.exception.ResourceNotFoundException;
 import de.escidoc.admintool.view.ModalDialog;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.admintool.view.resource.ResourceView;
+import de.escidoc.core.resources.Resource;
 
 @SuppressWarnings("serial")
 public class ContextView extends SplitPanel implements ResourceView {
@@ -82,5 +83,10 @@ public class ContextView extends SplitPanel implements ResourceView {
 
     public Item getSelectedItem() {
         return contextList.getItem(contextList.getValue());
+    }
+
+    @Override
+    public void selectInFolderView(final Resource resource) {
+        throw new UnsupportedOperationException("Not yet implemented");
     }
 }

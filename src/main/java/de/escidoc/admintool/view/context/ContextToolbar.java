@@ -15,9 +15,7 @@ import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.HorizontalLayout;
 
 import de.escidoc.admintool.app.AdminToolApplication;
-import de.escidoc.admintool.view.ModalDialog;
 import de.escidoc.admintool.view.context.workflow.AbstractState;
-import de.escidoc.core.client.exceptions.EscidocClientException;
 
 /**
  * @author ASP
@@ -128,12 +126,7 @@ public class ContextToolbar extends CustomComponent {
     private class NewContextListener implements Button.ClickListener {
         @Override
         public void buttonClick(final ClickEvent event) {
-            try {
-                app.getContextView().showAddView();
-            }
-            catch (final EscidocClientException e) {
-                ModalDialog.show(app.getMainWindow(), e);
-            }
+            app.getContextView().showAddView();
         }
     }
 }

@@ -6,6 +6,7 @@ import com.vaadin.event.ItemClickEvent.ItemClickListener;
 
 import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.view.ViewConstants;
+import de.escidoc.admintool.view.ViewManager;
 
 class NavigationTreeClickListener implements ItemClickListener {
 
@@ -13,28 +14,35 @@ class NavigationTreeClickListener implements ItemClickListener {
 
     private final AdminToolApplication app;
 
-    public NavigationTreeClickListener(final AdminToolApplication app) {
+    private final ViewManager viewManager;
+
+    public NavigationTreeClickListener(final AdminToolApplication app,
+        final ViewManager viewManager) {
+        Preconditions.checkNotNull(app, "app is null: %s", app);
+        Preconditions.checkNotNull(viewManager, "viewManager is null: %s",
+            viewManager);
         this.app = app;
+        this.viewManager = viewManager;
     }
 
     @Override
     public void itemClick(final ItemClickEvent event) {
         Preconditions.checkNotNull(event, "event is null: %s", event);
+        showClickedView(event.getItemId());
+    }
 
-        final Object itemId = event.getItemId();
-
-        if (itemId == null || !(itemId instanceof String)) {
-            return;
-        }
-        else if (ViewConstants.RESOURCES.equals(itemId)
-            || ViewConstants.ADMIN_TASKS_LABEL.equals(itemId)) {
+    private void showClickedView(final Object itemId) {
+        if (isNullAndNotString(itemId)) {
             return;
         }
         else if (ViewConstants.CONTEXTS.equals(itemId)) {
             app.showContextView();
         }
-        else if (ViewConstants.LAB.equals(itemId)) {
+        else if (ViewConstants.ORG_UNITS.equals(itemId)) {
             app.showResourceView();
+        }
+        else if (ViewConstants.CONTENT_MODELS.equals(itemId)) {
+            app.showContentModelView();
         }
         else if (ViewConstants.USERS.equals(itemId)) {
             app.showUserView();
@@ -54,9 +62,16 @@ class NavigationTreeClickListener implements ItemClickListener {
         else if (ViewConstants.FILTERING_RESOURCES_TITLE.equals(itemId)) {
             app.showFilterResourceView();
         }
+        else if (ViewConstants.RESOURCES.equals(itemId)
+            || ViewConstants.ADMIN_TASKS_LABEL.equals(itemId)) {
+            return;
+        }
         else {
             throw new IllegalArgumentException("Unknown type.");
         }
+    }
 
+    private boolean isNullAndNotString(final Object itemId) {
+        return (itemId == null) || !(itemId instanceof String);
     }
 }

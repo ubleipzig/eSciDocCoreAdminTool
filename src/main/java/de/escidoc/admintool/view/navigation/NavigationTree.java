@@ -4,4 +4,6 @@ import com.vaadin.ui.Component;
 
 public interface NavigationTree extends Component {
 
+    void init();
+
 }

@@ -18,7 +18,7 @@ public class ReindexView extends AbstractAdminTaskView {
     }
 
     @Override
-    protected void addView() {
+    public void addView() {
         Label text = new H2(ViewConstants.REINDEX_RESOURCES_TITLE);
         text.setContentMode(Label.CONTENT_XHTML);
 

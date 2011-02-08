@@ -6,6 +6,7 @@ import com.vaadin.ui.Tree;
 
 import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.view.ViewConstants;
+import de.escidoc.admintool.view.ViewManager;
 
 public class NavigationTreeImpl extends CustomComponent
     implements NavigationTree {
@@ -16,14 +17,18 @@ public class NavigationTreeImpl extends CustomComponent
 
     final AdminToolApplication app;
 
-    public NavigationTreeImpl(final AdminToolApplication app) {
-        Preconditions.checkNotNull(app, "app is null: %s", app);
-        this.app = app;
+    private final ViewManager viewManager;
 
-        init();
+    public NavigationTreeImpl(final AdminToolApplication app,
+        final ViewManager viewManager) {
+        Preconditions.checkNotNull(app, "app is null: %s", app);
+        Preconditions.checkNotNull(viewManager, "viewManager is null: %s",
+            viewManager);
+        this.app = app;
+        this.viewManager = viewManager;
     }
 
-    private void init() {
+    public void init() {
         setCompositionRoot(tree);
         configureTree();
         addResourcesNode();
@@ -33,7 +38,7 @@ public class NavigationTreeImpl extends CustomComponent
     private void configureTree() {
         tree.setSelectable(true);
         tree.setNullSelectionAllowed(true);
-        tree.addListener(new NavigationTreeClickListener(app));
+        tree.addListener(new NavigationTreeClickListener(app, viewManager));
     }
 
     private void addResourcesNode() {
@@ -60,6 +65,7 @@ public class NavigationTreeImpl extends CustomComponent
 
     private void addAdminTaskNode() {
         addRoot(ViewConstants.ADMIN_TASKS_LABEL);
-        addChildren(ViewConstants.ADMIN_TASKS_LABEL, ViewConstants.ADMIN_TASKS_NODE);
+        addChildren(ViewConstants.ADMIN_TASKS_LABEL,
+            ViewConstants.ADMIN_TASKS_NODE);
     }
 }

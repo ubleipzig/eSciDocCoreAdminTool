@@ -64,7 +64,6 @@ final class PurgeResourcesListener implements ClickListener {
             pollStatus();
             if (status.getStatusCode() == MessagesStatus.STATUS_FINISHED) {
                 removeResourcesFromContainer();
-                // showMessage();
             }
             else {
                 showErrorMessage();

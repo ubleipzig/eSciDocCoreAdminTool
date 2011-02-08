@@ -60,7 +60,6 @@ public class ReindexResourceViewImpl extends AbstractCustomView
 
     private void init() {
         createShowStatusCommand();
-
         addClearIndexBox();
         addIndexNameSelection();
         addReindexButton();
@@ -101,7 +100,7 @@ public class ReindexResourceViewImpl extends AbstractCustomView
     }
 
     private void setDefaultAsTrue() {
-        clearIndexBox.setValue(true);
+        clearIndexBox.setValue(Boolean.TRUE);
     }
 
     private void addReindexButton() {
@@ -110,7 +109,6 @@ public class ReindexResourceViewImpl extends AbstractCustomView
     }
 
     private void addListener() {
-
         reindexResourceBtn.addListener(listener);
         showStatusButton.addListener(showStatusListener);
     }

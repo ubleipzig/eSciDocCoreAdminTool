@@ -8,6 +8,7 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.ListSelect;
+import com.vaadin.ui.Table;
 import com.vaadin.ui.Window;
 
 import de.escidoc.admintool.view.ModalDialog;
@@ -109,6 +110,8 @@ public final class AddOrgUnitToTheList implements Button.ClickListener {
     private final ResourceTreeView resourceTreeView;
 
     private ListSelect orgUnitList;
+
+    private Table orgUnitTable;
 
     public AddOrgUnitToTheList(final Window mainWindow,
         final ResourceTreeView resourceTreeView) {

@@ -14,6 +14,7 @@ import com.vaadin.ui.Window;
 import de.escidoc.admintool.app.PropertyId;
 import de.escidoc.admintool.domain.OrgUnitBuilder;
 import de.escidoc.admintool.service.ResourceService;
+import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.resources.oum.OrganizationalUnit;
 
@@ -23,8 +24,8 @@ public class UpdateOrgUnitBtnListener extends AbstractResourceBtnListener {
 
     public UpdateOrgUnitBtnListener(final Collection<Field> allFields,
         final Map<String, Field> fieldByName, final Window mainWindow,
-        final ResourceService resourceService) {
-        super(allFields, fieldByName, mainWindow, resourceService);
+        final ResourceView resourceView, final ResourceService resourceService) {
+        super(allFields, fieldByName, mainWindow, resourceView, resourceService);
     }
 
     @Override
@@ -57,11 +58,23 @@ public class UpdateOrgUnitBtnListener extends AbstractResourceBtnListener {
 
     @Override
     protected String getSucessMessage() {
-        return "Succesfully updated organizational unit.";
+        return ViewConstants.SUCCESFULLY_UPDATED_ORGANIZATIONAL_UNIT;
     }
 
     @Override
     protected void updateResourceContainer() {
         // do nothing
+    }
+
+    @Override
+    protected void showInEditView() {
+        // do nothing
+    }
+
+    @Override
+    protected void commitAllFields() {
+        for (final Field field : getData().allFields) {
+            field.commit();
+        }
     }
 }

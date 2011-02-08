@@ -22,7 +22,7 @@ public class ParentOrgUnitBinder implements FieldsBinder {
 
     @Override
     public void bindFields() {
-        bind(orgUnitSpecificView.parentsValue).with(parentProperty);
+        bind(orgUnitSpecificView.parentsField).with(parentProperty);
     }
 
     private ParentOrgUnitBinder bind(final Component nameField) {

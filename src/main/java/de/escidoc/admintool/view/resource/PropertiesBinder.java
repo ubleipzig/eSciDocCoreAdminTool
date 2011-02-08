@@ -1,10 +1,13 @@
 package de.escidoc.admintool.view.resource;
 
+import org.joda.time.DateTime;
+
 import com.vaadin.data.Property;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 
 import de.escidoc.admintool.app.PropertyId;
+import de.escidoc.admintool.view.util.Converter;
 
 public class PropertiesBinder implements FieldsBinder {
 
@@ -32,8 +35,7 @@ public class PropertiesBinder implements FieldsBinder {
         bind(propertiesFields.descField).with(
             getProperty(PropertyId.DESCRIPTION));
 
-        bind(propertiesFields.modifiedOn).with(
-            getProperty(PropertyId.LAST_MODIFICATION_DATE));
+        bindModifienOn();
 
         bind(propertiesFields.modifiedBy).with(
             getProperty(PropertyId.MODIFIED_BY));
@@ -41,8 +43,7 @@ public class PropertiesBinder implements FieldsBinder {
         bind(propertiesFields.createdBy).with(
             getProperty(PropertyId.CREATED_BY));
 
-        bind(propertiesFields.createdOn).with(
-            getProperty(PropertyId.CREATED_ON));
+        bindCreatedOn();
 
         bind(propertiesFields.statusField).with(
             getProperty(PropertyId.PUBLIC_STATUS));
@@ -50,6 +51,21 @@ public class PropertiesBinder implements FieldsBinder {
         bind(propertiesFields.statusComment).with(
             getProperty(PropertyId.PUBLIC_STATUS_COMMENT));
 
+    }
+
+    private void bindCreatedOn() {
+        final Object value = getProperty(PropertyId.CREATED_ON).getValue();
+        final DateTime dateTime = (DateTime) value;
+        propertiesFields.createdOn.setCaption(Converter
+            .dateTimeToString(dateTime));
+    }
+
+    private void bindModifienOn() {
+        final Object value =
+            getProperty(PropertyId.LAST_MODIFICATION_DATE).getValue();
+        final DateTime dateTime = (DateTime) value;
+        propertiesFields.modifiedOn.setCaption(Converter
+            .dateTimeToString(dateTime));
     }
 
     private Property getProperty(final Object id) {
@@ -63,6 +79,7 @@ public class PropertiesBinder implements FieldsBinder {
 
     private void with(final Property itemProperty) {
         if (toBeBind instanceof Label) {
+
             ((Label) toBeBind).setPropertyDataSource(itemProperty);
         }
         else {

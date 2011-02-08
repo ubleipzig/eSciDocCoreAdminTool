@@ -33,7 +33,6 @@ public abstract class AbstractAdminTaskView extends CustomComponent {
         this.mainWindow = mainWindow;
 
         init();
-        addView();
     }
 
     private void init() {
@@ -50,5 +49,5 @@ public abstract class AbstractAdminTaskView extends CustomComponent {
         cssLayout.addComponent(texts);
     }
 
-    protected abstract void addView();
+    public abstract void addView();
 }

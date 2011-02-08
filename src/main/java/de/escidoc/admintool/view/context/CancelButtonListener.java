@@ -5,21 +5,22 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Window;
 
 final class CancelButtonListener implements ClickListener {
-  private final Window mainWindow;
-  private final Window modalWindow;
+    private final Window mainWindow;
 
-  CancelButtonListener(Window mainWindow, Window modalWindow) {
-    this.mainWindow = mainWindow;
-    this.modalWindow = modalWindow;
-  }
+    private final Window modalWindow;
 
-  private static final long serialVersionUID = -1211409730229979129L;
+    CancelButtonListener(Window mainWindow, Window modalWindow) {
+        this.mainWindow = mainWindow;
+        this.modalWindow = modalWindow;
+    }
 
-  public void buttonClick(final ClickEvent event) {
-    closeWindow();
-  }
+    private static final long serialVersionUID = -1211409730229979129L;
 
-  private void closeWindow() {
-    mainWindow.removeWindow(modalWindow);
-  }
+    public void buttonClick(final ClickEvent event) {
+        closeWindow();
+    }
+
+    private void closeWindow() {
+        mainWindow.removeWindow(modalWindow);
+    }
 }

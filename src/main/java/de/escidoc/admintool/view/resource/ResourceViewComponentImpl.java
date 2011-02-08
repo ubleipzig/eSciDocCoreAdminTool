@@ -1,7 +1,6 @@
 package de.escidoc.admintool.view.resource;
 
-import java.util.Collection;
-
+import com.google.common.base.Preconditions;
 import com.vaadin.data.Item;
 import com.vaadin.ui.Window;
 
@@ -9,21 +8,17 @@ import de.escidoc.admintool.service.OrgUnitServiceLab;
 import de.escidoc.admintool.service.ResourceService;
 import de.escidoc.admintool.view.resource.ResourceTreeView.AddChildrenCommand;
 import de.escidoc.core.client.exceptions.EscidocClientException;
-import de.escidoc.core.client.exceptions.EscidocException;
-import de.escidoc.core.client.exceptions.InternalClientException;
-import de.escidoc.core.client.exceptions.TransportException;
-import de.escidoc.core.resources.oum.OrganizationalUnit;
 
 public class ResourceViewComponentImpl implements ResourceViewComponent {
 
     private final FolderHeader header = new FolderHeaderImpl(
         "Organizational Units");
 
-    private final ResourceViewImpl resourceView;
+    private ResourceViewImpl resourceView;
 
     private final ResourceContainer resourceContainer;
 
-    private final AddChildrenCommand addChildrenCommand;
+    private AddChildrenCommand addChildrenCommand;
 
     private final ResourceService resourceService;
 
@@ -31,19 +26,28 @@ public class ResourceViewComponentImpl implements ResourceViewComponent {
 
     private final Window mainWindow;
 
-    public ResourceViewComponentImpl(final Window mainWindow,
-        final ResourceService resourceService) throws EscidocClientException {
+    private ResourceTreeView resourceTreeView;
 
+    public ResourceViewComponentImpl(final Window mainWindow,
+        final ResourceService resourceService,
+        final ResourceContainer resourceContainer) {
+        Preconditions.checkNotNull(mainWindow, "mainWindow is null: %s",
+            mainWindow);
+        Preconditions.checkNotNull(resourceService,
+            "resourceService is null: %s", resourceService);
+        Preconditions.checkNotNull(resourceContainer,
+            "resourceContainer is null: %s", resourceContainer);
         this.mainWindow = mainWindow;
         this.resourceService = resourceService;
+        this.resourceContainer = resourceContainer;
+    }
 
-        resourceContainer = createResourceContainer();
+    public void init() throws EscidocClientException {
+        // resourceContainer = getResourceContainer();
         addChildrenCommand = createAddChildrenCommand(resourceContainer);
-
         resourceView =
             new ResourceViewImpl(mainWindow, createFolderView(),
                 resourceService, resourceContainer);
-        resourceView.showAddView();
     }
 
     private ResourceFolderView createFolderView() {
@@ -57,7 +61,7 @@ public class ResourceViewComponentImpl implements ResourceViewComponent {
                     resourceView.showEditView(item);
                 }
             };
-            final ResourceTreeView resourceTreeView =
+            resourceTreeView =
                 new ResourceTreeView(mainWindow, header, resourceContainer);
             resourceTreeView.setEditView(showEditResourceView);
             resourceTreeView.setCommand(addChildrenCommand);
@@ -77,13 +81,34 @@ public class ResourceViewComponentImpl implements ResourceViewComponent {
             resourceContainer);
     }
 
-    public ResourceContainer createResourceContainer() throws EscidocException,
-        InternalClientException, TransportException {
-        return new ResourceContainerImpl(getTopLevelOrgUnits());
-    }
+    // public ResourceContainer getResourceContainer() throws EscidocException,
+    // InternalClientException, TransportException {
+    // if (resourceContainer == null) {
+    // resourceContainer = createResourceContainer();
+    // }
+    // return resourceContainer;
+    // }
 
-    private Collection<OrganizationalUnit> getTopLevelOrgUnits()
-        throws EscidocException, InternalClientException, TransportException {
-        return ((OrgUnitServiceLab) resourceService).getTopLevelOrgUnits();
+    // public ResourceContainer createResourceContainer() throws
+    // EscidocException,
+    // InternalClientException, TransportException {
+    // return new ResourceContainerImpl(getTopLevelOrgUnits());
+    // }
+
+    // private Collection<OrganizationalUnit> getTopLevelOrgUnits()
+    // throws EscidocException, InternalClientException, TransportException {
+    // return ((OrgUnitServiceLab) resourceService).getTopLevelOrgUnits();
+    // }
+
+    @Override
+    public void showFirstItemInEditView() {
+        if (resourceContainer.isEmpty()) {
+            resourceView.showAddView();
+        }
+        else {
+            resourceTreeView.tree.select(resourceContainer.firstResource());
+            final Item item = resourceContainer.firstResourceAsItem();
+            resourceView.showEditView(item);
+        }
     }
 }

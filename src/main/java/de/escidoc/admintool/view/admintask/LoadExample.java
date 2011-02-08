@@ -13,12 +13,18 @@ public class LoadExample extends AbstractAdminTaskView {
 
     private static final long serialVersionUID = -7128844384392979070L;
 
+    private AddToContainer command;
+
     public LoadExample(final ServiceContainer services, final Window mainWindow) {
         super(services, mainWindow);
     }
 
+    public void setCommand(final AddToContainer command) {
+        this.command = command;
+    }
+
     @Override
-    protected void addView() {
+    public void addView() {
         Label text = new H2(ViewConstants.LOAD_EXAMPLES_TITLE);
         text.setContentMode(Label.CONTENT_XHTML);
         cssLayout.addComponent(text);
@@ -34,7 +40,7 @@ public class LoadExample extends AbstractAdminTaskView {
 
         final LoadExampleView filterView =
             new LoadExampleResourceViewImpl(mainWindow,
-                services.getAdminService());
+                services.getAdminService(), command);
         hLayout.addComponent(filterView);
         cssLayout.addComponent(hLayout);
     }

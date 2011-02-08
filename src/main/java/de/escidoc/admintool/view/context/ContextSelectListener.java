@@ -6,10 +6,9 @@ import com.vaadin.data.Item;
 import com.vaadin.ui.VerticalLayout;
 
 import de.escidoc.admintool.app.AdminToolApplication;
-import de.escidoc.admintool.view.ModalDialog;
 import de.escidoc.admintool.view.resource.AbstractResourceSelectListener;
 import de.escidoc.admintool.view.resource.ResourceView;
-import de.escidoc.core.client.exceptions.EscidocClientException;
+import de.escidoc.core.resources.Resource;
 
 public class ContextSelectListener extends AbstractResourceSelectListener {
 
@@ -23,13 +22,7 @@ public class ContextSelectListener extends AbstractResourceSelectListener {
 
     @Override
     public ResourceView getView() {
-        try {
-            return app.getContextView();
-        }
-        catch (final EscidocClientException e) {
-            ModalDialog.show(app.getMainWindow(), e);
-        }
-        return new EmptyView();
+        return app.getContextView();
     }
 
     private class EmptyView extends VerticalLayout implements ResourceView {
@@ -44,6 +37,11 @@ public class ContextSelectListener extends AbstractResourceSelectListener {
         @Override
         public void showEditView(final Item item) {
             throw new NotImplementedException(EmptyView.class);
+        }
+
+        @Override
+        public void selectInFolderView(final Resource resource) {
+            throw new UnsupportedOperationException("Not yet implemented");
         }
     }
 }

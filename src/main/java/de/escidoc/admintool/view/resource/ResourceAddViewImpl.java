@@ -39,11 +39,13 @@ public class ResourceAddViewImpl extends CustomComponent
 
     private final ResourceService resourceService;
 
-    private ResourceBtnListener createOrgUnitBtnListener;
-
     private final PropertiesFields propertyFields;
 
     private final ResourceContainer resourceContainer;
+
+    private final ResourceView resourceView;
+
+    private ResourceBtnListener createOrgUnitBtnListener;
 
     public ResourceAddViewImpl(final Window mainWindow,
         final ResourceView resourceView, final ResourceService resourceService,
@@ -53,11 +55,14 @@ public class ResourceAddViewImpl extends CustomComponent
             resourceContainer);
 
         this.mainWindow = mainWindow;
+        this.resourceView = resourceView;
         this.resourceService = resourceService;
         this.resourceContainer = resourceContainer;
+
         propertyFields =
             new PropertiesFieldsImpl(vLayout, formLayout, fieldByName);
         propertyFields.removeOthers();
+
         createOrgUnitSpecificView(mainWindow, resourceService,
             resourceContainer);
 
@@ -96,7 +101,8 @@ public class ResourceAddViewImpl extends CustomComponent
     private void addSaveAndCancelButtons() {
         createOrgUnitBtnListener =
             new CreateOrgUnitBtnListener(propertyFields.getAllFields(),
-                fieldByName, mainWindow, resourceService, resourceContainer);
+                fieldByName, mainWindow, resourceView, resourceService,
+                resourceContainer);
         footers.setOkButtonListener(createOrgUnitBtnListener);
 
         footers.getCancelBtn().addListener(new ClickListener() {
@@ -116,8 +122,15 @@ public class ResourceAddViewImpl extends CustomComponent
     private OrgUnitSpecificView createOrgUnitSpecificView(
         final Window mainWindow, final ResourceService orgUnitService,
         final ResourceContainer resourceContainer) {
-        return new OrgUnitSpecificView(mainWindow,
-            (OrgUnitServiceLab) orgUnitService, resourceContainer, formLayout,
-            fieldByName);
+
+        final OrgUnitSpecificView orgUnitSpecificView =
+            new OrgUnitSpecificView(mainWindow,
+                (OrgUnitServiceLab) orgUnitService, resourceContainer,
+                formLayout, fieldByName);
+        orgUnitSpecificView.init();
+        orgUnitSpecificView.addAddParentOkBtnListener();
+        orgUnitSpecificView.setNoParents();
+
+        return orgUnitSpecificView;
     }
 }

@@ -22,19 +22,19 @@ public class UserAccountPropertiesField extends PropertiesFieldsImpl {
     }
 
     private void configure() {
-//        getTitleField().setCaption(ViewConstants.NAME_LABEL);
-//        final TextField loginField =
-//            new TextField(ViewConstants.LOGIN_NAME_LABEL);
-//        getFormLayout().addComponent(loginField, 1);
-//        getFormLayout().removeComponent(getDescField());
-//        getFormLayout().removeComponent(getStatusField());
-//        getFormLayout().removeComponent(getStatusComment());
+        // getTitleField().setCaption(ViewConstants.NAME_LABEL);
+        // final TextField loginField =
+        // new TextField(ViewConstants.LOGIN_NAME_LABEL);
+        // getFormLayout().addComponent(loginField, 1);
+        // getFormLayout().removeComponent(getDescField());
+        // getFormLayout().removeComponent(getStatusField());
+        // getFormLayout().removeComponent(getStatusComment());
     }
 
     @Override
     public void bind(final Item item) {
         Preconditions.checkNotNull(item, "item is null: %s", item);
-//        Preconditions.checkNotNull(getBinder(), "binder is null: %s",
-//            getBinder());
+        // Preconditions.checkNotNull(getBinder(), "binder is null: %s",
+        // getBinder());
     }
 }

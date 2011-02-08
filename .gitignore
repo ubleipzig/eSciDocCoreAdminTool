@@ -3,8 +3,10 @@ bin/*
 target/*
 reports/*
 bin
+etc/*
 *.log*
 *.snapshot
 *.iml
 *.ipr
 *.iws
+*.sh

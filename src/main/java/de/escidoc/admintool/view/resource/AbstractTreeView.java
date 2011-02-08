@@ -10,6 +10,7 @@ import com.vaadin.ui.themes.Reindeer;
 import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.app.PropertyId;
 import de.escidoc.admintool.service.EscidocService;
+import de.escidoc.core.resources.Resource;
 
 public class AbstractTreeView extends CustomComponent
     implements ResourceFolderView {
@@ -47,6 +48,13 @@ public class AbstractTreeView extends CustomComponent
         tree.setContainerDataSource(container);
         tree.setItemCaptionMode(AbstractSelect.ITEM_CAPTION_MODE_PROPERTY);
         tree.setItemCaptionPropertyId(PropertyId.NAME);
+
+    }
+
+    @Override
+    public void select(final Resource resource) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Not yet implemented");
 
     }
 }

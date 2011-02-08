@@ -11,12 +11,12 @@ public class EditParentListener implements ClickListener {
 
     private final Window mainWindow;
 
-    private final ModalWindow orgUnitSelectDialog;
+    private final AddOrEditParentModalWindow orgUnitSelectDialog;
 
     private Item item;
 
     public EditParentListener(final Window mainWindow,
-        final ModalWindow orgUnitSelectDialog) {
+        final AddOrEditParentModalWindow orgUnitSelectDialog) {
         this.mainWindow = mainWindow;
         this.orgUnitSelectDialog = orgUnitSelectDialog;
     }

@@ -38,6 +38,7 @@ final class ShowFilterResultCommandImpl implements ShowFilterResultCommand {
             "filterResourceView is null: %s", filterResourceView);
 
         this.filterResourceView = filterResourceView;
+
         showPurgeStatusListener =
             new ShowPurgeStatusListener(filterResourceView.adminService,
                 filterResourceView.mainWindow, statusLabel);

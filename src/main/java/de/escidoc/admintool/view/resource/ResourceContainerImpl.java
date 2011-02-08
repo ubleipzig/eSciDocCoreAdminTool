@@ -44,7 +44,6 @@ public class ResourceContainerImpl implements ResourceContainer {
             addContainerProperties();
             addTopLevel();
             sortByLatestModificationDate();
-
             return container;
         }
     }
@@ -52,8 +51,8 @@ public class ResourceContainerImpl implements ResourceContainer {
     private void sortByLatestModificationDate() {
         final boolean[] sort = new boolean[1];
         sort[0] = false;
-        container.sort(new String[] { PropertyId.LAST_MODIFICATION_DATE },
-            sort);
+        container
+            .sort(new String[] { PropertyId.LAST_MODIFICATION_DATE }, sort);
     }
 
     public void addChildren(
@@ -75,6 +74,7 @@ public class ResourceContainerImpl implements ResourceContainer {
 
     private void setParentIfAny(final Resource parent, final Resource child) {
         if (parent != null) {
+            container.setChildrenAllowed(parent, true);
             container.setParent(child, parent);
         }
         else if (hasParent(child)) {
@@ -151,13 +151,13 @@ public class ResourceContainerImpl implements ResourceContainer {
         }
     }
 
-    public void add(final Resource topLevel) {
-        Preconditions.checkNotNull(topLevel, "topLevel is null: %s", topLevel);
-        final Item item = container.addItem(topLevel);
+    public void add(final Resource resource) {
+        Preconditions.checkNotNull(resource, "resource is null: %s", resource);
+        final Item item = container.addItem(resource);
         Preconditions.checkNotNull(item, "item is null: %s", item);
 
-        markAsLeaf(topLevel);
-        bind(item, topLevel);
+        markAsLeaf(resource);
+        bind(item, resource);
     }
 
     private void bind(final Item item, final Resource resource) {
@@ -192,6 +192,7 @@ public class ResourceContainerImpl implements ResourceContainer {
         container.setChildrenAllowed(topLevel, hasChildren);
     }
 
+    @SuppressWarnings("boxing")
     private boolean hasChildren(final Resource resource) {
         return ((OrganizationalUnit) resource).getProperties().getHasChildren();
     }
@@ -281,6 +282,27 @@ public class ResourceContainerImpl implements ResourceContainer {
             || container.getChildren(parent) == null) {
             container.setChildrenAllowed(parent, false);
         }
+    }
+
+    @Override
+    public Item firstResourceAsItem() {
+        return container.getItem(container.firstItemId());
+    }
+
+    @Override
+    public Object firstResource() {
+        return container.getIdByIndex(0);
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return container.rootItemIds() == null
+            || container.rootItemIds().isEmpty();
+    }
+
+    @Override
+    public Item getItem(final Resource resource) {
+        return container.getItem(resource);
     }
 
 }

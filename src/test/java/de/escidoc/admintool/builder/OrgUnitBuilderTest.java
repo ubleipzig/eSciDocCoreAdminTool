@@ -15,43 +15,46 @@ import de.escidoc.core.resources.oum.OrganizationalUnit;
 
 public class OrgUnitBuilderTest {
 
-  @Test
-  public void shouldReturnAnOrgUnit() throws ParserConfigurationException {
-    final String name = "aName";
-    final String desc = "aDesc";
+    @Test
+    public void shouldReturnAnOrgUnit() throws ParserConfigurationException {
+        final String name = "aName";
+        final String desc = "aDesc";
 
-    final OrganizationalUnit orgUnit = new OrgUnit.BuilderImpl(name, desc).build();
-    assertThat(orgUnit.getProperties().getName(), is(name));
-    assertThat(orgUnit.getProperties().getDescription(), is(desc));
-  }
+        final OrganizationalUnit orgUnit =
+            new OrgUnit.BuilderImpl(name, desc).build();
+        assertThat(orgUnit.getProperties().getName(), is(name));
+        assertThat(orgUnit.getProperties().getDescription(), is(desc));
+    }
 
-  @Test
-  public void shouldReturnAnOrgUnitFromAnOldOrgUnit()
-      throws ParserConfigurationException {
-    final String name = "aName";
-    final String desc = "aDesc";
-    final OrganizationalUnit before = new OrganizationalUnit();
-    final OrganizationalUnit orgUnit = new OrgUnit.BuilderImpl(before).name(
-        name).description(desc).build();
-    assertThat(orgUnit.getProperties().getName(), is(name));
-    assertThat(orgUnit.getProperties().getDescription(), is(desc));
-  }
+    @Test
+    public void shouldReturnAnOrgUnitFromAnOldOrgUnit()
+        throws ParserConfigurationException {
+        final String name = "aName";
+        final String desc = "aDesc";
+        final OrganizationalUnit before = new OrganizationalUnit();
+        final OrganizationalUnit orgUnit =
+            new OrgUnit.BuilderImpl(before)
+                .name(name).description(desc).build();
+        assertThat(orgUnit.getProperties().getName(), is(name));
+        assertThat(orgUnit.getProperties().getDescription(), is(desc));
+    }
 
-  @Test
-  public void shouldReturnAnOrgUnitWithType()
-      throws ParserConfigurationException {
-    final String name = "aName";
-    final String desc = "aDesc";
-    final Set<String> parentObjectIds = new HashSet<String>() {
-      {
-        add("a");
-        add("b");
-      }
-    };
+    @Test
+    public void shouldReturnAnOrgUnitWithType()
+        throws ParserConfigurationException {
+        final String name = "aName";
+        final String desc = "aDesc";
+        final Set<String> parentObjectIds = new HashSet<String>() {
+            {
+                add("a");
+                add("b");
+            }
+        };
 
-    final OrganizationalUnit orgUnit = new OrgUnit.BuilderImpl(name, desc).parents(
-        parentObjectIds).build();
-    assertThat(orgUnit.getProperties().getName(), is(name));
-    assertThat(orgUnit.getProperties().getDescription(), is(desc));
-  }
+        final OrganizationalUnit orgUnit =
+            new OrgUnit.BuilderImpl(name, desc)
+                .parents(parentObjectIds).build();
+        assertThat(orgUnit.getProperties().getName(), is(name));
+        assertThat(orgUnit.getProperties().getDescription(), is(desc));
+    }
 }

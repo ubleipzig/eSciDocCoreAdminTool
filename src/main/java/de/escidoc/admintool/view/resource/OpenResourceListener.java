@@ -1,5 +1,6 @@
 package de.escidoc.admintool.view.resource;
 
+import com.google.common.base.Preconditions;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Window;
@@ -11,10 +12,16 @@ import de.escidoc.core.client.exceptions.EscidocClientException;
 public class OpenResourceListener extends AbstractUpdateable
     implements ClickListener {
 
+    private final ResourceToolbar resourceToolbar;
+
     public OpenResourceListener(final Window mainWindow,
         final ResourceService orgUnitService,
-        final ResourceContainer resourceContainer) {
+        final ResourceContainer resourceContainer,
+        final ResourceToolbar resourceToolbar) {
         super(mainWindow, orgUnitService, resourceContainer);
+        Preconditions.checkNotNull(resourceToolbar,
+            "resourceToolbar is null: %s", resourceToolbar);
+        this.resourceToolbar = resourceToolbar;
     }
 
     private static final long serialVersionUID = -4212838698528374884L;
@@ -22,6 +29,7 @@ public class OpenResourceListener extends AbstractUpdateable
     @Override
     public void buttonClick(final ClickEvent event) {
         onUpdate();
+        resourceToolbar.bind(getItem());
     }
 
     @Override

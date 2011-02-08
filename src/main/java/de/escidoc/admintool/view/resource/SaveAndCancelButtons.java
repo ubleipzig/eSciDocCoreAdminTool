@@ -10,17 +10,18 @@ import de.escidoc.admintool.view.ViewConstants;
 public class SaveAndCancelButtons extends CustomComponent {
     private static final long serialVersionUID = 5031656063216982470L;
 
-    final HorizontalLayout footers = new HorizontalLayout();
+    final HorizontalLayout hl = new HorizontalLayout();
 
-    final Button cancelBtn = new Button(ViewConstants.CANCEL);
+    private final HorizontalLayout footers = new HorizontalLayout();
 
-    final Button saveBtn = new Button(ViewConstants.SAVE);
+    private final Button cancelBtn = new Button(ViewConstants.CANCEL);
+
+    private final Button saveBtn = new Button(ViewConstants.SAVE);
 
     public SaveAndCancelButtons() {
         setCompositionRoot(footers);
         footers.setWidth(100, UNITS_PERCENTAGE);
 
-        final HorizontalLayout hl = new HorizontalLayout();
         hl.addComponent(saveBtn);
         hl.addComponent(cancelBtn);
         footers.addComponent(hl);

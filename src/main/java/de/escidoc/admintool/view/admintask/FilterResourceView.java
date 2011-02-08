@@ -1,7 +1,6 @@
 package de.escidoc.admintool.view.admintask;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Set;
 
 import com.google.common.base.Preconditions;
@@ -39,6 +38,9 @@ public class FilterResourceView extends AbstractCustomView {
 
     public FilterResourceView(final ServiceContainer serviceContainer,
         final Window mainWindow) {
+
+        preconditions(serviceContainer, mainWindow);
+
         this.mainWindow = mainWindow;
         adminService = serviceContainer.getAdminService();
         listener = new FilterResourceListener(mainWindow, serviceContainer);
@@ -47,25 +49,12 @@ public class FilterResourceView extends AbstractCustomView {
         init();
     }
 
-    // TODO: DELETE_ME
-    public FilterResourceView(final FilterResourceListener listener,
-        final AdminService adminService, final Window mainWindow) {
-        preconditions(listener, adminService, mainWindow);
-        this.listener = listener;
-        this.adminService = adminService;
-        this.mainWindow = mainWindow;
-        command = new ShowFilterResultCommandImpl(this);
-
-        init();
-    }
-
     private void preconditions(
-        final FilterResourceListener listener, final AdminService adminService,
-        final Window mainWindow) {
-        Preconditions.checkNotNull(listener, "Listener can not be null.");
-        Preconditions.checkNotNull(adminService,
-            "AdminService can not be null.");
-        Preconditions.checkNotNull(mainWindow, "MainWindow can not be null.");
+        final ServiceContainer serviceContainer, final Window mainWindow) {
+        Preconditions.checkNotNull(serviceContainer,
+            "serviceContainer is null: %s", serviceContainer);
+        Preconditions.checkNotNull(mainWindow, "mainWindow is null: %s",
+            mainWindow);
     }
 
     private void init() {
@@ -83,10 +72,11 @@ public class FilterResourceView extends AbstractCustomView {
     }
 
     private void addResourceTypeOption() {
-        final List<ResourceType> list = Arrays.asList(ResourceType.values());
+        final BeanItemContainer<ResourceType> dataSource =
+            new BeanItemContainer<ResourceType>(ResourceType.class);
+        dataSource.addAll(Arrays.asList(ResourceType.values()));
+        resourceOption.setContainerDataSource(dataSource);
 
-        resourceOption
-            .setContainerDataSource(new BeanItemContainer<ResourceType>(list));
         resourceOption.setItemCaptionPropertyId(PropertyId.LABEL);
         resourceOption.select(ResourceType.ITEM);
         getViewLayout().addComponent(resourceOption);
@@ -99,7 +89,7 @@ public class FilterResourceView extends AbstractCustomView {
     }
 
     interface ShowFilterResultCommand {
-        void execute(Set<Resource> repoInfos);
+        void execute(Set<Resource> filterResult);
     }
 
     private void addListener() {

@@ -1,7 +1,9 @@
 package de.escidoc.admintool.service;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -20,6 +22,7 @@ import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
 import de.escidoc.core.client.interfaces.UserAccountHandlerClientInterface;
 import de.escidoc.core.resources.aa.role.Role;
+import de.escidoc.core.resources.aa.useraccount.Attribute;
 import de.escidoc.core.resources.aa.useraccount.Grant;
 import de.escidoc.core.resources.aa.useraccount.GrantProperties;
 import de.escidoc.core.resources.aa.useraccount.UserAccount;
@@ -30,6 +33,9 @@ import de.escidoc.core.resources.common.reference.Reference;
 import de.escidoc.core.resources.common.reference.RoleRef;
 
 public class UserService {
+
+    private static final String ORGANIZATIONAL_UNIT_DEFAULT_ATTRIBUTE_NAME =
+        "o";
 
     private UserAccountHandlerClientInterface client;
 
@@ -320,4 +326,36 @@ public class UserService {
         Preconditions.checkArgument(!newPassword.isEmpty(),
             "newPassword is empty: %s", newPassword);
     }
+
+    public List<String> retrieveOrgUnitsFor(final String objectId)
+        throws EscidocClientException {
+        Preconditions.checkNotNull(objectId, "objectId is null: %s", objectId);
+        Preconditions.checkArgument(!objectId.isEmpty(), objectId,
+            "objectId is empty: %s");
+
+        final List<String> orgUnits = new ArrayList<String>();
+        for (final Attribute attribute : client.retrieveAttributes(objectId)) {
+            if (nameIsEqualsO(attribute)) {
+                orgUnits.add(attribute.getValue());
+            }
+        }
+
+        return orgUnits;
+
+    }
+
+    private boolean nameIsEqualsO(final Attribute attribute) {
+        return !attribute.getName().isEmpty()
+            && ORGANIZATIONAL_UNIT_DEFAULT_ATTRIBUTE_NAME.equals(attribute
+                .getName());
+    }
+
+    public void assign(final String objectId, final Attribute attribute)
+        throws EscidocClientException {
+        Preconditions.checkNotNull(objectId, "objectId is null: %s", objectId);
+        Preconditions.checkNotNull(attribute, "attribute is null: %s",
+            attribute);
+        client.createAttribute(objectId, attribute);
+    }
+
 }

@@ -339,10 +339,12 @@ public class ViewConstants {
         REINDEX_ALL, REINDEX_ESCIDOC, REINDEX_ESCIDOC_OU,
         REINDEX_ESCIDOC_OAI_PMH });
 
-    public static final String LAB = "Organizational Units";
+    public static final String ORG_UNITS = "Organizational Units";
 
-    public static final String[] RESOURCES_NODE =
-        { LAB, CONTEXTS, USERS, ROLE };
+    public static final String CONTENT_MODELS = "Content Models";
+
+    public static final String[] RESOURCES_NODE = { ORG_UNITS, CONTEXTS,
+        CONTENT_MODELS, USERS, ROLE };
 
     public static final String[] ADMIN_TASKS_NODE = { LOAD_EXAMPLES_TITLE,
         FILTERING_RESOURCES_TITLE, SHOW_REPOSITORY_INFO, REINDEX };
@@ -418,5 +420,18 @@ public class ViewConstants {
     public static final int PASSWORD_FIELD_WIDTH = 300;
 
     public static final String USER_ADD_VIEW_CAPTION = "Add a new User Account";
+
+    public static final String SUCCESFULLY_UPDATED_ORGANIZATIONAL_UNIT =
+        "Succesfully updated organizational unit.";
+
+    public static final String NOT_AUTHORIZED = "Not Authorized";
+
+    public static final int DEFAULT_LABEL_WIDTH = 100;
+
+    public static final String NO_PARENTS_LABEL = "no parents";
+
+    public static final String ADD = "Add";
+
+    public static final String WELCOME_LABEL = "Welcome";
 
 }

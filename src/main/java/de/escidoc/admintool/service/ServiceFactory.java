@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 
 import de.escidoc.core.client.AdminHandlerClient;
 import de.escidoc.core.client.ContainerHandlerClient;
+import de.escidoc.core.client.ContentModelHandlerClient;
 import de.escidoc.core.client.ContextHandlerClient;
 import de.escidoc.core.client.ItemHandlerClient;
 import de.escidoc.core.client.OrganizationalUnitHandlerClient;
@@ -105,5 +106,16 @@ public class ServiceFactory {
         final OrgUnitServiceLab orgUnitService = new OrgUnitServiceLab(client);
         orgUnitService.loginWith(token);
         return orgUnitService;
+    }
+
+    public ResourceService createContentModelService()
+        throws InternalClientException {
+        final ContentModelHandlerClient client =
+            new ContentModelHandlerClient(eSciDocUri);
+        client.setTransport(TransportProtocol.REST);
+
+        final ResourceService service = new ContentModelService(client);
+        service.loginWith(token);
+        return service;
     }
 }

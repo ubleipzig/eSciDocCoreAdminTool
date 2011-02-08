@@ -10,7 +10,7 @@
 		<dependency>
 			<groupId>com.vaadin</groupId>
 			<artifactId>vaadin</artifactId>
-			<version>6.4.8</version>
+			<version>6.5.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.vaadin.addons</groupId>
@@ -34,6 +34,11 @@
 					<groupId>org.escidoc</groupId>
 				</exclusion>
 			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.vaadin.addons</groupId>
+			<artifactId>appfoundation</artifactId>
+			<version>1.3.5</version>
 		</dependency>
 		<dependency>
 			<groupId>org.vaadin.addons</groupId>
@@ -73,17 +78,20 @@
 			<version>1.1</version>
 			<scope>test</scope>
 		</dependency>
-	<dependency>
-		<groupId>javax.servlet</groupId>
-		<artifactId>servlet-api</artifactId>
-		<version>2.3</version>
-		<scope>provided</scope>
-	</dependency>
-		
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>2.3</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>commons-discovery</groupId>
+			<artifactId>commons-discovery</artifactId>
+			<version>0.2</version>
+		</dependency>
 	</dependencies>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<vaadin-version>6.4.7</vaadin-version>
 		<jetty.port>8081</jetty.port>
 		<jetty.scan.sec>10</jetty.scan.sec>
 		<vaadin-widgets-dir>src/main/webapp/VAADIN/widgetsets
@@ -128,7 +136,7 @@
 				<version>2.1</version>
 				<configuration>
 					<webXml>src/main/webapp/WEB-INF/web.xml</webXml>
-					 <warSourceExcludes>WEB-INF/lib/servlet-api-2.3.jar</warSourceExcludes>
+					<warSourceExcludes>WEB-INF/lib/servlet-api-2.3.jar</warSourceExcludes>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -198,7 +206,7 @@
 		</plugins>
 		<finalName>${project.artifactId}</finalName>
 	</build>
-	
+
 	<name>eSciDoc Admin Tool with Vaadin</name>
 	<description>eSciDoc Admin Tool handles following eSciDoc resouces: 
 org unit, context, user accounts and roles.</description>

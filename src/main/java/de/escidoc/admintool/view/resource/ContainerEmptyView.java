@@ -3,7 +3,9 @@ package de.escidoc.admintool.view.resource;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
+
 import de.escidoc.admintool.view.ViewConstants;
+import de.escidoc.core.resources.Resource;
 
 public class ContainerEmptyView extends CustomComponent
     implements ResourceFolderView {
@@ -19,5 +21,10 @@ public class ContainerEmptyView extends CustomComponent
         vLayout.addComponent(toolbar);
         vLayout.addComponent(EMPTY);
         EMPTY.setHeight(30, UNITS_PIXELS);
+    }
+
+    @Override
+    public void select(final Resource resource) {
+        throw new UnsupportedOperationException("Not yet implemented");
     }
 }

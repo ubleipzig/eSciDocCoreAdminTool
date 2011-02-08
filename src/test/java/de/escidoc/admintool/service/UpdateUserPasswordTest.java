@@ -25,10 +25,9 @@ public class UpdateUserPasswordTest {
 
     private void createUserService() throws Exception {
         service =
-            new UserService(Constants.DEFAULT_SERVICE_URL,
-                new Authentication(Constants.DEFAULT_SERVICE_URL,
-                    Constants.SYSADMIN_LOGIN_NAME, SYSADMIN_PASSWORD)
-                    .getHandle());
+            new UserService(Constants.DEFAULT_SERVICE_URL, new Authentication(
+                Constants.DEFAULT_SERVICE_URL, Constants.SYSADMIN_LOGIN_NAME,
+                SYSADMIN_PASSWORD).getHandle());
     }
 
     @Test(expected = AuthenticationException.class)

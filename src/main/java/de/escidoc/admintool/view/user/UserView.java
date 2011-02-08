@@ -8,6 +8,7 @@ import com.vaadin.ui.VerticalLayout;
 import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.admintool.view.resource.ResourceView;
+import de.escidoc.core.resources.Resource;
 import de.escidoc.core.resources.aa.useraccount.UserAccount;
 
 @SuppressWarnings("serial")
@@ -54,7 +55,7 @@ public class UserView extends SplitPanel implements ResourceView {
     }
 
     public void showAddView() {
-        setSecondComponent(app.newUserLabAddView());
+        setSecondComponent(app.newUserAddView());
     }
 
     public void showEditView(final Item item) {
@@ -65,5 +66,10 @@ public class UserView extends SplitPanel implements ResourceView {
     public void remove(final UserAccount deletedUser) {
         userList.remove(deletedUser);
         showAddView();
+    }
+
+    @Override
+    public void selectInFolderView(final Resource resource) {
+        throw new UnsupportedOperationException("Not yet implemented");
     }
 }

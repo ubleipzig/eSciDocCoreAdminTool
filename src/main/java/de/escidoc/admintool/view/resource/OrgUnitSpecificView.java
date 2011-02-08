@@ -9,6 +9,7 @@ import com.google.common.base.Preconditions;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
@@ -25,9 +26,12 @@ import de.escidoc.admintool.view.ModalDialog;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.resources.oum.OrganizationalUnit;
+import de.escidoc.core.resources.oum.Parent;
 import de.escidoc.core.resources.oum.Parents;
 
 public class OrgUnitSpecificView {
+
+    private static final String CITY_LABEL = "city";
 
     private static final long serialVersionUID = -3927641436455665147L;
 
@@ -54,7 +58,7 @@ public class OrgUnitSpecificView {
 
     Label parentsValue;
 
-    private ModalWindow modalWindow;
+    TextField parentsField;
 
     private final Button removeParentBtn = new Button(ViewConstants.REMOVE);
 
@@ -76,11 +80,28 @@ public class OrgUnitSpecificView {
 
     private TextField alternativeField;
 
+    private AddOrEditParentModalWindow addOrEditParentModalWindow;
+
+    private ObjectProperty<ResourceRefDisplay> parentProperty;
+
     public OrgUnitSpecificView(final Window mainWindow,
         final OrgUnitServiceLab orgUnitService,
         final ResourceContainer resourceContainer, final FormLayout formLayout,
         final Map<String, Field> fieldByName) {
 
+        checkPreconditions(mainWindow, orgUnitService, resourceContainer,
+            formLayout);
+
+        this.mainWindow = mainWindow;
+        this.orgUnitService = orgUnitService;
+        this.resourceContainer = resourceContainer;
+        this.formLayout = formLayout;
+        this.fieldByName = fieldByName;
+    }
+
+    private void checkPreconditions(
+        final Window mainWindow, final OrgUnitServiceLab orgUnitService,
+        final ResourceContainer resourceContainer, final FormLayout formLayout) {
         Preconditions.checkNotNull(mainWindow, "mainWindow is null: %s",
             mainWindow);
         Preconditions.checkNotNull(orgUnitService,
@@ -91,24 +112,9 @@ public class OrgUnitSpecificView {
             formLayout);
         Preconditions.checkNotNull(formLayout, "formLayout is null: %s",
             formLayout);
-
-        this.mainWindow = mainWindow;
-        this.orgUnitService = orgUnitService;
-        this.resourceContainer = resourceContainer;
-        this.formLayout = formLayout;
-        this.fieldByName = fieldByName;
-
-        init();
     }
 
-    private String getXLinkTitle(final Parents parents) {
-        if (parents == null || parents.isEmpty()) {
-            return "no parents";
-        }
-        return parents.get(0).getXLinkTitle();
-    }
-
-    private void init() {
+    public void init() {
         addParentField();
         addParentEditor();
         addPubmanMetadata();
@@ -121,25 +127,31 @@ public class OrgUnitSpecificView {
     }
 
     private void addParentField() {
-        final Label parentsLabel = new Label(ViewConstants.PARENTS_LABEL + ":");
-        parentsValue = new Label();
+        parentsField = new TextField(ViewConstants.PARENTS_LABEL);
+        parentsField.setReadOnly(true);
+        parentsField.setWidth("300px");
 
         editParentBtn.setStyleName(Reindeer.BUTTON_SMALL);
         removeParentBtn.setStyleName(Reindeer.BUTTON_SMALL);
 
         hLayout.setSpacing(true);
-        hLayout.addComponent(parentsLabel);
-        hLayout.addComponent(parentsValue);
+        hLayout.addComponent(parentsField);
         hLayout.addComponent(editParentBtn);
         hLayout.addComponent(removeParentBtn);
 
+        fieldByName.put("parents", parentsField);
+
+        formLayout.addComponent(parentsField);
         formLayout.addComponent(hLayout);
     }
 
     private void createEditParentListener() {
-        modalWindow =
-            new ModalWindow(resourceContainer, orgUnitService, mainWindow);
-        editParentListener = new EditParentListener(mainWindow, modalWindow);
+        addOrEditParentModalWindow =
+            new AddOrEditParentModalWindow(this, resourceContainer,
+                orgUnitService, mainWindow);
+        addOrEditParentModalWindow.addUpdateParentOkListener();
+        editParentListener =
+            new EditParentListener(mainWindow, addOrEditParentModalWindow);
     }
 
     private void addRemoveParentListener() {
@@ -192,7 +204,7 @@ public class OrgUnitSpecificView {
         cityField = new TextField(ViewConstants.CITY_LABEL);
         cityField.setWidth(ViewConstants.FIELD_WIDTH);
         configure(cityField);
-        fieldByName.put("city", cityField);
+        fieldByName.put(CITY_LABEL, cityField);
         formLayout.addComponent(cityField);
     }
 
@@ -232,14 +244,33 @@ public class OrgUnitSpecificView {
         Preconditions.checkNotNull(item, "item is null: %s", item);
         this.item = item;
 
-        final ObjectProperty parentProperty = createParentProperty();
-        binder = new ParentOrgUnitBinder(this, parentProperty);
+        bindParents(item);
         binder.bindFields();
-        modalWindow.setParentProperty(parentProperty);
+        bindPubmanMetadata();
+    }
+
+    private void bindParents(final Item item) {
+        parentProperty = createParentProperty();
+        binder = new ParentOrgUnitBinder(this, parentProperty);
+        addOrEditParentModalWindow.setParentPropertyForUpdate(parentProperty);
         removeParentListener.setParentProperty(parentProperty);
         editParentListener.bind(item);
+    }
 
-        bindPubmanMetadata();
+    private ObjectProperty<ResourceRefDisplay> createParentProperty() {
+        final ObjectProperty<ResourceRefDisplay> parentProperty =
+            new ObjectProperty<ResourceRefDisplay>(new ResourceRefDisplay(),
+                ResourceRefDisplay.class, false);
+        if (hasParents(getParentsFromItem())) {
+            final Parent parent = getParentsFromItem().get(0);
+            parentProperty.setValue(new ResourceRefDisplay(parent.getObjid(),
+                parent.getXLinkTitle()));
+        }
+        return parentProperty;
+    }
+
+    private boolean hasParents(final Parents parentsFromItem) {
+        return parentsFromItem != null && parentsFromItem.size() > 0;
     }
 
     private void bindPubmanMetadata() {
@@ -254,53 +285,36 @@ public class OrgUnitSpecificView {
     }
 
     private void bindCoodinates() {
-        // coordinatesField.setValue(metadataExtractor
-        // .get(AppConstants.KML_COORDINATES));
         coordinatesField
             .setPropertyDataSource(createObjectProperty(AppConstants.KML_COORDINATES));
     }
 
-    private ObjectProperty createObjectProperty(final String value) {
-        return new ObjectProperty(metadataExtractor.get(value));
+    private ObjectProperty<String> createObjectProperty(final String value) {
+        return new ObjectProperty<String>(metadataExtractor.get(value));
     }
 
     private void bindType() {
-        // typeField.setValue(metadataExtractor
-        // .get(AppConstants.ETERMS_ORGANIZATION_TYPE));
-
         typeField
             .setPropertyDataSource(createObjectProperty(AppConstants.ETERMS_ORGANIZATION_TYPE));
 
     }
 
     private void bindIdentifier() {
-        // identifierField.setValue(metadataExtractor
-        // .get(AppConstants.DC_IDENTIFIER));
-
         identifierField
             .setPropertyDataSource(createObjectProperty(AppConstants.DC_IDENTIFIER));
     }
 
     private void bindAlternativeTitle() {
-        // alternativeField.setValue(metadataExtractor
-        // .get(AppConstants.DCTERMS_ALTERNATIVE));
-
         alternativeField
             .setPropertyDataSource(createObjectProperty(AppConstants.DCTERMS_ALTERNATIVE));
     }
 
     private void bindCity() {
-        // cityField.setValue(metadataExtractor.get(AppConstants.ETERMS_CITY));
-
         cityField
             .setPropertyDataSource(createObjectProperty(AppConstants.ETERMS_CITY));
     }
 
     private void bindCountry() {
-        // countryField.setValue(metadataExtractor
-        // .get(AppConstants.ETERMS_COUNTRY));
-        //
-
         countryField
             .setPropertyDataSource(createObjectProperty(AppConstants.ETERMS_COUNTRY));
     }
@@ -319,16 +333,8 @@ public class OrgUnitSpecificView {
         return (String) item.getItemProperty(PropertyId.OBJECT_ID).getValue();
     }
 
-    private ObjectProperty createParentProperty() {
-        final ObjectProperty parentProperty =
-            new ObjectProperty(
-                getXLinkTitle(getParentsFromItem(PropertyId.PARENTS)),
-                String.class, false);
-        return parentProperty;
-    }
-
-    private Parents getParentsFromItem(final Object propertyId) {
-        return (Parents) item.getItemProperty(propertyId).getValue();
+    private Parents getParentsFromItem() {
+        return (Parents) item.getItemProperty(PropertyId.PARENTS).getValue();
     }
 
     public void setNotEditable(final boolean isReadOnly) {
@@ -342,5 +348,43 @@ public class OrgUnitSpecificView {
         removeParentBtn.setVisible(!isReadOnly);
         // predecessorTypeSelect.setReadOnly(isReadOnly);
         // addPredecessorButton.setVisible(!isReadOnly);
+    }
+
+    public void setNoParents() {
+        removeParentBtn.setVisible(false);
+        editParentBtn.setCaption(ViewConstants.ADD);
+
+        bindParentsForAddView();
+    }
+
+    private void bindParentsForAddView() {
+        final ResourceRefDisplay resourceRefDisplay = new ResourceRefDisplay();
+        final ObjectProperty<ResourceRefDisplay> parentPropertyForAddView =
+            new ObjectProperty<ResourceRefDisplay>(resourceRefDisplay,
+                ResourceRefDisplay.class, false);
+
+        parentsField.setPropertyDataSource(parentPropertyForAddView);
+        addOrEditParentModalWindow
+            .setParentPropertyForAdd(parentPropertyForAddView);
+
+    }
+
+    public void addAddParentOkBtnListener() {
+        addOrEditParentModalWindow.addAddParentOkLisner();
+    }
+
+    public void showRemoveButton() {
+        removeParentBtn.setVisible(true);
+        removeParentBtn.addListener(new Button.ClickListener() {
+
+            private static final long serialVersionUID = 8560744974716622255L;
+
+            @Override
+            public void buttonClick(final ClickEvent event) {
+                parentsField.getPropertyDataSource().setValue(
+                    new ResourceRefDisplay());
+                removeParentBtn.setVisible(false);
+            }
+        });
     }
 }

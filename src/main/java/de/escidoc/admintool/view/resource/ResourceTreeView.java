@@ -34,7 +34,6 @@ public class ResourceTreeView extends CustomComponent
     public ResourceTreeView(final Window mainWindow, final FolderHeader header,
         final ResourceContainer resourceContainer) {
         preconditions(mainWindow, header, resourceContainer);
-
         this.mainWindow = mainWindow;
         this.header = header;
         this.resourceContainer = resourceContainer;
@@ -58,6 +57,10 @@ public class ResourceTreeView extends CustomComponent
 
     }
 
+    public void select(final Resource resource) {
+        tree.select(resource);
+    }
+
     interface AddChildrenCommand {
         void addChildrenFor(Resource resource) throws EscidocClientException;
     }
@@ -65,7 +68,6 @@ public class ResourceTreeView extends CustomComponent
     public void addResourceNodeExpandListener() {
         final ResourceNodeExpandListener resourceNodeExpandListener =
             new ResourceNodeExpandListener(tree, mainWindow, addChildrenCommand);
-
         tree.addListener(resourceNodeExpandListener);
     }
 

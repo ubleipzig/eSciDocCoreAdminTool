@@ -2,6 +2,7 @@ package de.escidoc.admintool.view.admintask;
 
 import java.util.Collection;
 
+import com.google.common.base.Preconditions;
 import com.vaadin.ui.Label;
 
 import de.escidoc.core.resources.adm.LoadExamplesResult.Entry;
@@ -9,13 +10,17 @@ import de.escidoc.core.resources.adm.LoadExamplesResult.Entry;
 final class ShowResultCommandImpl
     implements LoadExampleResourceViewImpl.ShowResultCommand {
 
+    private final AddToContainer addToContainer;
+
     private final LoadExampleResourceViewImpl loadExampleResourceViewImpl;
 
-    /**
-     * @param loadExampleResourceViewImpl
-     */
-    ShowResultCommandImpl(final LoadExampleResourceViewImpl loadExampleResourceViewImpl) {
+    private AddToContainer addToContextContainer;
+
+    ShowResultCommandImpl(
+        final LoadExampleResourceViewImpl loadExampleResourceViewImpl,
+        final AddToContainer addExampleCommand) {
         this.loadExampleResourceViewImpl = loadExampleResourceViewImpl;
+        addToContainer = addExampleCommand;
     }
 
     @Override
@@ -29,11 +34,19 @@ final class ShowResultCommandImpl
     }
 
     private void updateContainers(final Entry entry) {
-        assert entry != null : "entry should not be null.";
+        Preconditions.checkNotNull(entry, "entry is null: %s", entry);
+        if (entry.getResourceType() == null) {
+            return;
+        }
+        switch (entry.getResourceType()) {
+            case OrganizationalUnit:
+                addToContainer.execute(entry);
+                break;
+            case Context:
+                addToContextContainer.execute(entry);
+                break;
 
-        entry.getObjid();
-        entry.getResourceType();
-        // throw new UnsupportedOperationException("Not yet implemented");
+        }
     }
 
     private void showLoadedExamplesResult(final Entry entry) {

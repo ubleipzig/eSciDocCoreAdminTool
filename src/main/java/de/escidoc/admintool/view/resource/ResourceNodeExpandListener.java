@@ -5,19 +5,15 @@ import com.vaadin.ui.Tree;
 import com.vaadin.ui.Tree.ExpandEvent;
 import com.vaadin.ui.Tree.ExpandListener;
 import com.vaadin.ui.Window;
+
 import de.escidoc.admintool.view.ModalDialog;
 import de.escidoc.admintool.view.resource.ResourceTreeView.AddChildrenCommand;
 import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.resources.oum.OrganizationalUnit;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class ResourceNodeExpandListener implements ExpandListener {
 
     private static final long serialVersionUID = -288898779192780110L;
-
-    private static final Logger LOG = LoggerFactory
-        .getLogger(ResourceNodeExpandListener.class);
 
     private final Tree tree;
 

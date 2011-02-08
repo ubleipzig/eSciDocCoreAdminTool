@@ -48,6 +48,8 @@ public class ResourceEditViewImpl extends CustomComponent
 
     private final Panel panel = new Panel(ViewConstants.EDIT_ORG_UNIT);
 
+    private final ResourceView resourceView;
+
     public ResourceEditViewImpl(final Window mainWindow,
         final ResourceViewImpl resourceView,
         final ResourceService orgUnitService,
@@ -57,6 +59,7 @@ public class ResourceEditViewImpl extends CustomComponent
             resourceContainer);
 
         this.mainWindow = mainWindow;
+        this.resourceView = resourceView;
         resourceService = orgUnitService;
         formLayout.setWidth(75, UNITS_PERCENTAGE);
 
@@ -95,6 +98,8 @@ public class ResourceEditViewImpl extends CustomComponent
     }
 
     private void buildView() {
+        resourceSpecific.init();
+
         setCompositionRoot(panel);
         panel.setContent(vLayout);
         panel.setStyleName(Reindeer.PANEL_LIGHT);
@@ -118,10 +123,11 @@ public class ResourceEditViewImpl extends CustomComponent
     private void addSaveAndCancelButtons() {
         updateOrgUnitBtnListener =
             new UpdateOrgUnitBtnListener(propertyFields.getAllFields(),
-                fieldByName, mainWindow, resourceService);
+                fieldByName, mainWindow, resourceView, resourceService);
         footers.setOkButtonListener(updateOrgUnitBtnListener);
 
         footers.getCancelBtn().addListener(new ClickListener() {
+            private static final long serialVersionUID = 7587546491866882218L;
 
             @Override
             public void buttonClick(final ClickEvent event) {

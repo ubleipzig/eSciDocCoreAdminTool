@@ -38,6 +38,7 @@ public class ContextListView extends Table {
         final ContextService contextService) throws EscidocException,
         InternalClientException, TransportException {
         checkForNull(app, contextService);
+
         this.app = app;
         this.contextService = contextService;
         buildView();
@@ -58,6 +59,7 @@ public class ContextListView extends Table {
         setImmediate(true);
         addListener(new ContextSelectListener(app));
         setNullSelectionAllowed(false);
+
     }
 
     private void bindDataSource() {
@@ -71,13 +73,26 @@ public class ContextListView extends Table {
     }
 
     private void initContextContainer() {
-        contextContainer =
-            new POJOContainer<Context>(allContexts, PropertyId.OBJECT_ID,
-                PropertyId.NAME, PropertyId.DESCRIPTION,
-                PropertyId.PUBLIC_STATUS, PropertyId.PUBLIC_STATUS_COMMENT,
-                PropertyId.TYPE, PropertyId.CREATED_ON, PropertyId.CREATED_BY,
-                PropertyId.LAST_MODIFICATION_DATE, PropertyId.MODIFIED_BY,
-                PropertyId.ORG_UNIT_REFS, PropertyId.ADMIN_DESCRIPTORS);
+        if (allContexts.isEmpty()) {
+            contextContainer =
+                new POJOContainer<Context>(Context.class, PropertyId.OBJECT_ID,
+                    PropertyId.NAME, PropertyId.DESCRIPTION,
+                    PropertyId.PUBLIC_STATUS, PropertyId.PUBLIC_STATUS_COMMENT,
+                    PropertyId.TYPE, PropertyId.CREATED_ON,
+                    PropertyId.CREATED_BY, PropertyId.LAST_MODIFICATION_DATE,
+                    PropertyId.MODIFIED_BY, PropertyId.ORG_UNIT_REFS,
+                    PropertyId.ADMIN_DESCRIPTORS);
+        }
+        else {
+            contextContainer =
+                new POJOContainer<Context>(allContexts, PropertyId.OBJECT_ID,
+                    PropertyId.NAME, PropertyId.DESCRIPTION,
+                    PropertyId.PUBLIC_STATUS, PropertyId.PUBLIC_STATUS_COMMENT,
+                    PropertyId.TYPE, PropertyId.CREATED_ON,
+                    PropertyId.CREATED_BY, PropertyId.LAST_MODIFICATION_DATE,
+                    PropertyId.MODIFIED_BY, PropertyId.ORG_UNIT_REFS,
+                    PropertyId.ADMIN_DESCRIPTORS);
+        }
         setContainerDataSource(contextContainer);
         sort(new Object[] { PropertyId.LAST_MODIFICATION_DATE },
             new boolean[] { false });
@@ -116,7 +131,7 @@ public class ContextListView extends Table {
             initContextContainer();
         }
         final POJOItem<Context> addedItem = contextContainer.addItem(context);
-        assert addedItem != null : "Adding context to the list failed.";
+        // assert addedItem != null : "Adding context to the list failed.";
         sort();
         return addedItem;
     }
@@ -131,6 +146,7 @@ public class ContextListView extends Table {
         assert selected != null : "context must not be null.";
         assert contextContainer.containsId(selected) : "Context not in the list view";
 
+        @SuppressWarnings("boxing")
         final Object itemId = contextContainer.removeItem(selected);
 
         assert itemId != null : "Removing context to the list failed.";
@@ -143,4 +159,5 @@ public class ContextListView extends Table {
             new boolean[] { false });
         setValue(newContext);
     }
+
 }

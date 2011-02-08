@@ -12,6 +12,7 @@ import com.vaadin.ui.OptionGroup;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
 
+import de.escidoc.admintool.app.AppConstants;
 import de.escidoc.admintool.service.ResourceService;
 import de.escidoc.admintool.service.ServiceContainer;
 import de.escidoc.admintool.view.ModalDialog;
@@ -128,11 +129,10 @@ public class FilterResourceListener implements ClickListener {
     private String getRawFilter() {
         final Object value = rawFilterTextArea.getValue();
         if (value instanceof String) {
-            final String trim = ((String) value).trim();
-            return trim;
+            return ((String) value).trim();
         }
         else {
-            return "";
+            return AppConstants.EMPTY_STRING;
         }
     }
 

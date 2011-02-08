@@ -5,9 +5,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.google.common.base.Preconditions;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.ObjectProperty;
@@ -26,9 +23,6 @@ public class PropertiesFieldsImpl extends CustomComponent
     implements PropertiesFields {
 
     private static final long serialVersionUID = -1808186834466896787L;
-
-    private final static Logger LOG = LoggerFactory
-        .getLogger(PropertiesFieldsImpl.class);
 
     private final FormLayout formLayout;
 
@@ -124,10 +118,11 @@ public class PropertiesFieldsImpl extends CustomComponent
     }
 
     private void configure(final TextField field) {
-        field.setPropertyDataSource(new ObjectProperty(""));
+        field.setPropertyDataSource(new ObjectProperty<String>(
+            ViewConstants.EMPTY_STRING));
         field.setImmediate(false);
         field.setInvalidCommitted(false);
-        field.setNullRepresentation("");
+        field.setNullRepresentation(ViewConstants.EMPTY_STRING);
         field.setNullSettingAllowed(false);
         field.setWriteThrough(false);
     }
@@ -181,18 +176,12 @@ public class PropertiesFieldsImpl extends CustomComponent
         modifiedLayout.addComponent(modifiedOn);
     }
 
-    // private void addStatusComment() {
-    // statusComment.setWidth(ViewConstants.FIELD_WIDTH);
-    // statusComment.setReadOnly(true);
-    // configure(statusComment);
-    // formLayout.addComponent(statusComment);
-    // }
-
     public List<Field> getAllFields() {
         final Iterator<Component> iterator = formLayout.getComponentIterator();
         while (iterator.hasNext()) {
             final Component component = iterator.next();
-            if (component instanceof Field) {
+            if (component instanceof Field
+                && !component.getCaption().equals("Parents")) {
                 final Field field = (Field) component;
                 allFields.add(field);
             }

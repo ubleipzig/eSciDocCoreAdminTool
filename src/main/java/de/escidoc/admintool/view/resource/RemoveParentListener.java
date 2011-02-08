@@ -3,17 +3,22 @@ package de.escidoc.admintool.view.resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 
 import de.escidoc.admintool.app.PropertyId;
 import de.escidoc.admintool.view.ModalDialog;
+import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.client.exceptions.application.invalid.InvalidStatusException;
 import de.escidoc.core.resources.oum.OrganizationalUnit;
+import de.escidoc.core.resources.oum.Parent;
+import de.escidoc.core.resources.oum.Parents;
 
 final class RemoveParentListener implements ClickListener {
+
     private static final long serialVersionUID = 1887055528394173137L;
 
     private static final Logger LOG = LoggerFactory
@@ -23,7 +28,7 @@ final class RemoveParentListener implements ClickListener {
 
     private Property parentProperty;
 
-    private OrganizationalUnit child;
+    private OrganizationalUnit selectedOrgUnit;
 
     RemoveParentListener(final OrgUnitSpecificView orgUnitSpecificView) {
         this.orgUnitSpecificView = orgUnitSpecificView;
@@ -31,20 +36,25 @@ final class RemoveParentListener implements ClickListener {
 
     @Override
     public void buttonClick(final ClickEvent event) {
+        if (getSelectedOrgUnitId().equals(ViewConstants.EMPTY_STRING)) {
+            return;
+        }
         removeParent();
     }
 
     private void removeParent() {
         try {
-            child = retrieveOrgUnit(getSelectedOrgUnitId());
-            updatePersistence(child);
-            updateResourceContainer(child);
-            updateItem(child);
+            retrieveOrgUnit(getSelectedOrgUnitId());
+            updatePersistence();
+            updateResourceContainer();
+            updateItem();
+            updateView();
         }
         catch (final EscidocClientException e) {
             if (e instanceof InvalidStatusException) {
                 ModalDialog.show(orgUnitSpecificView.mainWindow, "Parent of "
-                    + child.getXLinkTitle() + " is not in status opened.");
+                    + selectedOrgUnit.getXLinkTitle()
+                    + " is not in status opened.");
             }
             else {
                 LOG.warn("Internal server error.", e);
@@ -53,27 +63,48 @@ final class RemoveParentListener implements ClickListener {
         }
     }
 
-    private void updateItem(final Object child) {
-        parentProperty.setValue("no parents");
+    private void updateItem() {
+        final Parent parent = null;
+        if (parent == null) {
+            // getParentProperty().setValue("no parents");
+            getParentProperty().setValue(new ResourceRefDisplay());
+        }
+
+        final Item updateItem = orgUnitSpecificView.item;
+
+        final Property itemProperty =
+            updateItem.getItemProperty(PropertyId.PARENTS);
+        itemProperty.setValue(new Parents());
     }
 
-    private void updateResourceContainer(final OrganizationalUnit child) {
-        orgUnitSpecificView.resourceContainer.removeParent(child);
+    private Property getParentProperty() {
+        return parentProperty;
+    }
+
+    protected void updatePersistence() throws EscidocClientException {
+        orgUnitSpecificView.orgUnitService.removeParent(selectedOrgUnit);
+    }
+
+    private void updateResourceContainer() {
+        orgUnitSpecificView.resourceContainer.removeParent(selectedOrgUnit);
+    }
+
+    private void updateView() {
+        parentProperty.setValue(new ResourceRefDisplay());
     }
 
     private OrganizationalUnit retrieveOrgUnit(final String objectId)
         throws EscidocClientException {
-        return orgUnitSpecificView.orgUnitService.findById(objectId);
+        return selectedOrgUnit =
+            orgUnitSpecificView.orgUnitService.findById(objectId);
     }
 
     private String getSelectedOrgUnitId() {
+        if (orgUnitSpecificView.item == null) {
+            return ViewConstants.EMPTY_STRING;
+        }
         return (String) orgUnitSpecificView.item.getItemProperty(
             PropertyId.OBJECT_ID).getValue();
-    }
-
-    protected void updatePersistence(final OrganizationalUnit child)
-        throws EscidocClientException {
-        orgUnitSpecificView.orgUnitService.removeParent(child);
     }
 
     public void setParentProperty(final Property parentProperty) {

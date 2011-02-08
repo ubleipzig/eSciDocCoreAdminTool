@@ -11,33 +11,33 @@ import de.escidoc.admintool.view.admintask.Style.Ruler;
 
 public class RepositoryInfoFooView extends AbstractAdminTaskView {
 
-  private static final long serialVersionUID = 3758827172683416515L;
+    private static final long serialVersionUID = 3758827172683416515L;
 
-  public RepositoryInfoFooView(final ServiceContainer services,
-      final Window mainWindow) {
-    super(services, mainWindow);
-  }
+    public RepositoryInfoFooView(final ServiceContainer services,
+        final Window mainWindow) {
+        super(services, mainWindow);
+    }
 
-  @Override
-  protected void addView() {
+    @Override
+    public void addView() {
 
-    Label text = new H2(ViewConstants.REPOSITORY_INFORMATION_TITLE);
-    text.setContentMode(Label.CONTENT_XHTML);
-    cssLayout.addComponent(text);
+        Label text = new H2(ViewConstants.REPOSITORY_INFORMATION_TITLE);
+        text.setContentMode(Label.CONTENT_XHTML);
+        cssLayout.addComponent(text);
 
-    cssLayout.addComponent(new Ruler());
+        cssLayout.addComponent(new Ruler());
 
-    text = new Label(ViewConstants.REPO_INFO_TEXT, Label.CONTENT_XHTML);
-    cssLayout.addComponent(text);
+        text = new Label(ViewConstants.REPO_INFO_TEXT, Label.CONTENT_XHTML);
+        cssLayout.addComponent(text);
 
-    final HorizontalLayout hLayout = new HorizontalLayout();
-    hLayout.setWidth(100, UNITS_PERCENTAGE);
-    hLayout.setHeight(100, UNITS_PERCENTAGE);
+        final HorizontalLayout hLayout = new HorizontalLayout();
+        hLayout.setWidth(100, UNITS_PERCENTAGE);
+        hLayout.setHeight(100, UNITS_PERCENTAGE);
 
-    final RepoInfoClickListener listener = new RepoInfoClickListener(
-        mainWindow, services.getAdminService());
-    hLayout.addComponent(new RepositoryInfoView(listener));
-    cssLayout.addComponent(hLayout);
-  }
+        final RepoInfoClickListener listener =
+            new RepoInfoClickListener(mainWindow, services.getAdminService());
+        hLayout.addComponent(new RepositoryInfoView(listener));
+        cssLayout.addComponent(hLayout);
+    }
 
 }

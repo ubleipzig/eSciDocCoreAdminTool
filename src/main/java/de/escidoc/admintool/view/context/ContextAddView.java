@@ -14,8 +14,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
+import com.vaadin.data.Item;
 import com.vaadin.data.util.ObjectProperty;
-import com.vaadin.data.util.POJOItem;
 import com.vaadin.terminal.SystemError;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Alignment;
@@ -320,14 +320,14 @@ public class ContextAddView extends CustomComponent implements ClickListener {
 
     private void addAndSortContextInListView(final Context newContext)
         throws EscidocClientException {
-        final POJOItem<Context> item = contextListView.addContext(newContext);
+        contextListView.addContext(newContext);
         contextListView.sort();
         contextListView.select(newContext);
+        final Item item = contextListView.getItem(newContext);
         showInEditView(item);
     }
 
-    private void showInEditView(final POJOItem<Context> item)
-        throws EscidocClientException {
+    private void showInEditView(final Item item) throws EscidocClientException {
         app.getContextView().showEditView(item);
     }
 

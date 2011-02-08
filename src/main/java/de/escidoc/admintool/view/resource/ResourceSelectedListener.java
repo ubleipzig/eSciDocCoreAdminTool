@@ -11,10 +11,11 @@ final class ResourceSelectedListener implements ItemClickListener {
 
     private String selectedParent;
 
-    ModalWindow modalWindow;
+    AddOrEditParentModalWindow addOrEditParentModalWindow;
 
-    ResourceSelectedListener(final ModalWindow modalWindow) {
-        this.modalWindow = modalWindow;
+    ResourceSelectedListener(
+        final AddOrEditParentModalWindow addOrEditParentModalWindow) {
+        this.addOrEditParentModalWindow = addOrEditParentModalWindow;
     }
 
     public void itemClick(final ItemClickEvent event) {
@@ -22,7 +23,7 @@ final class ResourceSelectedListener implements ItemClickListener {
         if (item == null) {
             return;
         }
-        modalWindow.setSelected(getSelectedParent(item));
+        addOrEditParentModalWindow.setSelected(getSelectedParent(item));
     }
 
     private String getSelectedParent(final Item item) {

@@ -1,43 +1,45 @@
 package de.escidoc.admintool.view.resource;
 
 import com.google.common.base.Preconditions;
-import com.vaadin.ui.Button.ClickListener;
 
 import de.escidoc.admintool.service.OrgUnitServiceLab;
+import de.escidoc.admintool.view.ModalDialog;
+import de.escidoc.core.client.exceptions.EscidocClientException;
 
-final class UpdateParentListener extends AbstractModifyParentOrgUnitListener
-    implements ClickListener {
+final class UpdateParentListener extends AbstractAddOrChangeParentListener {
 
     protected static final long serialVersionUID = 7022982222058387053L;
 
-    protected final ModalWindow modalWindow;
-
-    public UpdateParentListener(final ModalWindow modalWindow,
+    public UpdateParentListener(
+        final AddOrEditParentModalWindow addOrEditParentModalWindow,
         final OrgUnitServiceLab orgUnitService) {
 
-        Preconditions.checkNotNull(modalWindow, "modalWindow is null: %s",
-            modalWindow);
+        Preconditions.checkNotNull(addOrEditParentModalWindow,
+            "modalWindow is null: %s", addOrEditParentModalWindow);
         Preconditions.checkNotNull(orgUnitService,
             "orgUnitService is null: %s", orgUnitService);
 
-        this.modalWindow = modalWindow;
-
+        super.addOrEditParentModalWindow = addOrEditParentModalWindow;
         super.orgUnitService = orgUnitService;
-        super.resourceContainer = modalWindow.resourceContainer;
+        super.resourceContainer = addOrEditParentModalWindow.resourceContainer;
     }
 
     @Override
-    protected void onButtonClick() {
-        closeWindow();
+    protected void addOrUpdateParent() {
         updateParent();
     }
 
-    private void closeWindow() {
-        modalWindow.closeWindow();
-    }
-
-    @Override
-    protected String getSelectedParentId() {
-        return modalWindow.selectedParent;
+    private void updateParent() {
+        try {
+            selectedOrgUnit = getChild();
+            selectedParent = getSelectedParent();
+            updatePersistence();
+            updateResourceContainer();
+            updateItem();
+            checkPostConditions(selectedOrgUnit);
+        }
+        catch (final EscidocClientException e) {
+            ModalDialog.show(getMainWindow(), e);
+        }
     }
 }

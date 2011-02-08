@@ -69,7 +69,8 @@ public class ErrorDialog extends Window implements Button.ClickListener {
         final Label errorMassageLabel = new Label(errorMessage);
         layout.addComponent(errorMassageLabel);
         layout.setExpandRatio(errorMassageLabel, 1);
-        // layout.addComponent(LayoutHelper.createContextView("", new Label(errorMessage),
+        // layout.addComponent(LayoutHelper.createContextView("", new
+        // Label(errorMessage),
         // 10, false));
         final Button button = new Button("OK");
         layout.addComponent(LayoutHelper.create("", button, 10, false));

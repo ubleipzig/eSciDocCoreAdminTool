@@ -55,7 +55,6 @@ public class ContextServiceLab
 
     @Override
     public void update(final Resource resource) throws EscidocClientException {
-        // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Not yet implemented");
 
     }

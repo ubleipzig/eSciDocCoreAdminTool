@@ -37,4 +37,8 @@ public class AppConstants {
 
     public static final String ETERMS_ORGANIZATION_TYPE =
         "eterms:organization-type";
+
+    public static final String DEFAULT_ORG_UNIT_ATTRIBUTE_NAME = "o";
+
+    public static final String EMPTY_STRING = "";
 }
