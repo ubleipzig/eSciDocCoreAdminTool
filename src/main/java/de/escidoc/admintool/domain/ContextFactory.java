@@ -4,8 +4,8 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import de.escidoc.core.resources.om.context.AdminDescriptors;
 import de.escidoc.core.resources.om.context.Context;
-import de.escidoc.core.resources.om.context.OrganizationalUnitRefs;
 import de.escidoc.core.resources.om.context.ContextProperties;
+import de.escidoc.core.resources.om.context.OrganizationalUnitRefs;
 
 //TODO refactor this class, adapt to more appropriate pattern e.g. Builder
 public class ContextFactory {
@@ -52,7 +52,8 @@ public class ContextFactory {
     }
 
     private boolean isNotSet(final AdminDescriptors adminDescriptors) {
-        return adminDescriptors == null || adminDescriptors.size() == 0;
+        return adminDescriptors == null;
+        // || adminDescriptors.size() == 0;
     }
 
     public Context build() {

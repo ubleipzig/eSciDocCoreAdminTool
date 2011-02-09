@@ -117,12 +117,14 @@ public class AddOrEditParentModalWindow extends Window {
     public void addAddParentOkLisner() {
         addParentOkListener =
             new AddParentOkListener(this, orgUnitService, orgUnitSpecificView);
+        addParentOkListener.setMainWindow(mainWindow);
         okButton.removeListener(updateParentListener);
         okButton.addListener(addParentOkListener);
     }
 
     public void addUpdateParentOkListener() {
         updateParentListener = new UpdateParentListener(this, orgUnitService);
+        updateParentListener.setMainWindow(mainWindow);
         okButton.removeListener(addParentOkListener);
         okButton.addListener(updateParentListener);
     }

@@ -69,15 +69,12 @@ public abstract class AbstractAddOrChangeParentListener
     protected void updateItem() {
         final Parent parent = newParents.get(0);
         if (parent == null) {
-            // getParentProperty().setValue("no parents");
             getParentProperty().setValue(new ResourceRefDisplay());
         }
         else {
             getParentProperty().setValue(
                 new ResourceRefDisplay(parent.getObjid(), parent
                     .getXLinkTitle()));
-
-            // getParentProperty().setValue(parent.getXLinkTitle());
         }
 
         final Item updateItem =

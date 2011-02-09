@@ -106,10 +106,16 @@ public class AdminToolApplication extends Application {
     @Override
     public void init() {
         configureLogger();
+        showProxyInfoInLog();
         registerViewHandler();
         setMainWindowAndTheme();
         setFullSize();
         addParameterHandler();
+    }
+
+    private void showProxyInfoInLog() {
+        LOG.info("proxy: " + System.getProperty("http.proxyHost"));
+        LOG.info("proxy: " + System.getProperty("http.proxyPort"));
     }
 
     private void registerViewHandler() {
