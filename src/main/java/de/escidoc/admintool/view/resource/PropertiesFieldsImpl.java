@@ -34,6 +34,8 @@ public class PropertiesFieldsImpl extends CustomComponent
 
     final TextField descField = new TextField(ViewConstants.DESCRIPTION_LABEL);
 
+    private final HorizontalLayout objectIdLayout = new HorizontalLayout();
+
     private final HorizontalLayout modifiedLayout = new HorizontalLayout();
 
     private final HorizontalLayout modifiedByLayout = new HorizontalLayout();
@@ -62,6 +64,8 @@ public class PropertiesFieldsImpl extends CustomComponent
 
     Label publicStatusValue;
 
+    Label objectId;
+
     public PropertiesFieldsImpl(final VerticalLayout vLayout,
         final FormLayout formLayout, final Map<String, Field> fieldByName) {
         this.formLayout = formLayout;
@@ -86,6 +90,7 @@ public class PropertiesFieldsImpl extends CustomComponent
     }
 
     public void removeOthers() {
+        formLayout.removeComponent(objectIdLayout);
         formLayout.removeComponent(modifiedLayout);
         formLayout.removeComponent(modifiedByLayout);
         formLayout.removeComponent(createdLayout);
@@ -130,15 +135,26 @@ public class PropertiesFieldsImpl extends CustomComponent
     }
 
     private void addReadOnlyProperties() {
+        formLayout.addComponent(objectIdLayout);
         formLayout.addComponent(modifiedLayout);
         formLayout.addComponent(modifiedByLayout);
         formLayout.addComponent(createdLayout);
         formLayout.addComponent(createdByLayout);
 
+        addObjectId();
         addModifiedOn();
         addModifiedBy();
         addCreatedOn();
         addCreatedBy();
+    }
+
+    private void addObjectId() {
+        final Label objectIdLabel = new Label(ViewConstants.OBJECT_ID_LABEL);
+        objectIdLayout.addComponent(objectIdLabel);
+        objectIdLayout.setSpacing(true);
+
+        objectId = new Label();
+        objectIdLayout.addComponent(objectId);
     }
 
     private void addCreatedOn() {

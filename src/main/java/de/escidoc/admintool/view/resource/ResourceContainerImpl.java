@@ -66,10 +66,23 @@ public class ResourceContainerImpl implements ResourceContainer {
     }
 
     public void addChild(final Resource parent, final Resource child) {
+        Preconditions.checkNotNull(parent, "parent is null: %s", parent);
+        Preconditions.checkNotNull(child, "child is null: %s", child);
         final Item item = container.addItem(child);
-        bind(item, child);
-        markAsLeaf(child);
-        setParentIfAny(parent, child);
+
+        if (alreadyInTree(item)) {
+            // child has more that one parents, not yet supported.
+        }
+        else {
+            bind(item, child);
+            markAsLeaf(child);
+            setParentIfAny(parent, child);
+        }
+
+    }
+
+    private boolean alreadyInTree(final Item item) {
+        return item == null;
     }
 
     private void setParentIfAny(final Resource parent, final Resource child) {

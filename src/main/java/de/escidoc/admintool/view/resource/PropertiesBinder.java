@@ -35,6 +35,7 @@ public class PropertiesBinder implements FieldsBinder {
         bind(propertiesFields.descField).with(
             getProperty(PropertyId.DESCRIPTION));
 
+        bind(propertiesFields.objectId).with(getProperty(PropertyId.OBJECT_ID));
         bindModifienOn();
 
         bind(propertiesFields.modifiedBy).with(

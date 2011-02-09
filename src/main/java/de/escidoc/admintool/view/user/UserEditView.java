@@ -6,19 +6,19 @@ import com.vaadin.ui.VerticalLayout;
 @SuppressWarnings("serial")
 public class UserEditView extends VerticalLayout {
 
-    private final UserEditForm userLabEditForm;
+    private final UserEditForm usemEditForm;
 
     public UserEditView(final UserEditForm userLabForm) {
-        userLabEditForm = userLabForm;
+        usemEditForm = userLabForm;
         buildUI();
     }
 
     private void buildUI() {
         addStyleName("view");
-        addComponent(userLabEditForm);
+        addComponent(usemEditForm);
     }
 
     public void setSelected(final Item item) {
-        userLabEditForm.setSelected(item);
+        usemEditForm.setSelected(item);
     }
 }

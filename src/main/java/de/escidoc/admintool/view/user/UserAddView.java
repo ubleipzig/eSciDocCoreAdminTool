@@ -159,10 +159,10 @@ public class UserAddView extends CustomComponent implements ClickListener {
         orgUnitWidget.withRemoveButton().withListener(
             new RemoveSeletecteOrgUnitListener(this));
         panel.addComponent(new Label(" &nbsp; ", Label.CONTENT_XHTML));
-        panel.addComponent(bar(orgUnitWidget.build()));
+        panel.addComponent(createLayout(orgUnitWidget.build()));
     }
 
-    private Component bar(final VerticalLayout build) {
+    private Component createLayout(final VerticalLayout build) {
         final HorizontalLayout hLayout = new HorizontalLayout();
 
         final Label textLabel =
@@ -301,8 +301,9 @@ public class UserAddView extends CustomComponent implements ClickListener {
             final POJOItem<UserAccount> item =
                 userListView.addUser(createdUserAccount);
             resetFields();
-            userListView.select(createdUserAccount);
-            showInEditView(item);
+            app.showUserInEditView(createdUserAccount);
+            // userListView.select(createdUserAccount);
+            // showInEditView(item);
         }
         catch (final EscidocException e) {
             if (e instanceof AuthorizationException) {
