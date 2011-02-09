@@ -32,12 +32,8 @@ public class MainView extends CustomComponent {
 
     private GridLayout toolbar;
 
-    private final ViewManager viewManager;
-
-    public MainView(final AdminToolApplication app,
-        final ViewManager viewManager) {
+    public MainView(final AdminToolApplication app) {
         this.app = app;
-        this.viewManager = viewManager;
         init();
     }
 
@@ -82,7 +78,7 @@ public class MainView extends CustomComponent {
             ViewConstants.SPLIT_POSITION_FROM_LEFT, SplitPanel.UNITS_PIXELS);
         horizontalSplit.addStyleName(ViewConstants.THIN_SPLIT);
 
-        navigation = new NavigationTreeImpl(app, viewManager);
+        navigation = new NavigationTreeImpl(app);
         navigation.init();
         horizontalSplit.setFirstComponent(navigation);
     }

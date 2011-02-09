@@ -45,6 +45,18 @@ public class UserViewComponent {
         this.resourceTreeView = resourceTreeView;
     }
 
+    public void init() {
+        listView = new UserListView(app, userService);
+        setUserListView(listView);
+        editForm =
+            new UserEditForm(app, userService, orgUnitService, resourceTreeView);
+        setUserEditForm(editForm);
+        setUserEditView(new UserEditView(getUserEditForm()));
+        userView = new UserView(app, getUserListView(), getUserEditView());
+        setUserView(userView);
+        // showFirstItemInEditView();
+    }
+
     /**
      * @return the userListView
      */
@@ -64,22 +76,10 @@ public class UserViewComponent {
      * @return the userView
      */
     public UserView getUserView() {
-        if (userView == null) {
-            listView = new UserListView(app, userService);
-            setUserListView(listView);
-            editForm =
-                new UserEditForm(app, userService, orgUnitService,
-                    resourceTreeView);
-            setUserEditForm(editForm);
-            setUserEditView(new UserEditView(getUserEditForm()));
-            userView = new UserView(app, getUserListView(), getUserEditView());
-            setUserView(userView);
-            showFirstItemInEditView();
-        }
         return userView;
     }
 
-    private void showFirstItemInEditView() {
+    public void showFirstItemInEditView() {
         final Item item =
             listView.getContainerDataSource().getItem(listView.firstItemId());
         listView.select(listView.firstItemId());

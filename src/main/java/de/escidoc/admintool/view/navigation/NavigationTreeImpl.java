@@ -6,7 +6,6 @@ import com.vaadin.ui.Tree;
 
 import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.view.ViewConstants;
-import de.escidoc.admintool.view.ViewManager;
 
 public class NavigationTreeImpl extends CustomComponent
     implements NavigationTree {
@@ -17,15 +16,9 @@ public class NavigationTreeImpl extends CustomComponent
 
     final AdminToolApplication app;
 
-    private final ViewManager viewManager;
-
-    public NavigationTreeImpl(final AdminToolApplication app,
-        final ViewManager viewManager) {
+    public NavigationTreeImpl(final AdminToolApplication app) {
         Preconditions.checkNotNull(app, "app is null: %s", app);
-        Preconditions.checkNotNull(viewManager, "viewManager is null: %s",
-            viewManager);
         this.app = app;
-        this.viewManager = viewManager;
     }
 
     public void init() {
@@ -38,7 +31,7 @@ public class NavigationTreeImpl extends CustomComponent
     private void configureTree() {
         tree.setSelectable(true);
         tree.setNullSelectionAllowed(true);
-        tree.addListener(new NavigationTreeClickListener(app, viewManager));
+        tree.addListener(new NavigationTreeClickListener(app));
     }
 
     private void addResourcesNode() {

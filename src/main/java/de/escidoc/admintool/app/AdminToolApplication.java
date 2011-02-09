@@ -38,8 +38,6 @@ import de.escidoc.admintool.view.admintask.ReindexView;
 import de.escidoc.admintool.view.admintask.RepositoryInfoFooView;
 import de.escidoc.admintool.view.contentmodel.ContentModelAddView;
 import de.escidoc.admintool.view.context.ContextAddView;
-import de.escidoc.admintool.view.context.ContextEditForm;
-import de.escidoc.admintool.view.context.ContextListView;
 import de.escidoc.admintool.view.context.ContextView;
 import de.escidoc.admintool.view.factory.ContextViewFactory;
 import de.escidoc.admintool.view.login.WelcomePage;
@@ -219,14 +217,8 @@ public class AdminToolApplication extends Application {
     }
 
     private void buildMainLayout() {
-        viewManager.setMainView(new MainView(this, viewManager));
+        viewManager.setMainView(new MainView(this));
         viewManager.showMainView();
-    }
-
-    private void createUserViewComponent() {
-        userViewComp =
-            new UserViewComponent(this, userService, orgUnitServiceLab,
-                createResourceTreeView());
     }
 
     private ResourceViewComponent containerViewComponent;
@@ -246,10 +238,6 @@ public class AdminToolApplication extends Application {
     private AdminService adminService;
 
     private ContextView contextView;
-
-    private ContextListView contextList;
-
-    private ContextEditForm contextForm;
 
     private ContentModelAddView contentModelAddView;
 
@@ -355,12 +343,6 @@ public class AdminToolApplication extends Application {
         return roleView;
     }
 
-    public UserView getUserView() {
-        createUserViewComponent();
-        final UserView userView = userViewComp.getUserView();
-        return userView;
-    }
-
     public ContextAddView newContextAddView() {
         return contextViewFactory
             .createContextAddView(createResourceTreeView());
@@ -398,13 +380,26 @@ public class AdminToolApplication extends Application {
     }
 
     public void showUserView() {
-        final UserView userView = getUserView();
+        createUserViewComponent();
+        userViewComp.showFirstItemInEditView();
+        final UserView userView = userViewComp.getUserView();
         setMainView(userView);
+    }
+
+    public UserView getUserView() {
+        return userViewComp.getUserView();
+    }
+
+    private void createUserViewComponent() {
+        userViewComp =
+            new UserViewComponent(this, userService, orgUnitServiceLab,
+                createResourceTreeView());
+        userViewComp.init();
     }
 
     public void showResourceView() {
         try {
-            createResourceView();
+            createResourceViewComponent();
             containerViewComponent.showFirstItemInEditView();
             setMainView(getResourceView());
         }
@@ -414,7 +409,7 @@ public class AdminToolApplication extends Application {
         }
     }
 
-    private void createResourceView() throws EscidocClientException {
+    private void createResourceViewComponent() throws EscidocClientException {
         containerViewComponent =
             new ResourceViewComponentImpl(this, mainWindow, orgUnitServiceLab,
                 getResourceContainer());

@@ -6,7 +6,6 @@ import com.vaadin.event.ItemClickEvent.ItemClickListener;
 
 import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.view.ViewConstants;
-import de.escidoc.admintool.view.ViewManager;
 
 class NavigationTreeClickListener implements ItemClickListener {
 
@@ -14,15 +13,9 @@ class NavigationTreeClickListener implements ItemClickListener {
 
     private final AdminToolApplication app;
 
-    private final ViewManager viewManager;
-
-    public NavigationTreeClickListener(final AdminToolApplication app,
-        final ViewManager viewManager) {
+    public NavigationTreeClickListener(final AdminToolApplication app) {
         Preconditions.checkNotNull(app, "app is null: %s", app);
-        Preconditions.checkNotNull(viewManager, "viewManager is null: %s",
-            viewManager);
         this.app = app;
-        this.viewManager = viewManager;
     }
 
     @Override
