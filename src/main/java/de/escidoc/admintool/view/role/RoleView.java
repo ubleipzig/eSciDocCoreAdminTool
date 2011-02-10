@@ -83,14 +83,10 @@ public class RoleView extends CustomComponent {
 
     private final ListSelect resouceResult = new ListSelect();
 
-    // TODO refactor all footer to a class.
     private final HorizontalLayout footer = new HorizontalLayout();
 
     private final Button saveBtn = new Button(ViewConstants.SAVE,
         new SaveBtnListener());
-
-    private final Button cancelBtn = new Button(ViewConstants.CANCEL,
-        new CancelBtnListener());
 
     private final Window mainWindow;
 
@@ -218,7 +214,6 @@ public class RoleView extends CustomComponent {
         final VerticalLayout verticalLayout = new VerticalLayout();
         verticalLayout.addComponent(footer);
         verticalLayout.setComponentAlignment(footer, Alignment.MIDDLE_RIGHT);
-
         mainLayout.addComponent(verticalLayout);
     }
 
@@ -251,8 +246,8 @@ public class RoleView extends CustomComponent {
 
     private void bindResourceTypeData() {
         final BeanItemContainer<ResourceType> resourceTypeContainer =
-            new BeanItemContainer<ResourceType>(Arrays.asList(ResourceType
-                .values()));
+            new BeanItemContainer<ResourceType>(ResourceType.class,
+                Arrays.asList(ResourceType.values()));
         resourceTypeComboBox.setContainerDataSource(resourceTypeContainer);
         resourceTypeComboBox.addListener(new ResourceTypeListener());
     }
@@ -313,7 +308,6 @@ public class RoleView extends CustomComponent {
         }
 
         private void onSaveClick() {
-            // TODO add validation
             assignRole();
         }
 

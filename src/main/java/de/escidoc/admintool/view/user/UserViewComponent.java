@@ -8,6 +8,7 @@ import de.escidoc.admintool.service.OrgUnitServiceLab;
 import de.escidoc.admintool.service.ResourceService;
 import de.escidoc.admintool.service.UserService;
 import de.escidoc.admintool.view.resource.ResourceTreeView;
+import de.escidoc.core.resources.aa.useraccount.UserAccount;
 
 public class UserViewComponent {
 
@@ -54,7 +55,6 @@ public class UserViewComponent {
         setUserEditView(new UserEditView(getUserEditForm()));
         userView = new UserView(app, getUserListView(), getUserEditView());
         setUserView(userView);
-        // showFirstItemInEditView();
     }
 
     /**
@@ -115,5 +115,11 @@ public class UserViewComponent {
 
     public void showAddView() {
         userView.showAddView();
+    }
+
+    public void showUserInEditView(final UserAccount user) {
+        final Item item = listView.getContainerDataSource().getItem(user);
+        listView.select(user);
+        userView.showEditView(item);
     }
 }

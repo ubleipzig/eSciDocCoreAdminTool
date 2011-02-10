@@ -58,6 +58,10 @@ public class UserView extends SplitPanel implements ResourceView {
         setSecondComponent(app.newUserAddView());
     }
 
+    public Item toItem(final UserAccount user) {
+        return userList.getContainerDataSource().getItem(user);
+    }
+
     public void showEditView(final Item item) {
         setSecondComponent(userEditView);
         userEditView.setSelected(item);
