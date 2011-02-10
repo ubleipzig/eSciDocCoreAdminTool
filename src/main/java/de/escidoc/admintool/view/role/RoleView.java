@@ -192,7 +192,7 @@ public class RoleView extends CustomComponent {
         searchButton.setEnabled(false);
         mainLayout.addComponent(searchBox);
         searchButton.addListener(new SearchBtnListener());
-        mainLayout.addComponent(searchButton);
+        // mainLayout.addComponent(searchButton);
     }
 
     private void addResourceSelection() {
