@@ -382,13 +382,9 @@ public class AdminToolApplication extends Application {
         if (userViewComp == null) {
             createUserViewComponent();
         }
-        userViewComp.showUserInEditView(user);
-
-        // userViewComp.getUserView().getUserList().select(user);
-        // // userViewComp.getUserView().showEditView(
-        // // userViewComp.getUserView().getSelectedItem());
-        // final Item item = userViewComp.getUserView().toItem(user);
-        // userViewComp.getUserView().showEditView(item);
+        userViewComp.getUserView().getUserList().select(user);
+        userViewComp.getUserView().showEditView(
+            userViewComp.getUserView().getSelectedItem());
         setMainView(userViewComp.getUserView());
     }
 
