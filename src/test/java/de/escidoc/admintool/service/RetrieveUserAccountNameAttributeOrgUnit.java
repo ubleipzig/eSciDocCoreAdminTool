@@ -4,6 +4,7 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import de.escidoc.admintool.Constants;
@@ -32,6 +33,7 @@ public class RetrieveUserAccountNameAttributeOrgUnit {
     /**
      * @throws Exception
      */
+    @Ignore
     @SuppressWarnings("boxing")
     @Test
     public void shouldReturnAllOrgUnitIfExists() throws Exception {
