@@ -105,7 +105,7 @@ public class AdminToolApplication extends Application {
 
     @Override
     public void init() {
-        configureLogger();
+        // configureLogger();
         showProxyInfoInLog();
         registerViewHandler();
         setMainWindowAndTheme();
@@ -115,7 +115,9 @@ public class AdminToolApplication extends Application {
 
     private void showProxyInfoInLog() {
         LOG.info("proxy: " + System.getProperty("http.proxyHost"));
-        LOG.info("proxy: " + System.getProperty("http.proxyPort"));
+        LOG.info("port: " + System.getProperty("http.proxyPort"));
+        LOG.info("http.nonProxyHosts"
+            + System.getProperty("http.nonProxyHosts"));
     }
 
     private void registerViewHandler() {
@@ -191,6 +193,7 @@ public class AdminToolApplication extends Application {
 
     private void createServices() throws InternalClientException,
         EscidocException, TransportException {
+        LOG.info("service address: " + eSciDocUri);
         if (eSciDocUri != null && !eSciDocUri.isEmpty()) {
             Preconditions.checkArgument(
                 eSciDocUri != null && !eSciDocUri.isEmpty(),

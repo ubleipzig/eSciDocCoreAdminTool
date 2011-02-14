@@ -14,7 +14,6 @@ import com.vaadin.data.Validator.EmptyValueException;
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.Notification;
 
@@ -31,11 +30,11 @@ public abstract class LoginButtonListener implements ClickListener {
 
     protected final AdminToolApplication app;
 
-    private final ComboBox escidocComboBox;
+    private final AbstractField escidocComboBox;
 
     private final Window mainWindow;
 
-    public LoginButtonListener(final ComboBox escidocComboBox,
+    public LoginButtonListener(final AbstractField escidocComboBox,
         final AdminToolApplication app) {
         this.escidocComboBox = escidocComboBox;
         this.app = app;
@@ -88,6 +87,12 @@ public abstract class LoginButtonListener implements ClickListener {
             final int responseCode =
                 ((HttpURLConnection) connection).getResponseCode();
             return responseCode == 200;
+        }
+        catch (final IllegalArgumentException e) {
+            LOG.warn("Malformed URL: " + e);
+            mainWindow.showNotification(new Notification(e.getMessage(),
+                Notification.TYPE_ERROR_MESSAGE));
+            return false;
         }
         catch (final MalformedURLException e) {
             LOG.warn("Malformed URL: " + e);

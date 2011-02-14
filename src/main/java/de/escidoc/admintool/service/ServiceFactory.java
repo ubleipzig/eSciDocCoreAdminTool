@@ -34,6 +34,7 @@ public class ServiceFactory {
         Preconditions.checkNotNull(eSciDocUri,
             "eSciDocUri can not be null: %s", eSciDocUri);
         Preconditions.checkNotNull(token, "token can not be null: %s", token);
+
         this.eSciDocUri = eSciDocUri;
         this.token = token;
     }

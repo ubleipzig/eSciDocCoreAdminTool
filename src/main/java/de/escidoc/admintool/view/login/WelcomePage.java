@@ -1,15 +1,12 @@
 package de.escidoc.admintool.view.login;
 
-import java.util.Arrays;
-
-import com.vaadin.ui.AbstractSelect.Filtering;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
 import de.escidoc.admintool.app.AdminToolApplication;
@@ -24,10 +21,8 @@ public class WelcomePage extends CustomComponent {
 
     private final FormLayout fLayout = new FormLayout();
 
-    private final ComboBox escidocComboBox = new ComboBox(
-        ViewConstants.ESCIDOC_URL_TEXTFIELD, Arrays.asList(new String[] {
-            "http://localhost:8080", "http://escidev4.fiz-karlsruhe.de:8080",
-            "http://escidev6.fiz-karlsruhe.de:8080" }));
+    private final TextField escidocServiceUrl = new TextField(
+        ViewConstants.ESCIDOC_URL_TEXTFIELD);
 
     private final HorizontalLayout footer = new HorizontalLayout();
 
@@ -67,22 +62,19 @@ public class WelcomePage extends CustomComponent {
     }
 
     private void addComboBox() {
-        escidocComboBox.setWidth(265, UNITS_PIXELS);
-        escidocComboBox.setFilteringMode(Filtering.FILTERINGMODE_CONTAINS);
-        escidocComboBox.setImmediate(true);
-        escidocComboBox.setNullSelectionAllowed(false);
-        escidocComboBox.focus();
-        escidocComboBox.setRequired(true);
-        escidocComboBox.setRequiredError("eSciDoc Location can not be empty.");
-        escidocComboBox.setInputPrompt("http://localhost:8080");
-        escidocComboBox.setValue("http://localhost:8080");
-        escidocComboBox.setNewItemsAllowed(true);
-        fLayout.addComponent(escidocComboBox);
+        escidocServiceUrl.setWidth(265, UNITS_PIXELS);
+        escidocServiceUrl.setImmediate(true);
+        escidocServiceUrl.focus();
+        escidocServiceUrl.setRequired(true);
+        escidocServiceUrl
+            .setRequiredError("eSciDoc Location can not be empty.");
+        escidocServiceUrl.setInputPrompt("http://");
+        fLayout.addComponent(escidocServiceUrl);
     }
 
     private void addLoginButton() {
         loginButton = new Button(ViewConstants.LOGIN_LABEL);
-        loginButton.addListener(new LoginButtonListenerImpl(escidocComboBox,
+        loginButton.addListener(new LoginButtonListenerImpl(escidocServiceUrl,
             app));
 
         footer.addComponent(loginButton);

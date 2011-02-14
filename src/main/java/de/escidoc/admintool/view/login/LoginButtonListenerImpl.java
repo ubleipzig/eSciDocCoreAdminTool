@@ -1,7 +1,7 @@
 package de.escidoc.admintool.view.login;
 
 import com.vaadin.terminal.ExternalResource;
-import com.vaadin.ui.ComboBox;
+import com.vaadin.ui.AbstractField;
 
 import de.escidoc.admintool.app.AdminToolApplication;
 
@@ -9,8 +9,8 @@ public class LoginButtonListenerImpl extends LoginButtonListener {
 
     private static final long serialVersionUID = 2949659635673188343L;
 
-    public LoginButtonListenerImpl(ComboBox escidocComboBox,
-        AdminToolApplication app) {
+    public LoginButtonListenerImpl(final AbstractField escidocComboBox,
+        final AdminToolApplication app) {
         super(escidocComboBox, app);
     }
 
