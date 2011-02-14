@@ -1,0 +1,15 @@
+build/*
+bin/*
+target/*
+reports/*
+bin/*
+etc/*
+script/*
+*.log*
+*.snapshot
+*.iml
+*.ipr
+*.iws
+*.sh
+.project
+.classpath
