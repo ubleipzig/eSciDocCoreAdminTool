@@ -5,6 +5,7 @@ reports/*
 bin/*
 etc/*
 script/*
+.settings/*
 *.log*
 *.snapshot
 *.iml

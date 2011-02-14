@@ -4,7 +4,7 @@
 
 	<groupId>de.escidoc.admintool</groupId>
 	<artifactId>AdminTool</artifactId>
-	<version>1.0-SNAPSHOT</version>
+	<version>1.0-beta1</version>
 	<packaging>war</packaging>
 	<dependencies>
 		<dependency>
