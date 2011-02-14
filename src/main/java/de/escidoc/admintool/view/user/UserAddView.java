@@ -300,10 +300,10 @@ public class UserAddView extends CustomComponent implements ClickListener {
 
             final POJOItem<UserAccount> item =
                 userListView.addUser(createdUserAccount);
+            Preconditions.checkNotNull(item,
+                "Add new user to the list failed: %s", item);
             resetFields();
             app.showUserInEditView(createdUserAccount);
-            // userListView.select(createdUserAccount);
-            // showInEditView(item);
         }
         catch (final EscidocException e) {
             if (e instanceof AuthorizationException) {

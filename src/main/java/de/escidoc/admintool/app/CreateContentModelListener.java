@@ -33,7 +33,7 @@ public class CreateContentModelListener implements ResourceBtnListener {
 
     private final Window mainWindow;
 
-    private Resource created;
+    // private Resource created;
 
     private final ContentModelContainer contentModelContainer;
 
@@ -63,8 +63,6 @@ public class CreateContentModelListener implements ResourceBtnListener {
         if (validateAllFields() && saveToReposity()) {
             removeValidationErrors();
             commitAllFields();
-            // updateResourceContainer();
-            // showInEditView();
         }
     }
 
@@ -75,10 +73,12 @@ public class CreateContentModelListener implements ResourceBtnListener {
 
     private boolean updatePersistence() {
         try {
-            created = contentModelService.create(build);
-            ModalDialog.showMessage(mainWindow, ViewConstants.EMPTY_STRING,
-                "A new Content Model with the ID " + created.getObjid()
-                    + " is created.");
+            final Resource created = contentModelService.create(build);
+            if (created != null && created.getObjid() != null) {
+                ModalDialog.showMessage(mainWindow, ViewConstants.EMPTY_STRING,
+                    "A new Content Model with the ID " + created.getObjid()
+                        + " is created.");
+            }
 
             return created != null && created.getObjid() != null;
         }
@@ -121,14 +121,6 @@ public class CreateContentModelListener implements ResourceBtnListener {
         for (final Field field : allFields) {
             ((AbstractComponent) field).setComponentError(null);
         }
-    }
-
-    private void showInEditView() {
-        // do nothing
-    }
-
-    private void updateResourceContainer() {
-        contentModelContainer.add(created);
     }
 
     private void commitAllFields() {

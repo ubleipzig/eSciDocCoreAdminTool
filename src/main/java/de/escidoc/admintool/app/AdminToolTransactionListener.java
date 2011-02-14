@@ -64,8 +64,6 @@ final class AdminToolTransactionListener implements TransactionListener {
 
             for (final Cookie cookie : request.getCookies()) {
                 if (isEscidocCookie(cookie)) {
-                    final Cookie escidocCookie = cookie;
-                    final String escidocHandle = escidocCookie.getValue();
                     return cookie;
                 }
             }

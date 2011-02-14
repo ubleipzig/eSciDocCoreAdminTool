@@ -24,7 +24,8 @@ import de.escidoc.core.resources.om.context.AdminDescriptor;
 
 @SuppressWarnings("serial")
 public abstract class AdminDescriptorView extends Window {
-    private final Logger LOG = LoggerFactory
+
+    private static final Logger LOG = LoggerFactory
         .getLogger(AdminDescriptorView.class);
 
     protected static final String EDIT_ADMIN_DESCRIPTOR =

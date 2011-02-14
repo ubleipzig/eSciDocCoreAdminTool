@@ -33,6 +33,7 @@ public class PropertyUtilities {
         try {
             final FileOutputStream out = new FileOutputStream(path);
             prop.store(out, caption);
+            out.close();
         }
         catch (final FileNotFoundException e) {
             LOG.error("The file " + path + " could not be read!", e);
@@ -44,7 +45,6 @@ public class PropertyUtilities {
                     e);
             e.printStackTrace();
         }
-
     }
 
     public static InputStream getResourceAsStream(final String path) {

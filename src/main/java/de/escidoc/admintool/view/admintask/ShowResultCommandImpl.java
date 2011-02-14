@@ -9,17 +9,12 @@ import de.escidoc.core.resources.adm.LoadExamplesResult.Entry;
 final class ShowResultCommandImpl
     implements LoadExampleResourceViewImpl.ShowResultCommand {
 
-    private final AddToContainer addToContainer;
-
     private final LoadExampleResourceViewImpl loadExampleResourceViewImpl;
-
-    private AddToContainer addToContextContainer;
 
     ShowResultCommandImpl(
         final LoadExampleResourceViewImpl loadExampleResourceViewImpl,
         final AddToContainer addExampleCommand) {
         this.loadExampleResourceViewImpl = loadExampleResourceViewImpl;
-        addToContainer = addExampleCommand;
     }
 
     @Override

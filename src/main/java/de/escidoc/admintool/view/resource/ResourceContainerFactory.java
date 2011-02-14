@@ -13,8 +13,6 @@ public class ResourceContainerFactory {
 
     private final OrgUnitServiceLab resourceService;
 
-    private ResourceContainer container;
-
     public ResourceContainerFactory(final ResourceService resourceService) {
         Preconditions.checkNotNull(resourceService,
             "resourceService is null: %s", resourceService);
@@ -23,10 +21,7 @@ public class ResourceContainerFactory {
 
     public ResourceContainer getResourceContainer()
         throws EscidocClientException {
-        if (container == null) {
-            return createResourceContainer();
-        }
-        return container;
+        return createResourceContainer();
     }
 
     private ResourceContainer createResourceContainer()

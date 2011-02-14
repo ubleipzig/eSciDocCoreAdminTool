@@ -32,14 +32,11 @@ public class ToolbarFactory {
 
     private GridLayout gLayout;
 
-    private Button[] buttons;
-
     public ToolbarFactory() {
         // do not init
     }
 
     public GridLayout createToolbar(final Button[] buttons) {
-        this.buttons = buttons;
         if (gLayout == null) {
             gLayout = new GridLayout(COLUMNS, ROWS);
             gLayout.setMargin(false);
@@ -48,13 +45,13 @@ public class ToolbarFactory {
             gLayout.setStyleName(TOOLBAR_STYLE_NAME);
             gLayout.addComponent(hLayout, 0, 0);
             addBackgroundImage();
-            addButtons();
+            addButtons(buttons);
         }
 
         return gLayout;
     }
 
-    private void addButtons() {
+    private void addButtons(final Button[] buttons) {
         for (final Button button : buttons) {
             gLayout.addComponent(button, 2, 0);
             gLayout.setComponentAlignment(button, Alignment.MIDDLE_RIGHT);
