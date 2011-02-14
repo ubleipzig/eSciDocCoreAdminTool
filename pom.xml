@@ -28,12 +28,12 @@
 			<artifactId>client-1.2</artifactId>
 			<version>0.8-SNAPSHOT</version>
 			<type>jar</type>
-			<exclusions>
+			<!-- exclusions>
 				<exclusion>
 					<artifactId>escidoc-core</artifactId>
 					<groupId>org.escidoc</groupId>
 				</exclusion>
-			</exclusions>
+			</exclusions-->
 		</dependency>
 		<dependency>
 			<groupId>org.vaadin.addons</groupId>
