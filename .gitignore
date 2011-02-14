@@ -2,8 +2,9 @@ build/*
 bin/*
 target/*
 reports/*
-bin
+bin/*
 etc/*
+script/*
 *.log*
 *.snapshot
 *.iml
