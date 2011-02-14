@@ -27,7 +27,7 @@ final class ShowResultCommandImpl
     public void execute(final Collection<?> entries) {
         for (final Object entry : entries) {
             if (entry instanceof Entry) {
-                updateContainers((Entry) entry);
+//                updateContainers((Entry) entry);
                 showLoadedExamplesResult((Entry) entry);
             }
         }
