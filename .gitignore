@@ -11,3 +11,5 @@ script/*
 *.ipr
 *.iws
 *.sh
+.project
+.classpath
