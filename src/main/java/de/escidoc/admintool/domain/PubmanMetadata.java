@@ -2,7 +2,6 @@ package de.escidoc.admintool.domain;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import de.escidoc.admintool.domain.Builder;
 import de.escidoc.core.resources.common.MetadataRecord;
 
 public class PubmanMetadata extends MetadataRecord {

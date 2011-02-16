@@ -45,7 +45,8 @@ final class AdminToolTransactionListener implements TransactionListener {
         this.mainWindow = mainWindow;
     }
 
-    public void transactionStart(
+    @Override
+	public void transactionStart(
         final Application application, final Object transactionData) {
         final HttpServletRequest request = (HttpServletRequest) transactionData;
         final Cookie escidocCookie = findEscidocCookie(request);
@@ -87,16 +88,6 @@ final class AdminToolTransactionListener implements TransactionListener {
             tryAuthenticate(cookie);
 
         }
-
-        // if (isEmpty(cookie)) {
-        // System.out.println("the user does not provide any token.");
-        // // app.showLandingView();
-        // tryAuthenticate(cookie);
-        //
-        // } else {
-        // LOG.debug("the user has a token.");
-        // tryAuthenticate(cookie);
-        // }
     }
 
     private void tryAuthenticate(final Cookie token)
@@ -126,14 +117,14 @@ final class AdminToolTransactionListener implements TransactionListener {
 
     private boolean isEmpty(final Cookie cookie) {
         return "".equals(cookie.getValue());
-        // return EMPTY_COOKIE.equals(cookie);
     }
 
     private boolean isEscidocCookie(final Cookie cookie) {
         return ESCIDOC_COOKIE_NAME.equals(cookie.getName());
     }
 
-    public void transactionEnd(
+    @Override
+	public void transactionEnd(
         final Application application, final Object transactionData) {
 
     }

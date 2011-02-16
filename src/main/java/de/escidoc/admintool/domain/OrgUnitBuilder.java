@@ -18,12 +18,12 @@ import de.escidoc.admintool.app.AppConstants;
 import de.escidoc.core.resources.common.MetadataRecord;
 import de.escidoc.core.resources.common.MetadataRecords;
 import de.escidoc.core.resources.oum.OrganizationalUnit;
+import de.escidoc.core.resources.oum.OrganizationalUnitProperties;
 import de.escidoc.core.resources.oum.Parent;
 import de.escidoc.core.resources.oum.Parents;
 import de.escidoc.core.resources.oum.Predecessor;
 import de.escidoc.core.resources.oum.PredecessorForm;
 import de.escidoc.core.resources.oum.Predecessors;
-import de.escidoc.core.resources.oum.OrganizationalUnitProperties;
 
 public class OrgUnitBuilder {
 

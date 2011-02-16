@@ -5,7 +5,6 @@ import com.vaadin.terminal.UserError;
 import com.vaadin.ui.AbstractTextField;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
 
 import de.escidoc.admintool.view.ModalDialog;

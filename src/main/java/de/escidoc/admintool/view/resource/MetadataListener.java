@@ -4,6 +4,7 @@ import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Window;
+
 import de.escidoc.admintool.view.ViewConstants;
 
 public final class MetadataListener implements ValueChangeListener {

@@ -1,6 +1,9 @@
 package de.escidoc.admintool.view.resource;
 
+import java.util.Collection;
+
 import com.google.common.base.Preconditions;
+
 import de.escidoc.admintool.service.OrgUnitServiceLab;
 import de.escidoc.admintool.view.resource.ResourceTreeView.AddChildrenCommand;
 import de.escidoc.core.client.exceptions.EscidocClientException;
@@ -9,8 +12,6 @@ import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
 import de.escidoc.core.resources.Resource;
 import de.escidoc.core.resources.oum.OrganizationalUnit;
-
-import java.util.Collection;
 
 public final class AddChildrenCommandImpl implements AddChildrenCommand {
     private final OrgUnitServiceLab orgUnitService;

@@ -6,10 +6,8 @@ import com.google.common.base.Preconditions;
 import com.vaadin.data.Item;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.FormLayout;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
-import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.admintool.view.resource.PropertiesFieldsImpl;
 
 public class UserAccountPropertiesField extends PropertiesFieldsImpl {

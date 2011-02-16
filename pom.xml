@@ -28,12 +28,6 @@
 			<artifactId>client-1.2</artifactId>
 			<version>0.8-SNAPSHOT</version>
 			<type>jar</type>
-			<!-- exclusions>
-				<exclusion>
-					<artifactId>escidoc-core</artifactId>
-					<groupId>org.escidoc</groupId>
-				</exclusion>
-			</exclusions-->
 		</dependency>
 		<dependency>
 			<groupId>org.vaadin.addons</groupId>
@@ -63,6 +57,11 @@
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
+			<version>1.6.1</version>
+		</dependency>
+		<dependency>
+			<groupId>joda-time</groupId>
+			<artifactId>joda-time</artifactId>
 			<version>1.6.1</version>
 		</dependency>
 		<dependency>
@@ -290,10 +289,21 @@ org unit, context, user accounts and roles.</description>
 			<url>http://maven.indexdata.com</url>
 		</repository>
 	</repositories>
+
 	<pluginRepositories>
 		<pluginRepository>
 			<id>codehaus-snapshots</id>
 			<url>http://nexus.codehaus.org/snapshots</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+		</pluginRepository>
+		<pluginRepository>
+			<id>vaadin-snapshots</id>
+			<url>http://oss.sonatype.org/content/repositories/vaadin-snapshots/</url>
 			<snapshots>
 				<enabled>true</enabled>
 			</snapshots>

@@ -1,11 +1,11 @@
 package de.escidoc.admintool.service;
 
-import com.google.common.base.Preconditions;
-
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+
+import com.google.common.base.Preconditions;
 
 import de.escidoc.admintool.app.AppConstants;
 import de.escidoc.core.client.Authentication;

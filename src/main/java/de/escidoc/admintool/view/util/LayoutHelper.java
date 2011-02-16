@@ -3,6 +3,11 @@
  */
 package de.escidoc.admintool.view.util;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import com.vaadin.data.util.POJOItem;
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.ui.AbstractComponent;
@@ -23,11 +28,6 @@ import com.vaadin.ui.Select;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.Reindeer;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import de.escidoc.admintool.view.util.interfaces.IMenuItem;
 

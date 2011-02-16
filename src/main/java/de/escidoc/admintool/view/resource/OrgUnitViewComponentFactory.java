@@ -1,11 +1,12 @@
 package de.escidoc.admintool.view.resource;
 
+import java.util.Arrays;
+
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.ui.ComboBox;
-import de.escidoc.admintool.view.ViewConstants;
 
-import java.util.Arrays;
+import de.escidoc.admintool.view.ViewConstants;
 
 public class OrgUnitViewComponentFactory {
 

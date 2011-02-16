@@ -443,7 +443,8 @@ public class UserEditForm extends CustomComponent implements ClickListener {
         panel.addComponent(verticalLayout);
     }
 
-    public void buttonClick(final ClickEvent event) {
+    @Override
+	public void buttonClick(final ClickEvent event) {
         final Button source = event.getButton();
         if (source.equals(cancel)) {
             discardFields();
@@ -629,7 +630,8 @@ public class UserEditForm extends CustomComponent implements ClickListener {
     private class NewUserListener implements Button.ClickListener {
         private static final long serialVersionUID = -9112247524189044505L;
 
-        public void buttonClick(final ClickEvent event) {
+        @Override
+		public void buttonClick(final ClickEvent event) {
             ((UserView) getParent().getParent()).showAddView();
         }
     }
@@ -638,7 +640,8 @@ public class UserEditForm extends CustomComponent implements ClickListener {
 
         private static final long serialVersionUID = 2287544338040780227L;
 
-        public void buttonClick(final ClickEvent event) {
+        @Override
+		public void buttonClick(final ClickEvent event) {
             try {
                 final UserAccount deletedUser = deleteUser();
                 ((UserView) getParent().getParent()).remove(deletedUser);
