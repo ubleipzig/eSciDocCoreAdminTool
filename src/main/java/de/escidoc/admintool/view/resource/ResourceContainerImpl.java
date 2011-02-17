@@ -190,7 +190,7 @@ public class ResourceContainerImpl implements ResourceContainer {
         item.getItemProperty(PropertyId.CREATED_ON).setValue(
             orgUnit.getProperties().getCreationDate());
         item.getItemProperty(PropertyId.CREATED_BY).setValue(
-            orgUnit.getProperties().getCreatedBy().getXLinkTitle());
+            orgUnit.getProperties().getCreatedBy());
         item.getItemProperty(PropertyId.LAST_MODIFICATION_DATE).setValue(
             orgUnit.getLastModificationDate());
         item.getItemProperty(PropertyId.MODIFIED_BY).setValue(
