@@ -5,9 +5,15 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.common.base.Preconditions;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.ObjectProperty;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Field;
@@ -16,17 +22,20 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.themes.BaseTheme;
 
+import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.view.ViewConstants;
 
 public class PropertiesFieldsImpl extends CustomComponent
     implements PropertiesFields {
 
+    private static final Logger LOG = LoggerFactory
+        .getLogger(PropertiesFieldsImpl.class);
+
     private static final long serialVersionUID = -1808186834466896787L;
 
     private final FormLayout formLayout;
-
-    private final FieldsBinder binder = new PropertiesBinder(this);
 
     private final List<Field> allFields = new ArrayList<Field>();
 
@@ -48,9 +57,9 @@ public class PropertiesFieldsImpl extends CustomComponent
 
     Label modifiedOn;
 
-    Label modifiedBy;
+    Button modifiedBy;
 
-    Label createdBy;
+    Button createdBy;
 
     Label createdOn;
 
@@ -66,10 +75,17 @@ public class PropertiesFieldsImpl extends CustomComponent
 
     Label objectId;
 
-    public PropertiesFieldsImpl(final VerticalLayout vLayout,
-        final FormLayout formLayout, final Map<String, Field> fieldByName) {
+    private final AdminToolApplication app;
+
+    private final FieldsBinder binder;
+
+    public PropertiesFieldsImpl(final AdminToolApplication app,
+        final VerticalLayout vLayout, final FormLayout formLayout,
+        final Map<String, Field> fieldByName) {
+        this.app = app;
         this.formLayout = formLayout;
         this.fieldByName = fieldByName;
+        binder = new PropertiesBinder(app, this);
         buildLayout();
         createAndAddPropertiesFields();
     }
@@ -89,6 +105,7 @@ public class PropertiesFieldsImpl extends CustomComponent
         addStatus();
     }
 
+    @Override
     public void removeOthers() {
         formLayout.removeComponent(objectIdLayout);
         formLayout.removeComponent(modifiedLayout);
@@ -166,12 +183,21 @@ public class PropertiesFieldsImpl extends CustomComponent
         createdLayout.addComponent(createdOn);
     }
 
+    @SuppressWarnings("serial")
     private void addCreatedBy() {
         final Label createdByLabel = new Label(" by ");
         createdByLayout.addComponent(createdByLabel);
         createdByLayout.setSpacing(true);
 
-        createdBy = new Label();
+        createdBy = new Button();
+        createdBy.setStyleName(BaseTheme.BUTTON_LINK);
+        createdBy.addListener(new ClickListener() {
+
+            @Override
+            public void buttonClick(final ClickEvent event) {
+                LOG.debug("" + event.getButton());
+            }
+        });
         createdByLayout.addComponent(createdBy);
     }
 
@@ -180,7 +206,8 @@ public class PropertiesFieldsImpl extends CustomComponent
         modifiedByLayout.addComponent(modifiedByLabel);
         modifiedByLayout.setSpacing(true);
 
-        modifiedBy = new Label();
+        modifiedBy = new Button();
+        modifiedBy.setStyleName(BaseTheme.BUTTON_LINK);
         modifiedByLayout.addComponent(modifiedBy);
     }
 
@@ -194,6 +221,7 @@ public class PropertiesFieldsImpl extends CustomComponent
         modifiedLayout.addComponent(modifiedOn);
     }
 
+    @Override
     public List<Field> getAllFields() {
         final Iterator<Component> iterator = formLayout.getComponentIterator();
         while (iterator.hasNext()) {

@@ -43,7 +43,7 @@ public class ResourceViewImpl extends AbstractResourceView {
     @Override
     public void showAddView() {
         getSplitPanel().setSecondComponent(
-            new ResourceAddViewImpl(mainWindow, this, resourceService,
+            new ResourceAddViewImpl(app, mainWindow, this, resourceService,
                 resourceContainer));
     }
 

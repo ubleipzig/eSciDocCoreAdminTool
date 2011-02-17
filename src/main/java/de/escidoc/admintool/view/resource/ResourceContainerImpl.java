@@ -13,6 +13,7 @@ import com.vaadin.data.util.HierarchicalContainer;
 import de.escidoc.admintool.app.PropertyId;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.core.resources.Resource;
+import de.escidoc.core.resources.common.reference.UserAccountRef;
 import de.escidoc.core.resources.oum.OrganizationalUnit;
 import de.escidoc.core.resources.oum.Parents;
 import de.escidoc.core.resources.oum.Predecessors;
@@ -55,6 +56,7 @@ public class ResourceContainerImpl implements ResourceContainer {
             .sort(new String[] { PropertyId.LAST_MODIFICATION_DATE }, sort);
     }
 
+    @Override
     public void addChildren(
         final Resource parent, final Collection<OrganizationalUnit> children) {
         Preconditions.checkNotNull(parent, "parent is null: %s", parent);
@@ -65,6 +67,7 @@ public class ResourceContainerImpl implements ResourceContainer {
         }
     }
 
+    @Override
     public void addChild(final Resource parent, final Resource child) {
         Preconditions.checkNotNull(parent, "parent is null: %s", parent);
         Preconditions.checkNotNull(child, "child is null: %s", child);
@@ -131,8 +134,8 @@ public class ResourceContainerImpl implements ResourceContainer {
             ViewConstants.EMPTY_STRING);
         container.addContainerProperty(PropertyId.LAST_MODIFICATION_DATE,
             DateTime.class, new DateTime());
-        container.addContainerProperty(PropertyId.MODIFIED_BY, String.class,
-            ViewConstants.EMPTY_STRING);
+        container.addContainerProperty(PropertyId.MODIFIED_BY,
+            UserAccountRef.class, new UserAccountRef(""));
         container.addContainerProperty(PropertyId.PUBLIC_STATUS, String.class,
             ViewConstants.EMPTY_STRING);
         container.addContainerProperty(PropertyId.PUBLIC_STATUS_COMMENT,
@@ -164,6 +167,7 @@ public class ResourceContainerImpl implements ResourceContainer {
         }
     }
 
+    @Override
     public void add(final Resource resource) {
         Preconditions.checkNotNull(resource, "resource is null: %s", resource);
         final Item item = container.addItem(resource);
@@ -190,7 +194,7 @@ public class ResourceContainerImpl implements ResourceContainer {
         item.getItemProperty(PropertyId.LAST_MODIFICATION_DATE).setValue(
             orgUnit.getLastModificationDate());
         item.getItemProperty(PropertyId.MODIFIED_BY).setValue(
-            orgUnit.getProperties().getModifiedBy().getXLinkTitle());
+            orgUnit.getProperties().getModifiedBy());
         item.getItemProperty(PropertyId.PUBLIC_STATUS).setValue(
             orgUnit.getProperties().getPublicStatus());
         item.getItemProperty(PropertyId.PUBLIC_STATUS_COMMENT).setValue(

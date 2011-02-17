@@ -446,12 +446,23 @@ public class AdminToolApplication extends Application {
         final ContentModelContainer contentModelContainer =
             new ContentModelContainer();
         contentModelAddView =
-            new ContentModelAddView(mainWindow, contentModelService,
+            new ContentModelAddView(this, mainWindow, contentModelService,
                 contentModelContainer);
         contentModelAddView.init();
     }
 
     private Component getContentModelView() {
         return contentModelAddView;
+    }
+
+    public void showUserInEditView(final String userId) {
+        try {
+            final UserAccount userById = userService.getUserById(userId);
+            showUserInEditView(userById);
+        }
+        catch (final EscidocClientException e) {
+            ModalDialog.show(mainWindow, e);
+            LOG.error(ViewConstants.SERVER_INTERNAL_ERROR, e);
+        }
     }
 }

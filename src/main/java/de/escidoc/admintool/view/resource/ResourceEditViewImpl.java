@@ -69,7 +69,7 @@ public class ResourceEditViewImpl extends CustomComponent
             new ResourceToolbar(app, resourceView, mainWindow, orgUnitService,
                 resourceContainer);
         propertyFields =
-            new PropertiesFieldsImpl(vLayout, formLayout, fieldByName);
+            new PropertiesFieldsImpl(app, vLayout, formLayout, fieldByName);
         resourceSpecific =
             createOrgUnitSpecificView(mainWindow, orgUnitService,
                 resourceContainer);

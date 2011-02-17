@@ -16,6 +16,7 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.Reindeer;
 
+import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.app.ContentModelContainer;
 import de.escidoc.admintool.app.CreateContentModelListener;
 import de.escidoc.admintool.service.ResourceService;
@@ -47,14 +48,18 @@ public class ContentModelAddView extends AbstractView<Panel> {
 
     private final ContentModelContainer contentModelContainer;
 
-    public ContentModelAddView(final Window mainWindow,
-        final ResourceService contentModelService,
+    private final AdminToolApplication app;
+
+    public ContentModelAddView(final AdminToolApplication app,
+        final Window mainWindow, final ResourceService contentModelService,
         final ContentModelContainer contentModelContainer) {
         super(new Panel());
+        Preconditions.checkNotNull(app, "app is null: %s", app);
         Preconditions.checkNotNull(mainWindow, "mainWindow is null: %s",
             mainWindow);
         Preconditions.checkNotNull(contentModelService,
             "contentModelService is null: %s", contentModelService);
+        this.app = app;
         this.mainWindow = mainWindow;
         this.contentModelService = contentModelService;
         this.contentModelContainer = contentModelContainer;
@@ -80,7 +85,7 @@ public class ContentModelAddView extends AbstractView<Panel> {
 
     private void createPropertiesFields() {
         propertyFields =
-            new PropertiesFieldsImpl(vLayout, formLayout, fieldByName);
+            new PropertiesFieldsImpl(app, vLayout, formLayout, fieldByName);
         propertyFields.removeOthers();
     }
 

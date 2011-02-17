@@ -1,57 +1,103 @@
 package de.escidoc.admintool.view.resource;
 
 import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.vaadin.data.Property;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 
+import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.app.PropertyId;
 import de.escidoc.admintool.view.util.Converter;
+import de.escidoc.core.resources.common.reference.UserAccountRef;
 
 public class PropertiesBinder implements FieldsBinder {
+
+    private static final Logger LOG = LoggerFactory
+        .getLogger(PropertiesBinder.class);
 
     private final PropertiesFieldsImpl propertiesFields;
 
     private Component toBeBind;
 
+    private final AdminToolApplication app;
+
     /**
+     * @param app
      * @param propertiesFieldsImpl
      */
-    PropertiesBinder(final PropertiesFieldsImpl propertiesFieldsImpl) {
+    PropertiesBinder(final AdminToolApplication app,
+        final PropertiesFieldsImpl propertiesFieldsImpl) {
+        this.app = app;
         propertiesFields = propertiesFieldsImpl;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see de.escidoc.admintool.view.resource.IFieldsBinder#bindFields()
-     */
-
     @Override
     public void bindFields() {
-        bind(propertiesFields.titleField).with(getProperty(PropertyId.NAME));
-
-        bind(propertiesFields.descField).with(
-            getProperty(PropertyId.DESCRIPTION));
-
-        bind(propertiesFields.objectId).with(getProperty(PropertyId.OBJECT_ID));
+        bindName();
+        bindDescriptiond();
+        bindObjectId();
         bindModifienOn();
-
-        bind(propertiesFields.modifiedBy).with(
-            getProperty(PropertyId.MODIFIED_BY));
-
-        bind(propertiesFields.createdBy).with(
-            getProperty(PropertyId.CREATED_BY));
-
+        bindModifiedBy();
+        bindCreatedBy();
         bindCreatedOn();
+        bindStatus();
+        bindStatusComment();
+    }
 
-        bind(propertiesFields.statusField).with(
-            getProperty(PropertyId.PUBLIC_STATUS));
-
+    private void bindStatusComment() {
         bind(propertiesFields.statusComment).with(
             getProperty(PropertyId.PUBLIC_STATUS_COMMENT));
+    }
 
+    private void bindStatus() {
+        bind(propertiesFields.statusField).with(
+            getProperty(PropertyId.PUBLIC_STATUS));
+    }
+
+    private void bindCreatedBy() {
+        bind(propertiesFields.createdBy).with(
+            getProperty(PropertyId.CREATED_BY));
+    }
+
+    private void bindObjectId() {
+        bind(propertiesFields.objectId).with(getProperty(PropertyId.OBJECT_ID));
+    }
+
+    private void bindDescriptiond() {
+        bind(propertiesFields.descField).with(
+            getProperty(PropertyId.DESCRIPTION));
+    }
+
+    private void bindName() {
+        bind(propertiesFields.titleField).with(getProperty(PropertyId.NAME));
+    }
+
+    private void bindModifiedBy() {
+        propertiesFields.modifiedBy.setCaption(getModifiedByTitle());
+        propertiesFields.modifiedBy.addListener(new Button.ClickListener() {
+
+            private static final long serialVersionUID = 3530819267393348554L;
+
+            @Override
+            public void buttonClick(final ClickEvent event) {
+                LOG.debug("modified by clicked: "
+                    + getModifiedByValue().getObjid());
+                app.showUserInEditView(getModifiedByValue().getObjid());
+            }
+        });
+    }
+
+    private String getModifiedByTitle() {
+        return getModifiedByValue().getXLinkTitle();
+    }
+
+    private UserAccountRef getModifiedByValue() {
+        return (UserAccountRef) getProperty(PropertyId.MODIFIED_BY).getValue();
     }
 
     private void bindCreatedOn() {
@@ -80,8 +126,11 @@ public class PropertiesBinder implements FieldsBinder {
 
     private void with(final Property itemProperty) {
         if (toBeBind instanceof Label) {
-
             ((Label) toBeBind).setPropertyDataSource(itemProperty);
+        }
+        else if (toBeBind instanceof Button) {
+            final Button button = (Button) toBeBind;
+            button.setCaption((String) itemProperty.getValue());
         }
         else {
             ((com.vaadin.ui.Field) toBeBind)
