@@ -130,8 +130,8 @@ public class ResourceContainerImpl implements ResourceContainer {
             ViewConstants.EMPTY_STRING);
         container.addContainerProperty(PropertyId.CREATED_ON, DateTime.class,
             new DateTime());
-        container.addContainerProperty(PropertyId.CREATED_BY, String.class,
-            ViewConstants.EMPTY_STRING);
+        container.addContainerProperty(PropertyId.CREATED_BY,
+            UserAccountRef.class, new UserAccountRef(""));
         container.addContainerProperty(PropertyId.LAST_MODIFICATION_DATE,
             DateTime.class, new DateTime());
         container.addContainerProperty(PropertyId.MODIFIED_BY,

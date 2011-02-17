@@ -12,8 +12,6 @@ import com.google.common.base.Preconditions;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Field;
@@ -183,21 +181,12 @@ public class PropertiesFieldsImpl extends CustomComponent
         createdLayout.addComponent(createdOn);
     }
 
-    @SuppressWarnings("serial")
     private void addCreatedBy() {
         final Label createdByLabel = new Label(" by ");
         createdByLayout.addComponent(createdByLabel);
         createdByLayout.setSpacing(true);
-
         createdBy = new Button();
         createdBy.setStyleName(BaseTheme.BUTTON_LINK);
-        createdBy.addListener(new ClickListener() {
-
-            @Override
-            public void buttonClick(final ClickEvent event) {
-                LOG.debug("" + event.getButton());
-            }
-        });
         createdByLayout.addComponent(createdBy);
     }
 
@@ -205,7 +194,6 @@ public class PropertiesFieldsImpl extends CustomComponent
         final Label modifiedByLabel = new Label(" by ");
         modifiedByLayout.addComponent(modifiedByLabel);
         modifiedByLayout.setSpacing(true);
-
         modifiedBy = new Button();
         modifiedBy.setStyleName(BaseTheme.BUTTON_LINK);
         modifiedByLayout.addComponent(modifiedBy);

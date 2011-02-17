@@ -4,7 +4,7 @@
 
 	<groupId>de.escidoc.admintool</groupId>
 	<artifactId>AdminTool</artifactId>
-	<version>1.0-beta1</version>
+	<version>1.0</version>
 	<packaging>war</packaging>
 	<dependencies>
 		<dependency>
@@ -55,12 +55,11 @@
 			<version>1.6.1</version>
 		</dependency>
 		
-		<!--dependency>
+		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
 			<version>1.6.1</version>
-		</dependency-->
-		
+		</dependency>
 		<dependency>
 			<groupId>joda-time</groupId>
 			<artifactId>joda-time</artifactId>

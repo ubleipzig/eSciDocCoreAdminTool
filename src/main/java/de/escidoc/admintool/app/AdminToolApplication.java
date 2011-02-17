@@ -105,7 +105,6 @@ public class AdminToolApplication extends Application {
 
     @Override
     public void init() {
-        // configureLogger();
         showProxyInfoInLog();
         registerViewHandler();
         setMainWindowAndTheme();
@@ -457,8 +456,7 @@ public class AdminToolApplication extends Application {
 
     public void showUserInEditView(final String userId) {
         try {
-            final UserAccount userById = userService.getUserById(userId);
-            showUserInEditView(userById);
+            showUserInEditView(userService.getUserById(userId));
         }
         catch (final EscidocClientException e) {
             ModalDialog.show(mainWindow, e);

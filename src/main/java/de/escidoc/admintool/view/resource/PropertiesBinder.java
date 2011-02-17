@@ -13,6 +13,7 @@ import com.vaadin.ui.Label;
 import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.app.PropertyId;
 import de.escidoc.admintool.view.util.Converter;
+import de.escidoc.core.resources.Resource;
 import de.escidoc.core.resources.common.reference.UserAccountRef;
 
 public class PropertiesBinder implements FieldsBinder {
@@ -60,8 +61,26 @@ public class PropertiesBinder implements FieldsBinder {
     }
 
     private void bindCreatedBy() {
-        bind(propertiesFields.createdBy).with(
-            getProperty(PropertyId.CREATED_BY));
+
+        propertiesFields.createdBy.setCaption(getCreatedByTitle());
+        propertiesFields.createdBy.addListener(new Button.ClickListener() {
+
+            private static final long serialVersionUID = 3530819267393348554L;
+
+            @Override
+            public void buttonClick(final ClickEvent event) {
+                app.showUserInEditView(getCreatedByValue().getObjid());
+            }
+
+        });
+    }
+
+    private Resource getCreatedByValue() {
+        return (UserAccountRef) getProperty(PropertyId.CREATED_BY).getValue();
+    }
+
+    private String getCreatedByTitle() {
+        return getCreatedByValue().getXLinkTitle();
     }
 
     private void bindObjectId() {
