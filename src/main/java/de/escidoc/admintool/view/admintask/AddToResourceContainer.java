@@ -10,8 +10,7 @@ import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.resources.Resource;
 import de.escidoc.core.resources.adm.LoadExamplesResult.Entry;
 
-public class AddToResourceContainer
-    implements AddToContainer {
+public class AddToResourceContainer implements AddToContainer {
 
     private final Window mainWindow;
 

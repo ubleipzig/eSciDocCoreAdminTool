@@ -46,7 +46,7 @@ final class AdminToolTransactionListener implements TransactionListener {
     }
 
     @Override
-	public void transactionStart(
+    public void transactionStart(
         final Application application, final Object transactionData) {
         final HttpServletRequest request = (HttpServletRequest) transactionData;
         final Cookie escidocCookie = findEscidocCookie(request);
@@ -124,7 +124,7 @@ final class AdminToolTransactionListener implements TransactionListener {
     }
 
     @Override
-	public void transactionEnd(
+    public void transactionEnd(
         final Application application, final Object transactionData) {
 
     }

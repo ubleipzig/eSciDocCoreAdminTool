@@ -25,8 +25,7 @@ public class LoadExampleResourceViewImpl extends AbstractCustomView
     private final AddToContainer addExampleCommand;
 
     public LoadExampleResourceViewImpl(final Window mainWindow,
-        final AdminService adminService,
-        final AddToContainer addExampleCommand) {
+        final AdminService adminService, final AddToContainer addExampleCommand) {
         checkPreconditions(mainWindow, adminService, addExampleCommand);
         this.mainWindow = mainWindow;
         this.adminService = adminService;
