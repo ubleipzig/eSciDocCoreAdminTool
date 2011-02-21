@@ -1,7 +1,5 @@
 package de.escidoc.admintool.app;
 
-import java.io.IOException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.vaadin.appfoundation.view.ViewHandler;
@@ -58,8 +56,9 @@ import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
 import de.escidoc.core.resources.aa.useraccount.UserAccount;
 
-@SuppressWarnings("serial")
 public class AdminToolApplication extends Application {
+    // TODO refactor this class, reasons: big class, too many fields and methods
+    private static final long serialVersionUID = 6246642594303110049L;
 
     private static final Logger LOG = LoggerFactory
         .getLogger(AdminToolApplication.class);
@@ -121,15 +120,6 @@ public class AdminToolApplication extends Application {
 
     private void registerViewHandler() {
         ViewHandler.initialize(this);
-    }
-
-    private void configureLogger() {
-        try {
-            ConfigureLogger.execute();
-        }
-        catch (final IOException e) {
-            LOG.warn("Can not configure logger.");
-        }
     }
 
     private void setMainWindowAndTheme() {
