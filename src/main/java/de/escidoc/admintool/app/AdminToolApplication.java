@@ -113,9 +113,9 @@ public class AdminToolApplication extends Application {
     }
 
     private void showProxyInfoInLog() {
-        LOG.info("proxy: " + System.getProperty("http.proxyHost"));
-        LOG.info("port: " + System.getProperty("http.proxyPort"));
-        LOG.info("http.nonProxyHosts"
+        LOG.info("http.proxyHost: " + System.getProperty("http.proxyHost"));
+        LOG.info("http.proxyPort: " + System.getProperty("http.proxyPort"));
+        LOG.info("http.nonProxyHosts: "
             + System.getProperty("http.nonProxyHosts"));
     }
 
