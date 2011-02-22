@@ -11,6 +11,8 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.Notification;
 
+import de.escidoc.admintool.domain.PdpRequest;
+import de.escidoc.admintool.domain.PdpRequestImpl;
 import de.escidoc.admintool.service.AdminService;
 import de.escidoc.admintool.service.ContextService;
 import de.escidoc.admintool.service.ContextServiceLab;
@@ -107,6 +109,30 @@ public class AdminToolApplication extends Application {
 
     private PdpService pdpService;
 
+    private ResourceViewComponent containerViewComponent;
+
+    private ResourceService orgUnitServiceLab;
+
+    private ResourceContainer resourceContainer;
+
+    private FilterView filterResourceView;
+
+    private LoadExample loadExampleView;
+
+    private ReindexView reindexView;
+
+    private RepositoryInfoFooView repoInfoView;
+
+    private AdminService adminService;
+
+    private ContextView contextView;
+
+    private ContentModelAddView contentModelAddView;
+
+    private ResourceService contentModelService;
+
+    private PdpRequest pdpRequest;
+
     @Override
     public void init() {
         showProxyInfoInLog();
@@ -171,11 +197,16 @@ public class AdminToolApplication extends Application {
             createServices();
             setCurrentUser();
             createFactories();
+            createPdpRequest();
             buildMainLayout();
         }
         else {
             showLandingView();
         }
+    }
+
+    private void createPdpRequest() {
+        pdpRequest = new PdpRequestImpl(pdpService, currentUser);
     }
 
     private void setCurrentUser() throws EscidocClientException {
@@ -236,28 +267,6 @@ public class AdminToolApplication extends Application {
         viewManager.setMainView(new MainView(this, pdpService, currentUser));
         viewManager.showMainView();
     }
-
-    private ResourceViewComponent containerViewComponent;
-
-    private ResourceService orgUnitServiceLab;
-
-    private ResourceContainer resourceContainer;
-
-    private FilterView filterResourceView;
-
-    private LoadExample loadExampleView;
-
-    private ReindexView reindexView;
-
-    private RepositoryInfoFooView repoInfoView;
-
-    private AdminService adminService;
-
-    private ContextView contextView;
-
-    private ContentModelAddView contentModelAddView;
-
-    private ResourceService contentModelService;
 
     private void createRepoInfoView() {
         repoInfoView = new RepositoryInfoFooView(services, mainWindow);
@@ -412,7 +421,7 @@ public class AdminToolApplication extends Application {
     private void createUserViewComponent() {
         userViewComp =
             new UserViewComponent(this, userService, orgUnitServiceLab,
-                createResourceTreeView());
+                createResourceTreeView(), pdpRequest);
         userViewComp.init();
     }
 

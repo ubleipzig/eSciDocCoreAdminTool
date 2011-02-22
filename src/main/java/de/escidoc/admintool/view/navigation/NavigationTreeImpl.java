@@ -89,7 +89,7 @@ public class NavigationTreeImpl extends CustomComponent
     private boolean isAllowedToReindex() {
         try {
             return pdpService
-                .isAction(ActionConstants.REINDEX)
+                .isAction(ActionIdConstants.REINDEX_ACTION_ID)
                 .forUser(currentUser.getObjid()).permitted();
         }
         catch (final EscidocClientException e) {

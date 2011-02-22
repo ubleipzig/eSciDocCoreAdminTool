@@ -438,4 +438,6 @@ public class ViewConstants {
 
     public static final int MAX_DESC_LENGTH = 255;
 
+    public static final String ACTIVE_STATUS = "Active status";
+
 }

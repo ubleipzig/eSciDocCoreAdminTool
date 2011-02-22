@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import com.vaadin.data.Item;
 
 import de.escidoc.admintool.app.AdminToolApplication;
+import de.escidoc.admintool.domain.PdpRequest;
 import de.escidoc.admintool.service.OrgUnitServiceLab;
 import de.escidoc.admintool.service.ResourceService;
 import de.escidoc.admintool.service.UserService;
@@ -32,9 +33,11 @@ public class UserViewComponent {
 
     private final ResourceTreeView resourceTreeView;
 
+    private final PdpRequest pdpRequest;
+
     public UserViewComponent(final AdminToolApplication app,
         final UserService userService, final ResourceService orgUnitServiceLab,
-        final ResourceTreeView resourceTreeView) {
+        final ResourceTreeView resourceTreeView, final PdpRequest pdpRequest) {
         Preconditions
             .checkNotNull(app, "AdminToolApplication can not be null.");
         Preconditions.checkNotNull(userService, "UserService can not be null.");
@@ -44,13 +47,15 @@ public class UserViewComponent {
         this.userService = userService;
         orgUnitService = (OrgUnitServiceLab) orgUnitServiceLab;
         this.resourceTreeView = resourceTreeView;
+        this.pdpRequest = pdpRequest;
     }
 
     public void init() {
         listView = new UserListView(app, userService);
         setUserListView(listView);
         editForm =
-            new UserEditForm(app, userService, orgUnitService, resourceTreeView);
+            new UserEditForm(app, userService, orgUnitService,
+                resourceTreeView, pdpRequest);
         setUserEditForm(editForm);
         setUserEditView(new UserEditView(getUserEditForm()));
         userView = new UserView(app, getUserListView(), getUserEditView());

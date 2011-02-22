@@ -30,11 +30,13 @@ import com.vaadin.ui.themes.Reindeer;
 
 import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.app.PropertyId;
+import de.escidoc.admintool.domain.PdpRequest;
 import de.escidoc.admintool.service.OrgUnitServiceLab;
 import de.escidoc.admintool.service.UserService;
 import de.escidoc.admintool.view.ErrorMessage;
 import de.escidoc.admintool.view.ModalDialog;
 import de.escidoc.admintool.view.ViewConstants;
+import de.escidoc.admintool.view.navigation.ActionIdConstants;
 import de.escidoc.admintool.view.resource.ResourceRefDisplay;
 import de.escidoc.admintool.view.resource.ResourceTreeView;
 import de.escidoc.admintool.view.user.password.PasswordView;
@@ -110,7 +112,7 @@ public class UserEditForm extends CustomComponent implements ClickListener {
 
     private Label createdBy;
 
-    private CheckBox state;
+    private CheckBox activeStatus;
 
     private Item item;
 
@@ -126,14 +128,17 @@ public class UserEditForm extends CustomComponent implements ClickListener {
 
     private final OrgUnitServiceLab orgUnitService;
 
+    private final PdpRequest pdpRequest;
+
     public UserEditForm(final AdminToolApplication app,
         final UserService userService, final OrgUnitServiceLab orgUnitService,
-        final ResourceTreeView resourceTreeView) {
+        final ResourceTreeView resourceTreeView, final PdpRequest pdpRequest) {
         Preconditions.checkNotNull(orgUnitService,
             "orgUnitService is null: %s", orgUnitService);
         this.app = app;
         this.userService = userService;
         this.orgUnitService = orgUnitService;
+        this.pdpRequest = pdpRequest;
         mainWindow = app.getMainWindow();
         init();
     }
@@ -202,6 +207,8 @@ public class UserEditForm extends CustomComponent implements ClickListener {
 
     private POJOContainer<ResourceRefDisplay> orgUnitContainer;
 
+    private VerticalLayout footerLayout;
+
     private void bindUserOrgUnitsWithView() {
         final List<String> orgUnitIdsForSelectedUser =
             retrieveOrgUnitObjectIdsForSelectedUser();
@@ -242,10 +249,10 @@ public class UserEditForm extends CustomComponent implements ClickListener {
     // OrgUnit END
 
     private void addActiveStatusCheckBox() {
-        state = new CheckBox();
-        state.setWriteThrough(false);
-        panel.addComponent(LayoutHelper.create("Active status", state,
-            LABEL_WIDTH, false));
+        activeStatus = new CheckBox();
+        activeStatus.setWriteThrough(false);
+        panel.addComponent(LayoutHelper.create(ViewConstants.ACTIVE_STATUS,
+            activeStatus, LABEL_WIDTH, false));
     }
 
     private void addCreatedOnAndByLabel() {
@@ -436,11 +443,11 @@ public class UserEditForm extends CustomComponent implements ClickListener {
         footer.addComponent(save);
         footer.addComponent(cancel);
 
-        final VerticalLayout verticalLayout = new VerticalLayout();
-        verticalLayout.addComponent(footer);
-        verticalLayout.setComponentAlignment(footer, Alignment.MIDDLE_RIGHT);
+        footerLayout = new VerticalLayout();
+        footerLayout.addComponent(footer);
+        footerLayout.setComponentAlignment(footer, Alignment.MIDDLE_RIGHT);
 
-        panel.addComponent(verticalLayout);
+        panel.addComponent(footerLayout);
     }
 
     @Override
@@ -470,14 +477,14 @@ public class UserEditForm extends CustomComponent implements ClickListener {
     private void commitFields() {
         nameField.commit();
         loginNameField.commit();
-        state.commit();
+        activeStatus.commit();
     }
 
     private void updateUserAccount() {
         try {
             userService.update(getSelectedItemId(),
                 (String) nameField.getValue());
-            if (state.isModified()) {
+            if (activeStatus.isModified()) {
                 changeState();
             }
         }
@@ -540,15 +547,57 @@ public class UserEditForm extends CustomComponent implements ClickListener {
                 PropertyId.LAST_MODIFICATION_DATE).getValue()));
         modifiedBy.setPropertyDataSource(item
             .getItemProperty(PropertyId.MODIFIED_BY));
-        state.setPropertyDataSource(item.getItemProperty(PropertyId.ACTIVE));
+        activeStatus.setPropertyDataSource(item
+            .getItemProperty(PropertyId.ACTIVE));
         createdOn.setCaption(Converter
             .dateTimeToString((org.joda.time.DateTime) item.getItemProperty(
                 PropertyId.CREATED_ON).getValue()));
         createdBy.setPropertyDataSource(item
             .getItemProperty(PropertyId.CREATED_BY));
+
         bindUpdatePassword();
         bindRolesWithView();
         bindUserOrgUnitsWithView();
+
+        bindUserRightsWithView();
+    }
+
+    private void bindUserRightsWithView() {
+        final boolean createNewUserAllowed = isCreateNewUserAllowed();
+        newUserBtn.setVisible(isCreateNewUserAllowed());
+        deleteUserBtn.setVisible(isDeleteUserAllowed());
+
+        // name
+        nameField.setReadOnly(!isEditNotAllowed());
+        // password
+
+        if (isEditNotAllowed()) {
+            // passwordView
+            panel.removeComponent(passwordView);
+
+            // active status
+            activeStatus.setReadOnly(isEditNotAllowed());
+
+            // roles
+            addRoleButton.setVisible(!isEditNotAllowed());
+            removeRoleButton.setVisible(!isEditNotAllowed());
+
+            // foooter
+            panel.removeComponent(footerLayout);
+        }
+    }
+
+    private boolean isEditNotAllowed() {
+        return true;
+    }
+
+    private boolean isDeleteUserAllowed() {
+        return false;
+    }
+
+    private boolean isCreateNewUserAllowed() {
+        return pdpRequest
+            .isAllowed(ActionIdConstants.CREATE_USER_ACCOUNT_ACTION_ID);
     }
 
     private void bindRolesWithView() {
@@ -619,7 +668,7 @@ public class UserEditForm extends CustomComponent implements ClickListener {
 
     public void changeState() throws InternalClientException,
         TransportException, EscidocClientException {
-        if (!(Boolean) state.getPropertyDataSource().getValue()) {
+        if (!(Boolean) activeStatus.getPropertyDataSource().getValue()) {
             userService.activate(getSelectedItemId());
         }
         else {

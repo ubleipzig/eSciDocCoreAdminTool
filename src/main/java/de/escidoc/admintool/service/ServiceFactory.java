@@ -2,7 +2,6 @@ package de.escidoc.admintool.service;
 
 import com.google.common.base.Preconditions;
 
-import de.admintool.services.PdpServiceImpl;
 import de.escidoc.core.client.AdminHandlerClient;
 import de.escidoc.core.client.Authentication;
 import de.escidoc.core.client.ContainerHandlerClient;
