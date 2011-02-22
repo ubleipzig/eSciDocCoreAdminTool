@@ -341,7 +341,9 @@ public class UserEditForm extends CustomComponent implements ClickListener {
     private HorizontalLayout createHeader() {
         header.setMargin(true);
         header.setSpacing(true);
-        header.addComponent(newUserBtn);
+        if (isCreateNewUserAllowed()) {
+            header.addComponent(newUserBtn);
+        }
         header.addComponent(deleteUserBtn);
         header.setVisible(true);
         return header;
@@ -563,36 +565,51 @@ public class UserEditForm extends CustomComponent implements ClickListener {
     }
 
     private void bindUserRightsWithView() {
-        final boolean createNewUserAllowed = isCreateNewUserAllowed();
-        newUserBtn.setVisible(isCreateNewUserAllowed());
         deleteUserBtn.setVisible(isDeleteUserAllowed());
 
         // name
-        nameField.setReadOnly(!isEditNotAllowed());
+        nameField.setReadOnly(!isUpdateNotAllowed());
         // password
 
-        if (isEditNotAllowed()) {
-            // passwordView
+        // passwordView
+        if (isUpdateNotAllowed()) {
             panel.removeComponent(passwordView);
-
-            // active status
-            activeStatus.setReadOnly(isEditNotAllowed());
-
-            // roles
-            addRoleButton.setVisible(!isEditNotAllowed());
-            removeRoleButton.setVisible(!isEditNotAllowed());
-
-            // foooter
             panel.removeComponent(footerLayout);
         }
+        // active status
+        activeStatus.setReadOnly(isDeactivateUserNotAllowed());
+
+        // roles
+        addRoleButton.setVisible(isCreateGrantAllowed());
+        removeRoleButton.setVisible(isRevokeGrantAllowed());
+
+        // foooter
+        // }
     }
 
-    private boolean isEditNotAllowed() {
-        return true;
+    private boolean isRevokeGrantAllowed() {
+        return pdpRequest.isAllowed(ActionIdConstants.REVOKE_GRANT,
+            getSelectedItemId());
+    }
+
+    private boolean isCreateGrantAllowed() {
+        return pdpRequest.isAllowed(ActionIdConstants.CREATE_GRANT,
+            getSelectedItemId());
+    }
+
+    private boolean isDeactivateUserNotAllowed() {
+        return !pdpRequest.isAllowed(ActionIdConstants.DEACTIVATE_USER_ACCOUNT,
+            getSelectedItemId());
+    }
+
+    private boolean isUpdateNotAllowed() {
+        return !pdpRequest.isAllowed(ActionIdConstants.UPDATE_USER_ACCOUNT,
+            getSelectedItemId());
     }
 
     private boolean isDeleteUserAllowed() {
-        return false;
+        return pdpRequest.isAllowed(ActionIdConstants.DELETE_USER_ACCOUNT,
+            getSelectedItemId());
     }
 
     private boolean isCreateNewUserAllowed() {

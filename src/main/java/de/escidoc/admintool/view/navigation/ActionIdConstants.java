@@ -13,6 +13,7 @@ public class ActionIdConstants {
 
     public final static String GET_PURGE_STATUS_ACTION =
         "info:escidoc/names:aa:1.0:action:get-purge-status";
+
     // "info:escidoc/names:aa:1.0:action:activate-user-account"
     // "info:escidoc/names:aa:1.0:action:activate-user-group"
     // "info:escidoc/names:aa:1.0:action:add-members-to-container"
@@ -60,7 +61,6 @@ public class ActionIdConstants {
     // "info:escidoc/names:aa:1.0:action:delete-role"
     // "info:escidoc/names:aa:1.0:action:delete-scope"
     // "info:escidoc/names:aa:1.0:action:delete-unsecured-actions"
-    // "info:escidoc/names:aa:1.0:action:delete-user-account"
     // "info:escidoc/names:aa:1.0:action:delete-user-group"
     // "info:escidoc/names:aa:1.0:action:delete-workflow-definition"
     // "info:escidoc/names:aa:1.0:action:delete-workflow-instance"
@@ -140,7 +140,6 @@ public class ActionIdConstants {
     // "info:escidoc/names:aa:1.0:action:update-metadata-schema"
     // "info:escidoc/names:aa:1.0:action:update-organizational-unit"
     // "info:escidoc/names:aa:1.0:action:update-report-definition"
-    // "info:escidoc/names:aa:1.0:action:update-role"
     // "info:escidoc/names:aa:1.0:action:update-scope"
     // "info:escidoc/names:aa:1.0:action:update-user-account"
     // "info:escidoc/names:aa:1.0:action:update-user-group"
@@ -157,4 +156,23 @@ public class ActionIdConstants {
     // "info:escidoc/names:aa:1.0:action:delete-set-definition"
     // "info:escidoc/names:aa:1.0:action:query-semantic-store"
     // "info:escidoc/names:aa:1.0:action:retrieve-set-definition"
+
+    public static final String DELETE_USER_ACCOUNT =
+        "info:escidoc/names:aa:1.0:action:delete-user-account";
+
+    public static final String UPDATE_USER_ACCOUNT =
+        "info:escidoc/names:aa:1.0:action:update-user-account";
+
+    public static final String DEACTIVATE_USER_ACCOUNT =
+        "info:escidoc/names:aa:1.0:action:deactivate-user-account";
+
+    public static final String UPDATE_ROLE =
+        "info:escidoc/names:aa:1.0:action:update-role";
+
+    public static final String CREATE_GRANT =
+        "info:escidoc/names:aa:1.0:action:create-grant";
+
+    public static final String REVOKE_GRANT =
+        "info:escidoc/names:aa:1.0:action:revoke-grant";
+
 }
