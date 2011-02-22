@@ -34,9 +34,6 @@ import de.escidoc.core.resources.common.reference.RoleRef;
 
 public class UserService {
 
-    private static final String ORGANIZATIONAL_UNIT_DEFAULT_ATTRIBUTE_NAME =
-        "o";
-
     private UserAccountHandlerClientInterface client;
 
     private final Map<String, UserAccount> userAccountById =
@@ -346,8 +343,8 @@ public class UserService {
 
     private boolean nameIsEqualsO(final Attribute attribute) {
         return !attribute.getName().isEmpty()
-            && ORGANIZATIONAL_UNIT_DEFAULT_ATTRIBUTE_NAME.equals(attribute
-                .getName());
+            && AppConstants.ORGANIZATIONAL_UNIT_DEFAULT_ATTRIBUTE_NAME
+                .equals(attribute.getName());
     }
 
     public void assign(final String objectId, final Attribute attribute)
@@ -356,6 +353,10 @@ public class UserService {
         Preconditions.checkNotNull(attribute, "attribute is null: %s",
             attribute);
         client.createAttribute(objectId, attribute);
+    }
+
+    public UserAccount getCurrentUser() throws EscidocClientException {
+        return client.retrieveCurrentUser();
     }
 
 }

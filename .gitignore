@@ -14,3 +14,4 @@ script/*
 *.sh
 .project
 .classpath
+src/test/java/de/admintool/services/*

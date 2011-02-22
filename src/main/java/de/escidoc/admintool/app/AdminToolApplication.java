@@ -18,6 +18,7 @@ import de.escidoc.admintool.service.EscidocService;
 import de.escidoc.admintool.service.ItemService;
 import de.escidoc.admintool.service.OrgUnitService;
 import de.escidoc.admintool.service.OrgUnitServiceLab;
+import de.escidoc.admintool.service.PdpService;
 import de.escidoc.admintool.service.ResourceService;
 import de.escidoc.admintool.service.RoleService;
 import de.escidoc.admintool.service.ServiceContainer;
@@ -102,6 +103,10 @@ public class AdminToolApplication extends Application {
 
     private ContextViewFactory contextViewFactory;
 
+    private UserAccount currentUser;
+
+    private PdpService pdpService;
+
     @Override
     public void init() {
         showProxyInfoInLog();
@@ -162,14 +167,23 @@ public class AdminToolApplication extends Application {
     public void loadProtectedResources(final String token)
         throws EscidocClientException {
         this.token = token;
-        if (eSciDocUri != null && !eSciDocUri.isEmpty()) {
+        if (isEscidocUriKnown()) {
             createServices();
+            setCurrentUser();
             createFactories();
             buildMainLayout();
         }
         else {
             showLandingView();
         }
+    }
+
+    private void setCurrentUser() throws EscidocClientException {
+        currentUser = userService.getCurrentUser();
+        mainWindow.showNotification(new Notification("Info",
+            "You are logged in as: "
+                + currentUser.getProperties().getLoginName(),
+            Notification.TYPE_TRAY_NOTIFICATION));
     }
 
     private void createFactories() {
@@ -183,9 +197,8 @@ public class AdminToolApplication extends Application {
     private void createServices() throws InternalClientException,
         EscidocException, TransportException {
         LOG.info("service address: " + eSciDocUri);
-        if (eSciDocUri != null && !eSciDocUri.isEmpty()) {
-            Preconditions.checkArgument(
-                eSciDocUri != null && !eSciDocUri.isEmpty(),
+        if (isEscidocUriKnown()) {
+            Preconditions.checkArgument(isEscidocUriKnown(),
                 "Escidoc URI can not be empty nor null");
             final ServiceFactory serviceFactory =
                 new ServiceFactory(eSciDocUri, token);
@@ -208,14 +221,19 @@ public class AdminToolApplication extends Application {
             Preconditions.checkNotNull(adminService,
                 "can not get AdminService from service container");
             contentModelService = serviceFactory.createContentModelService();
+            pdpService = serviceFactory.createPdpService();
         }
         else {
             showLandingView();
         }
     }
 
+    private boolean isEscidocUriKnown() {
+        return eSciDocUri != null && !eSciDocUri.isEmpty();
+    }
+
     private void buildMainLayout() {
-        viewManager.setMainView(new MainView(this));
+        viewManager.setMainView(new MainView(this, pdpService, currentUser));
         viewManager.showMainView();
     }
 

@@ -7,7 +7,7 @@ import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.view.ViewConstants;
 
-class NavigationTreeClickListener implements ItemClickListener {
+public class NavigationTreeClickListener implements ItemClickListener {
 
     private static final long serialVersionUID = 3387642828574003867L;
 

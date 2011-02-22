@@ -8,9 +8,6 @@ import java.util.Set;
 import com.google.common.base.Preconditions;
 
 import de.escidoc.admintool.app.AppConstants;
-import de.escidoc.core.client.Authentication;
-import de.escidoc.core.client.OrganizationalUnitHandlerClient;
-import de.escidoc.core.client.TransportProtocol;
 import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
@@ -33,13 +30,9 @@ public class OrgUnitServiceLab
         super(client);
     }
 
-    public OrgUnitServiceLab(Authentication authentication) {
-        super(authentication);
-        final OrganizationalUnitHandlerClientInterface client =
-            new OrganizationalUnitHandlerClient(
-                authentication.getServiceAddress());
-        client.setTransport(TransportProtocol.REST);
-        super.client = client;
+    @Override
+    public OrganizationalUnitHandlerClientInterface getClient() {
+        return (OrganizationalUnitHandlerClientInterface) client;
     }
 
     @Override
@@ -49,18 +42,13 @@ public class OrgUnitServiceLab
     }
 
     @Override
-    OrganizationalUnitHandlerClientInterface getClient() {
-        return (OrganizationalUnitHandlerClientInterface) client;
-    }
-
-    @Override
-    Collection<? extends Resource> findPublicOrReleseadResourcesUsingOldFilter()
+    public Collection<? extends Resource> findPublicOrReleseadResourcesUsingOldFilter()
         throws EscidocClientException {
         return getClient().retrieveOrganizationalUnits(withEmptyTaskParam());
     }
 
     @Override
-    Collection<? extends Resource> findPublicOrReleasedResources()
+    public Collection<? extends Resource> findPublicOrReleasedResources()
         throws EscidocException, InternalClientException, TransportException {
         return getClient().retrieveOrganizationalUnitsAsList(withEmptyFilter());
     }

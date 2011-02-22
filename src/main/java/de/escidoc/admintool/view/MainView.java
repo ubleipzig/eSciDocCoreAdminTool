@@ -10,9 +10,11 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.Reindeer;
 
 import de.escidoc.admintool.app.AdminToolApplication;
+import de.escidoc.admintool.service.PdpService;
 import de.escidoc.admintool.view.factory.ToolbarFactory;
 import de.escidoc.admintool.view.navigation.NavigationTree;
-import de.escidoc.admintool.view.navigation.NavigationTreeImpl;
+import de.escidoc.admintool.view.navigation.NavigationTreeClickListener;
+import de.escidoc.core.resources.aa.useraccount.UserAccount;
 
 public class MainView extends CustomComponent {
     private static final long serialVersionUID = -5906063682647356346L;
@@ -32,8 +34,15 @@ public class MainView extends CustomComponent {
 
     private GridLayout toolbar;
 
-    public MainView(final AdminToolApplication app) {
+    private final PdpService pdpService;
+
+    private final UserAccount currentUser;
+
+    public MainView(final AdminToolApplication app,
+        final PdpService pdpService, final UserAccount currentUser) {
         this.app = app;
+        this.pdpService = pdpService;
+        this.currentUser = currentUser;
         init();
     }
 
@@ -74,12 +83,14 @@ public class MainView extends CustomComponent {
     private void createAndAddNavigationTree() {
         appLayout.addComponent(horizontalSplit);
         appLayout.setExpandRatio(horizontalSplit, 1);
+
         horizontalSplit.setSplitPosition(
             ViewConstants.SPLIT_POSITION_FROM_LEFT, SplitPanel.UNITS_PIXELS);
         horizontalSplit.addStyleName(ViewConstants.THIN_SPLIT);
 
-        navigation = new NavigationTreeImpl(app);
-        navigation.init();
+        navigation =
+            NavigationTreeFactory.createViewFor(
+                new NavigationTreeClickListener(app), currentUser, pdpService);
         horizontalSplit.setFirstComponent(navigation);
     }
 

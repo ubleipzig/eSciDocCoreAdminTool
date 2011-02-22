@@ -41,4 +41,16 @@ public class AppConstants {
     public static final String DEFAULT_ORG_UNIT_ATTRIBUTE_NAME = "o";
 
     public static final String EMPTY_STRING = "";
+
+    public static final String ORGANIZATIONAL_UNIT_DEFAULT_ATTRIBUTE_NAME =
+    "o";
+
+    public static final String XACML_ACTION_ID =
+    "urn:oasis:names:tc:xacml:1.0:action:action-id";
+
+    public final static String GET_PURGE_STATUS_ACTION =
+    "info:escidoc/names:aa:1.0:action:get-purge-status";
+
+    public static final String DELETE_ORGANIZATIONAL_UNIT_ACTION =
+    "info:escidoc/names:aa:1.0:action:delete-organizational-unit";
 }

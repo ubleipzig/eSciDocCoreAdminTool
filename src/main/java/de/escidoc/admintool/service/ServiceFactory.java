@@ -2,7 +2,9 @@ package de.escidoc.admintool.service;
 
 import com.google.common.base.Preconditions;
 
+import de.admintool.services.PdpServiceImpl;
 import de.escidoc.core.client.AdminHandlerClient;
+import de.escidoc.core.client.Authentication;
 import de.escidoc.core.client.ContainerHandlerClient;
 import de.escidoc.core.client.ContentModelHandlerClient;
 import de.escidoc.core.client.ContextHandlerClient;
@@ -12,6 +14,7 @@ import de.escidoc.core.client.TransportProtocol;
 import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
+import de.escidoc.core.client.exceptions.application.security.AuthenticationException;
 import de.escidoc.core.client.interfaces.ContainerHandlerClientInterface;
 import de.escidoc.core.client.interfaces.ContextHandlerClientInterface;
 import de.escidoc.core.client.interfaces.HandlerServiceInterface;
@@ -19,6 +22,10 @@ import de.escidoc.core.client.interfaces.ItemHandlerClientInterface;
 import de.escidoc.core.client.interfaces.OrganizationalUnitHandlerClientInterface;
 
 public class ServiceFactory {
+
+    private static final String SYSADMIN_PASSWORD = "eSciDoc";
+
+    private static final String SYSADMIN_LOGIN_NAME = "sysadmin";
 
     private final String eSciDocUri;
 
@@ -118,5 +125,12 @@ public class ServiceFactory {
         final ResourceService service = new ContentModelService(client);
         service.loginWith(token);
         return service;
+    }
+
+    // TODO get SysAdmin LoginName from file/database
+    public PdpService createPdpService() throws AuthenticationException,
+        TransportException {
+        return new PdpServiceImpl(new Authentication(eSciDocUri,
+            SYSADMIN_LOGIN_NAME, SYSADMIN_PASSWORD));
     }
 }
