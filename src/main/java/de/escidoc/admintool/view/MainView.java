@@ -10,11 +10,10 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.Reindeer;
 
 import de.escidoc.admintool.app.AdminToolApplication;
-import de.escidoc.admintool.service.PdpService;
+import de.escidoc.admintool.domain.PdpRequest;
 import de.escidoc.admintool.view.factory.ToolbarFactory;
 import de.escidoc.admintool.view.navigation.NavigationTree;
 import de.escidoc.admintool.view.navigation.NavigationTreeClickListener;
-import de.escidoc.core.resources.aa.useraccount.UserAccount;
 
 public class MainView extends CustomComponent {
     private static final long serialVersionUID = -5906063682647356346L;
@@ -34,15 +33,11 @@ public class MainView extends CustomComponent {
 
     private GridLayout toolbar;
 
-    private final PdpService pdpService;
+    private final PdpRequest pdpRequest;
 
-    private final UserAccount currentUser;
-
-    public MainView(final AdminToolApplication app,
-        final PdpService pdpService, final UserAccount currentUser) {
+    public MainView(final AdminToolApplication app, final PdpRequest pdpRequest) {
         this.app = app;
-        this.pdpService = pdpService;
-        this.currentUser = currentUser;
+        this.pdpRequest = pdpRequest;
         init();
     }
 
@@ -90,7 +85,7 @@ public class MainView extends CustomComponent {
 
         navigation =
             NavigationTreeFactory.createViewFor(
-                new NavigationTreeClickListener(app), currentUser, pdpService);
+                new NavigationTreeClickListener(app), pdpRequest);
         horizontalSplit.setFirstComponent(navigation);
     }
 

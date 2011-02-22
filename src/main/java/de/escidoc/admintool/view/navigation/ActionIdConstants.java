@@ -175,4 +175,7 @@ public class ActionIdConstants {
     public static final String REVOKE_GRANT =
         "info:escidoc/names:aa:1.0:action:revoke-grant";
 
+    public static final String CREATE_CONTENT_MODEL =
+        "info:escidoc/names:aa:1.0:action:create-content-model";
+
 }

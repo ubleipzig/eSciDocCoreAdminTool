@@ -264,7 +264,7 @@ public class AdminToolApplication extends Application {
     }
 
     private void buildMainLayout() {
-        viewManager.setMainView(new MainView(this, pdpService, currentUser));
+        viewManager.setMainView(new MainView(this, pdpRequest));
         viewManager.showMainView();
     }
 

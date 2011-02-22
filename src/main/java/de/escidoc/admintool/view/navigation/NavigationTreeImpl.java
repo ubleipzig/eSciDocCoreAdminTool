@@ -1,15 +1,11 @@
 package de.escidoc.admintool.view.navigation;
 
-import java.net.URISyntaxException;
-
 import com.google.common.base.Preconditions;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Tree;
 
-import de.escidoc.admintool.service.PdpService;
+import de.escidoc.admintool.domain.PdpRequest;
 import de.escidoc.admintool.view.ViewConstants;
-import de.escidoc.core.client.exceptions.EscidocClientException;
-import de.escidoc.core.resources.aa.useraccount.UserAccount;
 
 public class NavigationTreeImpl extends CustomComponent
     implements NavigationTree {
@@ -18,23 +14,20 @@ public class NavigationTreeImpl extends CustomComponent
 
     private final Tree tree = new Tree();
 
-    private UserAccount currentUser;
-
     private final NavigationTreeClickListener listener;
 
-    private final PdpService pdpService;
+    private final PdpRequest pdpRequest;
 
     public NavigationTreeImpl(final NavigationTreeClickListener listener,
-        final PdpService pdpService) {
+        final PdpRequest pdpRequest) {
         Preconditions.checkNotNull(listener, "listener is null: %s", listener);
-        Preconditions.checkNotNull(pdpService, "pdpService is null: %s",
-            pdpService);
+        Preconditions.checkNotNull(pdpRequest, "pdpRequest is null: %s",
+            pdpRequest);
         this.listener = listener;
-        this.pdpService = pdpService;
+        this.pdpRequest = pdpRequest;
     }
 
-    public NavigationTree init(final UserAccount currentUser) {
-        this.currentUser = currentUser;
+    public NavigationTree init() {
         setCompositionRoot(tree);
         configureTree();
         addNodes();
@@ -64,8 +57,32 @@ public class NavigationTreeImpl extends CustomComponent
 
     private void addChildren(final String parent, final String[] nodes) {
         for (final String node : nodes) {
-            addChild(parent, node);
+            if (isEquals(node, ViewConstants.ROLE)) {
+                if (isAllowedToGrantRole()) {
+                    addChild(parent, node);
+                }
+            }
+            else if (isEquals(node, ViewConstants.CONTENT_MODELS)) {
+                if (isAllowedToCreateContentModel()) {
+                    addChild(parent, node);
+                }
+            }
+            else {
+                addChild(parent, node);
+            }
         }
+    }
+
+    private boolean isAllowedToCreateContentModel() {
+        return pdpRequest.isAllowed(ActionIdConstants.CREATE_CONTENT_MODEL);
+    }
+
+    private boolean isAllowedToGrantRole() {
+        return pdpRequest.isAllowed(ActionIdConstants.CREATE_GRANT);
+    }
+
+    private boolean isEquals(final String node, final String nodeLabel) {
+        return node.equalsIgnoreCase(nodeLabel);
     }
 
     private void setAsLeaf(final String node) {
@@ -87,17 +104,7 @@ public class NavigationTreeImpl extends CustomComponent
     }
 
     private boolean isAllowedToReindex() {
-        try {
-            return pdpService
-                .isAction(ActionIdConstants.REINDEX_ACTION_ID)
-                .forUser(currentUser.getObjid()).permitted();
-        }
-        catch (final EscidocClientException e) {
-            return false;
-        }
-        catch (final URISyntaxException e) {
-            return false;
-        }
+        return pdpRequest.isAllowed(ActionIdConstants.REINDEX_ACTION_ID);
     }
 
     private boolean isReindex(final String node) {
