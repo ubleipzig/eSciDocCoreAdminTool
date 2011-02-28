@@ -184,4 +184,13 @@ public class ActionIdConstants {
     public static final String DELETE_CONTEXT =
         "info:escidoc/names:aa:1.0:action:delete-context";
 
+    public static final String CLOSE_CONTEXT =
+        "info:escidoc/names:aa:1.0:action:close-context";
+
+    public static final String CREATE_CONTEXT =
+        "info:escidoc/names:aa:1.0:action:create-context";
+
+    public static final String OPEN_CONTEXT =
+        "info:escidoc/names:aa:1.0:action:open-context";
+
 }

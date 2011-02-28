@@ -10,10 +10,9 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
+import de.escidoc.admintool.view.ErrorMessage;
 import de.escidoc.admintool.view.ViewConstants;
-import de.escidoc.core.client.exceptions.EscidocException;
-import de.escidoc.core.client.exceptions.InternalClientException;
-import de.escidoc.core.client.exceptions.TransportException;
+import de.escidoc.core.client.exceptions.EscidocClientException;
 
 public class CloseContextModalWindow extends VerticalLayout {
     private static final long serialVersionUID = -2916506925078723208L;
@@ -53,16 +52,9 @@ public class CloseContextModalWindow extends VerticalLayout {
                 contextForm.close((String) commentField.getValue());
                 subwindow.getParent().removeWindow(subwindow);
             }
-            catch (final EscidocException e) {
-                LOG.error("An unexpected error occured! See LOG for details.",
-                    e);
-            }
-            catch (final InternalClientException e) {
-                LOG.error("An unexpected error occured! See LOG for details.",
-                    e);
-            }
-            catch (final TransportException e) {
-                LOG.error("An unexpected error occured! See LOG for details.",
+            catch (final EscidocClientException e) {
+                subwindow.getParent().removeWindow(subwindow);
+                ErrorMessage.show(contextForm.getApplication().getMainWindow(),
                     e);
             }
         }

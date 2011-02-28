@@ -23,4 +23,14 @@
 		<appender-ref ref="console" />
 		<appender-ref ref="R" />
 	</root>
+	<logger name="org.escidoc">
+		<level value="warn" />
+		<appender-ref ref="console" />
+		<appender-ref ref="R" />
+	</logger>
+	<logger name="org.apache">
+		<level value="warn" />
+		<appender-ref ref="console" />
+		<appender-ref ref="R" />
+	</logger>
 </log4j:configuration>

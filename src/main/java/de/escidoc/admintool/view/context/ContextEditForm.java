@@ -632,8 +632,7 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
         setSelected(item);
     }
 
-    public Context close(final String comment) throws EscidocException,
-        InternalClientException, TransportException {
+    public Context close(final String comment) throws EscidocClientException {
         final Context cachedContext = getContextFromCache();
         final Context closedContext = closeContext(comment);
         updateContextList(cachedContext, closedContext);
@@ -643,8 +642,8 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
         return closedContext;
     }
 
-    private Context closeContext(final String comment) throws EscidocException,
-        InternalClientException, TransportException {
+    private Context closeContext(final String comment)
+        throws EscidocClientException {
         return contextService.close(getSelectedItemId(), comment);
     }
 

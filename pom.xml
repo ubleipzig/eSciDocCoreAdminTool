@@ -27,7 +27,6 @@
 			<groupId>org.escidoc.core</groupId>
 			<artifactId>client-1.2</artifactId>
 			<version>0.8-SNAPSHOT</version>
-			<type>jar</type>
 		</dependency>
 		<dependency>
 			<groupId>org.vaadin.addons</groupId>
@@ -129,6 +128,7 @@
 				<configuration>
 					<downloadSources>true</downloadSources>
 					<downloadJavadocs>true</downloadJavadocs>
+					<useProjectReferences>false</useProjectReferences>
 				</configuration>
 			</plugin>
 			<plugin>

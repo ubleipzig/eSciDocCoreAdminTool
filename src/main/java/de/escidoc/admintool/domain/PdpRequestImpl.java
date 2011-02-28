@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.escidoc.admintool.service.PdpService;
+import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.resources.aa.useraccount.UserAccount;
 
@@ -33,7 +34,7 @@ public final class PdpRequestImpl implements PdpRequest {
      */
     @Override
     public boolean isPermitted(final String actionId) {
-        evaluatePdpRequest(actionId, "");
+        evaluatePdpRequest(actionId, ViewConstants.EMPTY_STRING);
         return isAllowed;
     }
 

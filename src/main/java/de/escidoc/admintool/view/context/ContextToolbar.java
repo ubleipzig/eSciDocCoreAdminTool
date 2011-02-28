@@ -148,13 +148,37 @@ public class ContextToolbar extends CustomComponent {
 
     public void bind(final String selectedItemId) {
         this.selectedItemId = selectedItemId;
-        if (isEditNotAllowed()) {
+        if (isCreateNotAllowed()) {
             newContextBtn.setVisible(false);
+        }
+        if (isOpenNotAllowed()) {
+            openContextBtn.setVisible(false);
+        }
+        if (isCloseContextNotAllowed()) {
+            closeContextBtn.setVisible(false);
+        }
+        if (isDeleteNotAllowed()) {
+            deleteContextBtn.setVisible(false);
         }
     }
 
-    private boolean isEditNotAllowed() {
+    private boolean isOpenNotAllowed() {
+        return pdpRequest.isDenied(ActionIdConstants.OPEN_CONTEXT,
+            selectedItemId);
+    }
+
+    private boolean isDeleteNotAllowed() {
         return pdpRequest.isDenied(ActionIdConstants.DELETE_CONTEXT,
+            selectedItemId);
+    }
+
+    private boolean isCloseContextNotAllowed() {
+        return pdpRequest.isDenied(ActionIdConstants.CLOSE_CONTEXT,
+            selectedItemId);
+    }
+
+    private boolean isCreateNotAllowed() {
+        return pdpRequest.isDenied(ActionIdConstants.CREATE_CONTEXT,
             selectedItemId);
     }
 }
