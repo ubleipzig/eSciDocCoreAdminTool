@@ -8,10 +8,12 @@ import com.vaadin.data.Property;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 
 import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.app.PropertyId;
+import de.escidoc.admintool.view.navigation.ActionIdConstants;
 import de.escidoc.admintool.view.util.Converter;
 import de.escidoc.core.resources.common.reference.UserAccountRef;
 
@@ -26,14 +28,16 @@ public class PropertiesBinder implements FieldsBinder {
 
     private final AdminToolApplication app;
 
+    private Label createdByLabel;
+
     /**
      * @param app
      * @param propertiesFieldsImpl
      */
     PropertiesBinder(final AdminToolApplication app,
-        final PropertiesFieldsImpl propertiesFieldsImpl) {
+        final PropertiesFieldsImpl propertiesFields) {
         this.app = app;
-        propertiesFields = propertiesFieldsImpl;
+        this.propertiesFields = propertiesFields;
     }
 
     @Override
@@ -60,17 +64,37 @@ public class PropertiesBinder implements FieldsBinder {
     }
 
     private void bindCreatedBy() {
-        propertiesFields.createdBy.setCaption(getCreatedByTitle());
-        propertiesFields.createdBy.addListener(new Button.ClickListener() {
+        if (needReplaced() && isRetrieveCreatorDenied()) {
+            final Component parent = propertiesFields.createdBy.getParent();
+            createdByLabel = new Label(getCreatedByTitle());
+            ((HorizontalLayout) parent).replaceComponent(
+                propertiesFields.createdBy, createdByLabel);
+        }
+        else {
+            propertiesFields.createdBy.setCaption(getCreatedByTitle());
+            propertiesFields.createdBy.addListener(new Button.ClickListener() {
 
-            private static final long serialVersionUID = 3530819267393348554L;
+                private static final long serialVersionUID =
+                    3530819267393348554L;
 
-            @Override
-            public void buttonClick(final ClickEvent event) {
-                app.showUserInEditView(getCreatedByValue().getObjid());
-            }
+                @Override
+                public void buttonClick(final ClickEvent event) {
+                    app.showUserInEditView(getCreatedByValue().getObjid());
+                }
+            });
+        }
+    }
 
-        });
+    private boolean needReplaced() {
+        final Component parent = propertiesFields.createdBy.getParent();
+        final HorizontalLayout foo = (HorizontalLayout) parent;
+        return foo.getComponentIndex(createdByLabel) < 0;
+    }
+
+    private boolean isRetrieveCreatorDenied() {
+        return app.getPdpRequest().isDenied(
+            ActionIdConstants.RETRIEVE_USER_ACCOUNT,
+            getCreatedByValue().getObjid());
     }
 
     private String getCreatedByTitle() {
@@ -95,6 +119,21 @@ public class PropertiesBinder implements FieldsBinder {
     }
 
     private void bindModifiedBy() {
+        // if (isRetrieveModifierDenied()) {
+        // replaceLinkWithLabel();
+        // }
+        // else {
+        bindModifiedByLinkWithData();
+        // }
+    }
+
+    private void replaceLinkWithLabel() {
+        final Component parent = propertiesFields.modifiedBy.getParent();
+        ((HorizontalLayout) parent).replaceComponent(
+            propertiesFields.modifiedBy, new Label(getModifiedByTitle()));
+    }
+
+    private void bindModifiedByLinkWithData() {
         propertiesFields.modifiedBy.setCaption(getModifiedByTitle());
         propertiesFields.modifiedBy.addListener(new Button.ClickListener() {
 
@@ -107,6 +146,12 @@ public class PropertiesBinder implements FieldsBinder {
                 app.showUserInEditView(getModifiedByValue().getObjid());
             }
         });
+    }
+
+    private boolean isRetrieveModifierDenied() {
+        return app.getPdpRequest().isDenied(
+            ActionIdConstants.RETRIEVE_USER_ACCOUNT,
+            getModifiedByValue().getObjid());
     }
 
     private String getModifiedByTitle() {

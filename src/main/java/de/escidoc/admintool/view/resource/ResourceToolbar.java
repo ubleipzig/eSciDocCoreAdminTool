@@ -118,7 +118,7 @@ public class ResourceToolbar extends CustomComponent {
     public void bind(final Item item) {
         this.item = item;
         bindUserRightsWithView();
-        bindButtons();
+        bindStatusAndRightWithView();
         openResourceListener.bind(item);
         closeResourceListener.bind(item);
         delResourceListener.bind(item);
@@ -149,19 +149,29 @@ public class ResourceToolbar extends CustomComponent {
             getSelectedItemId());
     }
 
+    private boolean isUpdateDenied() {
+        return pdpRequest.isDenied(ActionIdConstants.CREATE_ORG_UNIT,
+            getSelectedItemId());
+    }
+
+    private boolean isUpdatePermitted() {
+        return pdpRequest.isPermitted(ActionIdConstants.CREATE_ORG_UNIT,
+            getSelectedItemId());
+    }
+
     private String getSelectedItemId() {
         return (String) item.getItemProperty(PropertyId.OBJECT_ID).getValue();
     }
 
-    private void bindButtons() {
+    private void bindStatusAndRightWithView() {
         switch (getPublicStatus()) {
             case CREATED: {
                 openBtn.setVisible(true && isOpenPermitted());
                 closeBtn.setVisible(false);
                 delBtn.setVisible(true && isDeletePermitted());
 
-                resourceViewImpl.setFormReadOnly(false);
-                resourceViewImpl.setFooterVisible(true);
+                resourceViewImpl.setFormReadOnly(false || isUpdateDenied());
+                resourceViewImpl.setFooterVisible(true && isUpdatePermitted());
                 break;
             }
             case OPENED: {
@@ -169,8 +179,8 @@ public class ResourceToolbar extends CustomComponent {
                 closeBtn.setVisible(true && isClosePermitted());
                 delBtn.setVisible(false);
 
-                resourceViewImpl.setFormReadOnly(false);
-                resourceViewImpl.setFooterVisible(true);
+                resourceViewImpl.setFormReadOnly(false || isUpdateDenied());
+                resourceViewImpl.setFooterVisible(true && isUpdatePermitted());
                 break;
             }
             case CLOSED: {

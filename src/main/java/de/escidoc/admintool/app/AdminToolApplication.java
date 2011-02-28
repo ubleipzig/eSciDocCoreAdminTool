@@ -481,4 +481,8 @@ public class AdminToolApplication extends Application {
             LOG.error(ViewConstants.SERVER_INTERNAL_ERROR, e);
         }
     }
+
+    public PdpRequest getPdpRequest() {
+        return pdpRequest;
+    }
 }

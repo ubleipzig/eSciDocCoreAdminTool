@@ -208,4 +208,7 @@ public class ActionIdConstants {
     public static final String OPEN_ORG_UNIT =
         "info:escidoc/names:aa:1.0:action:open-organizational-unit";
 
+    public static final String RETRIEVE_USER_ACCOUNT =
+        "info:escidoc/names:aa:1.0:action:retrieve-user-account";
+
 }

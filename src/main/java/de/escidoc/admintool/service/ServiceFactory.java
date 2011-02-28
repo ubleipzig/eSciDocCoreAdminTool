@@ -130,6 +130,6 @@ public class ServiceFactory {
     public PdpService createPdpService() throws AuthenticationException,
         TransportException {
         return new PdpServiceImpl(new Authentication(eSciDocUri,
-            SYSADMIN_LOGIN_NAME, "eSciDoc"));
+            SYSADMIN_LOGIN_NAME, "escidoc"));
     }
 }
