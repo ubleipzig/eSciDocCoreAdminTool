@@ -10,8 +10,10 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Table;
 
 import de.escidoc.admintool.app.PropertyId;
+import de.escidoc.admintool.domain.PdpRequest;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.admintool.view.admintask.FilterResourceView.ShowFilterResultCommand;
+import de.escidoc.admintool.view.navigation.ActionIdConstants;
 import de.escidoc.core.resources.Resource;
 
 final class ShowFilterResultCommandImpl implements ShowFilterResultCommand {
@@ -31,14 +33,16 @@ final class ShowFilterResultCommandImpl implements ShowFilterResultCommand {
 
     POJOContainer<Resource> filteredResourcesContainer;
 
-    public ShowFilterResultCommandImpl(
-        final FilterResourceView filterResourceView) {
+    private final PdpRequest pdpRequest;
 
+    public ShowFilterResultCommandImpl(
+        final FilterResourceView filterResourceView, final PdpRequest pdpRequest) {
         Preconditions.checkNotNull(filterResourceView,
             "filterResourceView is null: %s", filterResourceView);
-
+        Preconditions.checkNotNull(pdpRequest, "pdpRequest is null: %s",
+            pdpRequest);
         this.filterResourceView = filterResourceView;
-
+        this.pdpRequest = pdpRequest;
         showPurgeStatusListener =
             new ShowPurgeStatusListener(filterResourceView.adminService,
                 filterResourceView.mainWindow, statusLabel);
@@ -95,9 +99,15 @@ final class ShowFilterResultCommandImpl implements ShowFilterResultCommand {
 
     private void showFilterResultView() {
         formLayout.addComponent(filteredList);
-        addPurgeButton();
-        addShowPurgeStatusButton();
-        addStatusLabel();
+        if (isPurgePermitted()) {
+            addPurgeButton();
+            addShowPurgeStatusButton();
+            addStatusLabel();
+        }
+    }
+
+    private boolean isPurgePermitted() {
+        return pdpRequest.isPermitted(ActionIdConstants.PURGE_RESOURCES);
     }
 
     private void addPurgeButton() {
@@ -105,7 +115,6 @@ final class ShowFilterResultCommandImpl implements ShowFilterResultCommand {
         purgeBtn.setWidth("150px");
         formLayout.addComponent(purgeBtn);
         purgeBtn.addListener(new PurgeResourcesListener(this));
-
     }
 
     private void addStatusLabel() {

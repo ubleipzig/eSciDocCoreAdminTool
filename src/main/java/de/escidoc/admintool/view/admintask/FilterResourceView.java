@@ -11,6 +11,7 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
 
 import de.escidoc.admintool.app.PropertyId;
+import de.escidoc.admintool.domain.PdpRequest;
 import de.escidoc.admintool.service.AdminService;
 import de.escidoc.admintool.service.ServiceContainer;
 import de.escidoc.admintool.view.ViewConstants;
@@ -37,24 +38,24 @@ public class FilterResourceView extends AbstractCustomView {
     private final FilterResourceListener listener;
 
     public FilterResourceView(final ServiceContainer serviceContainer,
-        final Window mainWindow) {
-
-        preconditions(serviceContainer, mainWindow);
-
+        final Window mainWindow, final PdpRequest pdpRequest) {
+        preconditions(serviceContainer, mainWindow, pdpRequest);
         this.mainWindow = mainWindow;
         adminService = serviceContainer.getAdminService();
         listener = new FilterResourceListener(mainWindow, serviceContainer);
-        command = new ShowFilterResultCommandImpl(this);
-
+        command = new ShowFilterResultCommandImpl(this, pdpRequest);
         init();
     }
 
     private void preconditions(
-        final ServiceContainer serviceContainer, final Window mainWindow) {
+        final ServiceContainer serviceContainer, final Window mainWindow,
+        final PdpRequest pdpRequest) {
         Preconditions.checkNotNull(serviceContainer,
             "serviceContainer is null: %s", serviceContainer);
         Preconditions.checkNotNull(mainWindow, "mainWindow is null: %s",
             mainWindow);
+        Preconditions.checkNotNull(pdpRequest, "pdpRequest is null: %s",
+            pdpRequest);
     }
 
     private void init() {

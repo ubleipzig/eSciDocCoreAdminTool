@@ -64,25 +64,24 @@ public class PropertiesBinder implements FieldsBinder {
     }
 
     private void bindCreatedBy() {
-        if (needReplaced() && isRetrieveCreatorDenied()) {
-            final Component parent = propertiesFields.createdBy.getParent();
-            createdByLabel = new Label(getCreatedByTitle());
-            ((HorizontalLayout) parent).replaceComponent(
-                propertiesFields.createdBy, createdByLabel);
-        }
-        else {
-            propertiesFields.createdBy.setCaption(getCreatedByTitle());
-            propertiesFields.createdBy.addListener(new Button.ClickListener() {
+        // if (needReplaced() && isRetrieveCreatorDenied()) {
+        // final Component parent = propertiesFields.createdBy.getParent();
+        // createdByLabel = new Label(getCreatedByTitle());
+        // ((HorizontalLayout) parent).replaceComponent(
+        // propertiesFields.createdBy, createdByLabel);
+        // }
+        // else {
+        propertiesFields.createdBy.setCaption(getCreatedByTitle());
+        propertiesFields.createdBy.addListener(new Button.ClickListener() {
 
-                private static final long serialVersionUID =
-                    3530819267393348554L;
+            private static final long serialVersionUID = 3530819267393348554L;
 
-                @Override
-                public void buttonClick(final ClickEvent event) {
-                    app.showUserInEditView(getCreatedByValue().getObjid());
-                }
-            });
-        }
+            @Override
+            public void buttonClick(final ClickEvent event) {
+                app.showUserInEditView(getCreatedByValue().getObjid());
+            }
+        });
+        // }
     }
 
     private boolean needReplaced() {

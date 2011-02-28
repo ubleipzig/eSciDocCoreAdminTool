@@ -211,4 +211,7 @@ public class ActionIdConstants {
     public static final String RETRIEVE_USER_ACCOUNT =
         "info:escidoc/names:aa:1.0:action:retrieve-user-account";
 
+    public static final String PURGE_RESOURCES =
+        "info:escidoc/names:aa:1.0:action:delete-objects";
+
 }

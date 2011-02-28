@@ -275,7 +275,7 @@ public class AdminToolApplication extends Application {
     }
 
     private void createFilterView() {
-        filterResourceView = new FilterView(services, mainWindow);
+        filterResourceView = new FilterView(services, mainWindow, pdpRequest);
         filterResourceView.addView();
     }
 

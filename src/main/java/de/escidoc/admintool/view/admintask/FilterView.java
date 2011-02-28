@@ -4,6 +4,7 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Window;
 
+import de.escidoc.admintool.domain.PdpRequest;
 import de.escidoc.admintool.service.ServiceContainer;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.admintool.view.admintask.Style.H2;
@@ -13,8 +14,12 @@ public class FilterView extends AbstractAdminTaskView {
 
     private static final long serialVersionUID = -1412202753685048760L;
 
-    public FilterView(final ServiceContainer services, final Window mainWindow) {
+    private final PdpRequest pdpRequest;
+
+    public FilterView(final ServiceContainer services, final Window mainWindow,
+        final PdpRequest pdpRequest) {
         super(services, mainWindow);
+        this.pdpRequest = pdpRequest;
     }
 
     @Override
@@ -33,7 +38,7 @@ public class FilterView extends AbstractAdminTaskView {
         hLayout.setHeight(100, UNITS_PERCENTAGE);
 
         final FilterResourceView filterView =
-            new FilterResourceView(services, mainWindow);
+            new FilterResourceView(services, mainWindow, pdpRequest);
         hLayout.addComponent(filterView);
         cssLayout.addComponent(hLayout);
     }
