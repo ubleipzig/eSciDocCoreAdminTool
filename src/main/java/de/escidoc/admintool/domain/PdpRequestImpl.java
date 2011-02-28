@@ -56,8 +56,9 @@ public final class PdpRequestImpl implements PdpRequest {
             LOG.error(e.getMessage());
         }
         catch (final EscidocClientException e) {
-            LOG.error(e.getMessage());
+            LOG.error(e.getMessage(), e);
         }
+
     }
 
     @Override

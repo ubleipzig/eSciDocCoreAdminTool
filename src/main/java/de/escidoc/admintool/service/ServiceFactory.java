@@ -3,7 +3,6 @@ package de.escidoc.admintool.service;
 import com.google.common.base.Preconditions;
 
 import de.escidoc.core.client.AdminHandlerClient;
-import de.escidoc.core.client.Authentication;
 import de.escidoc.core.client.ContainerHandlerClient;
 import de.escidoc.core.client.ContentModelHandlerClient;
 import de.escidoc.core.client.ContextHandlerClient;
@@ -26,7 +25,7 @@ public class ServiceFactory {
 
     private static final String SYSADMIN_LOGIN_NAME = "sysadmin";
 
-    private final String eSciDocUri;
+    private final String serviceUri;
 
     private final String token;
 
@@ -41,32 +40,32 @@ public class ServiceFactory {
             "eSciDocUri can not be null: %s", eSciDocUri);
         Preconditions.checkNotNull(token, "token can not be null: %s", token);
 
-        this.eSciDocUri = eSciDocUri;
+        serviceUri = eSciDocUri;
         this.token = token;
     }
 
     public OrgUnitService createOrgService() throws InternalClientException {
-        return new OrgUnitService(eSciDocUri, token);
+        return new OrgUnitService(serviceUri, token);
     }
 
     public UserService createUserService() throws EscidocException,
         InternalClientException, TransportException {
-        return new UserService(eSciDocUri, token);
+        return new UserService(serviceUri, token);
     }
 
     public ContextService createContextService() throws EscidocException,
         TransportException, InternalClientException {
-        return new ContextService(eSciDocUri, token);
+        return new ContextService(serviceUri, token);
     }
 
     public RoleService createRoleService() throws EscidocException,
         InternalClientException, TransportException {
-        return new RoleService(eSciDocUri, token);
+        return new RoleService(serviceUri, token);
     }
 
     public EscidocService createContainerService()
         throws InternalClientException {
-        client = new ContainerHandlerClient(eSciDocUri);
+        client = new ContainerHandlerClient(serviceUri);
         client.setTransport(TransportProtocol.REST);
         final ContainerService containerService = new ContainerService(client);
         containerService.loginWith(token);
@@ -82,13 +81,13 @@ public class ServiceFactory {
     private HandlerServiceInterface createAdminClient()
         throws InternalClientException {
         final HandlerServiceInterface client =
-            new AdminHandlerClient(eSciDocUri);
+            new AdminHandlerClient(serviceUri);
         client.setTransport(TransportProtocol.REST);
         return client;
     }
 
     public ItemService createItemService() throws InternalClientException {
-        itemClient = new ItemHandlerClient(eSciDocUri);
+        itemClient = new ItemHandlerClient(serviceUri);
         itemClient.setTransport(TransportProtocol.REST);
         final ItemService itemService = new ItemService(itemClient);
         itemService.loginWith(token);
@@ -98,7 +97,7 @@ public class ServiceFactory {
     public ContextServiceLab createContextServiceLab()
         throws InternalClientException {
         final ContextHandlerClientInterface client =
-            new ContextHandlerClient(eSciDocUri);
+            new ContextHandlerClient(serviceUri);
         client.setTransport(TransportProtocol.REST);
         final ContextServiceLab contextService = new ContextServiceLab(client);
         contextService.loginWith(token);
@@ -108,7 +107,7 @@ public class ServiceFactory {
     public OrgUnitServiceLab createOrgUnitService()
         throws InternalClientException {
         final OrganizationalUnitHandlerClientInterface client =
-            new OrganizationalUnitHandlerClient(eSciDocUri);
+            new OrganizationalUnitHandlerClient(serviceUri);
         client.setTransport(TransportProtocol.REST);
         final OrgUnitServiceLab orgUnitService = new OrgUnitServiceLab(client);
         orgUnitService.loginWith(token);
@@ -118,7 +117,7 @@ public class ServiceFactory {
     public ResourceService createContentModelService()
         throws InternalClientException {
         final ContentModelHandlerClient client =
-            new ContentModelHandlerClient(eSciDocUri);
+            new ContentModelHandlerClient(serviceUri);
         client.setTransport(TransportProtocol.REST);
 
         final ResourceService service = new ContentModelService(client);
@@ -126,10 +125,10 @@ public class ServiceFactory {
         return service;
     }
 
-    // TODO get SysAdmin LoginName from file/database
     public PdpService createPdpService() throws AuthenticationException,
         TransportException {
-        return new PdpServiceImpl(new Authentication(eSciDocUri,
-            SYSADMIN_LOGIN_NAME, "eSciDoc"));
+        final PdpServiceImpl pdpService = new PdpServiceImpl(serviceUri, token);
+        // pdpService.loginWith(token);
+        return pdpService;
     }
 }

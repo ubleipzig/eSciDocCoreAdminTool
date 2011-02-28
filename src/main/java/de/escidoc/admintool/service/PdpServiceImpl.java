@@ -15,7 +15,6 @@ import com.sun.xacml.ctx.RequestCtx;
 import com.sun.xacml.ctx.Subject;
 
 import de.escidoc.admintool.app.AppConstants;
-import de.escidoc.core.client.Authentication;
 import de.escidoc.core.client.PolicyDecisionPointHandlerClient;
 import de.escidoc.core.client.TransportProtocol;
 import de.escidoc.core.client.exceptions.EscidocClientException;
@@ -42,10 +41,21 @@ public class PdpServiceImpl implements PdpService {
 
     private final Set<Subject> subjects = new HashSet<Subject>();
 
-    public PdpServiceImpl(final Authentication auth) {
-        client = new PolicyDecisionPointHandlerClient(auth.getServiceAddress());
-        client.setHandle(auth.getHandle());
+    // public PdpServiceImpl(final Authentication auth) {
+    // client = new PolicyDecisionPointHandlerClient(auth.getServiceAddress());
+    // client.setHandle(auth.getHandle());
+    // client.setTransport(TransportProtocol.REST);
+    // }
+
+    public PdpServiceImpl(final String serviceAddress) {
+        client = new PolicyDecisionPointHandlerClient(serviceAddress);
         client.setTransport(TransportProtocol.REST);
+    }
+
+    public PdpServiceImpl(final String serviceUri, final String token) {
+        client = new PolicyDecisionPointHandlerClient(serviceUri);
+        client.setTransport(TransportProtocol.REST);
+        client.setHandle(token);
     }
 
     public PdpService isAction(final String actionId) throws URISyntaxException {
@@ -92,5 +102,15 @@ public class PdpServiceImpl implements PdpService {
 
     private Decision getDecisionFrom(final Results results) {
         return results.get(0).getInterpretedDecision();
+    }
+
+    @Override
+    public boolean denied() throws EscidocClientException {
+        return !permitted();
+    }
+
+    @Override
+    public void loginWith(final String token) {
+        client.setHandle(token);
     }
 }

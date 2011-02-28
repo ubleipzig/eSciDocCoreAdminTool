@@ -22,7 +22,7 @@
 		<appender-ref ref="console" />
 		<appender-ref ref="R" />
 	</root>
-	<logger name="org.escidoc">
+	<!-- logger name="org.escidoc">
 		<level value="warn" />
 		<appender-ref ref="console" />
 		<appender-ref ref="R" />
@@ -32,9 +32,9 @@
 		<appender-ref ref="console" />
 		<appender-ref ref="R" />
 	</logger>
-	   <logger name="httpclient.wire">
-        <level value="warn" />
-        <appender-ref ref="console" />
-        <appender-ref ref="R" />
-    </logger>
+	<logger name="httpclient.wire">
+		<level value="warn" />
+		<appender-ref ref="console" />
+		<appender-ref ref="R" />
+	</logger-->
 </log4j:configuration>

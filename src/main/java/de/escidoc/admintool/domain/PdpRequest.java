@@ -1,5 +1,6 @@
 package de.escidoc.admintool.domain;
 
+
 public interface PdpRequest {
 
     boolean isPermitted(String actionId);
