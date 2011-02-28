@@ -178,4 +178,10 @@ public class ActionIdConstants {
     public static final String CREATE_CONTENT_MODEL =
         "info:escidoc/names:aa:1.0:action:create-content-model";
 
+    public static final String CREATE_ITEM =
+        "info:escidoc/names:aa:1.0:action:create-item";
+
+    public static final String DELETE_CONTEXT =
+        "info:escidoc/names:aa:1.0:action:delete-context";
+
 }

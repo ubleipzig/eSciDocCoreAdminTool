@@ -9,13 +9,16 @@ import java.lang.reflect.InvocationTargetException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.base.Preconditions;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.HorizontalLayout;
 
 import de.escidoc.admintool.app.AdminToolApplication;
+import de.escidoc.admintool.domain.PdpRequest;
 import de.escidoc.admintool.view.context.workflow.AbstractState;
+import de.escidoc.admintool.view.navigation.ActionIdConstants;
 
 /**
  * @author ASP
@@ -44,10 +47,23 @@ public class ContextToolbar extends CustomComponent {
 
     private final AdminToolApplication app;
 
+    private final PdpRequest pdpRequest;
+
+    private String selectedItemId;
+
     public ContextToolbar(final ContextEditForm contextEditForm,
-        final AdminToolApplication app) {
+        final AdminToolApplication app, final PdpRequest pdpRequest) {
+        Preconditions.checkNotNull(contextEditForm,
+            "contextEditForm can not be null.");
+        Preconditions.checkNotNull(app, "app can not be null.");
+        Preconditions.checkNotNull(pdpRequest, "pdpRequest can not be null.");
+
         this.contextEditForm = contextEditForm;
         this.app = app;
+        this.pdpRequest = pdpRequest;
+    }
+
+    void init() {
         header.setMargin(true);
         header.setSpacing(true);
         header.addComponent(newContextBtn);
@@ -128,5 +144,17 @@ public class ContextToolbar extends CustomComponent {
         public void buttonClick(final ClickEvent event) {
             app.getContextView().showAddView();
         }
+    }
+
+    public void bind(final String selectedItemId) {
+        this.selectedItemId = selectedItemId;
+        if (isEditNotAllowed()) {
+            newContextBtn.setVisible(false);
+        }
+    }
+
+    private boolean isEditNotAllowed() {
+        return pdpRequest.isDenied(ActionIdConstants.DELETE_CONTEXT,
+            selectedItemId);
     }
 }

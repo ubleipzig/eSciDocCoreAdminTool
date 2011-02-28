@@ -13,6 +13,8 @@ import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.view.ViewConstants;
 
 public class WelcomePage extends CustomComponent {
+    private static final String LANDING_VIEW_STYLE_NAME = "landing-view";
+
     private static final long serialVersionUID = 5514330045540866939L;
 
     private final VerticalLayout viewLayout = new VerticalLayout();
@@ -28,19 +30,18 @@ public class WelcomePage extends CustomComponent {
 
     private final AdminToolApplication app;
 
-    private Button loginButton;
+    private Button startButton;
 
     public WelcomePage(final AdminToolApplication app) {
         this.app = app;
-        init();
     }
 
-    private void init() {
-        setStyleName("landing-view");
+    public void init() {
+        setStyleName(LANDING_VIEW_STYLE_NAME);
         setCompositionRoot(viewLayout);
         setSizeFull();
         viewLayout.setSizeFull();
-        viewLayout.setStyleName("landing-view");
+        viewLayout.setStyleName(LANDING_VIEW_STYLE_NAME);
 
         viewLayout.addComponent(panel);
         viewLayout.setComponentAlignment(panel, Alignment.MIDDLE_CENTER);
@@ -48,7 +49,7 @@ public class WelcomePage extends CustomComponent {
         panel.setWidth(ViewConstants.LOGIN_WINDOW_WIDTH);
         panel.setCaption(ViewConstants.WELCOMING_MESSAGE);
 
-        addComboBox();
+        addEscidocUrlField();
         addFooters();
 
         panel.addComponent(fLayout);
@@ -58,10 +59,10 @@ public class WelcomePage extends CustomComponent {
         footer.setWidth(100, UNITS_PERCENTAGE);
         footer.setMargin(true);
         fLayout.addComponent(footer);
-        addLoginButton();
+        addStartButton();
     }
 
-    private void addComboBox() {
+    private void addEscidocUrlField() {
         escidocServiceUrl.setWidth(265, UNITS_PIXELS);
         escidocServiceUrl.setImmediate(true);
         escidocServiceUrl.focus();
@@ -72,12 +73,12 @@ public class WelcomePage extends CustomComponent {
         fLayout.addComponent(escidocServiceUrl);
     }
 
-    private void addLoginButton() {
-        loginButton = new Button(ViewConstants.LOGIN_LABEL);
-        loginButton.addListener(new LoginButtonListenerImpl(escidocServiceUrl,
+    private void addStartButton() {
+        startButton = new Button(ViewConstants.OK_LABEL);
+        startButton.addListener(new StartButtonListenerImpl(escidocServiceUrl,
             app));
 
-        footer.addComponent(loginButton);
-        footer.setComponentAlignment(loginButton, Alignment.MIDDLE_RIGHT);
+        footer.addComponent(startButton);
+        footer.setComponentAlignment(startButton, Alignment.MIDDLE_RIGHT);
     }
 }

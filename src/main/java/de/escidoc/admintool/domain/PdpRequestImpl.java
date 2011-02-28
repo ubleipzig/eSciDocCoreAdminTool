@@ -32,12 +32,13 @@ public final class PdpRequestImpl implements PdpRequest {
      * @see de.admintool.services.PdpRequest#isAllowed()
      */
     @Override
-    public boolean isAllowed(final String actionId) {
+    public boolean isPermitted(final String actionId) {
         evaluatePdpRequest(actionId, "");
         return isAllowed;
     }
 
-    public boolean isAllowed(final String actionId, final String resourceId) {
+    @Override
+    public boolean isPermitted(final String actionId, final String resourceId) {
         evaluatePdpRequest(actionId, resourceId);
         return isAllowed;
     }
@@ -56,5 +57,15 @@ public final class PdpRequestImpl implements PdpRequest {
         catch (final EscidocClientException e) {
             LOG.error(e.getMessage());
         }
+    }
+
+    @Override
+    public boolean isDenied(final String actionId, final String selectedItemId) {
+        return !isPermitted(actionId, selectedItemId);
+    }
+
+    @Override
+    public boolean isDenied(final String actionId) {
+        return !isPermitted(actionId);
     }
 }

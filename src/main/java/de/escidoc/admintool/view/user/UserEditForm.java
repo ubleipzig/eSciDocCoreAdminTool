@@ -588,33 +588,33 @@ public class UserEditForm extends CustomComponent implements ClickListener {
     }
 
     private boolean isRevokeGrantAllowed() {
-        return pdpRequest.isAllowed(ActionIdConstants.REVOKE_GRANT,
+        return pdpRequest.isPermitted(ActionIdConstants.REVOKE_GRANT,
             getSelectedItemId());
     }
 
     private boolean isCreateGrantAllowed() {
-        return pdpRequest.isAllowed(ActionIdConstants.CREATE_GRANT,
+        return pdpRequest.isPermitted(ActionIdConstants.CREATE_GRANT,
             getSelectedItemId());
     }
 
     private boolean isDeactivateUserNotAllowed() {
-        return !pdpRequest.isAllowed(ActionIdConstants.DEACTIVATE_USER_ACCOUNT,
-            getSelectedItemId());
+        return !pdpRequest.isPermitted(
+            ActionIdConstants.DEACTIVATE_USER_ACCOUNT, getSelectedItemId());
     }
 
     private boolean isUpdateNotAllowed() {
-        return !pdpRequest.isAllowed(ActionIdConstants.UPDATE_USER_ACCOUNT,
+        return !pdpRequest.isPermitted(ActionIdConstants.UPDATE_USER_ACCOUNT,
             getSelectedItemId());
     }
 
     private boolean isDeleteUserAllowed() {
-        return pdpRequest.isAllowed(ActionIdConstants.DELETE_USER_ACCOUNT,
+        return pdpRequest.isPermitted(ActionIdConstants.DELETE_USER_ACCOUNT,
             getSelectedItemId());
     }
 
     private boolean isCreateNewUserAllowed() {
         return pdpRequest
-            .isAllowed(ActionIdConstants.CREATE_USER_ACCOUNT_ACTION_ID);
+            .isPermitted(ActionIdConstants.CREATE_USER_ACCOUNT_ACTION_ID);
     }
 
     private void bindRolesWithView() {

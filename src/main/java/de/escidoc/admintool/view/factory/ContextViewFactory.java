@@ -7,6 +7,7 @@ import com.google.common.base.Preconditions;
 import com.vaadin.ui.Window;
 
 import de.escidoc.admintool.app.AdminToolApplication;
+import de.escidoc.admintool.domain.PdpRequest;
 import de.escidoc.admintool.service.ContextService;
 import de.escidoc.admintool.service.OrgUnitService;
 import de.escidoc.admintool.view.ModalDialog;
@@ -34,9 +35,11 @@ public class ContextViewFactory {
 
     private final ContextService contextService;
 
+    private final PdpRequest pdpRequest;
+
     public ContextViewFactory(final AdminToolApplication app,
         final Window mainWindow, final OrgUnitService orgUnitService,
-        final ContextService contextService) {
+        final ContextService contextService, final PdpRequest pdpRequest) {
         Preconditions.checkNotNull(app, "app is null: %s", app);
         Preconditions.checkNotNull(mainWindow, "mainWindow is null: %s",
             mainWindow);
@@ -48,7 +51,7 @@ public class ContextViewFactory {
         this.mainWindow = mainWindow;
         this.orgUnitService = orgUnitService;
         this.contextService = contextService;
-
+        this.pdpRequest = pdpRequest;
     }
 
     private ContextListView contextList;
@@ -95,7 +98,7 @@ public class ContextViewFactory {
         contextForm =
             new ContextEditForm(app, mainWindow, contextService,
                 orgUnitService, new AddOrgUnitToTheList(mainWindow,
-                    resourceTreeView));
+                    resourceTreeView), pdpRequest);
     }
 
     private void createContextListView() throws EscidocException,

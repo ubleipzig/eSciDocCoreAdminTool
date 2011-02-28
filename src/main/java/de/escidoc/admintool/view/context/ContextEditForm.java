@@ -42,6 +42,7 @@ import com.vaadin.ui.themes.Reindeer;
 
 import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.app.PropertyId;
+import de.escidoc.admintool.domain.PdpRequest;
 import de.escidoc.admintool.exception.ResourceNotFoundException;
 import de.escidoc.admintool.service.ContextService;
 import de.escidoc.admintool.service.OrgUnitService;
@@ -132,18 +133,22 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
 
     private final AddOrgUnitToTheList addOrgUnitToTheList;
 
+    private final PdpRequest pdpRequest;
+
     public ContextEditForm(final AdminToolApplication app,
         final Window mainWindow, final ContextService contextService,
         final OrgUnitService orgUnitService,
-        final AddOrgUnitToTheList addOrgUnitToTheList) {
+        final AddOrgUnitToTheList addOrgUnitToTheList,
+        final PdpRequest pdpRequest) {
 
         checkPreconditions(app, mainWindow, contextService, orgUnitService,
-            addOrgUnitToTheList);
+            addOrgUnitToTheList, pdpRequest);
         this.app = app;
         this.mainWindow = mainWindow;
         this.contextService = contextService;
         this.orgUnitService = orgUnitService;
         this.addOrgUnitToTheList = addOrgUnitToTheList;
+        this.pdpRequest = pdpRequest;
         init();
     }
 
@@ -151,7 +156,8 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
         final AdminToolApplication app, final Window mainWindow,
         final ContextService contextService,
         final OrgUnitService orgUnitService,
-        final AddOrgUnitToTheList addOrgUnitToTheList) {
+        final AddOrgUnitToTheList addOrgUnitToTheList,
+        final PdpRequest pdpRequest) {
         Preconditions.checkNotNull(mainWindow,
             "mainWindow can not be null: %s", mainWindow);
         Preconditions
@@ -162,6 +168,7 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
             "OrgUnitService can not be null.");
         Preconditions.checkNotNull(addOrgUnitToTheList,
             "addOrgUnitToTheList can not be null.");
+        Preconditions.checkNotNull(pdpRequest, "pdpRequest can not be null.");
     }
 
     private void init() {
@@ -185,7 +192,8 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
         form.setSpacing(false);
         form.setWidth(520, UNITS_PIXELS);
 
-        editToolbar = new ContextToolbar(this, app);
+        editToolbar = new ContextToolbar(this, app, pdpRequest);
+        editToolbar.init();
         form.addComponent(editToolbar);
     }
 
@@ -516,6 +524,7 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
         typeField.setPropertyDataSource(item.getItemProperty(PropertyId.TYPE));
         descriptionField.setPropertyDataSource(item
             .getItemProperty(PropertyId.DESCRIPTION));
+
         editToolbar.setSelected(publicStatus);
 
         orgUnitList.removeAllItems();
@@ -549,6 +558,12 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
                     e);
             }
         }
+
+        bindUserRightWithView();
+    }
+
+    private void bindUserRightWithView() {
+        editToolbar.bind(getSelectedItemId());
     }
 
     private String findOrgUnitTitle(final OrganizationalUnitRef resourceRef) {

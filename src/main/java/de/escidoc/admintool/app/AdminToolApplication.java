@@ -165,6 +165,7 @@ public class AdminToolApplication extends Application {
 
     public void showLandingView() {
         welcomePage = new WelcomePage(this);
+        welcomePage.init();
         viewManager.setLandingView(welcomePage);
         viewManager.showLandingView();
     }
@@ -196,8 +197,8 @@ public class AdminToolApplication extends Application {
         if (isEscidocUriKnown()) {
             createServices();
             setCurrentUser();
-            createFactories();
             createPdpRequest();
+            createFactories();
             buildMainLayout();
         }
         else {
@@ -222,7 +223,7 @@ public class AdminToolApplication extends Application {
             new ResourceContainerFactory(orgUnitServiceLab);
         contextViewFactory =
             new ContextViewFactory(this, mainWindow, orgUnitService,
-                contextService);
+                contextService, pdpRequest);
     }
 
     private void createServices() throws InternalClientException,

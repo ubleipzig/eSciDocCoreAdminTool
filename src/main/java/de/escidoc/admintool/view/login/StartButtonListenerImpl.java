@@ -5,11 +5,11 @@ import com.vaadin.ui.AbstractField;
 
 import de.escidoc.admintool.app.AdminToolApplication;
 
-public class LoginButtonListenerImpl extends LoginButtonListener {
+public class StartButtonListenerImpl extends LoginButtonListener {
 
     private static final long serialVersionUID = 2949659635673188343L;
 
-    public LoginButtonListenerImpl(final AbstractField escidocComboBox,
+    public StartButtonListenerImpl(final AbstractField escidocComboBox,
         final AdminToolApplication app) {
         super(escidocComboBox, app);
     }

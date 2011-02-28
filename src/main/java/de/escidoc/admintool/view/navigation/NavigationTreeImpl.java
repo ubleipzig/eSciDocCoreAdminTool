@@ -27,6 +27,7 @@ public class NavigationTreeImpl extends CustomComponent
         this.pdpRequest = pdpRequest;
     }
 
+    @Override
     public NavigationTree init() {
         setCompositionRoot(tree);
         configureTree();
@@ -67,6 +68,7 @@ public class NavigationTreeImpl extends CustomComponent
                     addChild(parent, node);
                 }
             }
+
             else {
                 addChild(parent, node);
             }
@@ -74,11 +76,11 @@ public class NavigationTreeImpl extends CustomComponent
     }
 
     private boolean isAllowedToCreateContentModel() {
-        return pdpRequest.isAllowed(ActionIdConstants.CREATE_CONTENT_MODEL);
+        return pdpRequest.isPermitted(ActionIdConstants.CREATE_CONTENT_MODEL);
     }
 
     private boolean isAllowedToGrantRole() {
-        return pdpRequest.isAllowed(ActionIdConstants.CREATE_GRANT);
+        return pdpRequest.isPermitted(ActionIdConstants.CREATE_GRANT);
     }
 
     private boolean isEquals(final String node, final String nodeLabel) {
@@ -97,14 +99,23 @@ public class NavigationTreeImpl extends CustomComponent
                     addChild(ViewConstants.ADMIN_TASKS_LABEL, node);
                 }
             }
+            else if (isEquals(node, ViewConstants.LOAD_EXAMPLES)) {
+                if (isAllowedToCreateItem()) {
+                    addChild(ViewConstants.ADMIN_TASKS_LABEL, node);
+                }
+            }
             else {
                 addChild(ViewConstants.ADMIN_TASKS_LABEL, node);
             }
         }
     }
 
+    private boolean isAllowedToCreateItem() {
+        return pdpRequest.isPermitted(ActionIdConstants.CREATE_ITEM);
+    }
+
     private boolean isAllowedToReindex() {
-        return pdpRequest.isAllowed(ActionIdConstants.REINDEX_ACTION_ID);
+        return pdpRequest.isPermitted(ActionIdConstants.REINDEX_ACTION_ID);
     }
 
     private boolean isReindex(final String node) {
