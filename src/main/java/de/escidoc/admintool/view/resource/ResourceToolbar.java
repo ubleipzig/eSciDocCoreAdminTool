@@ -9,9 +9,11 @@ import com.vaadin.ui.Window;
 
 import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.app.PropertyId;
+import de.escidoc.admintool.domain.PdpRequest;
 import de.escidoc.admintool.service.ResourceService;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.admintool.view.context.PublicStatus;
+import de.escidoc.admintool.view.navigation.ActionIdConstants;
 
 public class ResourceToolbar extends CustomComponent {
 
@@ -45,10 +47,12 @@ public class ResourceToolbar extends CustomComponent {
 
     private final AdminToolApplication app;
 
+    private final PdpRequest pdpRequest;
+
     public ResourceToolbar(final AdminToolApplication app,
         final ResourceViewImpl resourceViewImpl, final Window mainWindow,
         final ResourceService resourceService,
-        final ResourceContainer resourceContainer) {
+        final ResourceContainer resourceContainer, final PdpRequest pdpRequest) {
         Preconditions.checkNotNull(resourceViewImpl,
             "resourceViewImpl is null: %s", resourceViewImpl);
         Preconditions.checkNotNull(mainWindow, "mainWindow is null: %s",
@@ -57,11 +61,14 @@ public class ResourceToolbar extends CustomComponent {
             "resourceService is null: %s", resourceService);
         Preconditions.checkNotNull(resourceContainer,
             "resourceContainer is null: %s", resourceContainer);
+        Preconditions.checkNotNull(pdpRequest, "pdpRequest is null: %s",
+            pdpRequest);
         this.app = app;
         this.resourceViewImpl = resourceViewImpl;
         this.mainWindow = mainWindow;
         this.resourceService = resourceService;
         this.resourceContainer = resourceContainer;
+        this.pdpRequest = pdpRequest;
         init();
     }
 
@@ -110,18 +117,48 @@ public class ResourceToolbar extends CustomComponent {
 
     public void bind(final Item item) {
         this.item = item;
+        bindUserRightsWithView();
         bindButtons();
         openResourceListener.bind(item);
         closeResourceListener.bind(item);
         delResourceListener.bind(item);
     }
 
+    private void bindUserRightsWithView() {
+        newBtn.setVisible(isCreatePermitted());
+        delBtn.setVisible(isDeletePermitted());
+    }
+
+    private boolean isOpenPermitted() {
+        return pdpRequest.isPermitted(ActionIdConstants.OPEN_ORG_UNIT,
+            getSelectedItemId());
+    }
+
+    private boolean isClosePermitted() {
+        return pdpRequest.isPermitted(ActionIdConstants.CLOSE_ORG_UNIT,
+            getSelectedItemId());
+    }
+
+    private boolean isDeletePermitted() {
+        return pdpRequest.isPermitted(ActionIdConstants.DELETE_ORG_UNIT,
+            getSelectedItemId());
+    }
+
+    private boolean isCreatePermitted() {
+        return pdpRequest.isPermitted(ActionIdConstants.CREATE_ORG_UNIT,
+            getSelectedItemId());
+    }
+
+    private String getSelectedItemId() {
+        return (String) item.getItemProperty(PropertyId.OBJECT_ID).getValue();
+    }
+
     private void bindButtons() {
         switch (getPublicStatus()) {
             case CREATED: {
-                openBtn.setVisible(true);
+                openBtn.setVisible(true && isOpenPermitted());
                 closeBtn.setVisible(false);
-                delBtn.setVisible(true);
+                delBtn.setVisible(true && isDeletePermitted());
 
                 resourceViewImpl.setFormReadOnly(false);
                 resourceViewImpl.setFooterVisible(true);
@@ -129,7 +166,7 @@ public class ResourceToolbar extends CustomComponent {
             }
             case OPENED: {
                 openBtn.setVisible(false);
-                closeBtn.setVisible(true);
+                closeBtn.setVisible(true && isClosePermitted());
                 delBtn.setVisible(false);
 
                 resourceViewImpl.setFormReadOnly(false);

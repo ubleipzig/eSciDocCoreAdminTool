@@ -4,6 +4,7 @@ import com.vaadin.data.Item;
 import com.vaadin.ui.Window;
 
 import de.escidoc.admintool.app.AdminToolApplication;
+import de.escidoc.admintool.domain.PdpRequest;
 import de.escidoc.admintool.service.ResourceService;
 import de.escidoc.core.resources.Resource;
 
@@ -26,7 +27,7 @@ public class ResourceViewImpl extends AbstractResourceView {
     public ResourceViewImpl(final AdminToolApplication app,
         final Window mainWindow, final ResourceFolderView resourceListView,
         final ResourceService resourceService,
-        final ResourceContainer resourceContainer) {
+        final ResourceContainer resourceContainer, final PdpRequest pdpRequest) {
 
         super(resourceListView);
         this.app = app;
@@ -36,7 +37,7 @@ public class ResourceViewImpl extends AbstractResourceView {
         this.resourceContainer = resourceContainer;
         resourceEditView =
             new ResourceEditViewImpl(app, mainWindow, this, resourceService,
-                resourceContainer);
+                resourceContainer, pdpRequest);
 
     }
 

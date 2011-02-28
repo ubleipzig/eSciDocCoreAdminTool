@@ -196,4 +196,16 @@ public class ActionIdConstants {
     public static final String UPDATE_CONTEXT =
         "info:escidoc/names:aa:1.0:action:update-context";
 
+    public static final String CREATE_ORG_UNIT =
+        "info:escidoc/names:aa:1.0:action:create-organizational-unit";
+
+    public static final String DELETE_ORG_UNIT =
+        "info:escidoc/names:aa:1.0:action:delete-organizational-unit";
+
+    public static final String CLOSE_ORG_UNIT =
+        "info:escidoc/names:aa:1.0:action:close-organizational-unit";
+
+    public static final String OPEN_ORG_UNIT =
+        "info:escidoc/names:aa:1.0:action:open-organizational-unit";
+
 }

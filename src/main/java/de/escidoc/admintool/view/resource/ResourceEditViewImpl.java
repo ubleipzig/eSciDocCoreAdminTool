@@ -18,6 +18,7 @@ import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.Reindeer;
 
 import de.escidoc.admintool.app.AdminToolApplication;
+import de.escidoc.admintool.domain.PdpRequest;
 import de.escidoc.admintool.service.OrgUnitServiceLab;
 import de.escidoc.admintool.service.ResourceService;
 import de.escidoc.admintool.view.ViewConstants;
@@ -41,7 +42,7 @@ public class ResourceEditViewImpl extends CustomComponent
 
     private final Window mainWindow;
 
-    private final ResourceService resourceService;
+    private final ResourceService orgUnitService;
 
     private ResourceBtnListener updateOrgUnitBtnListener;
 
@@ -53,21 +54,24 @@ public class ResourceEditViewImpl extends CustomComponent
 
     private final AdminToolApplication app;
 
+    private final PdpRequest pdpRequest;
+
     public ResourceEditViewImpl(final AdminToolApplication app,
         final Window mainWindow, final ResourceViewImpl resourceView,
         final ResourceService orgUnitService,
-        final ResourceContainer resourceContainer) {
+        final ResourceContainer resourceContainer, final PdpRequest pdpRequest) {
         checkPreconditions(mainWindow, resourceView, orgUnitService,
-            resourceContainer);
+            resourceContainer, pdpRequest);
         this.app = app;
         this.mainWindow = mainWindow;
         this.resourceView = resourceView;
-        resourceService = orgUnitService;
+        this.orgUnitService = orgUnitService;
+        this.pdpRequest = pdpRequest;
         formLayout.setWidth(75, UNITS_PERCENTAGE);
 
         resourceToolbar =
             new ResourceToolbar(app, resourceView, mainWindow, orgUnitService,
-                resourceContainer);
+                resourceContainer, pdpRequest);
         propertyFields =
             new PropertiesFieldsImpl(app, vLayout, formLayout, fieldByName);
         resourceSpecific =
@@ -80,7 +84,7 @@ public class ResourceEditViewImpl extends CustomComponent
     private void checkPreconditions(
         final Window mainWindow, final ResourceViewImpl resourceViewImpl,
         final ResourceService orgUnitService,
-        final ResourceContainer resourceContainer) {
+        final ResourceContainer resourceContainer, final PdpRequest pdpRequest) {
         Preconditions.checkNotNull(mainWindow, "mainWindow is null: %s",
             mainWindow);
         Preconditions.checkNotNull(resourceViewImpl,
@@ -89,6 +93,8 @@ public class ResourceEditViewImpl extends CustomComponent
             "orgUnitService is null: %s", orgUnitService);
         Preconditions.checkNotNull(resourceContainer,
             "resourceContainer is null: %s", resourceContainer);
+        Preconditions.checkNotNull(pdpRequest, "pdpRequest is null: %s",
+            pdpRequest);
     }
 
     private OrgUnitSpecificView createOrgUnitSpecificView(
@@ -125,7 +131,7 @@ public class ResourceEditViewImpl extends CustomComponent
     private void addSaveAndCancelButtons() {
         updateOrgUnitBtnListener =
             new UpdateOrgUnitBtnListener(propertyFields.getAllFields(),
-                fieldByName, mainWindow, resourceView, resourceService);
+                fieldByName, mainWindow, resourceView, orgUnitService);
         footers.setOkButtonListener(updateOrgUnitBtnListener);
 
         footers.getCancelBtn().addListener(new ClickListener() {

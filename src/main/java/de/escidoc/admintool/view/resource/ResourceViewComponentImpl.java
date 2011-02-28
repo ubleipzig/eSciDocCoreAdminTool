@@ -5,6 +5,7 @@ import com.vaadin.data.Item;
 import com.vaadin.ui.Window;
 
 import de.escidoc.admintool.app.AdminToolApplication;
+import de.escidoc.admintool.domain.PdpRequest;
 import de.escidoc.admintool.service.OrgUnitServiceLab;
 import de.escidoc.admintool.service.ResourceService;
 import de.escidoc.admintool.view.resource.ResourceTreeView.AddChildrenCommand;
@@ -31,26 +32,31 @@ public class ResourceViewComponentImpl implements ResourceViewComponent {
 
     private final AdminToolApplication app;
 
+    private final PdpRequest pdpRequest;
+
     public ResourceViewComponentImpl(final AdminToolApplication app,
         final Window mainWindow, final ResourceService resourceService,
-        final ResourceContainer resourceContainer) {
+        final ResourceContainer resourceContainer, final PdpRequest pdpRequest) {
         Preconditions.checkNotNull(mainWindow, "mainWindow is null: %s",
             mainWindow);
         Preconditions.checkNotNull(resourceService,
             "resourceService is null: %s", resourceService);
         Preconditions.checkNotNull(resourceContainer,
             "resourceContainer is null: %s", resourceContainer);
+        Preconditions.checkNotNull(pdpRequest, "pdpRequest is null: %s",
+            pdpRequest);
         this.app = app;
         this.mainWindow = mainWindow;
         this.resourceService = resourceService;
         this.resourceContainer = resourceContainer;
+        this.pdpRequest = pdpRequest;
     }
 
     public void init() throws EscidocClientException {
         addChildrenCommand = createAddChildrenCommand(resourceContainer);
         resourceView =
             new ResourceViewImpl(app, mainWindow, createFolderView(),
-                resourceService, resourceContainer);
+                resourceService, resourceContainer, pdpRequest);
     }
 
     private ResourceFolderView createFolderView() {
