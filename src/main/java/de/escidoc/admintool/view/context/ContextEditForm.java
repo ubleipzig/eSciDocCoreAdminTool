@@ -47,6 +47,7 @@ import de.escidoc.admintool.exception.ResourceNotFoundException;
 import de.escidoc.admintool.service.ContextService;
 import de.escidoc.admintool.service.OrgUnitService;
 import de.escidoc.admintool.view.ViewConstants;
+import de.escidoc.admintool.view.navigation.ActionIdConstants;
 import de.escidoc.admintool.view.resource.ResourceRefDisplay;
 import de.escidoc.admintool.view.util.Converter;
 import de.escidoc.admintool.view.util.LayoutHelper;
@@ -484,28 +485,11 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
 
     @SuppressWarnings("unchecked")
     private void bindData() {
-        final PublicStatus publicStatus =
-            PublicStatus.valueOf(((String) item.getItemProperty(
-                PropertyId.PUBLIC_STATUS).getValue()).toUpperCase());
-        switch (publicStatus) {
-            case CREATED: {
-                setFormReadOnly(false);
-                footer.setVisible(true);
-                break;
-            }
-            case OPENED: {
-                setFormReadOnly(false);
-                footer.setVisible(true);
-                break;
-            }
-            case CLOSED: {
-                setFormReadOnly(true);
-                footer.setVisible(false);
-                break;
-            }
-        }
+        bindPublicStatusWithView();
+
         nameField.setPropertyDataSource(item
             .getItemProperty(ViewConstants.NAME_ID));
+
         final Property objectIdProperty =
             item.getItemProperty(PropertyId.OBJECT_ID);
         objIdField.setPropertyDataSource(objectIdProperty);
@@ -524,8 +508,6 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
         typeField.setPropertyDataSource(item.getItemProperty(PropertyId.TYPE));
         descriptionField.setPropertyDataSource(item
             .getItemProperty(PropertyId.DESCRIPTION));
-
-        editToolbar.setSelected(publicStatus);
 
         orgUnitList.removeAllItems();
         final List<OrganizationalUnitRef> refs =
@@ -562,8 +544,39 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
         bindUserRightWithView();
     }
 
+    private void bindPublicStatusWithView() {
+        final PublicStatus publicStatus =
+            PublicStatus.valueOf(((String) item.getItemProperty(
+                PropertyId.PUBLIC_STATUS).getValue()).toUpperCase());
+        switch (publicStatus) {
+            case CREATED: {
+                setFormReadOnly(false);
+                footer.setVisible(true);
+                break;
+            }
+            case OPENED: {
+                setFormReadOnly(false);
+                footer.setVisible(true);
+                break;
+            }
+            case CLOSED: {
+                setFormReadOnly(true);
+                footer.setVisible(false);
+                break;
+            }
+        }
+        editToolbar.setSelected(publicStatus);
+    }
+
     private void bindUserRightWithView() {
         editToolbar.bind(getSelectedItemId());
+        setFormReadOnly(isUpdateNotAllowed());
+        footer.setVisible(!isUpdateNotAllowed());
+    }
+
+    private boolean isUpdateNotAllowed() {
+        return pdpRequest.isDenied(ActionIdConstants.UPDATE_CONTEXT,
+            getSelectedItemId());
     }
 
     private String findOrgUnitTitle(final OrganizationalUnitRef resourceRef) {

@@ -193,4 +193,7 @@ public class ActionIdConstants {
     public static final String OPEN_CONTEXT =
         "info:escidoc/names:aa:1.0:action:open-context";
 
+    public static final String UPDATE_CONTEXT =
+        "info:escidoc/names:aa:1.0:action:update-context";
+
 }
