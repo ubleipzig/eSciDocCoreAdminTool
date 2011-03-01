@@ -5,8 +5,6 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import biz.source_code.base64Coder.Base64Coder;
-
 import com.google.common.base.Preconditions;
 import com.vaadin.terminal.ParameterHandler;
 import com.vaadin.ui.Window;
@@ -29,23 +27,26 @@ public class ParamaterHandlerImpl implements ParameterHandler {
 
     private final AdminToolApplication app;
 
+    private final ParamaterDecoder paramDecoder;
+
     public ParamaterHandlerImpl(final Window mainWindow,
         final AdminToolApplication app) {
-
         Preconditions.checkNotNull(mainWindow,
             "MainWindow can not be null: %s", mainWindow);
         Preconditions.checkNotNull(app,
             "AdminToolApplication can not be null: %s", app);
-
         this.mainWindow = mainWindow;
         this.app = app;
+        paramDecoder = new ParamaterDecoder(app);
     }
 
     @Override
     public void handleParameters(final Map<String, String[]> parameters) {
         if (isTokenExist(parameters)) {
             LOG.debug("the user has a token.");
-            tryToLoadProtectedSource(parseAndDecodeToken(parameters));
+            tryToLoadProtectedSource(paramDecoder
+                .parseAndDecodeToken(parameters));
+
         }
         else {
             LOG.debug("the user does not provide any token.");
@@ -83,25 +84,24 @@ public class ParamaterHandlerImpl implements ParameterHandler {
         }
     }
 
-    private String parseAndDecodeToken(final Map<String, String[]> parameters) {
-        final String parameter =
-            parameters.get(AppConstants.ESCIDOC_USER_HANDLE)[0];
-        return tryToDecode(parameter);
-    }
+    // private String parseAndDecodeToken(final Map<String, String[]>
+    // parameters) {
+    // final String parameter =
+    // parameters.get(AppConstants.ESCIDOC_USER_HANDLE)[0];
+    // return tryToDecode(parameter);
+    // }
 
-    private String tryToDecode(final String parameter) {
-        try {
-            return Base64Coder.decodeString(parameter);
-        }
-        catch (final IllegalArgumentException e) {
-            LOG.error(Messages.getString("AdminToolApplication.3"), e);
-            app.showLandingView();
-
-            mainWindow.showNotification(new Notification(
-                ViewConstants.WRONG_TOKEN_MESSAGE, "Wrong token",
-                Notification.TYPE_ERROR_MESSAGE));
-        }
-        return "";
-    }
-
+    // private String tryToDecode(final String parameter) {
+    // try {
+    // return Base64Coder.decodeString(parameter);
+    // }
+    // catch (final IllegalArgumentException e) {
+    // LOG.error(ViewConstants.GENERAL_ERROR_MESSAGE, e);
+    // app.showLandingView();
+    // mainWindow.showNotification(new Notification(
+    // ViewConstants.WRONG_TOKEN_MESSAGE, "Wrong token",
+    // Notification.TYPE_ERROR_MESSAGE));
+    // }
+    // return AppConstants.EMPTY_STRING;
+    // }
 }

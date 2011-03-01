@@ -12,7 +12,6 @@ import com.vaadin.ui.Table;
 import de.escidoc.admintool.app.PropertyId;
 import de.escidoc.admintool.domain.PdpRequest;
 import de.escidoc.admintool.view.ViewConstants;
-import de.escidoc.admintool.view.admintask.FilterResourceView.ShowFilterResultCommand;
 import de.escidoc.admintool.view.navigation.ActionIdConstants;
 import de.escidoc.core.resources.Resource;
 

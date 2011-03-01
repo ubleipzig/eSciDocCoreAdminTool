@@ -56,6 +56,7 @@ public class UserViewComponent {
         editForm =
             new UserEditForm(app, userService, orgUnitService,
                 resourceTreeView, pdpRequest);
+        editForm.init();
         setUserEditForm(editForm);
         setUserEditView(new UserEditView(getUserEditForm()));
         userView = new UserView(app, getUserListView(), getUserEditView());
@@ -85,10 +86,16 @@ public class UserViewComponent {
     }
 
     public void showFirstItemInEditView() {
-        final Item item =
-            listView.getContainerDataSource().getItem(listView.firstItemId());
+        if (listView.firstItemId() == null) {
+            return;
+        }
         listView.select(listView.firstItemId());
-        userView.showEditView(item);
+        userView.showEditView(getFirstItem());
+    }
+
+    private Item getFirstItem() {
+        return listView
+            .getContainerDataSource().getItem(listView.firstItemId());
     }
 
     /**

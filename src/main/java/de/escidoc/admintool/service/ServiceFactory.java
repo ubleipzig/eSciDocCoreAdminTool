@@ -3,6 +3,7 @@ package de.escidoc.admintool.service;
 import com.google.common.base.Preconditions;
 
 import de.escidoc.core.client.AdminHandlerClient;
+import de.escidoc.core.client.Authentication;
 import de.escidoc.core.client.ContainerHandlerClient;
 import de.escidoc.core.client.ContentModelHandlerClient;
 import de.escidoc.core.client.ContextHandlerClient;
@@ -21,7 +22,9 @@ import de.escidoc.core.client.interfaces.OrganizationalUnitHandlerClientInterfac
 
 public class ServiceFactory {
 
-    private static final String SYSADMIN_PASSWORD = "eSciDoc";
+    private static final String SYSADMIN_PASSWORD_ESCIDEV_6 = "escidoc";
+
+    private static final String SYSADMIN_PASSWORD_LOCAL = "eSciDoc";
 
     private static final String SYSADMIN_LOGIN_NAME = "sysadmin";
 
@@ -127,8 +130,11 @@ public class ServiceFactory {
 
     public PdpService createPdpService() throws AuthenticationException,
         TransportException {
-        final PdpServiceImpl pdpService = new PdpServiceImpl(serviceUri, token);
-        // pdpService.loginWith(token);
+        final Authentication authentication =
+            new Authentication(serviceUri, SYSADMIN_LOGIN_NAME,
+                SYSADMIN_PASSWORD_LOCAL);
+        final PdpServiceImpl pdpService =
+            new PdpServiceImpl(serviceUri, authentication.getHandle());
         return pdpService;
     }
 }

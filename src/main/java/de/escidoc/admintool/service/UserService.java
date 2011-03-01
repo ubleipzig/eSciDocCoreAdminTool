@@ -23,6 +23,7 @@ import de.escidoc.core.client.exceptions.TransportException;
 import de.escidoc.core.client.interfaces.UserAccountHandlerClientInterface;
 import de.escidoc.core.resources.aa.role.Role;
 import de.escidoc.core.resources.aa.useraccount.Attribute;
+import de.escidoc.core.resources.aa.useraccount.Attributes;
 import de.escidoc.core.resources.aa.useraccount.Grant;
 import de.escidoc.core.resources.aa.useraccount.GrantProperties;
 import de.escidoc.core.resources.aa.useraccount.UserAccount;
@@ -338,7 +339,11 @@ public class UserService {
         }
 
         return orgUnits;
+    }
 
+    public Attributes retrieveAttributes(final String objectId)
+        throws EscidocClientException {
+        return client.retrieveAttributes(objectId);
     }
 
     private boolean nameIsEqualsO(final Attribute attribute) {
@@ -355,8 +360,24 @@ public class UserService {
         client.createAttribute(objectId, attribute);
     }
 
+    public void updateAttribute(final String objectId, final Attribute attribute)
+        throws EscidocClientException {
+        Preconditions.checkNotNull(objectId, "objectId is null: %s", objectId);
+        Preconditions.checkNotNull(attribute, "attribute is null: %s",
+            attribute);
+        client.updateAttribute(objectId, attribute);
+    }
+
     public UserAccount getCurrentUser() throws EscidocClientException {
         return client.retrieveCurrentUser();
+    }
+
+    public void removeAttribute(final String objectId, final Attribute attribute)
+        throws EscidocClientException {
+        Preconditions.checkNotNull(objectId, "objectId is null: %s", objectId);
+        Preconditions.checkNotNull(attribute, "attribute is null: %s",
+            attribute);
+        client.deleteAttribute(objectId, attribute);
     }
 
 }

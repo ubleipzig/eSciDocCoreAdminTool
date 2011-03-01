@@ -16,7 +16,6 @@ import de.escidoc.admintool.app.AppConstants;
 import de.escidoc.admintool.service.ResourceService;
 import de.escidoc.admintool.service.ServiceContainer;
 import de.escidoc.admintool.view.ModalDialog;
-import de.escidoc.admintool.view.admintask.FilterResourceView.ShowFilterResultCommand;
 import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.resources.Resource;
 

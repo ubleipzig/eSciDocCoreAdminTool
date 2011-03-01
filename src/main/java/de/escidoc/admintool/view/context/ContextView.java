@@ -11,9 +11,11 @@ import com.vaadin.ui.SplitPanel;
 import com.vaadin.ui.VerticalLayout;
 
 import de.escidoc.admintool.app.AdminToolApplication;
+import de.escidoc.admintool.domain.PdpRequest;
 import de.escidoc.admintool.exception.ResourceNotFoundException;
 import de.escidoc.admintool.view.ModalDialog;
 import de.escidoc.admintool.view.ViewConstants;
+import de.escidoc.admintool.view.navigation.ActionIdConstants;
 import de.escidoc.admintool.view.resource.ResourceView;
 import de.escidoc.core.resources.Resource;
 
@@ -28,10 +30,12 @@ public class ContextView extends SplitPanel implements ResourceView {
 
     private final AdminToolApplication app;
 
+    private final PdpRequest pdpRequest;
+
     public ContextView(final AdminToolApplication app,
         final ContextListView contextList,
         final ContextEditForm contextEditForm,
-        final ContextAddView contextAddView) {
+        final ContextAddView contextAddView, final PdpRequest pdpRequest) {
 
         Preconditions.checkNotNull(app, "App can not be null");
         Preconditions.checkNotNull(contextList, "contextList can not be null");
@@ -39,10 +43,13 @@ public class ContextView extends SplitPanel implements ResourceView {
             "contextEditForm can not be null");
         Preconditions.checkNotNull(contextAddView,
             "contextAddView can not be null");
+        Preconditions.checkNotNull(pdpRequest, "pdpRequest is null: %s",
+            pdpRequest);
 
         this.app = app;
         this.contextList = contextList;
         this.contextEditForm = contextEditForm;
+        this.pdpRequest = pdpRequest;
 
         final VerticalLayout vLayout = new VerticalLayout();
         vLayout.setHeight(100, UNITS_PERCENTAGE);
@@ -57,7 +64,7 @@ public class ContextView extends SplitPanel implements ResourceView {
 
         setSplitPosition(ViewConstants.SPLIT_POSITION_IN_PERCENT);
         setOrientation(ORIENTATION_HORIZONTAL);
-        setSecondComponent(new Label("Place holder for creating new context."));
+        setSecondComponent(new Label(""));
     }
 
     public ContextListView getContextList() {
@@ -94,8 +101,21 @@ public class ContextView extends SplitPanel implements ResourceView {
         Preconditions.checkNotNull(contextList, "contextList is null: %s",
             contextList);
 
-        contextList.select(contextList.firstItemId());
-        showEditView(contextList.getContainerDataSource().getItem(
-            contextList.firstItemId()));
+        final Object firstItemId = contextList.firstItemId();
+        if (firstItemId == null && isPermitToCreate()) {
+            showAddView();
+        }
+        else if (firstItemId == null && !isPermitToCreate()) {
+            return;
+        }
+        else {
+            contextList.select(firstItemId);
+            showEditView(contextList.getContainerDataSource().getItem(
+                firstItemId));
+        }
+    }
+
+    private boolean isPermitToCreate() {
+        return pdpRequest.isPermitted(ActionIdConstants.CREATE_CONTEXT);
     }
 }

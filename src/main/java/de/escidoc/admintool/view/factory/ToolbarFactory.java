@@ -28,7 +28,7 @@ public class ToolbarFactory {
 
     private final Embedded embedded = new Embedded();
 
-    final ThemeResource imageResource = new ThemeResource(ESCIDOC_LOGO);
+    private final ThemeResource imageResource = new ThemeResource(ESCIDOC_LOGO);
 
     private GridLayout gLayout;
 

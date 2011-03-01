@@ -240,7 +240,7 @@ public class ViewConstants {
 
     public static final String CANCEL = "Cancel";
 
-    public static final String SAVE = "Save";
+    public static final String SAVE_LABEL = "Save";
 
     public static final String EDIT = "Edit ";
 
@@ -439,5 +439,8 @@ public class ViewConstants {
     public static final int MAX_DESC_LENGTH = 255;
 
     public static final String ACTIVE_STATUS = "Active status";
+
+    public static final String GENERAL_ERROR_MESSAGE =
+        "An unexpected error occured! See log for details";
 
 }

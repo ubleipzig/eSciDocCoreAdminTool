@@ -99,15 +99,19 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
 
     private ListSelect orgUnitList;
 
-    private final Button saveButton = new Button("Save", this);
+    private final Button saveButton =
+        new Button(ViewConstants.SAVE_LABEL, this);
 
-    private final Button cancelButton = new Button("Cancel", this);
+    private final Button cancelButton = new Button(ViewConstants.CANCEL_LABEL,
+        this);
 
-    private final Button addAdminDescButton = new Button("Add");
+    private final Button addAdminDescButton = new Button(
+        ViewConstants.ADD_LABEL);
 
-    private final Button editAdminDescButton = new Button("Edit");
+    private final Button editAdminDescButton = new Button(
+        ViewConstants.EDIT_LABEL);
 
-    private final Button delAdminDescButton = new Button("Delete");
+    private final Button delAdminDescButton = new Button(ViewConstants.DELETE);
 
     private final Button addOrgUnitButton = new Button(ViewConstants.ADD_LABEL);
 
@@ -150,7 +154,6 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
         this.orgUnitService = orgUnitService;
         this.addOrgUnitToTheList = addOrgUnitToTheList;
         this.pdpRequest = pdpRequest;
-        init();
     }
 
     private void checkPreconditions(
@@ -172,7 +175,7 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
         Preconditions.checkNotNull(pdpRequest, "pdpRequest can not be null.");
     }
 
-    private void init() {
+    public void init() {
         configureLayout();
         addFields();
         addSpace();

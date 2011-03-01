@@ -1,7 +1,6 @@
 package de.escidoc.admintool.view.admintask;
 
 import java.util.Arrays;
-import java.util.Set;
 
 import com.google.common.base.Preconditions;
 import com.vaadin.data.util.BeanItemContainer;
@@ -15,7 +14,6 @@ import de.escidoc.admintool.domain.PdpRequest;
 import de.escidoc.admintool.service.AdminService;
 import de.escidoc.admintool.service.ServiceContainer;
 import de.escidoc.admintool.view.ViewConstants;
-import de.escidoc.core.resources.Resource;
 
 public class FilterResourceView extends AbstractCustomView {
 
@@ -29,7 +27,7 @@ public class FilterResourceView extends AbstractCustomView {
     private final Button filterResourceBtn = new Button(
         ViewConstants.FILTER_RESOURCES);
 
-    private final ShowFilterResultCommandImpl command;
+    private final ShowFilterResultCommand command;
 
     final AdminService adminService;
 
@@ -87,10 +85,6 @@ public class FilterResourceView extends AbstractCustomView {
         filterResourceBtn.setWidth(150, UNITS_PIXELS);
         getViewLayout().addComponent(filterResourceBtn);
         addListener();
-    }
-
-    interface ShowFilterResultCommand {
-        void execute(Set<Resource> filterResult);
     }
 
     private void addListener() {

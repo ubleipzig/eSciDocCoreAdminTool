@@ -57,7 +57,7 @@ public class UserAddView extends CustomComponent implements ClickListener {
 
     private final HorizontalLayout footer = new HorizontalLayout();
 
-    private final Button saveBtn = new Button(ViewConstants.SAVE, this);
+    private final Button saveBtn = new Button(ViewConstants.SAVE_LABEL, this);
 
     private final Button cancel = new Button(ViewConstants.CANCEL, this);
 
@@ -345,7 +345,7 @@ public class UserAddView extends CustomComponent implements ClickListener {
             "createdUserAccount is null: %s", createdUserAccount);
 
         initSetOrgUnitsCommand(createdUserAccount);
-        setOrgUnitsCommand.execute(orgUnitWidget);
+        setOrgUnitsCommand.execute(orgUnitWidget.getTable());
     }
 
     // END:reference selected org units to created user.
@@ -449,10 +449,6 @@ public class UserAddView extends CustomComponent implements ClickListener {
             userService.create(nameProperty.getValue(),
                 loginNameProperty.getValue());
         return createdUserAccount;
-    }
-
-    private void showInEditView(final POJOItem<UserAccount> item) {
-        app.getUserView().showEditView(item);
     }
 
     private void resetFields() {

@@ -2,7 +2,9 @@ package de.escidoc.admintool.view.user;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
@@ -36,6 +38,7 @@ import de.escidoc.admintool.service.UserService;
 import de.escidoc.admintool.view.ErrorMessage;
 import de.escidoc.admintool.view.ModalDialog;
 import de.escidoc.admintool.view.ViewConstants;
+import de.escidoc.admintool.view.context.AddOrgUnitToTheList;
 import de.escidoc.admintool.view.navigation.ActionIdConstants;
 import de.escidoc.admintool.view.resource.ResourceRefDisplay;
 import de.escidoc.admintool.view.resource.ResourceTreeView;
@@ -51,6 +54,8 @@ import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
+import de.escidoc.core.resources.aa.useraccount.Attribute;
+import de.escidoc.core.resources.aa.useraccount.Attributes;
 import de.escidoc.core.resources.aa.useraccount.Grant;
 import de.escidoc.core.resources.aa.useraccount.UserAccount;
 import de.escidoc.core.resources.common.reference.Reference;
@@ -86,7 +91,7 @@ public class UserEditForm extends CustomComponent implements ClickListener {
     private final Button removeRoleButton = new Button(
         ViewConstants.REMOVE_LABEL, new RemoveRoleButtonListener(this));
 
-    private final Button save = new Button(ViewConstants.SAVE, this);
+    private final Button save = new Button(ViewConstants.SAVE_LABEL, this);
 
     private final Button cancel = new Button(ViewConstants.CANCEL, this);
 
@@ -130,17 +135,29 @@ public class UserEditForm extends CustomComponent implements ClickListener {
 
     private final PdpRequest pdpRequest;
 
+    private final ResourceTreeView resourceTreeView;
+
     public UserEditForm(final AdminToolApplication app,
         final UserService userService, final OrgUnitServiceLab orgUnitService,
         final ResourceTreeView resourceTreeView, final PdpRequest pdpRequest) {
+        Preconditions.checkNotNull(app, "app is null: %s", app);
+        Preconditions.checkNotNull(userService, "userService is null: %s",
+            userService);
         Preconditions.checkNotNull(orgUnitService,
             "orgUnitService is null: %s", orgUnitService);
+        Preconditions.checkNotNull(resourceTreeView,
+            "resourceTreeView is null: %s", resourceTreeView);
+        Preconditions.checkNotNull(pdpRequest, "pdpRequest is null: %s",
+            pdpRequest);
+        Preconditions.checkNotNull(pdpRequest, "pdpRequest is null: %s",
+            pdpRequest);
+
         this.app = app;
         this.userService = userService;
         this.orgUnitService = orgUnitService;
+        this.resourceTreeView = resourceTreeView;
         this.pdpRequest = pdpRequest;
         mainWindow = app.getMainWindow();
-        init();
     }
 
     public final void init() {
@@ -164,15 +181,39 @@ public class UserEditForm extends CustomComponent implements ClickListener {
 
     private final Table orgUnitTable = new Table();
 
-    private final Button addOrgUnitButton = new Button(ViewConstants.ADD_LABEL);
+    private final Button editOrgUnitButton =
+        new Button(ViewConstants.ADD_LABEL);
 
     private final Button removeOrgUnitButton = new Button(
         ViewConstants.REMOVE_LABEL);
 
     private void addOrgUnitsWidget() {
         createOrgUnitTable();
+        createButtonListener();
+        setButtonsStyle();
         addVerticalSpace();
         addToPanel();
+    }
+
+    private void createButtonListener() {
+        final AddOrgUnitToTheList listener =
+            new AddOrgUnitToTheList(mainWindow, resourceTreeView);
+        listener.using(orgUnitTable);
+        editOrgUnitButton.addListener(listener);
+
+        removeOrgUnitButton.addListener(new Button.ClickListener() {
+
+            @Override
+            public void buttonClick(final ClickEvent event) {
+                final Object value = orgUnitTable.getValue();
+                if (value instanceof Set<?>) {
+                    for (final Object object : (Set<?>) orgUnitTable.getValue()) {
+                        orgUnitTable.removeItem(object);
+                    }
+                }
+
+            }
+        });
     }
 
     private void createOrgUnitTable() {
@@ -181,7 +222,8 @@ public class UserEditForm extends CustomComponent implements ClickListener {
         orgUnitTable.setSelectable(true);
         orgUnitTable.setNullSelectionAllowed(true);
         orgUnitTable.setMultiSelect(true);
-        orgUnitTable.setImmediate(true);
+        orgUnitTable.setWriteThrough(false);
+
         orgUnitTable.setColumnHeaderMode(Table.COLUMN_HEADER_MODE_HIDDEN);
     }
 
@@ -190,14 +232,13 @@ public class UserEditForm extends CustomComponent implements ClickListener {
     }
 
     private VerticalLayout createOrgUnitWidgetWitButtons() {
-        setButtonsStyle();
         return createLayout(ViewConstants.ORGANIZATION_UNITS_LABEL,
             orgUnitTable, 120, (int) (0.5 * ROLE_LIST_HEIGHT), false,
-            new Button[] {});
+            new Button[] { editOrgUnitButton, removeOrgUnitButton });
     }
 
     private void setButtonsStyle() {
-        addOrgUnitButton.setStyleName(Reindeer.BUTTON_SMALL);
+        editOrgUnitButton.setStyleName(Reindeer.BUTTON_SMALL);
         removeOrgUnitButton.setStyleName(Reindeer.BUTTON_SMALL);
     }
 
@@ -489,6 +530,9 @@ public class UserEditForm extends CustomComponent implements ClickListener {
             if (activeStatus.isModified()) {
                 changeState();
             }
+
+            updateOrgUnit();
+
         }
         catch (final EscidocException e) {
             ModalDialog.show(app.getMainWindow(), e);
@@ -514,6 +558,38 @@ public class UserEditForm extends CustomComponent implements ClickListener {
                 ViewConstants.AN_UNEXPECTED_ERROR_OCCURED_SEE_LOG_FOR_DETAILS,
                 e);
         }
+    }
+
+    private void updateOrgUnit() throws EscidocClientException {
+        final SetOrgUnitsCommand setOrgUnitsCommand =
+            new SetOrgUnitsCommandImpl(userService);
+        final Attributes allAttributes =
+            userService.retrieveAttributes(getSelectedItemId());
+
+        for (final Attribute attribute : allAttributes) {
+            if ("o".equals(attribute.getName())) {
+                final String value = attribute.getValue();
+            }
+        }
+
+        setOrgUnitsCommand.setSelectedUserId(getSelectedItemId());
+        setOrgUnitsCommand.setSeletectedOrgUnit(getOrgUnitsFromTable());
+        setOrgUnitsCommand.update(retrieveOrgUnitObjectIdsForSelectedUser(),
+            orgUnitTable);
+    }
+
+    public Set<ResourceRefDisplay> getOrgUnitsFromTable() {
+        final Set<ResourceRefDisplay> selectedSet =
+            new HashSet<ResourceRefDisplay>();
+
+        final Collection<?> itemIds = orgUnitTable.getItemIds();
+
+        for (final Object objectId : itemIds) {
+            if (objectId instanceof ResourceRefDisplay) {
+                selectedSet.add((ResourceRefDisplay) objectId);
+            }
+        }
+        return selectedSet;
     }
 
     private boolean isValid() {
@@ -613,8 +689,7 @@ public class UserEditForm extends CustomComponent implements ClickListener {
     }
 
     private boolean isCreateNewUserAllowed() {
-        return pdpRequest
-            .isPermitted(ActionIdConstants.CREATE_USER_ACCOUNT_ACTION_ID);
+        return pdpRequest.isPermitted(ActionIdConstants.CREATE_USER_ACCOUNT);
     }
 
     private void bindRolesWithView() {

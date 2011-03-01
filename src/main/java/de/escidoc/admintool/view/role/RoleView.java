@@ -85,7 +85,7 @@ public class RoleView extends CustomComponent {
 
     private final HorizontalLayout footer = new HorizontalLayout();
 
-    private final Button saveBtn = new Button(ViewConstants.SAVE,
+    private final Button saveBtn = new Button(ViewConstants.SAVE_LABEL,
         new SaveBtnListener());
 
     private final Window mainWindow;

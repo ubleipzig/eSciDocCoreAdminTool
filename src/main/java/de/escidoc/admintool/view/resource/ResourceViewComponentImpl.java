@@ -8,6 +8,7 @@ import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.domain.PdpRequest;
 import de.escidoc.admintool.service.OrgUnitServiceLab;
 import de.escidoc.admintool.service.ResourceService;
+import de.escidoc.admintool.view.navigation.ActionIdConstants;
 import de.escidoc.admintool.view.resource.ResourceTreeView.AddChildrenCommand;
 import de.escidoc.core.client.exceptions.EscidocClientException;
 
@@ -60,24 +61,19 @@ public class ResourceViewComponentImpl implements ResourceViewComponent {
     }
 
     private ResourceFolderView createFolderView() {
-        if (resourceContainer.size() == 0) {
-            return new ContainerEmptyView(header);
-        }
-        else {
-            showEditResourceView = new ShowEditResourceView() {
-                @Override
-                public void execute(final Item item) {
-                    resourceView.showEditView(item);
-                }
-            };
-            resourceTreeView =
-                new ResourceTreeView(mainWindow, header, resourceContainer);
-            resourceTreeView.setEditView(showEditResourceView);
-            resourceTreeView.setCommand(addChildrenCommand);
-            resourceTreeView.addResourceNodeExpandListener();
-            resourceTreeView.addResourceNodeClickedListener();
-            return resourceTreeView;
-        }
+        showEditResourceView = new ShowEditResourceView() {
+            @Override
+            public void execute(final Item item) {
+                resourceView.showEditView(item);
+            }
+        };
+        resourceTreeView =
+            new ResourceTreeView(mainWindow, header, resourceContainer);
+        resourceTreeView.setEditView(showEditResourceView);
+        resourceTreeView.setCommand(addChildrenCommand);
+        resourceTreeView.addResourceNodeExpandListener();
+        resourceTreeView.addResourceNodeClickedListener();
+        return resourceTreeView;
     }
 
     public ResourceView getResourceView() {
@@ -92,13 +88,20 @@ public class ResourceViewComponentImpl implements ResourceViewComponent {
 
     @Override
     public void showFirstItemInEditView() {
-        if (resourceContainer.isEmpty()) {
+        if (resourceContainer.isEmpty() && isPermitToCreate()) {
             resourceView.showAddView();
+        }
+        else if (resourceContainer.isEmpty() && !isPermitToCreate()) {
+            return;
         }
         else {
             resourceTreeView.tree.select(resourceContainer.firstResource());
             final Item item = resourceContainer.firstResourceAsItem();
             resourceView.showEditView(item);
         }
+    }
+
+    private boolean isPermitToCreate() {
+        return pdpRequest.isPermitted(ActionIdConstants.CREATE_USER_ACCOUNT);
     }
 }

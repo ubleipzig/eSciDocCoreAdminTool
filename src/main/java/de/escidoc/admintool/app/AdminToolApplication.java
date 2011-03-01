@@ -211,11 +211,29 @@ public class AdminToolApplication extends Application {
     }
 
     private void setCurrentUser() throws EscidocClientException {
+        if (isTokenExists()) {
+            userIsLoggedIn();
+        }
+        else {
+            currentUserIsAnon();
+        }
+    }
+
+    private void userIsLoggedIn() throws EscidocClientException {
         currentUser = userService.getCurrentUser();
         mainWindow.showNotification(new Notification("Info",
             "You are logged in as: "
                 + currentUser.getProperties().getLoginName(),
             Notification.TYPE_TRAY_NOTIFICATION));
+    }
+
+    private void currentUserIsAnon() {
+        currentUser = new UserAccount();
+        currentUser.setObjid(AppConstants.EMPTY_STRING);
+    }
+
+    private boolean isTokenExists() {
+        return token != null && !token.isEmpty();
     }
 
     private void createFactories() {
@@ -265,7 +283,10 @@ public class AdminToolApplication extends Application {
     }
 
     private void buildMainLayout() {
-        viewManager.setMainView(new MainView(this, pdpRequest));
+        final MainView mainView = new MainView(this, pdpRequest, currentUser);
+        mainView.init();
+
+        viewManager.setMainView(mainView);
         viewManager.showMainView();
     }
 

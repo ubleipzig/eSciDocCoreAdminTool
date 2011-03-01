@@ -60,7 +60,7 @@ public class ContextAddView extends CustomComponent implements ClickListener {
 
     private static final int LABEL_WIDTH = 100;
 
-    private final Button save = new Button(ViewConstants.SAVE, this);
+    private final Button save = new Button(ViewConstants.SAVE_LABEL, this);
 
     private final Button cancel = new Button(ViewConstants.CANCEL_LABEL, this);
 

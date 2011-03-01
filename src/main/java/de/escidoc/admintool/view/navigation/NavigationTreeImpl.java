@@ -1,6 +1,7 @@
 package de.escidoc.admintool.view.navigation;
 
 import com.google.common.base.Preconditions;
+import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Tree;
 
@@ -14,11 +15,11 @@ public class NavigationTreeImpl extends CustomComponent
 
     private final Tree tree = new Tree();
 
-    private final NavigationTreeClickListener listener;
+    private final ItemClickListener listener;
 
     private final PdpRequest pdpRequest;
 
-    public NavigationTreeImpl(final NavigationTreeClickListener listener,
+    public NavigationTreeImpl(final ItemClickListener listener,
         final PdpRequest pdpRequest) {
         Preconditions.checkNotNull(listener, "listener is null: %s", listener);
         Preconditions.checkNotNull(pdpRequest, "pdpRequest is null: %s",

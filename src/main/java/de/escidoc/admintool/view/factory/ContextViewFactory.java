@@ -69,7 +69,7 @@ public class ContextViewFactory {
             contextForm.setContextList(contextList);
             createContextAddView(resourceTreeView);
             return new ContextView(app, contextList, contextForm,
-                contextAddView);
+                contextAddView, pdpRequest);
         }
         catch (final EscidocException e) {
             ModalDialog.show(mainWindow, e);
@@ -95,10 +95,12 @@ public class ContextViewFactory {
     }
 
     private void createContextEditForm(final ResourceTreeView resourceTreeView) {
-        contextForm =
+        final ContextEditForm contextEditForm =
             new ContextEditForm(app, mainWindow, contextService,
                 orgUnitService, new AddOrgUnitToTheList(mainWindow,
                     resourceTreeView), pdpRequest);
+        contextEditForm.init();
+        contextForm = contextEditForm;
     }
 
     private void createContextListView() throws EscidocException,

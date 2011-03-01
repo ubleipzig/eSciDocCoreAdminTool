@@ -16,7 +16,7 @@ public class SaveAndCancelButtons extends CustomComponent {
 
     private final Button cancelBtn = new Button(ViewConstants.CANCEL);
 
-    private final Button saveBtn = new Button(ViewConstants.SAVE);
+    private final Button saveBtn = new Button(ViewConstants.SAVE_LABEL);
 
     public SaveAndCancelButtons() {
         setCompositionRoot(footers);

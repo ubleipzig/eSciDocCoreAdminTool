@@ -1,51 +1,89 @@
 package de.escidoc.admintool.view;
 
+import com.vaadin.terminal.Sizeable;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.GridLayout;
-import com.vaadin.ui.SplitPanel;
+import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.Reindeer;
 
 import de.escidoc.admintool.app.AdminToolApplication;
+import de.escidoc.admintool.app.AppConstants;
 import de.escidoc.admintool.domain.PdpRequest;
 import de.escidoc.admintool.view.factory.ToolbarFactory;
 import de.escidoc.admintool.view.navigation.NavigationTree;
 import de.escidoc.admintool.view.navigation.NavigationTreeClickListener;
+import de.escidoc.core.resources.aa.useraccount.UserAccount;
 
 public class MainView extends CustomComponent {
+
     private static final long serialVersionUID = -5906063682647356346L;
 
     private final VerticalLayout appLayout = new VerticalLayout();
 
-    private final SplitPanel horizontalSplit = new SplitPanel(
-        SplitPanel.ORIENTATION_HORIZONTAL);
+    private final HorizontalSplitPanel horizontalSplit =
+        new HorizontalSplitPanel();
 
     private final Button logoutButton = new Button(ViewConstants.LOGOUT);
 
     private final ToolbarFactory factory = new ToolbarFactory();
 
-    private final AdminToolApplication app;
+    final AdminToolApplication app;
+
+    private final PdpRequest pdpRequest;
+
+    private final UserAccount currentUser;
 
     private NavigationTree navigation;
 
     private GridLayout toolbar;
 
-    private final PdpRequest pdpRequest;
+    private Button loginButton;
 
-    public MainView(final AdminToolApplication app, final PdpRequest pdpRequest) {
+    public MainView(final AdminToolApplication app,
+        final PdpRequest pdpRequest, final UserAccount currentUser) {
         this.app = app;
         this.pdpRequest = pdpRequest;
-        init();
+        this.currentUser = currentUser;
     }
 
-    private void init() {
+    public void init() {
         setCompositionRoot(appLayout);
         makeFullSize();
+        createButtons();
         addToolbar();
         createAndAddNavigationTree();
+    }
+
+    private void addToolbar() {
+        if (addToolbarIsNeeded()) {
+            addButtonToToolbar();
+            appLayout.addComponent(toolbar);
+        }
+    }
+
+    private boolean addToolbarIsNeeded() {
+        return appLayout.getComponentIndex(toolbar) < 0;
+    }
+
+    private void addButtonToToolbar() {
+        if (isUserLoggedIn()) {
+            show(logoutButton);
+        }
+        else {
+            show(loginButton);
+        }
+    }
+
+    private boolean isUserLoggedIn() {
+        return !currentUser.getObjid().equals(AppConstants.EMPTY_STRING);
+    }
+
+    private void show(final Button button) {
+        toolbar = factory.createToolbar(new Button[] { button });
     }
 
     private void makeFullSize() {
@@ -53,18 +91,22 @@ public class MainView extends CustomComponent {
         appLayout.setSizeFull();
     }
 
-    private void addToolbar() {
+    private void createButtons() {
+        createLogInButton();
         createLogOutButton();
-        if (appLayout.getComponentIndex(toolbar) < 0) {
-            toolbar = factory.createToolbar(new Button[] { logoutButton });
-            appLayout.addComponent(toolbar);
-        }
+    }
+
+    private void createLogInButton() {
+        loginButton =
+            new Button(ViewConstants.LOGIN_LABEL, new LoginButtonListener(
+                app.getMainWindow(), app.escidocLoginUrl + app.getURL()));
+        loginButton.setStyleName(Reindeer.BUTTON_SMALL);
     }
 
     private void createLogOutButton() {
-        logoutButton.setEnabled(true);
         logoutButton.setStyleName(Reindeer.BUTTON_SMALL);
-        app.setLogoutURL(app.escidocLogoutUrl + app.getURL());
+        final String logoutURL = app.escidocLogoutUrl + app.getURL();
+        app.setLogoutURL(logoutURL);
         logoutButton.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = 6434716782391206321L;
 
@@ -76,17 +118,23 @@ public class MainView extends CustomComponent {
     }
 
     private void createAndAddNavigationTree() {
-        appLayout.addComponent(horizontalSplit);
-        appLayout.setExpandRatio(horizontalSplit, 1);
+        configureHorizontalSplit();
+        createNavigationTree();
+        horizontalSplit.setFirstComponent(navigation);
+    }
 
-        horizontalSplit.setSplitPosition(
-            ViewConstants.SPLIT_POSITION_FROM_LEFT, SplitPanel.UNITS_PIXELS);
-        horizontalSplit.addStyleName(ViewConstants.THIN_SPLIT);
-
+    private void createNavigationTree() {
         navigation =
             NavigationTreeFactory.createViewFor(
                 new NavigationTreeClickListener(app), pdpRequest);
-        horizontalSplit.setFirstComponent(navigation);
+    }
+
+    private void configureHorizontalSplit() {
+        appLayout.addComponent(horizontalSplit);
+        appLayout.setExpandRatio(horizontalSplit, 1);
+        horizontalSplit.setSplitPosition(
+            ViewConstants.SPLIT_POSITION_FROM_LEFT, Sizeable.UNITS_PIXELS);
+        horizontalSplit.addStyleName(ViewConstants.THIN_SPLIT);
     }
 
     public void setSecondComponent(final Component component) {

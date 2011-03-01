@@ -19,8 +19,6 @@ public final class PdpRequestImpl implements PdpRequest {
 
     private final PdpService service;
 
-    private boolean isAllowed;
-
     public PdpRequestImpl(final PdpService service,
         final UserAccount currentUser) {
         this.service = service;
@@ -34,23 +32,20 @@ public final class PdpRequestImpl implements PdpRequest {
      */
     @Override
     public boolean isPermitted(final String actionId) {
-        evaluatePdpRequest(actionId, ViewConstants.EMPTY_STRING);
-        return isAllowed;
+        return evaluatePdpRequest(actionId, ViewConstants.EMPTY_STRING);
     }
 
     @Override
     public boolean isPermitted(final String actionId, final String resourceId) {
-        evaluatePdpRequest(actionId, resourceId);
-        return isAllowed;
+        return evaluatePdpRequest(actionId, resourceId);
     }
 
-    private void evaluatePdpRequest(
+    private boolean evaluatePdpRequest(
         final String actionId, final String resourceId) {
         try {
-            isAllowed =
-                service
-                    .isAction(actionId).forUser(currentUser.getObjid())
-                    .forResource(resourceId).permitted();
+            return service
+                .isAction(actionId).forUser(currentUser.getObjid())
+                .forResource(resourceId).permitted();
         }
         catch (final URISyntaxException e) {
             LOG.error(e.getMessage());
@@ -58,7 +53,7 @@ public final class PdpRequestImpl implements PdpRequest {
         catch (final EscidocClientException e) {
             LOG.error(e.getMessage(), e);
         }
-
+        return false;
     }
 
     @Override

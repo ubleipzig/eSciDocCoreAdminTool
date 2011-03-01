@@ -9,6 +9,7 @@ import java.net.URLConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.base.Preconditions;
 import com.vaadin.Application;
 import com.vaadin.data.Validator.EmptyValueException;
 import com.vaadin.ui.AbstractField;
@@ -19,42 +20,49 @@ import com.vaadin.ui.Window.Notification;
 
 import de.escidoc.admintool.app.AdminToolApplication;
 
-public abstract class LoginButtonListener implements ClickListener {
+public abstract class StartButtonListener implements ClickListener {
+
+    private static final String CAN_NOT_CONNECT_TO = "Can not connect to: ";
 
     private static final int FIVE_SECONDS = 5000;
-
-    private static final long serialVersionUID = -7482204166398806832L;
 
     private final static Logger LOG = LoggerFactory
         .getLogger(LoginButtonListener.class);
 
-    protected final AdminToolApplication app;
-
-    private final AbstractField escidocComboBox;
+    private final AbstractField escidocUrlField;
 
     private final Window mainWindow;
 
-    public LoginButtonListener(final AbstractField escidocComboBox,
-        final AdminToolApplication app) {
-        this.escidocComboBox = escidocComboBox;
+    private final AdminToolApplication app;
+
+    public StartButtonListener(final AbstractField escidocUrlField,
+        final Window mainWindow, final AdminToolApplication app) {
+
+        Preconditions.checkNotNull(escidocUrlField,
+            "escidocUrlField is null: %s", escidocUrlField);
+        Preconditions.checkNotNull(mainWindow, "mainWindow is null: %s",
+            mainWindow);
+        Preconditions.checkNotNull(app, "app is null: %s", app);
+        this.escidocUrlField = escidocUrlField;
+        this.mainWindow = mainWindow;
         this.app = app;
-        mainWindow = app.getMainWindow();
     }
 
     @Override
     public void buttonClick(final ClickEvent event) {
-        validate(escidocComboBox);
+        validate(escidocUrlField);
     }
 
     private void validate(final AbstractField escidocUriField) {
         try {
             escidocUriField.validate();
-            if (validateConnection(escidocUriField)) {
+            if (tryToConnect(escidocUriField)) {
                 login();
             }
             else {
-                mainWindow.showNotification("Can not connect to: "
-                    + escidocUriField.getValue());
+                mainWindow.showNotification(new Notification(CAN_NOT_CONNECT_TO
+                    + escidocUriField.getValue(),
+                    Notification.TYPE_WARNING_MESSAGE));
             }
 
         }
@@ -66,7 +74,7 @@ public abstract class LoginButtonListener implements ClickListener {
 
     private void login() {
         setEscidocUri();
-        loginMe();
+        showMainPage();
     }
 
     private void setEscidocUri() {
@@ -76,12 +84,12 @@ public abstract class LoginButtonListener implements ClickListener {
     }
 
     private String getUserInput() {
-        return (String) escidocComboBox.getValue();
+        return (String) escidocUrlField.getValue();
     }
 
-    protected abstract void loginMe();
+    protected abstract void showMainPage();
 
-    private boolean validateConnection(final AbstractField escidocUriField) {
+    private boolean tryToConnect(final AbstractField escidocUriField) {
         final String strUrl = (String) escidocUriField.getValue();
         URLConnection connection;
         try {

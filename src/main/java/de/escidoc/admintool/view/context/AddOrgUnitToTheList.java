@@ -3,11 +3,11 @@ package de.escidoc.admintool.view.context;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.vaadin.ui.AbstractSelect;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Window;
 
@@ -109,7 +109,7 @@ public final class AddOrgUnitToTheList implements Button.ClickListener {
 
     private final ResourceTreeView resourceTreeView;
 
-    private ListSelect orgUnitList;
+    private AbstractSelect orgUnitList;
 
     private Table orgUnitTable;
 
@@ -168,7 +168,7 @@ public final class AddOrgUnitToTheList implements Button.ClickListener {
         mainWindow.addWindow(modalWindow);
     }
 
-    public void using(final ListSelect orgUnitList) {
+    public void using(final AbstractSelect orgUnitList) {
         this.orgUnitList = orgUnitList;
     }
 }

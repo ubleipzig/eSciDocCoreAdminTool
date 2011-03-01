@@ -25,22 +25,30 @@ import de.escidoc.admintool.view.navigation.ActionIdConstants;
  * 
  */
 public class ContextToolbar extends CustomComponent {
+    private static final String CLOSE = "Close";
+
+    private static final String OPEN = "Open";
+
+    private static final String DELETE = "Delete";
+
+    private static final String NEW = "New";
+
     private static final long serialVersionUID = -4522925443822439322L;
 
     private final Logger LOG = LoggerFactory.getLogger(ContextToolbar.class);
 
     private final HorizontalLayout header = new HorizontalLayout();
 
-    private final Button newContextBtn = new Button("New",
+    private final Button newContextBtn = new Button(NEW,
         new NewContextListener());
 
-    private final Button deleteContextBtn = new Button("Delete",
+    private final Button deleteContextBtn = new Button(DELETE,
         new DeleteContextListener());
 
-    private final Button openContextBtn = new Button("Open",
+    private final Button openContextBtn = new Button(OPEN,
         new OpenContextListener());
 
-    private final Button closeContextBtn = new Button("Close",
+    private final Button closeContextBtn = new Button(CLOSE,
         new CloseContextListener());
 
     private final ContextEditForm contextEditForm;
@@ -178,7 +186,6 @@ public class ContextToolbar extends CustomComponent {
     }
 
     private boolean isCreateNotAllowed() {
-        return pdpRequest.isDenied(ActionIdConstants.CREATE_CONTEXT,
-            selectedItemId);
+        return pdpRequest.isDenied(ActionIdConstants.CREATE_CONTEXT);
     }
 }

@@ -41,13 +41,7 @@ public class PdpServiceImpl implements PdpService {
 
     private final Set<Subject> subjects = new HashSet<Subject>();
 
-    // public PdpServiceImpl(final Authentication auth) {
-    // client = new PolicyDecisionPointHandlerClient(auth.getServiceAddress());
-    // client.setHandle(auth.getHandle());
-    // client.setTransport(TransportProtocol.REST);
-    // }
-
-    public PdpServiceImpl(final String serviceAddress) {
+   public PdpServiceImpl(final String serviceAddress) {
         client = new PolicyDecisionPointHandlerClient(serviceAddress);
         client.setTransport(TransportProtocol.REST);
     }

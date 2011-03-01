@@ -1,6 +1,10 @@
 package de.escidoc.admintool.view.user;
 
+import java.util.List;
 import java.util.Set;
+
+import com.vaadin.ui.AbstractSelect;
+import com.vaadin.ui.Table;
 
 import de.escidoc.admintool.view.resource.ResourceRefDisplay;
 import de.escidoc.core.client.exceptions.EscidocClientException;
@@ -11,6 +15,10 @@ public interface SetOrgUnitsCommand {
 
     void setSeletectedOrgUnit(Set<ResourceRefDisplay> selectedOrgUnits);
 
-    void execute(OrgUnitWidget orgUnitWidget) throws EscidocClientException;
+    void execute(AbstractSelect orgUnitWidget) throws EscidocClientException;
+
+    void update(
+        List<String> retrieveOrgUnitObjectIdsForSelectedUser, Table orgUnitTable)
+        throws EscidocClientException;
 
 }

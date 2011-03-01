@@ -5,7 +5,7 @@ public class ActionIdConstants {
     public static final String REINDEX_ACTION_ID =
         "info:escidoc/names:aa:1.0:action:reindex";
 
-    public static final String CREATE_USER_ACCOUNT_ACTION_ID =
+    public static final String CREATE_USER_ACCOUNT =
         "info:escidoc/names:aa:1.0:action:create-user-account";
 
     public static final String DELETE_ORGANIZATIONAL_UNIT_ACTION =
