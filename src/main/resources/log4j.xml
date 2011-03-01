@@ -31,5 +31,5 @@
 		<level value="warn" />
 		<appender-ref ref="console" />
 		<appender-ref ref="R" />
-	</logger-->
+	</logger>
 </log4j:configuration>

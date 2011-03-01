@@ -1,7 +1,7 @@
 <projectDescription>
   <name>AdminTool</name>
-  <comment>eSciDoc Admin Tool handles following eSciDoc resouces: 
-org unit, context, user accounts and roles. NO_M2ECLIPSE_SUPPORT: Project files created with the maven-eclipse-plugin are not supported in M2Eclipse.</comment>
+  <comment>eSciDoc Admin Tool handles following eSciDoc resouces: org
+		unit, context, user accounts and roles. NO_M2ECLIPSE_SUPPORT: Project files created with the maven-eclipse-plugin are not supported in M2Eclipse.</comment>
   <projects/>
   <buildSpec>
     <buildCommand>
