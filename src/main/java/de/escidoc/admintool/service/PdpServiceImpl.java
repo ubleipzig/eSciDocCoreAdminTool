@@ -5,9 +5,6 @@ import java.net.URISyntaxException;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.google.common.base.Preconditions;
 import com.sun.xacml.attr.StringAttribute;
 import com.sun.xacml.ctx.Attribute;
@@ -24,22 +21,13 @@ import de.escidoc.core.resources.aa.pdp.Results;
 
 public class PdpServiceImpl implements PdpService {
 
-    private static final Logger LOG = LoggerFactory
-        .getLogger(PdpServiceImpl.class);
-
-    private static final String SUBJECT_ID =
-        "urn:oasis:names:tc:xacml:1.0:subject:subject-id";
-
-    private static final String RESOURCE_ID =
-        "urn:oasis:names:tc:xacml:1.0:resource:resource-id";
-
     private final PolicyDecisionPointHandlerClient client;
 
-    private final Set<Attribute> actionAttrs = new HashSet<Attribute>();
+    private Set<Attribute> actionAttrs;
 
-    private final Set<Attribute> resourceAttrs = new HashSet<Attribute>();
+    private Set<Attribute> resourceAttrs;
 
-    private final Set<Subject> subjects = new HashSet<Subject>();
+    private Set<Subject> subjects;
 
    public PdpServiceImpl(final String serviceAddress) {
         client = new PolicyDecisionPointHandlerClient(serviceAddress);
@@ -53,7 +41,7 @@ public class PdpServiceImpl implements PdpService {
     }
 
     public PdpService isAction(final String actionId) throws URISyntaxException {
-        actionAttrs.removeAll(actionAttrs);
+        actionAttrs = new HashSet<Attribute>();
         actionAttrs.add(new Attribute(new URI(AppConstants.XACML_ACTION_ID),
             null, null, new StringAttribute(actionId)));
         return this;
@@ -62,18 +50,18 @@ public class PdpServiceImpl implements PdpService {
     @Override
     public PdpService forResource(final String resourceId)
         throws URISyntaxException {
-        resourceAttrs.removeAll(resourceAttrs);
-        resourceAttrs.add(new Attribute(new URI(RESOURCE_ID), null, null,
-            new StringAttribute(resourceId)));
+        resourceAttrs = new HashSet<Attribute>();
+        resourceAttrs.add(new Attribute(new URI(AppConstants.RESOURCE_ID),
+            null, null, new StringAttribute(resourceId)));
         return this;
     }
 
     @Override
     public PdpService forUser(final String userId) throws URISyntaxException {
         final Set<Attribute> subjectAttributes = new HashSet<Attribute>();
-        subjectAttributes.add(new Attribute(new URI(SUBJECT_ID), null, null,
-            new StringAttribute(userId)));
-        subjects.removeAll(subjects);
+        subjectAttributes.add(new Attribute(new URI(AppConstants.SUBJECT_ID),
+            null, null, new StringAttribute(userId)));
+        subjects = new HashSet<Subject>();
         subjects.add(new Subject(Subject.DEFAULT_CATEGORY, subjectAttributes));
         return this;
 

@@ -93,12 +93,13 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public MessagesStatus reindex(
-        final boolean shouldClearIndex, final String indexNamePrefix)
+        final Boolean shouldClearIndex, final String indexNamePrefix)
         throws EscidocException, InternalClientException, TransportException {
         Preconditions.checkNotNull(indexNamePrefix,
             "indexNamePrefix can not be null: %s", indexNamePrefix);
         Preconditions.checkArgument(!indexNamePrefix.isEmpty(),
             "indexNamePrefix can not be empty: %s", indexNamePrefix);
-        return getClient().reindex(shouldClearIndex, indexNamePrefix);
+        return getClient().reindex(shouldClearIndex.booleanValue(),
+            indexNamePrefix);
     }
 }

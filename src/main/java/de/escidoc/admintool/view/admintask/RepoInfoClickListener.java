@@ -1,9 +1,7 @@
 package de.escidoc.admintool.view.admintask;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,25 +39,7 @@ public class RepoInfoClickListener implements ClickListener {
     @Override
     public void buttonClick(final ClickEvent event) {
         final Map<String, String> repositoriesInfo = retrieveRepoInfo();// retrieveRepoInfoMock();
-
-        for (final Entry<String, String> entry : repositoriesInfo.entrySet()) {
-            LOG.debug("key: " + entry.getKey() + "/value: " + entry.getValue());
-        }
-
         command.execute(repositoriesInfo);
-    }
-
-    private Map<String, String> retrieveRepoInfoMock() {
-        final Map<String, String> repositoriesInfo =
-            new HashMap<String, String>();
-        repositoriesInfo.put("organizational-unit",
-            "http://www.escidoc.de/schemas/organizationalunit/0.8");
-        repositoriesInfo.put("container",
-            "http://www.escidoc.de/schemas/container/0.8");
-        repositoriesInfo.put("context",
-            "http://www.escidoc.de/schemas/context/0.7");
-
-        return repositoriesInfo;
     }
 
     private Map<String, String> retrieveRepoInfo() {

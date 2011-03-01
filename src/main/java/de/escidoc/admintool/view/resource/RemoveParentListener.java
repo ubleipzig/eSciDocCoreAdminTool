@@ -66,7 +66,6 @@ final class RemoveParentListener implements ClickListener {
     private void updateItem() {
         final Parent parent = null;
         if (parent == null) {
-            // getParentProperty().setValue("no parents");
             getParentProperty().setValue(new ResourceRefDisplay());
         }
 

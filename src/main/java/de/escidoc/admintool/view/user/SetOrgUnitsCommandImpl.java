@@ -1,5 +1,6 @@
 package de.escidoc.admintool.view.user;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -7,7 +8,6 @@ import java.util.Set;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
 import com.vaadin.ui.AbstractSelect;
-import com.vaadin.ui.Table;
 
 import de.escidoc.admintool.app.AppConstants;
 import de.escidoc.admintool.service.UserService;
@@ -62,39 +62,51 @@ public class SetOrgUnitsCommandImpl implements SetOrgUnitsCommand {
     }
 
     @Override
-    public void update(final List<String> oldOrgUnits, final Table orgUnitTable)
+    public void update(final List<String> oldOrgUnits)
         throws EscidocClientException {
+        if (updateNeeded(toCreate(oldOrgUnits), toRemove(oldOrgUnits))) {
+            addOrgUnit(toCreate(oldOrgUnits));
+            removeOrgUnit(toRemove(oldOrgUnits));
+        }
+    }
 
+    private Set<String> toRemove(final Collection<? extends String> oldOrgUnits) {
+        final Set<String> toRemove = Sets.newHashSet(oldOrgUnits);
+        toRemove.removeAll(getSelectedOrgUnitId());
+        return toRemove;
+    }
+
+    private Set<String> toCreate(final Collection<? extends String> oldOrgUnits) {
+        final Set<String> toCreate = Sets.newHashSet(getSelectedOrgUnitId());
+        toCreate.removeAll(new HashSet<String>(oldOrgUnits));
+        return toCreate;
+
+    }
+
+    private Set<String> getSelectedOrgUnitId() {
         final Set<String> newOrgUnits = new HashSet<String>();
         for (final ResourceRefDisplay resourceRefDisplay : orgUnitIds
             .toArray(new ResourceRefDisplay[orgUnitIds.size()])) {
             newOrgUnits.add(resourceRefDisplay.getObjectId());
         }
+        return newOrgUnits;
+    }
 
-        final Set<String> old = new HashSet<String>(oldOrgUnits);
+    private boolean updateNeeded(
+        final Set<String> toCreate, final Set<String> toRemove) {
+        return !toCreate.equals(toRemove);
+    }
 
-        final Set<String> toCreate = Sets.newHashSet(newOrgUnits);
-        final Set<String> toRemove = Sets.newHashSet(oldOrgUnits);
-
-        if (toCreate.equals(toRemove)) {
-            return;
-        }
-
-        // toCreate=new-old;
-        toCreate.removeAll(old);
-
-        // toDelete=old-new;
-        toRemove.removeAll(newOrgUnits);
-
+    private void addOrgUnit(final Set<String> toCreate)
+        throws EscidocClientException {
         for (final String string : toCreate) {
             userService.assign(objectId, new Attribute(
                 AppConstants.DEFAULT_ORG_UNIT_ATTRIBUTE_NAME, string));
         }
-
-        foo(toRemove);
     }
 
-    private void foo(final Set<String> toRemove) throws EscidocClientException {
+    private void removeOrgUnit(final Set<String> toRemove)
+        throws EscidocClientException {
         final Attributes allAttributes =
             userService.retrieveAttributes(objectId);
 
@@ -104,7 +116,6 @@ public class SetOrgUnitsCommandImpl implements SetOrgUnitsCommand {
                 if (toRemove.contains(value)) {
                     userService.removeAttribute(objectId, attribute);
                 }
-
             }
         }
     }

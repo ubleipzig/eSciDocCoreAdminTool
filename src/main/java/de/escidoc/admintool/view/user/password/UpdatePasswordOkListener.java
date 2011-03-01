@@ -77,6 +77,7 @@ public final class UpdatePasswordOkListener implements Button.ClickListener {
         Preconditions.checkNotNull(command, "command is null: %s", command);
         try {
             command.execute(enteredPassword());
+            resetAllFields();
             mainWindow.showNotification(ViewConstants.PASSWORD_UPDATED_MESSAGE);
         }
         catch (final EscidocClientException e) {

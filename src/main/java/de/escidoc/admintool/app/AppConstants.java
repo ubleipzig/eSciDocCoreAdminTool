@@ -47,4 +47,10 @@ public class AppConstants {
 
     public static final String XACML_ACTION_ID =
     "urn:oasis:names:tc:xacml:1.0:action:action-id";
+
+    public static final String SUBJECT_ID =
+    "urn:oasis:names:tc:xacml:1.0:subject:subject-id";
+
+    public static final String RESOURCE_ID =
+    "urn:oasis:names:tc:xacml:1.0:resource:resource-id";
 }

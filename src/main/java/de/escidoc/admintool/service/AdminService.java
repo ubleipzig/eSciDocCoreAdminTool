@@ -32,6 +32,6 @@ public interface AdminService extends EscidocService {
     MessagesStatus retrieveReindexStatus() throws EscidocException,
         InternalClientException, TransportException;
 
-    MessagesStatus reindex(boolean shouldClearIndex, String indexNamePrefix)
+    MessagesStatus reindex(Boolean shouldClearIndex, String indexNamePrefix)
         throws EscidocException, InternalClientException, TransportException;
 }

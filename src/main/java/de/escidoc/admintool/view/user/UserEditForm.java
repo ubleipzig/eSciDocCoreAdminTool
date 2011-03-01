@@ -28,6 +28,7 @@ import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.Window.Notification;
 import com.vaadin.ui.themes.Reindeer;
 
 import de.escidoc.admintool.app.AdminToolApplication;
@@ -54,8 +55,6 @@ import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
-import de.escidoc.core.resources.aa.useraccount.Attribute;
-import de.escidoc.core.resources.aa.useraccount.Attributes;
 import de.escidoc.core.resources.aa.useraccount.Grant;
 import de.escidoc.core.resources.aa.useraccount.UserAccount;
 import de.escidoc.core.resources.common.reference.Reference;
@@ -137,6 +136,8 @@ public class UserEditForm extends CustomComponent implements ClickListener {
 
     private final ResourceTreeView resourceTreeView;
 
+    private final SetOrgUnitsCommandImpl setOrgUnitsCommand;
+
     public UserEditForm(final AdminToolApplication app,
         final UserService userService, final OrgUnitServiceLab orgUnitService,
         final ResourceTreeView resourceTreeView, final PdpRequest pdpRequest) {
@@ -158,6 +159,8 @@ public class UserEditForm extends CustomComponent implements ClickListener {
         this.resourceTreeView = resourceTreeView;
         this.pdpRequest = pdpRequest;
         mainWindow = app.getMainWindow();
+
+        setOrgUnitsCommand = new SetOrgUnitsCommandImpl(userService);
     }
 
     public final void init() {
@@ -175,6 +178,7 @@ public class UserEditForm extends CustomComponent implements ClickListener {
         createAndAddRoleComponent();
         addOrgUnitsWidget();
         addFooter();
+
     }
 
     // OrgUnit START
@@ -504,7 +508,13 @@ public class UserEditForm extends CustomComponent implements ClickListener {
             updateUserAccount();
             commitFields();
             removeAllError();
+            showMessage();
         }
+    }
+
+    private void showMessage() {
+        mainWindow.showNotification(new Notification("Info",
+            "User Account is updated", Notification.TYPE_TRAY_NOTIFICATION));
     }
 
     private void discardFields() {
@@ -561,21 +571,9 @@ public class UserEditForm extends CustomComponent implements ClickListener {
     }
 
     private void updateOrgUnit() throws EscidocClientException {
-        final SetOrgUnitsCommand setOrgUnitsCommand =
-            new SetOrgUnitsCommandImpl(userService);
-        final Attributes allAttributes =
-            userService.retrieveAttributes(getSelectedItemId());
-
-        for (final Attribute attribute : allAttributes) {
-            if ("o".equals(attribute.getName())) {
-                final String value = attribute.getValue();
-            }
-        }
-
         setOrgUnitsCommand.setSelectedUserId(getSelectedItemId());
         setOrgUnitsCommand.setSeletectedOrgUnit(getOrgUnitsFromTable());
-        setOrgUnitsCommand.update(retrieveOrgUnitObjectIdsForSelectedUser(),
-            orgUnitTable);
+        setOrgUnitsCommand.update(retrieveOrgUnitObjectIdsForSelectedUser());
     }
 
     public Set<ResourceRefDisplay> getOrgUnitsFromTable() {

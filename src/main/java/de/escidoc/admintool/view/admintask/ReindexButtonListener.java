@@ -8,7 +8,6 @@ import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CheckBox;
-import com.vaadin.ui.Window.Notification;
 
 import de.escidoc.admintool.view.ModalDialog;
 import de.escidoc.core.client.exceptions.EscidocException;
@@ -78,18 +77,9 @@ final class ReindexButtonListener implements ClickListener {
         }
     }
 
-    private boolean isFinished() {
-        return status.getStatusCode() == MessagesStatus.STATUS_FINISHED;
-    }
-
     private void showMessage() {
         reindexResourceViewImpl.mainWindow.showNotification(status
             .getStatusMessage());
-    }
-
-    private void showErrorMessage() {
-        reindexResourceViewImpl.mainWindow.showNotification(new Notification(
-            status.getStatusMessage(), Notification.TYPE_ERROR_MESSAGE));
     }
 
     private Boolean shouldClearIndex() {

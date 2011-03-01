@@ -551,7 +551,7 @@ public final class LayoutHelper {
      * @param readOnly
      * @param propertyName
      * @param values
-     * @return
+     * @return abstract component
      */
     public static synchronized AbstractComponent createSelectElement(
         final String className, final POJOItem<?> item, final boolean readOnly,

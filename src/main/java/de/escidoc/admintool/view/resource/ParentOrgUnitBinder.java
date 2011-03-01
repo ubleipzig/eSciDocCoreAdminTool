@@ -2,9 +2,8 @@ package de.escidoc.admintool.view.resource;
 
 import com.vaadin.data.Property;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.Field;
 import com.vaadin.ui.Label;
-
-import de.escidoc.core.resources.oum.Parents;
 
 public class ParentOrgUnitBinder implements FieldsBinder {
 
@@ -34,21 +33,8 @@ public class ParentOrgUnitBinder implements FieldsBinder {
         if (toBeBind instanceof Label) {
             ((Label) toBeBind).setPropertyDataSource(itemProperty);
         }
-        else {
-            ((com.vaadin.ui.Field) toBeBind)
-                .setPropertyDataSource(itemProperty);
+        else if (toBeBind instanceof Field) {
+            ((Field) toBeBind).setPropertyDataSource(itemProperty);
         }
-    }
-
-    private Parents getParentsFromItem(final Object propertyId) {
-        return (Parents) orgUnitSpecificView.item
-            .getItemProperty(propertyId).getValue();
-    }
-
-    private String getXLinkTitle(final Parents parents) {
-        if (parents == null || parents.isEmpty()) {
-            return "no parents";
-        }
-        return parents.get(0).getXLinkTitle();
     }
 }
