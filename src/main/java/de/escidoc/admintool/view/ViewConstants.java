@@ -263,7 +263,7 @@ public class ViewConstants {
 
     public static final int LABEL_WIDTH = 140;
 
-    public static final String WELCOMING_MESSAGE = "Welcome to eSciDoc";
+    public static final String WELCOMING_MESSAGE = "Welcome to esciDoc";
 
     public static final String ESCIDOC_URL_TEXTFIELD = "eSciDoc URL ";
 
@@ -442,5 +442,4 @@ public class ViewConstants {
 
     public static final String GENERAL_ERROR_MESSAGE =
         "An unexpected error occured! See log for details";
-
 }

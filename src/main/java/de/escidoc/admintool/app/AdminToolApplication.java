@@ -27,6 +27,7 @@ import de.escidoc.admintool.service.ServiceContainer;
 import de.escidoc.admintool.service.ServiceContaiterImpl;
 import de.escidoc.admintool.service.ServiceFactory;
 import de.escidoc.admintool.service.UserService;
+import de.escidoc.admintool.view.EscidocServiceLocation;
 import de.escidoc.admintool.view.MainView;
 import de.escidoc.admintool.view.ModalDialog;
 import de.escidoc.admintool.view.ViewConstants;
@@ -99,8 +100,6 @@ public class AdminToolApplication extends Application {
 
     private String token;
 
-    private String eSciDocUri;
-
     private ResourceContainerFactory resourceContainerFactory;
 
     private ContextViewFactory contextViewFactory;
@@ -132,6 +131,8 @@ public class AdminToolApplication extends Application {
     private ResourceService contentModelService;
 
     private PdpRequest pdpRequest;
+
+    private EscidocServiceLocation escidocServiceLocation;
 
     @Override
     public void init() {
@@ -171,17 +172,15 @@ public class AdminToolApplication extends Application {
     }
 
     public void setEscidocUri(final String eSciDocUri) {
-        this.eSciDocUri = eSciDocUri;
+        escidocServiceLocation = new EscidocServiceLocation(eSciDocUri);
 
         if (eSciDocUri == null) {
             mainWindow.showNotification("eSciDoc URI is unknown",
                 Notification.TYPE_ERROR_MESSAGE);
         }
         else {
-            escidocLoginUrl = eSciDocUri + "/aa/login?target=";
-            escidocLogoutUrl = eSciDocUri + "/aa/logout?target=";
-
-            assert escidocLoginUrl != null && escidocLogoutUrl != null : "LoginUrl and Logout url can not be null.";
+            escidocLoginUrl = escidocServiceLocation.getLoginUri();
+            escidocLogoutUrl = escidocServiceLocation.getLogoutUri();
         }
     }
 
@@ -195,15 +194,25 @@ public class AdminToolApplication extends Application {
         throws EscidocClientException {
         this.token = token;
         if (isEscidocUriKnown()) {
-            createServices();
-            setCurrentUser();
-            createPdpRequest();
-            createFactories();
-            buildMainLayout();
+            initApplication();
         }
         else {
             showLandingView();
         }
+    }
+
+    private void initApplication() throws InternalClientException,
+        EscidocException, TransportException, EscidocClientException {
+        createServices();
+        setCurrentUser();
+        createPdpRequest();
+        createFactories();
+        buildMainLayout();
+    }
+
+    private boolean isEscidocUriKnown() {
+        return !(escidocServiceLocation == null || escidocServiceLocation
+            .getUri().isEmpty());
     }
 
     private void createPdpRequest() {
@@ -233,7 +242,7 @@ public class AdminToolApplication extends Application {
     }
 
     private boolean isTokenExists() {
-        return token != null && !token.isEmpty();
+        return !(token == null || token.isEmpty());
     }
 
     private void createFactories() {
@@ -246,40 +255,26 @@ public class AdminToolApplication extends Application {
 
     private void createServices() throws InternalClientException,
         EscidocException, TransportException {
-        LOG.info("service address: " + eSciDocUri);
-        if (isEscidocUriKnown()) {
-            Preconditions.checkArgument(isEscidocUriKnown(),
-                "Escidoc URI can not be empty nor null");
-            final ServiceFactory serviceFactory =
-                new ServiceFactory(eSciDocUri, token);
-            orgUnitService = serviceFactory.createOrgService();
-            userService = serviceFactory.createUserService();
-            final ContextServiceLab contextServiceLab =
-                serviceFactory.createContextServiceLab();
-            services.add(contextServiceLab);
-            contextService = serviceFactory.createContextService();
-            roleService = serviceFactory.createRoleService();
-            containerService = serviceFactory.createContainerService();
-            services.add(containerService);
-            itemService = serviceFactory.createItemService();
-            services.add(itemService);
-            adminService = serviceFactory.createAdminService();
-            services.add(adminService);
-            orgUnitServiceLab = serviceFactory.createOrgUnitService();
-            services.add(orgUnitServiceLab);
-            final AdminService adminService = services.getAdminService();
-            Preconditions.checkNotNull(adminService,
-                "can not get AdminService from service container");
-            contentModelService = serviceFactory.createContentModelService();
-            pdpService = serviceFactory.createPdpService();
-        }
-        else {
-            showLandingView();
-        }
-    }
-
-    private boolean isEscidocUriKnown() {
-        return eSciDocUri != null && !eSciDocUri.isEmpty();
+        LOG.info("service address: " + escidocServiceLocation.getUri());
+        final ServiceFactory serviceFactory =
+            new ServiceFactory(escidocServiceLocation, token);
+        orgUnitService = serviceFactory.createOrgService();
+        userService = serviceFactory.createUserService();
+        final ContextServiceLab contextServiceLab =
+            serviceFactory.createContextServiceLab();
+        services.add(contextServiceLab);
+        contextService = serviceFactory.createContextService();
+        roleService = serviceFactory.createRoleService();
+        containerService = serviceFactory.createContainerService();
+        services.add(containerService);
+        itemService = serviceFactory.createItemService();
+        services.add(itemService);
+        adminService = serviceFactory.createAdminService();
+        services.add(adminService);
+        orgUnitServiceLab = serviceFactory.createOrgUnitService();
+        services.add(orgUnitServiceLab);
+        contentModelService = serviceFactory.createContentModelService();
+        pdpService = serviceFactory.createPdpService();
     }
 
     private void buildMainLayout() {

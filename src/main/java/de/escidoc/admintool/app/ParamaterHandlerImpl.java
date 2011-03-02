@@ -83,25 +83,4 @@ public class ParamaterHandlerImpl implements ParameterHandler {
             app.showLandingView();
         }
     }
-
-    // private String parseAndDecodeToken(final Map<String, String[]>
-    // parameters) {
-    // final String parameter =
-    // parameters.get(AppConstants.ESCIDOC_USER_HANDLE)[0];
-    // return tryToDecode(parameter);
-    // }
-
-    // private String tryToDecode(final String parameter) {
-    // try {
-    // return Base64Coder.decodeString(parameter);
-    // }
-    // catch (final IllegalArgumentException e) {
-    // LOG.error(ViewConstants.GENERAL_ERROR_MESSAGE, e);
-    // app.showLandingView();
-    // mainWindow.showNotification(new Notification(
-    // ViewConstants.WRONG_TOKEN_MESSAGE, "Wrong token",
-    // Notification.TYPE_ERROR_MESSAGE));
-    // }
-    // return AppConstants.EMPTY_STRING;
-    // }
 }

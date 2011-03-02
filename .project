@@ -28,4 +28,5 @@
     <nature>org.eclipse.wst.common.project.facet.core.nature</nature>
     <nature>org.eclipse.wst.jsdt.core.jsNature</nature>
   </natures>
+>>>>>>> release-1.0
 </projectDescription>

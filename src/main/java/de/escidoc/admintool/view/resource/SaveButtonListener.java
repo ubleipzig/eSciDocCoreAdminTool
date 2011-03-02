@@ -20,8 +20,8 @@ import de.escidoc.admintool.app.PropertyId;
 import de.escidoc.admintool.domain.OrgUnitBuilder;
 import de.escidoc.admintool.service.ResourceService;
 import de.escidoc.admintool.view.ModalDialog;
+import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.core.client.exceptions.EscidocClientException;
-import de.escidoc.core.resources.Resource;
 import de.escidoc.core.resources.oum.OrganizationalUnit;
 
 public class SaveButtonListener implements ClickListener {
@@ -36,15 +36,10 @@ public class SaveButtonListener implements ClickListener {
 
     private Item item;
 
-    private Resource oldOrgUnit;
-
     private OrganizationalUnit toBeUpdated;
 
     private final Map<String, Field> fieldByName;
 
-    /**
-     * @param allFields
-     */
     public SaveButtonListener(final Collection<Field> allFields,
         final Map<String, Field> fieldByName, final Window mainWindow,
         final ResourceService resourceService) {
@@ -103,9 +98,6 @@ public class SaveButtonListener implements ClickListener {
         try {
             updateModel();
             updatePersistence();
-            // updateResourceContainer();
-            // updateItem();
-            // checkPostConditions(child);
             for (final Field field : allFields) {
                 field.commit();
             }
@@ -149,20 +141,7 @@ public class SaveButtonListener implements ClickListener {
     }
 
     private void showSuccessMessage() {
-        mainWindow.showNotification("Succesfully updated organizational unit.");
-    }
-
-    private boolean areAllFieldsValid() {
-        for (final Field field : allFields) {
-            if (notValid(field)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private boolean notValid(final Field field) {
-        return !field.isValid();
+        mainWindow.showNotification(ViewConstants.SUCCESFULLY_UPDATED_ORGANIZATIONAL_UNIT);
     }
 
     public void bind(final Item item) {

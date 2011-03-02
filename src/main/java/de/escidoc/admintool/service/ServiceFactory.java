@@ -2,6 +2,7 @@ package de.escidoc.admintool.service;
 
 import com.google.common.base.Preconditions;
 
+import de.escidoc.admintool.view.EscidocServiceLocation;
 import de.escidoc.core.client.AdminHandlerClient;
 import de.escidoc.core.client.Authentication;
 import de.escidoc.core.client.ContainerHandlerClient;
@@ -38,12 +39,14 @@ public class ServiceFactory {
 
     private ItemHandlerClientInterface itemClient;
 
-    public ServiceFactory(final String eSciDocUri, final String token) {
-        Preconditions.checkNotNull(eSciDocUri,
-            "eSciDocUri can not be null: %s", eSciDocUri);
+    public ServiceFactory(final EscidocServiceLocation escidocServiceLocation,
+        final String token) {
+        Preconditions.checkNotNull(escidocServiceLocation,
+            "escidocServiceLocation can not be null: %s",
+            escidocServiceLocation);
         Preconditions.checkNotNull(token, "token can not be null: %s", token);
 
-        serviceUri = eSciDocUri;
+        serviceUri = escidocServiceLocation.getUri();
         this.token = token;
     }
 

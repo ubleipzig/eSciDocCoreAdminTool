@@ -552,11 +552,7 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
             PublicStatus.valueOf(((String) item.getItemProperty(
                 PropertyId.PUBLIC_STATUS).getValue()).toUpperCase());
         switch (publicStatus) {
-            case CREATED: {
-                setFormReadOnly(false);
-                footer.setVisible(true);
-                break;
-            }
+            case CREATED:
             case OPENED: {
                 setFormReadOnly(false);
                 footer.setVisible(true);

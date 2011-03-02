@@ -1,5 +1,4 @@
 <classpath>
-  <classpathentry kind="src" path="src/test/java" output="target/test-classes" including="**/*.java"/>
   <classpathentry kind="src" path="src/main/java" including="**/*.java"/>
   <classpathentry kind="src" path="src/main/resources" excluding="**/*.java"/>
   <classpathentry kind="output" path="target/classes"/>
@@ -11,34 +10,34 @@
   <classpathentry kind="var" path="M2_REPO/org/escidoc/core/client-1.2/0.8-SNAPSHOT/client-1.2-0.8-SNAPSHOT.jar" sourcepath="M2_REPO/org/escidoc/core/client-1.2/0.8-SNAPSHOT/client-1.2-0.8-SNAPSHOT-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/commons-codec/commons-codec/1.4/commons-codec-1.4.jar" sourcepath="M2_REPO/commons-codec/commons-codec/1.4/commons-codec-1.4-sources.jar">
     <attributes>
-      <attribute value="jar:file:/home/chh/.m2/repository/commons-codec/commons-codec/1.4/commons-codec-1.4-javadoc.jar!/" name="javadoc_location"/>
+      <attribute value="jar:file:/C:/Users/chh/.m2/repository/commons-codec/commons-codec/1.4/commons-codec-1.4-javadoc.jar!/" name="javadoc_location"/>
     </attributes>
   </classpathentry>
   <classpathentry kind="var" path="M2_REPO/commons-discovery/commons-discovery/0.2/commons-discovery-0.2.jar" sourcepath="M2_REPO/commons-discovery/commons-discovery/0.2/commons-discovery-0.2-sources.jar">
     <attributes>
-      <attribute value="jar:file:/home/chh/.m2/repository/commons-discovery/commons-discovery/0.2/commons-discovery-0.2-javadoc.jar!/" name="javadoc_location"/>
+      <attribute value="jar:file:/C:/Users/chh/.m2/repository/commons-discovery/commons-discovery/0.2/commons-discovery-0.2-javadoc.jar!/" name="javadoc_location"/>
     </attributes>
   </classpathentry>
-  <classpathentry kind="var" path="M2_REPO/commons-httpclient/commons-httpclient/3.1/commons-httpclient-3.1.jar"/>
+  <classpathentry kind="var" path="M2_REPO/commons-httpclient/commons-httpclient/3.1/commons-httpclient-3.1.jar" sourcepath="M2_REPO/commons-httpclient/commons-httpclient/3.1/commons-httpclient-3.1-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/commons-lang/commons-lang/2.5/commons-lang-2.5.jar" sourcepath="M2_REPO/commons-lang/commons-lang/2.5/commons-lang-2.5-sources.jar">
     <attributes>
-      <attribute value="jar:file:/home/chh/.m2/repository/commons-lang/commons-lang/2.5/commons-lang-2.5-javadoc.jar!/" name="javadoc_location"/>
+      <attribute value="jar:file:/C:/Users/chh/.m2/repository/commons-lang/commons-lang/2.5/commons-lang-2.5-javadoc.jar!/" name="javadoc_location"/>
     </attributes>
   </classpathentry>
   <classpathentry kind="var" path="M2_REPO/commons-logging/commons-logging/1.0.3/commons-logging-1.0.3.jar">
     <attributes>
-      <attribute value="jar:file:/home/chh/.m2/repository/commons-logging/commons-logging/1.0.3/commons-logging-1.0.3-javadoc.jar!/" name="javadoc_location"/>
+      <attribute value="jar:file:/C:/Users/chh/.m2/repository/commons-logging/commons-logging/1.0.3/commons-logging-1.0.3-javadoc.jar!/" name="javadoc_location"/>
     </attributes>
   </classpathentry>
   <classpathentry kind="var" path="M2_REPO/org/z3950/zing/cql/1.0/cql-1.0.jar"/>
   <classpathentry kind="var" path="M2_REPO/com/google/guava/guava/r07/guava-r07.jar" sourcepath="M2_REPO/com/google/guava/guava/r07/guava-r07-sources.jar">
     <attributes>
-      <attribute value="jar:file:/home/chh/.m2/repository/com/google/guava/guava/r07/guava-r07-javadoc.jar!/" name="javadoc_location"/>
+      <attribute value="jar:file:/C:/Users/chh/.m2/repository/com/google/guava/guava/r07/guava-r07-javadoc.jar!/" name="javadoc_location"/>
     </attributes>
   </classpathentry>
   <classpathentry kind="var" path="M2_REPO/com/google/gwt/gwt-user/2.0.4/gwt-user-2.0.4.jar" sourcepath="M2_REPO/com/google/gwt/gwt-user/2.0.4/gwt-user-2.0.4-sources.jar">
     <attributes>
-      <attribute value="jar:file:/home/chh/.m2/repository/com/google/gwt/gwt-user/2.0.4/gwt-user-2.0.4-javadoc.jar!/" name="javadoc_location"/>
+      <attribute value="jar:file:/C:/Users/chh/.m2/repository/com/google/gwt/gwt-user/2.0.4/gwt-user-2.0.4-javadoc.jar!/" name="javadoc_location"/>
     </attributes>
   </classpathentry>
   <classpathentry kind="var" path="M2_REPO/org/hamcrest/hamcrest-all/1.1/hamcrest-all-1.1.jar" sourcepath="M2_REPO/org/hamcrest/hamcrest-all/1.1/hamcrest-all-1.1-sources.jar"/>
@@ -46,29 +45,29 @@
   <classpathentry kind="var" path="M2_REPO/org/jibx/jibx-run/1.2.2/jibx-run-1.2.2.jar"/>
   <classpathentry kind="var" path="M2_REPO/joda-time/joda-time/1.6.1/joda-time-1.6.1.jar" sourcepath="M2_REPO/joda-time/joda-time/1.6.1/joda-time-1.6.1-sources.jar">
     <attributes>
-      <attribute value="jar:file:/home/chh/.m2/repository/joda-time/joda-time/1.6.1/joda-time-1.6.1-javadoc.jar!/" name="javadoc_location"/>
+      <attribute value="jar:file:/C:/Users/chh/.m2/repository/joda-time/joda-time/1.6.1/joda-time-1.6.1-javadoc.jar!/" name="javadoc_location"/>
     </attributes>
   </classpathentry>
   <classpathentry kind="var" path="M2_REPO/junit/junit/4.8.2/junit-4.8.2.jar" sourcepath="M2_REPO/junit/junit/4.8.2/junit-4.8.2-sources.jar">
     <attributes>
-      <attribute value="jar:file:/home/chh/.m2/repository/junit/junit/4.8.2/junit-4.8.2-javadoc.jar!/" name="javadoc_location"/>
+      <attribute value="jar:file:/C:/Users/chh/.m2/repository/junit/junit/4.8.2/junit-4.8.2-javadoc.jar!/" name="javadoc_location"/>
     </attributes>
   </classpathentry>
   <classpathentry kind="var" path="M2_REPO/log4j/log4j/1.2.16/log4j-1.2.16.jar" sourcepath="M2_REPO/log4j/log4j/1.2.16/log4j-1.2.16-sources.jar">
     <attributes>
-      <attribute value="jar:file:/home/chh/.m2/repository/log4j/log4j/1.2.16/log4j-1.2.16-javadoc.jar!/" name="javadoc_location"/>
+      <attribute value="jar:file:/C:/Users/chh/.m2/repository/log4j/log4j/1.2.16/log4j-1.2.16-javadoc.jar!/" name="javadoc_location"/>
     </attributes>
   </classpathentry>
   <classpathentry kind="var" path="M2_REPO/org/vaadin/addons/pojo-container/0.1.0/pojo-container-0.1.0.jar"/>
   <classpathentry kind="var" path="M2_REPO/xalan/serializer/2.7.1/serializer-2.7.1.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/slf4j/slf4j-api/1.6.1/slf4j-api-1.6.1.jar" sourcepath="M2_REPO/org/slf4j/slf4j-api/1.6.1/slf4j-api-1.6.1-sources.jar">
     <attributes>
-      <attribute value="jar:file:/home/chh/.m2/repository/org/slf4j/slf4j-api/1.6.1/slf4j-api-1.6.1-javadoc.jar!/" name="javadoc_location"/>
+      <attribute value="jar:file:/C:/Users/chh/.m2/repository/org/slf4j/slf4j-api/1.6.1/slf4j-api-1.6.1-javadoc.jar!/" name="javadoc_location"/>
     </attributes>
   </classpathentry>
   <classpathentry kind="var" path="M2_REPO/org/slf4j/slf4j-log4j12/1.6.1/slf4j-log4j12-1.6.1.jar" sourcepath="M2_REPO/org/slf4j/slf4j-log4j12/1.6.1/slf4j-log4j12-1.6.1-sources.jar">
     <attributes>
-      <attribute value="jar:file:/home/chh/.m2/repository/org/slf4j/slf4j-log4j12/1.6.1/slf4j-log4j12-1.6.1-javadoc.jar!/" name="javadoc_location"/>
+      <attribute value="jar:file:/C:/Users/chh/.m2/repository/org/slf4j/slf4j-log4j12/1.6.1/slf4j-log4j12-1.6.1-javadoc.jar!/" name="javadoc_location"/>
     </attributes>
   </classpathentry>
   <classpathentry kind="var" path="M2_REPO/stax/stax-api/1.0.1/stax-api-1.0.1.jar"/>
@@ -77,7 +76,7 @@
   <classpathentry kind="var" path="M2_REPO/wsdl4j/wsdl4j/1.5.1/wsdl4j-1.5.1.jar" sourcepath="M2_REPO/wsdl4j/wsdl4j/1.5.1/wsdl4j-1.5.1-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/apache/ws/security/wss4j/1.5.8/wss4j-1.5.8.jar" sourcepath="M2_REPO/org/apache/ws/security/wss4j/1.5.8/wss4j-1.5.8-sources.jar">
     <attributes>
-      <attribute value="jar:file:/home/chh/.m2/repository/org/apache/ws/security/wss4j/1.5.8/wss4j-1.5.8-javadoc.jar!/" name="javadoc_location"/>
+      <attribute value="jar:file:/C:/Users/chh/.m2/repository/org/apache/ws/security/wss4j/1.5.8/wss4j-1.5.8-javadoc.jar!/" name="javadoc_location"/>
     </attributes>
   </classpathentry>
   <classpathentry kind="var" path="M2_REPO/org/codehaus/woodstox/wstx-asl/3.2.9/wstx-asl-3.2.9.jar" sourcepath="M2_REPO/org/codehaus/woodstox/wstx-asl/3.2.9/wstx-asl-3.2.9-sources.jar"/>
