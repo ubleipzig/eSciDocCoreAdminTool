@@ -19,7 +19,6 @@ import org.xml.sax.SAXException;
 
 import com.google.common.base.Preconditions;
 import com.vaadin.data.Item;
-import com.vaadin.data.Property;
 import com.vaadin.terminal.SystemError;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Alignment;
@@ -230,7 +229,7 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
         addDescField();
         addObjectId();
         addModified();
-        // addCreated();
+        addCreated();
         addStatus();
         addType();
         addOrgUnit();
@@ -250,15 +249,9 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
     }
 
     private void addCreated() {
-        // if (isRetrieveUserPermitted(getCreatorId())) {
         createCreatedByLink();
         form.addComponent(LayoutHelper.create("Created", "by", createdOn,
             createdByLink, LABEL_WIDTH, HEIGHT, false));
-        // }
-        // else {
-        // form.addComponent(LayoutHelper.create("Created", "by", createdOn,
-        // createdBy, LABEL_WIDTH, HEIGHT, false));
-        // }
     }
 
     private void createCreatedByLink() {
@@ -534,40 +527,45 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
         bindData();
     }
 
-    @SuppressWarnings("unchecked")
     private void bindData() {
         bindPublicStatusWithView();
+        bindName();
+        bindObjectId();
+        bindStatus();
+        bindModifiedOn();
+        bindModifiedBy();
+        bindCreatedOn();
+        bindCreatedBy();
+        bindType();
+        bindDescription();
+        bindOrgUnit();
+        bindAdminDescriptor();
+        bindUserRightWithView();
+    }
+
+    private void bindName() {
         nameField.setPropertyDataSource(item
             .getItemProperty(ViewConstants.NAME_ID));
-        final Property objectIdProperty =
-            item.getItemProperty(PropertyId.OBJECT_ID);
-        objIdField.setPropertyDataSource(objectIdProperty);
+    }
+
+    private void bindObjectId() {
+        objIdField.setPropertyDataSource(item
+            .getItemProperty(PropertyId.OBJECT_ID));
+    }
+
+    private void bindStatus() {
         status.setPropertyDataSource(item
             .getItemProperty(PropertyId.PUBLIC_STATUS));
+    }
+
+    private void bindModifiedOn() {
         modifiedOn.setCaption(Converter
             .dateTimeToString((org.joda.time.DateTime) item.getItemProperty(
                 PropertyId.LAST_MODIFICATION_DATE).getValue()));
-        bindModifiedBy();
-        createdOn.setCaption(Converter
-            .dateTimeToString((org.joda.time.DateTime) item.getItemProperty(
-                PropertyId.CREATED_ON).getValue()));
-        // bindCreatedBy();
-        typeField.setPropertyDataSource(item.getItemProperty(PropertyId.TYPE));
-        descriptionField.setPropertyDataSource(item
-            .getItemProperty(PropertyId.DESCRIPTION));
-        orgUnitList.removeAllItems();
-        final List<OrganizationalUnitRef> refs =
-            (List<OrganizationalUnitRef>) item.getItemProperty(
-                PropertyId.ORG_UNIT_REFS).getValue();
+    }
 
-        for (final OrganizationalUnitRef resourceRef : refs) {
-            final String orgUnitTitle = findOrgUnitTitle(resourceRef);
-            final ResourceRefDisplay resourceRefDisplay =
-                new ResourceRefDisplay(resourceRef.getObjid(), orgUnitTitle);
-            orgUnitList.addItem(resourceRefDisplay);
-        }
-        addOrgUnitToTheList.using(orgUnitList);
-
+    @SuppressWarnings("unchecked")
+    private void bindAdminDescriptor() {
         adminDescriptorAccordion.removeAllComponents();
 
         final List<AdminDescriptor> adminDescriptors =
@@ -586,19 +584,46 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
                     e);
             }
         }
+    }
 
-        bindUserRightWithView();
+    @SuppressWarnings("unchecked")
+    private void bindOrgUnit() {
+        orgUnitList.removeAllItems();
+        final List<OrganizationalUnitRef> refs =
+            (List<OrganizationalUnitRef>) item.getItemProperty(
+                PropertyId.ORG_UNIT_REFS).getValue();
+
+        for (final OrganizationalUnitRef resourceRef : refs) {
+            final String orgUnitTitle = findOrgUnitTitle(resourceRef);
+            final ResourceRefDisplay resourceRefDisplay =
+                new ResourceRefDisplay(resourceRef.getObjid(), orgUnitTitle);
+            orgUnitList.addItem(resourceRefDisplay);
+        }
+        addOrgUnitToTheList.using(orgUnitList);
+    }
+
+    private void bindDescription() {
+        descriptionField.setPropertyDataSource(item
+            .getItemProperty(PropertyId.DESCRIPTION));
+    }
+
+    private void bindType() {
+        typeField.setPropertyDataSource(item.getItemProperty(PropertyId.TYPE));
+    }
+
+    private void bindCreatedOn() {
+        createdOn.setCaption(Converter
+            .dateTimeToString((org.joda.time.DateTime) item.getItemProperty(
+                PropertyId.CREATED_ON).getValue()));
     }
 
     private void bindCreatedBy() {
+        createdByLink.setCaption(getCreatorName());
         if (isRetrieveUserPermitted(getCreatorId())) {
-            createdByLink.setCaption(getCreatorName());
-            final String creatorId = getCreatorId();
             creatorLinkListener.setUser(getCreatorId());
         }
         else {
-            createdBy.setPropertyDataSource(item
-                .getItemProperty(PropertyId.CREATED_BY));
+            createdByLink.setEnabled(false);
         }
 
     }
@@ -617,8 +642,9 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
     }
 
     private void bindModifiedBy() {
+        modifiedByLink.setCaption(getModifierName());
+
         if (isRetrieveUserPermitted(getModifierId())) {
-            modifiedByLink.setCaption(getModifierName());
             modifiedByLinkListener.setUser(getModifierId());
         }
         else {

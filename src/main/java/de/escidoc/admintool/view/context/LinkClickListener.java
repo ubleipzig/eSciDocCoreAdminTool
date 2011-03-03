@@ -26,6 +26,7 @@ public final class LinkClickListener implements Button.ClickListener {
     }
 
     public void setUser(final String userId) {
+        Preconditions.checkNotNull(userId, "userId is null: %s", userId);
         this.userId = userId;
     }
 }
