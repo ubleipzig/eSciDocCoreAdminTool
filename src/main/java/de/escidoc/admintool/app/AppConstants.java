@@ -55,4 +55,6 @@ public class AppConstants {
     "urn:oasis:names:tc:xacml:1.0:resource:resource-id";
 
     public static final String SMALL_BUTTON = "small";
+
+    public static final String ESCIDOC_LOGO = "images/SchriftLogo.jpg";
 }

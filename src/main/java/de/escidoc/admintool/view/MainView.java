@@ -2,11 +2,12 @@ package de.escidoc.admintool.view;
 
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.GridLayout;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.HorizontalSplitPanel;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.Reindeer;
 
@@ -31,7 +32,7 @@ public class MainView extends CustomComponent {
 
     private final ToolbarFactory factory = new ToolbarFactory();
 
-    final AdminToolApplication app;
+    private final AdminToolApplication app;
 
     private final PdpRequest pdpRequest;
 
@@ -43,11 +44,16 @@ public class MainView extends CustomComponent {
 
     private Button loginButton;
 
+    private final EscidocServiceLocation location;
+
     public MainView(final AdminToolApplication app,
-        final PdpRequest pdpRequest, final UserAccount currentUser) {
+        final PdpRequest pdpRequest, final UserAccount currentUser,
+        final EscidocServiceLocation location) {
+
         this.app = app;
         this.pdpRequest = pdpRequest;
         this.currentUser = currentUser;
+        this.location = location;
     }
 
     public void init() {
@@ -83,7 +89,12 @@ public class MainView extends CustomComponent {
     }
 
     private void show(final Button button) {
-        toolbar = factory.createToolbar(new Button[] { button });
+        final HorizontalLayout layout = new HorizontalLayout();
+        layout.addComponent(new Label(currentUser
+            .getProperties().getLoginName()));
+        layout.addComponent(new Label(" ", Label.CONTENT_XHTML));
+        layout.addComponent(button);
+        toolbar = factory.createToolbar(layout);
     }
 
     private void makeFullSize() {
@@ -99,22 +110,16 @@ public class MainView extends CustomComponent {
     private void createLogInButton() {
         loginButton =
             new Button(ViewConstants.LOGIN_LABEL, new LoginButtonListener(
-                app.getMainWindow(), app.escidocLoginUrl + app.getURL()));
+                app.getMainWindow(), location.getLoginUri()));
         loginButton.setStyleName(Reindeer.BUTTON_SMALL);
     }
 
     private void createLogOutButton() {
         logoutButton.setStyleName(Reindeer.BUTTON_SMALL);
-        final String logoutURL = app.escidocLogoutUrl + app.getURL();
-        app.setLogoutURL(logoutURL);
-        logoutButton.addListener(new Button.ClickListener() {
-            private static final long serialVersionUID = 6434716782391206321L;
-
-            @Override
-            public void buttonClick(final ClickEvent event) {
-                app.close();
-            }
-        });
+        app.setLogoutURL(location.getLogoutUri());
+        final LogoutButtonListener logoutButtonListener =
+            new LogoutButtonListener(app);
+        logoutButton.addListener(logoutButtonListener);
     }
 
     private void createAndAddNavigationTree() {
@@ -144,5 +149,4 @@ public class MainView extends CustomComponent {
     public NavigationTree getNavigationTree() {
         return navigation;
     }
-
 }

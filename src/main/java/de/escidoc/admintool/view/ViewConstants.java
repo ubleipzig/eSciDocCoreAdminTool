@@ -442,4 +442,6 @@ public class ViewConstants {
 
     public static final String GENERAL_ERROR_MESSAGE =
         "An unexpected error occured! See log for details";
+
+    public static final String TOOLBAR_STYLE_NAME = "escidoc-toolbar";
 }

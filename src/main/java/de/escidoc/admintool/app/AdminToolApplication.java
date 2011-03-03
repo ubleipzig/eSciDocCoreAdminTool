@@ -232,10 +232,6 @@ public class AdminToolApplication extends Application {
 
     private void userIsLoggedIn() throws EscidocClientException {
         currentUser = userService.getCurrentUser();
-        mainWindow.showNotification(new Notification("Info",
-            "You are logged in as: "
-                + currentUser.getProperties().getLoginName(),
-            Notification.TYPE_TRAY_NOTIFICATION));
     }
 
     private void currentUserIsAnon() {
@@ -280,7 +276,8 @@ public class AdminToolApplication extends Application {
     }
 
     private void buildMainLayout() {
-        mainView = new MainView(this, pdpRequest, currentUser);
+        mainView =
+            new MainView(this, pdpRequest, currentUser, escidocServiceLocation);
         mainView.init();
 
         viewManager.setMainView(mainView);
