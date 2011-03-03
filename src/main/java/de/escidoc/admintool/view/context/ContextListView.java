@@ -15,6 +15,7 @@ import de.escidoc.admintool.app.PropertyId;
 import de.escidoc.admintool.service.ContextService;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.admintool.view.util.dialog.ErrorDialog;
+import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
@@ -104,19 +105,7 @@ public class ContextListView extends Table {
         try {
             allContexts = contextService.findAll();
         }
-        catch (final EscidocException e) {
-            app.getMainWindow().addWindow(
-                new ErrorDialog(app.getMainWindow(), "Error",
-                    "An unexpected error occured! See LOG for details."));
-            LOG.error("An unexpected error occured! See LOG for details.", e);
-        }
-        catch (final InternalClientException e) {
-            app.getMainWindow().addWindow(
-                new ErrorDialog(app.getMainWindow(), "Error",
-                    "An unexpected error occured! See LOG for details."));
-            LOG.error("An unexpected error occured! See LOG for details.", e);
-        }
-        catch (final TransportException e) {
+        catch (final EscidocClientException e) {
             app.getMainWindow().addWindow(
                 new ErrorDialog(app.getMainWindow(), "Error",
                     "An unexpected error occured! See LOG for details."));

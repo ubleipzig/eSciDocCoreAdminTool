@@ -134,6 +134,8 @@ public class AdminToolApplication extends Application {
 
     private EscidocServiceLocation escidocServiceLocation;
 
+    private MainView mainView;
+
     @Override
     public void init() {
         showProxyInfoInLog();
@@ -278,7 +280,7 @@ public class AdminToolApplication extends Application {
     }
 
     private void buildMainLayout() {
-        final MainView mainView = new MainView(this, pdpRequest, currentUser);
+        mainView = new MainView(this, pdpRequest, currentUser);
         mainView.init();
 
         viewManager.setMainView(mainView);
@@ -418,6 +420,7 @@ public class AdminToolApplication extends Application {
         if (userViewComp == null) {
             createUserViewComponent();
         }
+        mainView.getNavigationTree().selectUserView();
         userViewComp.getUserView().getUserList().select(user);
         userViewComp.getUserView().showEditView(
             userViewComp.getUserView().getSelectedItem());

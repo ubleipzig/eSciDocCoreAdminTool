@@ -6,4 +6,6 @@ public interface NavigationTree extends Component {
 
     NavigationTree init();
 
+    void selectUserView();
+
 }

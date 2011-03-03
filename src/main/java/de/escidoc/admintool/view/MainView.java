@@ -141,4 +141,8 @@ public class MainView extends CustomComponent {
         horizontalSplit.setSecondComponent(component);
     }
 
+    public NavigationTree getNavigationTree() {
+        return navigation;
+    }
+
 }

@@ -38,9 +38,11 @@ import com.vaadin.ui.TabSheet.Tab;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.themes.BaseTheme;
 import com.vaadin.ui.themes.Reindeer;
 
 import de.escidoc.admintool.app.AdminToolApplication;
+import de.escidoc.admintool.app.AppConstants;
 import de.escidoc.admintool.app.PropertyId;
 import de.escidoc.admintool.domain.PdpRequest;
 import de.escidoc.admintool.exception.ResourceNotFoundException;
@@ -58,12 +60,14 @@ import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
 import de.escidoc.core.resources.common.reference.OrganizationalUnitRef;
+import de.escidoc.core.resources.common.reference.UserAccountRef;
 import de.escidoc.core.resources.om.context.AdminDescriptor;
 import de.escidoc.core.resources.om.context.AdminDescriptors;
 import de.escidoc.core.resources.om.context.Context;
 import de.escidoc.core.resources.om.context.OrganizationalUnitRefs;
 
 public class ContextEditForm extends CustomComponent implements ClickListener {
+
     private static final long serialVersionUID = 249276128897788486L;
 
     private static final Logger LOG = LoggerFactory
@@ -134,11 +138,19 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
 
     private Item item;
 
-    private final Window mainWindow;
+    final Window mainWindow;
 
     private final AddOrgUnitToTheList addOrgUnitToTheList;
 
     private final PdpRequest pdpRequest;
+
+    private Button createdByLink;
+
+    private LinkClickListener modifiedByLinkListener;
+
+    private Button modifiedByLink;
+
+    private LinkClickListener creatorLinkListener;
 
     public ContextEditForm(final AdminToolApplication app,
         final Window mainWindow, final ContextService contextService,
@@ -216,34 +228,70 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
         setFieldsWriteThrough(false);
         addNameField();
         addDescField();
+        addObjectId();
+        addModified();
+        // addCreated();
+        addStatus();
+        addType();
+        addOrgUnit();
+        addAdminDescriptor();
+    }
 
-        // objectid
-        form.addComponent(LayoutHelper.create(ViewConstants.OBJECT_ID_LABEL,
-            objIdField, LABEL_WIDTH, false));
-
-        // modified
-        form.addComponent(LayoutHelper.create("Modified", "by", modifiedOn,
-            modifiedBy, LABEL_WIDTH, HEIGHT, false));
-
-        // created
-        form.addComponent(LayoutHelper.create("Created", "by", createdOn,
-            createdBy, LABEL_WIDTH, HEIGHT, false));
-
-        // Status
-        form.addComponent(LayoutHelper.create("Status", status, LABEL_WIDTH,
-            false));
-
-        // Type
+    private void addType() {
         typeField.setWidth(ViewConstants.FIELD_WIDTH);
         fields.add(typeField);
         form.addComponent(LayoutHelper.create("Type", typeField, LABEL_WIDTH,
             false));
-
-        addOrgUnitField();
-        addAdminDescriptorComponent();
     }
 
-    private void addOrgUnitField() {
+    private void addStatus() {
+        form.addComponent(LayoutHelper.create("Status", status, LABEL_WIDTH,
+            false));
+    }
+
+    private void addCreated() {
+        // if (isRetrieveUserPermitted(getCreatorId())) {
+        createCreatedByLink();
+        form.addComponent(LayoutHelper.create("Created", "by", createdOn,
+            createdByLink, LABEL_WIDTH, HEIGHT, false));
+        // }
+        // else {
+        // form.addComponent(LayoutHelper.create("Created", "by", createdOn,
+        // createdBy, LABEL_WIDTH, HEIGHT, false));
+        // }
+    }
+
+    private void createCreatedByLink() {
+        createdByLink = new Button();
+        createdByLink.setStyleName(BaseTheme.BUTTON_LINK);
+        modifiedByLinkListener = new LinkClickListener(app);
+        createdByLink.addListener(modifiedByLinkListener);
+    }
+
+    private void addModified() {
+        createModifiedByLink();
+        form.addComponent(LayoutHelper.create("Modified", "by", modifiedOn,
+            modifiedByLink, LABEL_WIDTH, HEIGHT, false));
+    }
+
+    private void createModifiedByLink() {
+        modifiedByLink = new Button();
+        modifiedByLink.setStyleName(BaseTheme.BUTTON_LINK);
+        modifiedByLinkListener = new LinkClickListener(app);
+        modifiedByLink.addListener(modifiedByLinkListener);
+    }
+
+    private boolean isRetrieveUserPermitted(final String userId) {
+        return pdpRequest.isPermitted(ActionIdConstants.RETRIEVE_USER_ACCOUNT,
+            userId);
+    }
+
+    private void addObjectId() {
+        form.addComponent(LayoutHelper.create(ViewConstants.OBJECT_ID_LABEL,
+            objIdField, LABEL_WIDTH, false));
+    }
+
+    private void addOrgUnit() {
         createOrgUnitList();
         addOrgUnitEditor();
         form.addComponent(new Label(" &nbsp; ", Label.CONTENT_XHTML));
@@ -269,7 +317,7 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
         form.addComponent(orgUnitEditor);
     }
 
-    private void addAdminDescriptorComponent() {
+    private void addAdminDescriptor() {
         adminDescriptorAccordion = new Accordion();
         adminDescriptorAccordion.setWidth(ViewConstants.FIELD_WIDTH);
         adminDescriptorAccordion.setSizeFull();
@@ -279,9 +327,9 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
         accordionPanel.setSizeFull();
         accordionPanel.setWidth(ViewConstants.FIELD_WIDTH);
 
-        addAdminDescButton.setStyleName("small");
-        editAdminDescButton.setStyleName("small");
-        delAdminDescButton.setStyleName("small");
+        addAdminDescButton.setStyleName(AppConstants.SMALL_BUTTON);
+        editAdminDescButton.setStyleName(AppConstants.SMALL_BUTTON);
+        delAdminDescButton.setStyleName(AppConstants.SMALL_BUTTON);
 
         addAdminDescButton.addListener(new NewAdminDescriptorListener(
             mainWindow, adminDescriptorAccordion));
@@ -313,8 +361,8 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
     }
 
     private void setButtonsStyleToSmall() {
-        addOrgUnitButton.setStyleName("small");
-        removeOrgUnitButton.setStyleName("small");
+        addOrgUnitButton.setStyleName(AppConstants.SMALL_BUTTON);
+        removeOrgUnitButton.setStyleName(AppConstants.SMALL_BUTTON);
     }
 
     private void addOrgUnitButtonListeners() {
@@ -489,10 +537,8 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
     @SuppressWarnings("unchecked")
     private void bindData() {
         bindPublicStatusWithView();
-
         nameField.setPropertyDataSource(item
             .getItemProperty(ViewConstants.NAME_ID));
-
         final Property objectIdProperty =
             item.getItemProperty(PropertyId.OBJECT_ID);
         objIdField.setPropertyDataSource(objectIdProperty);
@@ -501,17 +547,14 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
         modifiedOn.setCaption(Converter
             .dateTimeToString((org.joda.time.DateTime) item.getItemProperty(
                 PropertyId.LAST_MODIFICATION_DATE).getValue()));
-        modifiedBy.setPropertyDataSource(item
-            .getItemProperty(PropertyId.MODIFIED_BY));
+        bindModifiedBy();
         createdOn.setCaption(Converter
             .dateTimeToString((org.joda.time.DateTime) item.getItemProperty(
                 PropertyId.CREATED_ON).getValue()));
-        createdBy.setPropertyDataSource(item
-            .getItemProperty(PropertyId.CREATED_BY));
+        // bindCreatedBy();
         typeField.setPropertyDataSource(item.getItemProperty(PropertyId.TYPE));
         descriptionField.setPropertyDataSource(item
             .getItemProperty(PropertyId.DESCRIPTION));
-
         orgUnitList.removeAllItems();
         final List<OrganizationalUnitRef> refs =
             (List<OrganizationalUnitRef>) item.getItemProperty(
@@ -545,6 +588,55 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
         }
 
         bindUserRightWithView();
+    }
+
+    private void bindCreatedBy() {
+        if (isRetrieveUserPermitted(getCreatorId())) {
+            createdByLink.setCaption(getCreatorName());
+            final String creatorId = getCreatorId();
+            creatorLinkListener.setUser(getCreatorId());
+        }
+        else {
+            createdBy.setPropertyDataSource(item
+                .getItemProperty(PropertyId.CREATED_BY));
+        }
+
+    }
+
+    private String getCreatorId() {
+        return getCreator().getObjid();
+    }
+
+    private String getCreatorName() {
+        return getCreator().getXLinkTitle();
+    }
+
+    private UserAccountRef getCreator() {
+        return (UserAccountRef) item
+            .getItemProperty(PropertyId.CREATED_BY).getValue();
+    }
+
+    private void bindModifiedBy() {
+        if (isRetrieveUserPermitted(getModifierId())) {
+            modifiedByLink.setCaption(getModifierName());
+            modifiedByLinkListener.setUser(getModifierId());
+        }
+        else {
+            modifiedByLink.setEnabled(false);
+        }
+    }
+
+    private String getModifierId() {
+        return getModifier().getObjid();
+    }
+
+    private String getModifierName() {
+        return getModifier().getXLinkTitle();
+    }
+
+    private UserAccountRef getModifier() {
+        return (UserAccountRef) item
+            .getItemProperty(PropertyId.MODIFIED_BY).getValue();
     }
 
     private void bindPublicStatusWithView() {

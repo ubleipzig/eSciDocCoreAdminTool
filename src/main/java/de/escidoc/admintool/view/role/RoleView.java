@@ -41,9 +41,6 @@ import de.escidoc.admintool.service.UserService;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.admintool.view.util.dialog.ErrorDialog;
 import de.escidoc.core.client.exceptions.EscidocClientException;
-import de.escidoc.core.client.exceptions.EscidocException;
-import de.escidoc.core.client.exceptions.InternalClientException;
-import de.escidoc.core.client.exceptions.TransportException;
 import de.escidoc.core.client.exceptions.application.notfound.RoleNotFoundException;
 import de.escidoc.core.resources.Resource;
 import de.escidoc.core.resources.aa.role.Role;
@@ -256,15 +253,7 @@ public class RoleView extends CustomComponent {
         try {
             return contextService.getCache();
         }
-        catch (final EscidocException e) {
-            mainWindow.addWindow(new ErrorDialog(mainWindow,
-                ViewConstants.ERROR_DIALOG_CAPTION, e.getMessage()));
-        }
-        catch (final InternalClientException e) {
-            mainWindow.addWindow(new ErrorDialog(mainWindow,
-                ViewConstants.ERROR_DIALOG_CAPTION, e.getMessage()));
-        }
-        catch (final TransportException e) {
+        catch (final EscidocClientException e) {
             mainWindow.addWindow(new ErrorDialog(mainWindow,
                 ViewConstants.ERROR_DIALOG_CAPTION, e.getMessage()));
         }
@@ -448,23 +437,7 @@ public class RoleView extends CustomComponent {
             try {
                 return contextService.findByTitle(userInput);
             }
-            catch (final EscidocException e) {
-                app.getMainWindow().addWindow(
-                    new ErrorDialog(app.getMainWindow(),
-                        ViewConstants.ERROR_DIALOG_CAPTION,
-                        "An unexpected error occured! See LOG for details."));
-                LOG.error("An unexpected error occured! See LOG for details.",
-                    e);
-            }
-            catch (final InternalClientException e) {
-                app.getMainWindow().addWindow(
-                    new ErrorDialog(app.getMainWindow(),
-                        ViewConstants.ERROR_DIALOG_CAPTION,
-                        "An unexpected error occured! See LOG for details."));
-                LOG.error("An unexpected error occured! See LOG for details.",
-                    e);
-            }
-            catch (final TransportException e) {
+            catch (final EscidocClientException e) {
                 app.getMainWindow().addWindow(
                     new ErrorDialog(app.getMainWindow(),
                         ViewConstants.ERROR_DIALOG_CAPTION,

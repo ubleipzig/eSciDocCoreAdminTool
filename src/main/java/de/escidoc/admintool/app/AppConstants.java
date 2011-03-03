@@ -53,4 +53,6 @@ public class AppConstants {
 
     public static final String RESOURCE_ID =
     "urn:oasis:names:tc:xacml:1.0:resource:resource-id";
+
+    public static final String SMALL_BUTTON = "small";
 }

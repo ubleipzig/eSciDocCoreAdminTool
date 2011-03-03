@@ -63,8 +63,7 @@ public class ContextService implements Serializable {
     }
 
     @SuppressWarnings("deprecation")
-    public Collection<Context> findAll() throws EscidocException,
-        InternalClientException, TransportException {
+    public Collection<Context> findAll() throws EscidocClientException {
         LOG.info("Retrieving Context from repository...");
 
         final Collection<Context> contexts =
@@ -87,7 +86,7 @@ public class ContextService implements Serializable {
     }
 
     public Collection<Context> findByTitle(final String ctxTitle)
-        throws EscidocException, InternalClientException, TransportException {
+        throws EscidocClientException {
         if (contextByTitle.size() == 0) {
             findAll();
         }
@@ -115,8 +114,7 @@ public class ContextService implements Serializable {
         return filter;
     }
 
-    public Collection<Context> getCache() throws EscidocException,
-        InternalClientException, TransportException {
+    public Collection<Context> getCache() throws EscidocClientException {
         if (contextById.values().size() == 0) {
             findAll();
         }

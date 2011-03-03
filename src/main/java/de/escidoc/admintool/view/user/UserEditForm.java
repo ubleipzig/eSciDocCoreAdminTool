@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Preconditions;
 import com.vaadin.data.Item;
+import com.vaadin.data.Property;
 import com.vaadin.data.util.POJOContainer;
 import com.vaadin.terminal.SystemError;
 import com.vaadin.ui.Alignment;
@@ -621,8 +622,7 @@ public class UserEditForm extends CustomComponent implements ClickListener {
         modifiedOn.setCaption(Converter
             .dateTimeToString((org.joda.time.DateTime) item.getItemProperty(
                 PropertyId.LAST_MODIFICATION_DATE).getValue()));
-        modifiedBy.setPropertyDataSource(item
-            .getItemProperty(PropertyId.MODIFIED_BY));
+        bindModifiedBy();
         activeStatus.setPropertyDataSource(item
             .getItemProperty(PropertyId.ACTIVE));
         createdOn.setCaption(Converter
@@ -636,6 +636,15 @@ public class UserEditForm extends CustomComponent implements ClickListener {
         bindUserOrgUnitsWithView();
 
         bindUserRightsWithView();
+    }
+
+    private void bindModifiedBy() {
+        modifiedBy.setPropertyDataSource(getModifedBy());
+    }
+
+    private Property getModifedBy() {
+        return item
+            .getItemProperty(PropertyId.MODIFIED_BY);
     }
 
     private void bindUserRightsWithView() {

@@ -130,4 +130,9 @@ public class NavigationTreeImpl extends CustomComponent
         setAsLeaf(node);
         tree.expandItemsRecursively(parent);
     }
+
+    @Override
+    public void selectUserView() {
+        tree.select(ViewConstants.USERS);
+    }
 }

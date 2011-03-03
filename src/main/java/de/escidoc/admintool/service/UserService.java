@@ -1,8 +1,9 @@
 package de.escidoc.admintool.service;
 
+import gov.loc.www.zing.srw.SearchRetrieveRequestType;
+
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -27,7 +28,6 @@ import de.escidoc.core.resources.aa.useraccount.Attributes;
 import de.escidoc.core.resources.aa.useraccount.Grant;
 import de.escidoc.core.resources.aa.useraccount.GrantProperties;
 import de.escidoc.core.resources.aa.useraccount.UserAccount;
-import de.escidoc.core.resources.common.Filter;
 import de.escidoc.core.resources.common.TaskParam;
 import de.escidoc.core.resources.common.reference.ContextRef;
 import de.escidoc.core.resources.common.reference.Reference;
@@ -63,33 +63,12 @@ public class UserService {
         client.setHandle(handle);
     }
 
-    @SuppressWarnings("deprecation")
     public Collection<UserAccount> findAll() throws EscidocClientException {
-        userAccounts =
-            client.retrieveUserAccounts(emptyFilter()).getUserAccounts();
+        client.retrieveUserAccounts(new SearchRetrieveRequestType());
         for (final UserAccount user : userAccounts) {
             userAccountById.put(user.getObjid(), user);
         }
         return userAccounts;
-    }
-
-    private TaskParam emptyFilter() {
-        final Set<Filter> filters = new HashSet<Filter>();
-        filters.add(getFilter(AppConstants.CREATED_BY_FILTER,
-            AppConstants.SYSADMIN_OBJECT_ID, null));
-        final TaskParam filterParam = new TaskParam();
-        filterParam.setFilters(filters);
-        return filterParam;
-    }
-
-    // FIXME duplicate method in UserAccountService
-    private Filter getFilter(
-        final String name, final String value, final Collection<String> ids) {
-        final Filter filter = new Filter();
-        filter.setName(name);
-        filter.setValue(value);
-        filter.setIds(ids);
-        return filter;
     }
 
     public UserAccount retrieve(final String userObjectId)
