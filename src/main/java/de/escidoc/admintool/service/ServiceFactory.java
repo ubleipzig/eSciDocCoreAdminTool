@@ -135,7 +135,7 @@ public class ServiceFactory {
         TransportException {
         final Authentication authentication =
             new Authentication(serviceUri, SYSADMIN_LOGIN_NAME,
-                SYSADMIN_PASSWORD_ESCIDEV_6);
+                SYSADMIN_PASSWORD_LOCAL);
         final PdpServiceImpl pdpService =
             new PdpServiceImpl(serviceUri, authentication.getHandle());
         return pdpService;
