@@ -90,6 +90,8 @@ public class MainView extends CustomComponent {
 
     private void show(final Button button) {
         final HorizontalLayout layout = new HorizontalLayout();
+        layout.setSpacing(true);
+        layout.setMargin(true);
         layout.addComponent(new Label(currentUser
             .getProperties().getLoginName()));
         layout.addComponent(new Label(" ", Label.CONTENT_XHTML));
