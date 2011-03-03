@@ -9,12 +9,16 @@ import java.util.Set;
 
 import com.google.common.base.Preconditions;
 
+import de.escidoc.admintool.view.EscidocServiceLocation;
 import de.escidoc.core.client.Authentication;
+import de.escidoc.core.client.ContextHandlerClient;
+import de.escidoc.core.client.TransportProtocol;
 import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
 import de.escidoc.core.client.exceptions.application.invalid.InvalidSearchQueryException;
+import de.escidoc.core.client.interfaces.ContextHandlerClientInterface;
 import de.escidoc.core.client.interfaces.HandlerServiceInterface;
 import de.escidoc.core.resources.Resource;
 import de.escidoc.core.resources.common.TaskParam;
@@ -31,10 +35,19 @@ public abstract class AbstractEscidocService<T extends HandlerServiceInterface>
         this.client = client;
     }
 
+    public AbstractEscidocService(
+        final EscidocServiceLocation escidocServiceLocation) {
+        final ContextHandlerClientInterface client =
+            new ContextHandlerClient(escidocServiceLocation.getUri());
+        client.setTransport(TransportProtocol.REST);
+        this.client = client;
+    }
+
     public AbstractEscidocService(final Authentication authentication) {
         this.authentification = authentication;
     }
 
+    @Override
     public void login() throws InternalClientException {
         client.setHandle(authentification.getHandle());
     }
@@ -79,6 +92,7 @@ public abstract class AbstractEscidocService<T extends HandlerServiceInterface>
     abstract Collection<? extends Resource> findPublicOrReleasedResources()
         throws EscidocException, InternalClientException, TransportException;
 
+    @Override
     public abstract Collection<? extends Resource> filterUsingInput(String query)
         throws EscidocException, InternalClientException, TransportException;
 
