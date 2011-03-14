@@ -8,4 +8,9 @@ public interface NavigationTree extends Component {
 
     void selectUserView();
 
+    boolean isExpanded(Object itemId);
+
+    void expandItem(Object itemId);
+
+    void collapseItem(Object itemId);
 }

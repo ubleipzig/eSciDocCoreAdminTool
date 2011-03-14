@@ -13,9 +13,16 @@ public class NavigationTreeClickListener implements ItemClickListener {
 
     private final AdminToolApplication app;
 
+    private ExpandCollapseCommand command;
+
     public NavigationTreeClickListener(final AdminToolApplication app) {
         Preconditions.checkNotNull(app, "app is null: %s", app);
         this.app = app;
+    }
+
+    public void setCommand(final ExpandCollapseCommand command) {
+        Preconditions.checkNotNull(command, "command is null: %s", command);
+        this.command = command;
     }
 
     @Override
@@ -57,7 +64,7 @@ public class NavigationTreeClickListener implements ItemClickListener {
         }
         else if (ViewConstants.RESOURCES.equals(itemId)
             || ViewConstants.ADMIN_TASKS_LABEL.equals(itemId)) {
-            return;
+            command.execute(itemId);
         }
         else {
             throw new IllegalArgumentException("Unknown type.");

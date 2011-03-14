@@ -15,6 +15,8 @@ import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.app.AppConstants;
 import de.escidoc.admintool.domain.PdpRequest;
 import de.escidoc.admintool.view.factory.ToolbarFactory;
+import de.escidoc.admintool.view.navigation.ExpandCollapseCommand;
+import de.escidoc.admintool.view.navigation.ExpandCollapseCommandImpl;
 import de.escidoc.admintool.view.navigation.NavigationTree;
 import de.escidoc.admintool.view.navigation.NavigationTreeClickListener;
 import de.escidoc.core.resources.aa.useraccount.UserAccount;
@@ -132,9 +134,13 @@ public class MainView extends CustomComponent {
     }
 
     private void createNavigationTree() {
+        final NavigationTreeClickListener treeClickListener =
+            new NavigationTreeClickListener(app);
         navigation =
-            NavigationTreeFactory.createViewFor(
-                new NavigationTreeClickListener(app), pdpRequest);
+            NavigationTreeFactory.createViewFor(treeClickListener, pdpRequest);
+        final ExpandCollapseCommand command =
+            new ExpandCollapseCommandImpl(navigation);
+        treeClickListener.setCommand(command);
     }
 
     private void configureHorizontalSplit() {
