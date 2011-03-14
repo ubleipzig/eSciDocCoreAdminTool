@@ -90,11 +90,7 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
 
     private final Label modifiedOn = new Label();
 
-    private final Label modifiedBy = new Label();
-
     private final Label createdOn = new Label();
-
-    private final Label createdBy = new Label();
 
     private final Label status = new Label();
 
@@ -258,7 +254,7 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
         createdByLink = new Button();
         createdByLink.setStyleName(BaseTheme.BUTTON_LINK);
         creatorLinkListener = new LinkClickListener(app);
-        createdByLink.addListener(modifiedByLinkListener);
+        createdByLink.addListener(creatorLinkListener);
     }
 
     private void addModified() {
@@ -558,12 +554,6 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
             .getItemProperty(PropertyId.PUBLIC_STATUS));
     }
 
-    private void bindModifiedOn() {
-        modifiedOn.setCaption(Converter
-            .dateTimeToString((org.joda.time.DateTime) item.getItemProperty(
-                PropertyId.LAST_MODIFICATION_DATE).getValue()));
-    }
-
     @SuppressWarnings("unchecked")
     private void bindAdminDescriptor() {
         adminDescriptorAccordion.removeAllComponents();
@@ -626,6 +616,12 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
             createdByLink.setEnabled(false);
         }
 
+    }
+
+    private void bindModifiedOn() {
+        modifiedOn.setCaption(Converter
+            .dateTimeToString((org.joda.time.DateTime) item.getItemProperty(
+                PropertyId.LAST_MODIFICATION_DATE).getValue()));
     }
 
     private String getCreatorId() {

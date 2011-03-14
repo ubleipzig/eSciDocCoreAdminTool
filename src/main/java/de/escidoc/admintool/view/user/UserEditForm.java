@@ -30,6 +30,7 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.Notification;
+import com.vaadin.ui.themes.BaseTheme;
 import com.vaadin.ui.themes.Reindeer;
 
 import de.escidoc.admintool.app.AdminToolApplication;
@@ -41,6 +42,7 @@ import de.escidoc.admintool.view.ErrorMessage;
 import de.escidoc.admintool.view.ModalDialog;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.admintool.view.context.AddOrgUnitToTheList;
+import de.escidoc.admintool.view.context.LinkClickListener;
 import de.escidoc.admintool.view.navigation.ActionIdConstants;
 import de.escidoc.admintool.view.resource.ResourceRefDisplay;
 import de.escidoc.admintool.view.resource.ResourceTreeView;
@@ -60,6 +62,7 @@ import de.escidoc.core.resources.aa.useraccount.Grant;
 import de.escidoc.core.resources.aa.useraccount.UserAccount;
 import de.escidoc.core.resources.common.reference.Reference;
 import de.escidoc.core.resources.common.reference.RoleRef;
+import de.escidoc.core.resources.common.reference.UserAccountRef;
 
 public class UserEditForm extends CustomComponent implements ClickListener {
     private static final long serialVersionUID = 3182336883168014436L;
@@ -113,9 +116,9 @@ public class UserEditForm extends CustomComponent implements ClickListener {
 
     private TextField loginNameField;
 
-    private Label createdOn;
+    private final Label createdOn = new Label();
 
-    private Label createdBy;
+    private final Label modi = new Label();
 
     private CheckBox activeStatus;
 
@@ -138,6 +141,14 @@ public class UserEditForm extends CustomComponent implements ClickListener {
     private final ResourceTreeView resourceTreeView;
 
     private final SetOrgUnitsCommandImpl setOrgUnitsCommand;
+
+    private Button createdByLink;
+
+    private LinkClickListener modifiedByLinkListener;
+
+    private Button modifiedByLink;
+
+    private LinkClickListener createdByLinkListener;
 
     public UserEditForm(final AdminToolApplication app,
         final UserService userService, final OrgUnitServiceLab orgUnitService,
@@ -172,8 +183,12 @@ public class UserEditForm extends CustomComponent implements ClickListener {
         addPasswordFields();
 
         addObjectIdLabel();
-        addModifiedOnLabel();
-        addCreatedOnAndByLabel();
+
+        addCreated();
+
+        addModified();
+        // addModifiedOnLabel();
+        // addCreatedOnAndByLabel();
         addActiveStatusCheckBox();
 
         createAndAddRoleComponent();
@@ -301,16 +316,47 @@ public class UserEditForm extends CustomComponent implements ClickListener {
             activeStatus, LABEL_WIDTH, false));
     }
 
-    private void addCreatedOnAndByLabel() {
-        createdOn = new Label();
-        createdBy = new Label();
-        panel.addComponent(LayoutHelper.create("Created", "by", createdOn,
-            createdBy, LABEL_WIDTH, LABEL_HEIGHT, false));
+    // private void addCreatedOnAndByLabel() {
+    // createdOn = new Label();
+    // createdBy = new Label();
+    // panel.addComponent(LayoutHelper.create("Created", "by", createdOn,
+    // createdBy, LABEL_WIDTH, LABEL_HEIGHT, false));
+    // }
+    //
+    // private void addModifiedOnLabel() {
+    // panel.addComponent(LayoutHelper.create("Modified", "by", modifiedOn,
+    // modifiedBy, LABEL_WIDTH, LABEL_HEIGHT, false));
+    // }
+
+    private void addCreated() {
+        createCreatedByLink();
+        form.addComponent(LayoutHelper.create("Created", "by", createdOn,
+            createdByLink, LABEL_WIDTH, LABEL_HEIGHT, false));
     }
 
-    private void addModifiedOnLabel() {
-        panel.addComponent(LayoutHelper.create("Modified", "by", modifiedOn,
-            modifiedBy, LABEL_WIDTH, LABEL_HEIGHT, false));
+    private void createCreatedByLink() {
+        createdByLink = new Button();
+        createdByLink.setStyleName(BaseTheme.BUTTON_LINK);
+        createdByLinkListener = new LinkClickListener(app);
+        createdByLink.addListener(createdByLinkListener);
+    }
+
+    private void addModified() {
+        createModifiedByLink();
+        form.addComponent(LayoutHelper.create("Modified", "by", modifiedOn,
+            modifiedByLink, LABEL_WIDTH, LABEL_HEIGHT, false));
+    }
+
+    private void createModifiedByLink() {
+        modifiedByLink = new Button();
+        modifiedByLink.setStyleName(BaseTheme.BUTTON_LINK);
+        modifiedByLinkListener = new LinkClickListener(app);
+        modifiedByLink.addListener(modifiedByLinkListener);
+    }
+
+    private boolean isRetrieveUserPermitted(final String userId) {
+        return pdpRequest.isPermitted(ActionIdConstants.RETRIEVE_USER_ACCOUNT,
+            userId);
     }
 
     private void addObjectIdLabel() {
@@ -619,17 +665,23 @@ public class UserEditForm extends CustomComponent implements ClickListener {
             .getItemProperty(PropertyId.LOGIN_NAME));
         objIdField.setPropertyDataSource(item
             .getItemProperty(PropertyId.OBJECT_ID));
-        modifiedOn.setCaption(Converter
-            .dateTimeToString((org.joda.time.DateTime) item.getItemProperty(
-                PropertyId.LAST_MODIFICATION_DATE).getValue()));
-        bindModifiedBy();
+        // modifiedOn.setCaption(Converter
+        // .dateTimeToString((org.joda.time.DateTime) item.getItemProperty(
+        // PropertyId.LAST_MODIFICATION_DATE).getValue()));
+        // bindModifiedBy();
+        // createdOn.setCaption(Converter
+        // .dateTimeToString((org.joda.time.DateTime) item.getItemProperty(
+        // PropertyId.CREATED_ON).getValue()));
+        // createdBy.setPropertyDataSource(item
+        // .getItemProperty(PropertyId.CREATED_BY));
+
         activeStatus.setPropertyDataSource(item
             .getItemProperty(PropertyId.ACTIVE));
-        createdOn.setCaption(Converter
-            .dateTimeToString((org.joda.time.DateTime) item.getItemProperty(
-                PropertyId.CREATED_ON).getValue()));
-        createdBy.setPropertyDataSource(item
-            .getItemProperty(PropertyId.CREATED_BY));
+
+        bindModifiedOn();
+        bindModifiedBy();
+        bindCreatedOn();
+        bindCreatedBy();
 
         bindUpdatePassword();
         bindRolesWithView();
@@ -638,13 +690,72 @@ public class UserEditForm extends CustomComponent implements ClickListener {
         bindUserRightsWithView();
     }
 
-    private void bindModifiedBy() {
-        modifiedBy.setPropertyDataSource(getModifedBy());
-    }
+    // private void bindModifiedBy() {
+    // modifiedBy.setPropertyDataSource(getModifedBy());
+    // }
 
     private Property getModifedBy() {
-        return item
-            .getItemProperty(PropertyId.MODIFIED_BY);
+        return item.getItemProperty(PropertyId.MODIFIED_BY);
+    }
+
+    private void bindCreatedOn() {
+        createdOn.setCaption(Converter
+            .dateTimeToString((org.joda.time.DateTime) item.getItemProperty(
+                PropertyId.CREATED_ON).getValue()));
+    }
+
+    private void bindCreatedBy() {
+        createdByLink.setCaption(getCreatorName());
+        if (isRetrieveUserPermitted(getCreatorId())) {
+            createdByLinkListener.setUser(getCreatorId());
+        }
+        else {
+            createdByLink.setEnabled(false);
+        }
+
+    }
+
+    private void bindModifiedOn() {
+        modifiedOn.setCaption(Converter
+            .dateTimeToString((org.joda.time.DateTime) item.getItemProperty(
+                PropertyId.LAST_MODIFICATION_DATE).getValue()));
+    }
+
+    private String getCreatorId() {
+        return getCreator().getObjid();
+    }
+
+    private String getCreatorName() {
+        return getCreator().getXLinkTitle();
+    }
+
+    private UserAccountRef getCreator() {
+        return (UserAccountRef) item
+            .getItemProperty(PropertyId.CREATED_BY).getValue();
+    }
+
+    private void bindModifiedBy() {
+        modifiedByLink.setCaption(getModifierName());
+
+        if (isRetrieveUserPermitted(getModifierId())) {
+            modifiedByLinkListener.setUser(getModifierId());
+        }
+        else {
+            modifiedByLink.setEnabled(false);
+        }
+    }
+
+    private String getModifierId() {
+        return getModifier().getObjid();
+    }
+
+    private String getModifierName() {
+        return getModifier().getXLinkTitle();
+    }
+
+    private UserAccountRef getModifier() {
+        return (UserAccountRef) item
+            .getItemProperty(PropertyId.MODIFIED_BY).getValue();
     }
 
     private void bindUserRightsWithView() {
@@ -665,9 +776,6 @@ public class UserEditForm extends CustomComponent implements ClickListener {
         // roles
         addRoleButton.setVisible(isCreateGrantAllowed());
         removeRoleButton.setVisible(isRevokeGrantAllowed());
-
-        // foooter
-        // }
     }
 
     private boolean isRevokeGrantAllowed() {

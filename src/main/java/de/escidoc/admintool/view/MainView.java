@@ -88,14 +88,15 @@ public class MainView extends CustomComponent {
         return !currentUser.getObjid().equals(AppConstants.EMPTY_STRING);
     }
 
-    private void show(final Button button) {
+    private void show(final Button logOutButton) {
         final HorizontalLayout layout = new HorizontalLayout();
         layout.setSpacing(true);
         layout.setMargin(true);
-        layout.addComponent(new Label(currentUser
-            .getProperties().getLoginName()));
-        layout.addComponent(new Label(" ", Label.CONTENT_XHTML));
-        layout.addComponent(button);
+        layout.addComponent(new Label("<b>User: "
+            + currentUser.getProperties().getLoginName() + "</b>",
+            Label.CONTENT_XHTML));
+        layout.addComponent(new Label("|", Label.CONTENT_XHTML));
+        layout.addComponent(logOutButton);
         toolbar = factory.createToolbar(layout);
     }
 
@@ -118,7 +119,7 @@ public class MainView extends CustomComponent {
 
     private void createLogOutButton() {
         logoutButton.setStyleName(Reindeer.BUTTON_SMALL);
-        app.setLogoutURL(location.getLogoutUri());
+        app.setLogoutURL(location.getLogoutUri() + app.getURL());
         final LogoutButtonListener logoutButtonListener =
             new LogoutButtonListener(app);
         logoutButton.addListener(logoutButtonListener);
