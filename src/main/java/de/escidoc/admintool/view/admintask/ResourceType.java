@@ -4,7 +4,6 @@ public enum ResourceType {
 
     ITEM("Item"), CONTAINER("Container"), CONTEXT("Context"), ORGANIZATIONAL_UNIT(
         "Organizational Unit");
-    // , NONE("None");
 
     private String label;
 

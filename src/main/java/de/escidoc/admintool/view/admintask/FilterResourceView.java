@@ -5,6 +5,7 @@ import java.util.Arrays;
 import com.google.common.base.Preconditions;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.OptionGroup;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
@@ -25,7 +26,7 @@ public class FilterResourceView extends AbstractCustomView {
     private final TextField rawFilterTextArea = new TextField();
 
     private final Button filterResourceBtn = new Button(
-        ViewConstants.FILTER_RESOURCES);
+        ViewConstants.FILTER_LABEL);
 
     private final ShowFilterResultCommand command;
 
@@ -34,6 +35,8 @@ public class FilterResourceView extends AbstractCustomView {
     final Window mainWindow;
 
     private final FilterResourceListener listener;
+
+    private HorizontalLayout filterLayout;
 
     public FilterResourceView(final ServiceContainer serviceContainer,
         final Window mainWindow, final PdpRequest pdpRequest) {
@@ -64,8 +67,13 @@ public class FilterResourceView extends AbstractCustomView {
 
     private void addFilterQueryTexField() {
         rawFilterTextArea.setWidth(800, UNITS_PIXELS);
-        rawFilterTextArea.setValue(ViewConstants.EXAMPLE_QUERY);
-        getViewLayout().addComponent(rawFilterTextArea);
+        rawFilterTextArea
+            .setDescription(ViewConstants.FILTER_EXAMPLE_TOOLTIP_TEXT);
+
+        filterLayout = new HorizontalLayout();
+        filterLayout.setMargin(true);
+        filterLayout.setSpacing(true);
+        filterLayout.addComponent(rawFilterTextArea);
     }
 
     private void addResourceTypeOption() {
@@ -79,7 +87,8 @@ public class FilterResourceView extends AbstractCustomView {
 
     private void addFilterButton() {
         filterResourceBtn.setWidth(150, UNITS_PIXELS);
-        getViewLayout().addComponent(filterResourceBtn);
+        filterLayout.addComponent(filterResourceBtn);
+        getViewLayout().addComponent(filterLayout);
         addListener();
     }
 

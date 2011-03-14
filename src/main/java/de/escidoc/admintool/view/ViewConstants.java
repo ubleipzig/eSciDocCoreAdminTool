@@ -277,7 +277,7 @@ public class ViewConstants {
 
     public static final String SHOW_REPOSITORY_INFO = "Repository Information";
 
-    public static final String FILTER_RESOURCES = "Filter Resources";
+    public static final String FILTER_LABEL = "Filter";
 
     public static final String PURGE = "Purge";
 
@@ -444,4 +444,14 @@ public class ViewConstants {
         "An unexpected error occured! See log for details";
 
     public static final String TOOLBAR_STYLE_NAME = "escidoc-toolbar";
+
+    public static final String FILTER_EXAMPLE_TOOLTIP_TEXT =
+        "<h2>Query examples: </h2>"
+            + "<ul>"
+            + "  <li>\"/id\"=escidoc:5 <br/> filter selected resource type with id=escidoc:5</li>"
+            + "  <li>\"/properties/public-status\"= \"released\" <br/> filter selected resource type with public status release</li>"
+            + "<li>"
+            + EXAMPLE_QUERY
+            + "<br/> filter selected resource type that created by useraccount with the id:exuser1</li>"
+            + "  <li>etc.</li>" + "</ul>";
 }
