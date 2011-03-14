@@ -130,6 +130,9 @@ public class UserViewComponent {
         userView.showAddView();
     }
 
+    // FIXME: this is a hack, an won't perform well.
+    // To improve: Implement equals() and hashCode in DTO or Domain Object i.e.
+    // UserAccount or MyUserAccount
     public void showUserInEditView(final UserAccount user) {
         for (final UserAccount userAccount : getAllUserAccountsFromContainer()) {
             if (hasEqualsId(user, userAccount)) {
