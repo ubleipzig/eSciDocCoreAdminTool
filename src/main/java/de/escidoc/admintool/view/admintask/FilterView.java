@@ -24,22 +24,36 @@ public class FilterView extends AbstractAdminTaskView {
 
     @Override
     public void addView() {
-        Label text = new H2(ViewConstants.FILTERING_RESOURCES_TITLE);
-        text.setContentMode(Label.CONTENT_XHTML);
-        cssLayout.addComponent(text);
+        addHeader();
+        addRuler();
+        addDescription();
+        addContent();
+    }
 
-        cssLayout.addComponent(new Ruler());
-
-        text = new Label(ViewConstants.FILTER_TEXT, Label.CONTENT_XHTML);
-        cssLayout.addComponent(text);
-
+    private void addContent() {
         final HorizontalLayout hLayout = new HorizontalLayout();
         hLayout.setWidth(100, UNITS_PERCENTAGE);
         hLayout.setHeight(100, UNITS_PERCENTAGE);
 
         final FilterResourceView filterView =
             new FilterResourceView(services, mainWindow, pdpRequest);
+        filterView.init();
         hLayout.addComponent(filterView);
         cssLayout.addComponent(hLayout);
+    }
+
+    private void addDescription() {
+        cssLayout.addComponent(new Label(ViewConstants.FILTER_DESCRIPTION_TEXT,
+            Label.CONTENT_XHTML));
+    }
+
+    private void addRuler() {
+        cssLayout.addComponent(new Ruler());
+    }
+
+    private void addHeader() {
+        final Label text = new H2(ViewConstants.FILTERING_RESOURCES_TITLE);
+        text.setContentMode(Label.CONTENT_XHTML);
+        cssLayout.addComponent(text);
     }
 }

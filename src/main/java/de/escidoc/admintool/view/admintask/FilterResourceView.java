@@ -42,7 +42,6 @@ public class FilterResourceView extends AbstractCustomView {
         adminService = serviceContainer.getAdminService();
         listener = new FilterResourceListener(mainWindow, serviceContainer);
         command = new ShowFilterResultCommandImpl(this, pdpRequest);
-        init();
     }
 
     private void preconditions(
@@ -56,9 +55,8 @@ public class FilterResourceView extends AbstractCustomView {
             pdpRequest);
     }
 
-    private void init() {
+    public void init() {
         getViewLayout().setSizeFull();
-
         addResourceTypeOption();
         addFilterQueryTexField();
         addFilterButton();
@@ -71,11 +69,9 @@ public class FilterResourceView extends AbstractCustomView {
     }
 
     private void addResourceTypeOption() {
-        final BeanItemContainer<ResourceType> dataSource =
-            new BeanItemContainer<ResourceType>(ResourceType.class);
-        dataSource.addAll(Arrays.asList(ResourceType.values()));
-        resourceOption.setContainerDataSource(dataSource);
-
+        resourceOption
+            .setContainerDataSource(new BeanItemContainer<ResourceType>(
+                ResourceType.class, Arrays.asList(ResourceType.values())));
         resourceOption.setItemCaptionPropertyId(PropertyId.LABEL);
         resourceOption.select(ResourceType.ITEM);
         getViewLayout().addComponent(resourceOption);

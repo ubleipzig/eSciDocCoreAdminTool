@@ -122,7 +122,7 @@ public class FilterResourceListener implements ClickListener {
         if (value instanceof ResourceType) {
             return (ResourceType) value;
         }
-        return ResourceType.NONE;
+        return ResourceType.ITEM;
     }
 
     private String getRawFilter() {
