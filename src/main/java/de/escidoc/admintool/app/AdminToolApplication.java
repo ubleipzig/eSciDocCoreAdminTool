@@ -13,6 +13,7 @@ import com.vaadin.ui.Window.Notification;
 
 import de.escidoc.admintool.domain.PdpRequest;
 import de.escidoc.admintool.domain.PdpRequestImpl;
+import de.escidoc.admintool.messages.Messages;
 import de.escidoc.admintool.service.AdminService;
 import de.escidoc.admintool.service.ContextService;
 import de.escidoc.admintool.service.ContextServiceLab;
@@ -58,6 +59,7 @@ import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
+import de.escidoc.core.client.exceptions.application.security.AuthenticationException;
 import de.escidoc.core.resources.aa.useraccount.UserAccount;
 
 public class AdminToolApplication extends Application {
@@ -187,20 +189,45 @@ public class AdminToolApplication extends Application {
     }
 
     private void addParameterHandler() {
-        final ParamaterHandlerImpl handler =
-            new ParamaterHandlerImpl(mainWindow, this);
-        mainWindow.addParameterHandler(handler);
+        mainWindow.addParameterHandler(new ParamaterHandlerImpl(this));
     }
 
-    public void loadProtectedResources(final String token)
-        throws EscidocClientException {
+    public void loadProtectedResources(final String token) {
         this.token = token;
         if (isEscidocUriKnown()) {
-            initApplication();
+            tryInitApp();
         }
         else {
             showLandingView();
         }
+    }
+
+    private void tryInitApp() {
+        try {
+            initApplication();
+        }
+        catch (final IllegalArgumentException e) {
+            LOG.error(Messages.getString("AdminToolApplication.3"), e);
+            mainWindow.showNotification(new Notification(
+                ViewConstants.WRONG_TOKEN_MESSAGE, "Wrong token",
+                Notification.TYPE_ERROR_MESSAGE));
+            showLandingView();
+        }
+        catch (final AuthenticationException e) {
+            LOG.debug(ViewConstants.WRONG_TOKEN_MESSAGE, e);
+            mainWindow.showNotification(new Notification(
+                ViewConstants.WRONG_TOKEN_MESSAGE, e.getMessage(),
+                Notification.TYPE_ERROR_MESSAGE));
+            showLandingView();
+        }
+        catch (final EscidocClientException e) {
+            handleException(e);
+        }
+    }
+
+    private void handleException(final Exception e) {
+        LOG.error(ViewConstants.SERVER_INTERNAL_ERROR, e);
+        ModalDialog.show(mainWindow, e);
     }
 
     private void initApplication() throws InternalClientException,

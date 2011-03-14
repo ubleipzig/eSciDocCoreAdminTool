@@ -56,4 +56,6 @@ public class AppConstants {
     public static final String SMALL_BUTTON = "small";
 
     public static final String ESCIDOC_LOGO = "images/SchriftLogo.jpg";
+
+    static final String ESCIDOC_URL = "escidocurl";
 }
