@@ -28,7 +28,7 @@ public class UserView extends SplitPanel implements ResourceView {
         buildUI();
     }
 
-    private void buildUI() {
+    public void buildUI() {
         setSplitPosition(ViewConstants.SPLIT_POSITION_IN_PERCENT);
         setOrientation(ORIENTATION_HORIZONTAL);
 
@@ -54,6 +54,7 @@ public class UserView extends SplitPanel implements ResourceView {
         return userList.getItem(userList.getValue());
     }
 
+    @Override
     public void showAddView() {
         setSecondComponent(app.newUserAddView());
     }
@@ -62,6 +63,7 @@ public class UserView extends SplitPanel implements ResourceView {
         return userList.getContainerDataSource().getItem(user);
     }
 
+    @Override
     public void showEditView(final Item item) {
         setSecondComponent(userEditView);
         userEditView.setSelected(item);

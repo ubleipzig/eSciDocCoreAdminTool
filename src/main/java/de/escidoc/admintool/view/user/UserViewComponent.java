@@ -1,5 +1,10 @@
 package de.escidoc.admintool.view.user;
 
+import java.util.Collection;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.common.base.Preconditions;
 import com.vaadin.data.Item;
 
@@ -13,9 +18,10 @@ import de.escidoc.core.resources.aa.useraccount.UserAccount;
 
 public class UserViewComponent {
 
-    private UserEditForm userEditForm;
+    private static final Logger LOG = LoggerFactory
+        .getLogger(UserViewComponent.class);
 
-    private UserListView userListView;
+    private UserEditForm userEditForm;
 
     private UserView userView;
 
@@ -36,51 +42,46 @@ public class UserViewComponent {
     private final PdpRequest pdpRequest;
 
     public UserViewComponent(final AdminToolApplication app,
-        final UserService userService, final ResourceService orgUnitServiceLab,
+        final UserService userService, final ResourceService orgUnitService,
         final ResourceTreeView resourceTreeView, final PdpRequest pdpRequest) {
-        Preconditions
-            .checkNotNull(app, "AdminToolApplication can not be null.");
-        Preconditions.checkNotNull(userService, "UserService can not be null.");
-        Preconditions.checkNotNull(orgUnitServiceLab,
-            "orgUnitService is null: %s", orgUnitServiceLab);
+        Preconditions.checkNotNull(app, "AdminToolApplication is null.");
+        Preconditions.checkNotNull(userService, "UserService is null.");
+        Preconditions.checkNotNull(orgUnitService,
+            "orgUnitService is null: %s", orgUnitService);
+        Preconditions.checkNotNull(pdpRequest, "pdpRequest is null: %s",
+            pdpRequest);
         this.app = app;
         this.userService = userService;
-        orgUnitService = (OrgUnitServiceLab) orgUnitServiceLab;
+        this.orgUnitService = (OrgUnitServiceLab) orgUnitService;
         this.resourceTreeView = resourceTreeView;
         this.pdpRequest = pdpRequest;
     }
 
     public void init() {
-        listView = new UserListView(app, userService);
-        setUserListView(listView);
+        createListView();
+        createEditForm();
+        createUserView();
+        setUserView(userView);
+    }
+
+    private void createUserView() {
+        userView = new UserView(app, listView, getUserEditView());
+        userView.buildUI();
+    }
+
+    private void createEditForm() {
         editForm =
             new UserEditForm(app, userService, orgUnitService,
                 resourceTreeView, pdpRequest);
         editForm.init();
         setUserEditForm(editForm);
         setUserEditView(new UserEditView(getUserEditForm()));
-        userView = new UserView(app, getUserListView(), getUserEditView());
-        setUserView(userView);
     }
 
-    /**
-     * @return the userListView
-     */
-    public UserListView getUserListView() {
-        return userListView;
+    private void createListView() {
+        listView = new UserListView(app, userService);
     }
 
-    /**
-     * @param userListView
-     *            the userListView to set
-     */
-    public void setUserListView(final UserListView userListView) {
-        this.userListView = userListView;
-    }
-
-    /**
-     * @return the userView
-     */
     public UserView getUserView() {
         return userView;
     }
@@ -130,8 +131,31 @@ public class UserViewComponent {
     }
 
     public void showUserInEditView(final UserAccount user) {
-        final Item item = listView.getContainerDataSource().getItem(user);
-        listView.select(user);
-        userView.showEditView(item);
+        for (final UserAccount userAccount : getAllUserAccountsFromContainer()) {
+            if (hasEqualsId(user, userAccount)) {
+                selectFoundUserInListView(userAccount);
+                showUserFoundUserInEditView(userAccount);
+            }
+        }
+    }
+
+    private void selectFoundUserInListView(final UserAccount userAccount) {
+        listView.select(userAccount);
+    }
+
+    private void showUserFoundUserInEditView(final UserAccount userAccount) {
+        userView.showEditView(listView.getContainerDataSource().getItem(
+            userAccount));
+    }
+
+    @SuppressWarnings("unchecked")
+    private Collection<UserAccount> getAllUserAccountsFromContainer() {
+        return (Collection<UserAccount>) listView
+            .getContainerDataSource().getItemIds();
+    }
+
+    private boolean hasEqualsId(
+        final UserAccount user, final UserAccount userAccount) {
+        return user.getObjid().equalsIgnoreCase(userAccount.getObjid());
     }
 }
