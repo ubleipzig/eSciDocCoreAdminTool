@@ -6,6 +6,7 @@ import org.vaadin.appfoundation.view.ViewHandler;
 
 import com.google.common.base.Preconditions;
 import com.vaadin.Application;
+import com.vaadin.data.Item;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
@@ -529,7 +530,36 @@ public class AdminToolApplication extends Application {
     }
 
     public void showUser(final String userId) {
-        tryShowUser(userId);
+        UserAccount user;
+        try {
+            user = userService.getUserById(userId);
+            if (userViewComp == null) {
+                userViewComp =
+                    new UserViewComponent(this, userService, orgUnitServiceLab,
+                        createResourceTreeView(), pdpRequest);
+                userViewComp.init();
+                userViewComp.getUserView().getUserList().select(user);
+                final Item item = userViewComp.getUserView().getSelectedItem();
+                userViewComp.showUserInEditView(user);
+                final UserView userView = userViewComp.getUserView();
+                setMainView(userView);
+            }
+            else {
+                userViewComp.showUserInEditView(user);
+                final UserView userView = userViewComp.getUserView();
+                setMainView(userView);
+            }
+            selectUserInNavigationTree();
+            selectInListView(user);
+            showUserInEditView();
+            // setMainView(userViewComp.getUserView());
+
+        }
+        catch (final EscidocClientException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
     }
 
     private void tryShowUser(final String userId) {

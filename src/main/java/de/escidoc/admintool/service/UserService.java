@@ -183,8 +183,6 @@ public class UserService {
             findAll();
         }
 
-        userAccountById.containsKey(objectId);
-
         return userAccountById.get(objectId);
     }
 
