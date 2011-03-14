@@ -2,11 +2,9 @@ package de.escidoc.admintool.view;
 
 import com.google.common.base.Preconditions;
 
+import de.escidoc.admintool.app.AppConstants;
+
 public class EscidocServiceLocation {
-
-    private static final String LOGOUT_TARGET = "/aa/logout?target=";
-
-    private static final String LOGIN_TARGET = "/aa/login?target=";
 
     private final String eSciDocUri;
 
@@ -20,10 +18,10 @@ public class EscidocServiceLocation {
     }
 
     public String getLoginUri() {
-        return eSciDocUri + LOGIN_TARGET;
+        return eSciDocUri + AppConstants.LOGIN_TARGET;
     }
 
     public String getLogoutUri() {
-        return eSciDocUri + LOGOUT_TARGET;
+        return eSciDocUri + AppConstants.LOGOUT_TARGET;
     }
 }
