@@ -19,13 +19,6 @@ final class ShowFilterResultCommandImpl implements ShowFilterResultCommand {
 
     private final FormLayout formLayout = new FormLayout();
 
-    private final Button showStatusButton = new Button(
-        ViewConstants.SHOW_STATUS);
-
-    private final Label statusLabel = new Label(ViewConstants.STATUS);
-
-    private final ShowPurgeStatusListener showPurgeStatusListener;
-
     final FilterResourceView filterResourceView;
 
     Table filteredList;
@@ -33,6 +26,13 @@ final class ShowFilterResultCommandImpl implements ShowFilterResultCommand {
     POJOContainer<Resource> filteredResourcesContainer;
 
     private final PdpRequest pdpRequest;
+
+    private final Button showStatusButton = new Button(
+        ViewConstants.SHOW_STATUS);
+
+    private final Label statusLabel = new Label(ViewConstants.STATUS);
+
+    private final ShowPurgeStatusListener showPurgeStatusListener;
 
     public ShowFilterResultCommandImpl(
         final FilterResourceView filterResourceView, final PdpRequest pdpRequest) {
@@ -99,21 +99,21 @@ final class ShowFilterResultCommandImpl implements ShowFilterResultCommand {
     private void showFilterResultView() {
         formLayout.addComponent(filteredList);
         if (isPurgePermitted()) {
+            addHintForSelection();
             addPurgeButton();
             addShowPurgeStatusButton();
             addStatusLabel();
         }
     }
 
-    private boolean isPurgePermitted() {
-        return pdpRequest.isPermitted(ActionIdConstants.PURGE_RESOURCES);
-    }
-
-    private void addPurgeButton() {
-        final Button purgeBtn = new Button(ViewConstants.PURGE);
-        purgeBtn.setWidth("150px");
-        formLayout.addComponent(purgeBtn);
-        purgeBtn.addListener(new PurgeResourcesListener(this));
+    private void addHintForSelection() {
+        final Label hintText =
+            new Label(
+                "<div><em>Hint: </em>"
+                    + "To select multiple resources, hold down the CONTROL key while you click on the resource.</br></div>"
+                    + "<strong>Warning:</strong> Purging resources can cause inconsitencies in the repository.</div>",
+                Label.CONTENT_XHTML);
+        formLayout.addComponent(hintText);
     }
 
     private void addStatusLabel() {
@@ -124,5 +124,17 @@ final class ShowFilterResultCommandImpl implements ShowFilterResultCommand {
         showStatusButton.setWidth("150px");
         formLayout.addComponent(showStatusButton);
         showStatusButton.addListener(showPurgeStatusListener);
+    }
+
+    private boolean isPurgePermitted() {
+        return pdpRequest.isPermitted(ActionIdConstants.PURGE_RESOURCES);
+    }
+
+    private void addPurgeButton() {
+        final Button purgeBtn = new Button(ViewConstants.PURGE);
+        purgeBtn.setWidth("150px");
+        formLayout.addComponent(purgeBtn);
+        purgeBtn.addListener(new PurgeResourcesListener(this, formLayout,
+            filterResourceView.adminService, filterResourceView.mainWindow));
     }
 }

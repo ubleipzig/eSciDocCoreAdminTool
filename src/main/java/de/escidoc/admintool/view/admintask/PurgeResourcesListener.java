@@ -8,8 +8,11 @@ import org.slf4j.LoggerFactory;
 
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.FormLayout;
+import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.Notification;
 
+import de.escidoc.admintool.service.AdminService;
 import de.escidoc.admintool.view.ModalDialog;
 import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
@@ -24,8 +27,14 @@ final class PurgeResourcesListener implements ClickListener {
 
     private final ShowFilterResultCommandImpl command;
 
-    PurgeResourcesListener(final ShowFilterResultCommandImpl command) {
+    private final FormLayout formLayout;
+
+    PurgeResourcesListener(final ShowFilterResultCommandImpl command,
+        final FormLayout formLayout, final AdminService adminService,
+        final Window mainWindow) {
         this.command = command;
+        this.formLayout = formLayout;
+
     }
 
     private static final long serialVersionUID = 978892007619016520L;
@@ -36,6 +45,8 @@ final class PurgeResourcesListener implements ClickListener {
 
     @Override
     public void buttonClick(final ClickEvent event) {
+        // addShowPurgeStatusButton();
+        // addStatusLabel();
         getSelectedResources();
     }
 
