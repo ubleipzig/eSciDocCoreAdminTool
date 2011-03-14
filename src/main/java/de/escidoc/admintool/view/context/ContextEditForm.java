@@ -257,7 +257,7 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
     private void createCreatedByLink() {
         createdByLink = new Button();
         createdByLink.setStyleName(BaseTheme.BUTTON_LINK);
-        modifiedByLinkListener = new LinkClickListener(app);
+        creatorLinkListener = new LinkClickListener(app);
         createdByLink.addListener(modifiedByLinkListener);
     }
 
