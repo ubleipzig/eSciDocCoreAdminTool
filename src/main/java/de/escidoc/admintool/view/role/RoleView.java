@@ -11,6 +11,7 @@ import org.apache.commons.lang.NotImplementedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.base.Preconditions;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.BeanItemContainer;
@@ -114,25 +115,25 @@ public class RoleView extends CustomComponent {
         final RoleService roleService, final UserService userService,
         final ContextService contextService,
         final ServiceContainer serviceContainer) {
-
-        if (app == null || roleService == null || userService == null
-            || contextService == null) {
-            throw new IllegalArgumentException(
-                "Constructor arguments can not be null.");
-        }
+        Preconditions.checkNotNull(app, "app is null: %s", app);
+        Preconditions.checkNotNull(roleService, "roleService is null: %s",
+            roleService);
+        Preconditions.checkNotNull(userService, "userService is null: %s",
+            userService);
+        Preconditions.checkNotNull(contextService,
+            "contextService is null: %s", contextService);
+        Preconditions.checkNotNull(serviceContainer,
+            "serviceContainer is null: %s", serviceContainer);
         this.app = app;
         this.roleService = roleService;
         this.userService = userService;
         this.contextService = contextService;
-
         this.serviceContainer = serviceContainer;
-
         mainWindow = app.getMainWindow();
-        init();
         bindData();
     }
 
-    private void init() {
+    public void init() {
         initLayout();
         addUserField();
         addRoleField();
@@ -145,7 +146,9 @@ public class RoleView extends CustomComponent {
     private void initLayout() {
         setCompositionRoot(panel);
         panel.setStyleName(Runo.PANEL_LIGHT);
+        panel.setSizeFull();
         setSizeFull();
+        verticalLayout.setWidth("100%");
         mainLayout.setWidth(400, UNITS_PIXELS);
 
         panel.setContent(verticalLayout);

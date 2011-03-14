@@ -408,6 +408,7 @@ public class AdminToolApplication extends Application {
         roleView =
             new RoleView(this, roleService, userService, contextService,
                 services);
+        roleView.init();
         return roleView;
     }
 
