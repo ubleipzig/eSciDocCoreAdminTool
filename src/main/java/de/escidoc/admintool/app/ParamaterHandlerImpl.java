@@ -48,16 +48,6 @@ public class ParamaterHandlerImpl implements ParameterHandler {
         }
     }
 
-    // if (isTokenExist(parameters)) {
-    // LOG.debug("the user has a token.");
-    // app.loadProtectedResources(paramDecoder
-    // .parseAndDecodeToken(parameters));
-    // }
-    // else {
-    // LOG.debug("the user does not provide any token.");
-    // loginMe();
-    // }
-
     private void showMainView(final Map<String, String[]> parameters) {
         app
             .loadProtectedResources(paramDecoder

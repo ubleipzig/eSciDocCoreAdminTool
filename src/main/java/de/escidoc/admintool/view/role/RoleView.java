@@ -305,7 +305,7 @@ public class RoleView extends CustomComponent {
                 userService
                     .assign(getSelectedUser()).withRole(getSelectedRole())
                     .onResources(getSelectedResources()).execute();
-                app.showUserInEditView(getSelectedUser());
+                app.showUser(getSelectedUser());
             }
             catch (final RoleNotFoundException e) {
                 app.getMainWindow().addWindow(

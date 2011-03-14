@@ -303,7 +303,7 @@ public class UserAddView extends CustomComponent implements ClickListener {
             Preconditions.checkNotNull(item,
                 "Add new user to the list failed: %s", item);
             resetFields();
-            app.showUserInEditView(createdUserAccount);
+            app.showUser(createdUserAccount);
         }
         catch (final EscidocException e) {
             if (e instanceof AuthorizationException) {

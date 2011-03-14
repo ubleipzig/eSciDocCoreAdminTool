@@ -130,16 +130,6 @@ public class ServiceFactory {
         return service;
     }
 
-    // public PdpService createPdpService() throws AuthenticationException,
-    // TransportException {
-    // final Authentication authentication =
-    // new Authentication(serviceUri, SYSADMIN_LOGIN_NAME,
-    // SYSADMIN_PASSWORD_ESCIDEV_6);
-    // final PdpServiceImpl pdpService =
-    // new PdpServiceImpl(serviceUri, authentication.getHandle());
-    // return pdpService;
-    // }
-
     public PdpService createPdpService() throws AuthenticationException,
         TransportException {
         final PdpServiceImpl pdpService = new PdpServiceImpl(serviceUri);

@@ -1,5 +1,6 @@
 package de.escidoc.admintool.view.user;
 
+import com.google.common.base.Preconditions;
 import com.vaadin.data.Item;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.SplitPanel;
@@ -21,11 +22,15 @@ public class UserView extends SplitPanel implements ResourceView {
     private final UserEditView userEditView;
 
     public UserView(final AdminToolApplication app,
-        final UserListView userLabList, final UserEditView userLabEditView) {
+        final UserListView userListView, final UserEditView userEditView) {
+        Preconditions.checkNotNull(app, "app is null: %s", app);
+        Preconditions.checkNotNull(userListView, "userListView is null: %s",
+            userListView);
+        Preconditions.checkNotNull(userEditView, "userLabEditView is null: %s",
+            userEditView);
         this.app = app;
-        userList = userLabList;
-        userEditView = userLabEditView;
-        buildUI();
+        this.userList = userListView;
+        this.userEditView = userEditView;
     }
 
     public void buildUI() {

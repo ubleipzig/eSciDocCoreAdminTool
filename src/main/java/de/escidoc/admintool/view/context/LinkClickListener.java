@@ -22,7 +22,7 @@ public final class LinkClickListener implements Button.ClickListener {
     public void buttonClick(final ClickEvent event) {
         final Object source = event.getSource();
         Preconditions.checkNotNull(userId, "userId is null: %s", userId);
-        app.showUserInEditView(userId);
+        app.showUser(userId);
     }
 
     public void setUser(final String userId) {

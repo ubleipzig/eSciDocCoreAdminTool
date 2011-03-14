@@ -263,8 +263,7 @@ public class ViewConstants {
 
     public static final int LABEL_WIDTH = 140;
 
-    public static final String WELCOMING_MESSAGE =
-        "Welcome to esciDoc AdminTool";
+    public static final String WELCOMING_MESSAGE = "Welcome to esciDoc";
 
     public static final String ESCIDOC_URL_TEXTFIELD = "eSciDoc URL ";
 

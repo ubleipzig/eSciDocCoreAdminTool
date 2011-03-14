@@ -63,7 +63,7 @@ public class PropertiesBinder implements FieldsBinder {
 
             @Override
             public void buttonClick(final ClickEvent event) {
-                app.showUserInEditView(getCreatedByValue().getObjid());
+                app.showUser(getCreatedByValue().getObjid());
             }
         });
     }
@@ -103,7 +103,7 @@ public class PropertiesBinder implements FieldsBinder {
             public void buttonClick(final ClickEvent event) {
                 LOG.debug("modified by clicked: "
                     + getModifiedByValue().getObjid());
-                app.showUserInEditView(getModifiedByValue().getObjid());
+                app.showUser(getModifiedByValue().getObjid());
             }
         });
     }

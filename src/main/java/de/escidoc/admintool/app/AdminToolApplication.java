@@ -225,7 +225,7 @@ public class AdminToolApplication extends Application {
         }
     }
 
-    private void handleException(final Exception e) {
+    private void handleException(final EscidocClientException e) {
         LOG.error(ViewConstants.SERVER_INTERNAL_ERROR, e);
         ModalDialog.show(mainWindow, e);
     }
@@ -440,33 +440,8 @@ public class AdminToolApplication extends Application {
         setMainView(roleView);
     }
 
-    public void showUserInEditView(final UserAccount user) {
-        if (userViewComp == null) {
-            createUserViewComponent();
-        }
-        mainView.getNavigationTree().selectUserView();
-        userViewComp.getUserView().getUserList().select(user);
-        userViewComp.getUserView().showEditView(
-            userViewComp.getUserView().getSelectedItem());
-        setMainView(userViewComp.getUserView());
-    }
-
-    public void showUserView() {
-        createUserViewComponent();
-        userViewComp.showFirstItemInEditView();
-        final UserView userView = userViewComp.getUserView();
-        setMainView(userView);
-    }
-
     public UserView getUserView() {
         return userViewComp.getUserView();
-    }
-
-    private void createUserViewComponent() {
-        userViewComp =
-            new UserViewComponent(this, userService, orgUnitServiceLab,
-                createResourceTreeView(), pdpRequest);
-        userViewComp.init();
     }
 
     public void showResourceView() {
@@ -515,13 +490,53 @@ public class AdminToolApplication extends Application {
         return contentModelAddView;
     }
 
-    public void showUserInEditView(final String userId) {
+    public void showUserView() {
+        createUserViewComponent();
+        userViewComp.showFirstItemInEditView();
+        final UserView userView = userViewComp.getUserView();
+        setMainView(userView);
+    }
+
+    public void showUser(final UserAccount user) {
+        if (userViewComp == null) {
+            showUserView();
+        }
+        selectUserInNavigationTree();
+        selectInListView(user);
+        showUserInEditView();
+        setMainView(userViewComp.getUserView());
+    }
+
+    private void createUserViewComponent() {
+        userViewComp =
+            new UserViewComponent(this, userService, orgUnitServiceLab,
+                createResourceTreeView(), pdpRequest);
+        userViewComp.init();
+    }
+
+    private void showUserInEditView() {
+        userViewComp.getUserView().showEditView(
+            userViewComp.getUserView().getSelectedItem());
+    }
+
+    private void selectUserInNavigationTree() {
+        mainView.getNavigationTree().selectUserView();
+    }
+
+    private void selectInListView(final UserAccount user) {
+        userViewComp.getUserView().getUserList().select(user);
+    }
+
+    public void showUser(final String userId) {
+        tryShowUser(userId);
+    }
+
+    private void tryShowUser(final String userId) {
         try {
-            showUserInEditView(userService.getUserById(userId));
+            showUser(userService.getUserById(userId));
         }
         catch (final EscidocClientException e) {
-            ModalDialog.show(mainWindow, e);
-            LOG.error(ViewConstants.SERVER_INTERNAL_ERROR, e);
+            handleException(e);
         }
     }
 
