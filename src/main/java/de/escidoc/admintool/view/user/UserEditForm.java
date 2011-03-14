@@ -102,8 +102,6 @@ public class UserEditForm extends CustomComponent implements ClickListener {
 
     private final Label modifiedOn = new Label();
 
-    private final Label modifiedBy = new Label();
-
     private final HorizontalLayout header = new HorizontalLayout();
 
     final Table roleTable = new Table();
@@ -117,8 +115,6 @@ public class UserEditForm extends CustomComponent implements ClickListener {
     private TextField loginNameField;
 
     private final Label createdOn = new Label();
-
-    private final Label modi = new Label();
 
     private CheckBox activeStatus;
 
@@ -187,19 +183,16 @@ public class UserEditForm extends CustomComponent implements ClickListener {
         addCreated();
 
         addModified();
-        // addModifiedOnLabel();
-        // addCreatedOnAndByLabel();
         addActiveStatusCheckBox();
 
         createAndAddRoleComponent();
         addOrgUnitsWidget();
         addFooter();
-
     }
 
     // OrgUnit START
 
-    private final Table orgUnitTable = new Table();
+    final Table orgUnitTable = new Table();
 
     private final Button editOrgUnitButton =
         new Button(ViewConstants.ADD_LABEL);
@@ -221,19 +214,8 @@ public class UserEditForm extends CustomComponent implements ClickListener {
         listener.using(orgUnitTable);
         editOrgUnitButton.addListener(listener);
 
-        removeOrgUnitButton.addListener(new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(final ClickEvent event) {
-                final Object value = orgUnitTable.getValue();
-                if (value instanceof Set<?>) {
-                    for (final Object object : (Set<?>) orgUnitTable.getValue()) {
-                        orgUnitTable.removeItem(object);
-                    }
-                }
-
-            }
-        });
+        removeOrgUnitButton.addListener(new RemoveOrgUnitFromUserListener(
+            orgUnitTable));
     }
 
     private void createOrgUnitTable() {
@@ -315,18 +297,6 @@ public class UserEditForm extends CustomComponent implements ClickListener {
         panel.addComponent(LayoutHelper.create(ViewConstants.ACTIVE_STATUS,
             activeStatus, LABEL_WIDTH, false));
     }
-
-    // private void addCreatedOnAndByLabel() {
-    // createdOn = new Label();
-    // createdBy = new Label();
-    // panel.addComponent(LayoutHelper.create("Created", "by", createdOn,
-    // createdBy, LABEL_WIDTH, LABEL_HEIGHT, false));
-    // }
-    //
-    // private void addModifiedOnLabel() {
-    // panel.addComponent(LayoutHelper.create("Modified", "by", modifiedOn,
-    // modifiedBy, LABEL_WIDTH, LABEL_HEIGHT, false));
-    // }
 
     private void addCreated() {
         createCreatedByLink();
@@ -665,16 +635,6 @@ public class UserEditForm extends CustomComponent implements ClickListener {
             .getItemProperty(PropertyId.LOGIN_NAME));
         objIdField.setPropertyDataSource(item
             .getItemProperty(PropertyId.OBJECT_ID));
-        // modifiedOn.setCaption(Converter
-        // .dateTimeToString((org.joda.time.DateTime) item.getItemProperty(
-        // PropertyId.LAST_MODIFICATION_DATE).getValue()));
-        // bindModifiedBy();
-        // createdOn.setCaption(Converter
-        // .dateTimeToString((org.joda.time.DateTime) item.getItemProperty(
-        // PropertyId.CREATED_ON).getValue()));
-        // createdBy.setPropertyDataSource(item
-        // .getItemProperty(PropertyId.CREATED_BY));
-
         activeStatus.setPropertyDataSource(item
             .getItemProperty(PropertyId.ACTIVE));
 
@@ -689,10 +649,6 @@ public class UserEditForm extends CustomComponent implements ClickListener {
 
         bindUserRightsWithView();
     }
-
-    // private void bindModifiedBy() {
-    // modifiedBy.setPropertyDataSource(getModifedBy());
-    // }
 
     private Property getModifedBy() {
         return item.getItemProperty(PropertyId.MODIFIED_BY);

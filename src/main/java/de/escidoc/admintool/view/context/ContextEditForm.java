@@ -584,9 +584,9 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
                 PropertyId.ORG_UNIT_REFS).getValue();
 
         for (final OrganizationalUnitRef resourceRef : refs) {
-            final String orgUnitTitle = findOrgUnitTitle(resourceRef);
             final ResourceRefDisplay resourceRefDisplay =
-                new ResourceRefDisplay(resourceRef.getObjid(), orgUnitTitle);
+                new ResourceRefDisplay(resourceRef.getObjid(),
+                    resourceRef.getXLinkTitle());
             orgUnitList.addItem(resourceRefDisplay);
         }
         addOrgUnitToTheList.using(orgUnitList);
