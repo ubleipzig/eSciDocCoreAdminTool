@@ -6,7 +6,9 @@ import com.google.common.base.Preconditions;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.OptionGroup;
+import com.vaadin.ui.PopupView;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
 
@@ -67,12 +69,15 @@ public class FilterResourceView extends AbstractCustomView {
 
     private void addFilterQueryTexField() {
         rawFilterTextArea.setWidth(800, UNITS_PIXELS);
-        rawFilterTextArea
-            .setDescription(ViewConstants.FILTER_EXAMPLE_TOOLTIP_TEXT);
-
         filterLayout = new HorizontalLayout();
         filterLayout.setMargin(true);
         filterLayout.setSpacing(true);
+        final Label popUpContent =
+            new Label(ViewConstants.FILTER_EXAMPLE_TOOLTIP_TEXT,
+                Label.CONTENT_XHTML);
+        popUpContent.setWidth(400, UNITS_PIXELS);
+        final PopupView popup = new PopupView("Tip", popUpContent);
+        filterLayout.addComponent(popup);
         filterLayout.addComponent(rawFilterTextArea);
     }
 

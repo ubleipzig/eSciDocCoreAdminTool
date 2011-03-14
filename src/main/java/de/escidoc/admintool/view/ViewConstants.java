@@ -448,10 +448,10 @@ public class ViewConstants {
     public static final String FILTER_EXAMPLE_TOOLTIP_TEXT =
         "<h2>Query examples: </h2>"
             + "<ul>"
-            + "  <li>\"/id\"=escidoc:5 <br/> filter selected resource type with id=escidoc:5</li>"
-            + "  <li>\"/properties/public-status\"= \"released\" <br/> filter selected resource type with public status release</li>"
+            + "  <li>\"/id\"=escidoc:5 <br/> filter selected resource type with the id escidoc:5</li>"
+            + "  <li>\"/properties/public-status\"= \"released\" <br/> filter selected resource type which are released</li>"
             + "<li>"
             + EXAMPLE_QUERY
-            + "<br/> filter selected resource type that created by useraccount with the id:exuser1</li>"
-            + "  <li>etc.</li>" + "</ul>";
+            + "<br/> filter selected resource type that created by user account with the id exuser1</li>"
+            + "</ul>";
 }

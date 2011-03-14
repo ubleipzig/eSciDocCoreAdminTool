@@ -52,11 +52,11 @@ public class ResourceTreeView extends CustomComponent
 
         treeLayout.addComponent(header);
         treeLayout.addComponent(tree);
-
         setDataSource();
 
     }
 
+    @Override
     public void select(final Resource resource) {
         tree.select(resource);
     }
