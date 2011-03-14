@@ -228,10 +228,12 @@ public class OrgUnitSpecificView {
         return new TextField(caption);
     }
 
-    private static void configure(final TextField field) {
+    private void configure(final TextField field) {
+        field.setPropertyDataSource(new ObjectProperty<String>(
+            ViewConstants.EMPTY_STRING));
         field.setImmediate(false);
         field.setInvalidCommitted(false);
-        field.setNullRepresentation("");
+        field.setNullRepresentation(ViewConstants.EMPTY_STRING);
         field.setNullSettingAllowed(false);
         field.setWriteThrough(false);
     }

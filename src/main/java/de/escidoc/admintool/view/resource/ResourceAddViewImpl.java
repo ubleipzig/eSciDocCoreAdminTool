@@ -1,12 +1,9 @@
 package de.escidoc.admintool.view.resource;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 import com.google.common.base.Preconditions;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.FormLayout;
@@ -32,7 +29,7 @@ public class ResourceAddViewImpl extends CustomComponent
 
     private final FormLayout formLayout = FormLayoutFactory.create();
 
-    private final Map<String, Field> fieldByName = new HashMap<String, Field>();
+    final Map<String, Field> fieldByName = new HashMap<String, Field>();
 
     private final SaveAndCancelButtons footers = new SaveAndCancelButtons();
 
@@ -107,17 +104,8 @@ public class ResourceAddViewImpl extends CustomComponent
                 resourceContainer);
         footers.setOkButtonListener(createOrgUnitBtnListener);
 
-        footers.getCancelBtn().addListener(new ClickListener() {
-            private static final long serialVersionUID = 9116178009548492155L;
-
-            @Override
-            public void buttonClick(final ClickEvent event) {
-                final Collection<Field> values = fieldByName.values();
-                for (final Field field : values) {
-                    field.discard();
-                }
-            }
-        });
+        footers.getCancelBtn().addListener(
+            new CancelResourceAddView(fieldByName));
         formLayout.addComponent(footers);
     }
 
