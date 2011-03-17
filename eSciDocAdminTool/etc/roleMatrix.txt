@@ -1,0 +1,14 @@
+Predefined Roles		Scope?	ctx	cn	item 	component
+
+1. System Administrator		X
+2. System Inspector		X
+3. Administrator			X
+5. Depositor				X	
+6. MD-Editor				X	
+7. Moderator				X	
+10. Privileged-Viewer			X	
+4. Author					X
+12. Audience								X 
+11. Collaborator			X	X	X	X
+8. Statistics-Editor		Statistics
+9. Statistics-Reader		Statistics
