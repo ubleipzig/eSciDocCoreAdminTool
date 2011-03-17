@@ -5,9 +5,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.google.common.base.Preconditions;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.ObjectProperty;
@@ -27,9 +24,6 @@ import de.escidoc.admintool.view.ViewConstants;
 
 public class PropertiesFieldsImpl extends CustomComponent
     implements PropertiesFields {
-
-    private static final Logger LOG = LoggerFactory
-        .getLogger(PropertiesFieldsImpl.class);
 
     private static final long serialVersionUID = -1808186834466896787L;
 

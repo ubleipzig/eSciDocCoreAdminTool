@@ -434,7 +434,7 @@ public class ViewConstants {
 
     public static final String WELCOME_LABEL = "Welcome";
 
-    public static final int MAX_TITLE_LENGTH = 50;
+    public static final int MAX_TITLE_LENGTH = 255;
 
     public static final int MAX_DESC_LENGTH = 255;
 

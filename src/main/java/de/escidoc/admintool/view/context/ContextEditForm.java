@@ -37,6 +37,7 @@ import com.vaadin.ui.TabSheet.Tab;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.Window.Notification;
 import com.vaadin.ui.themes.BaseTheme;
 import com.vaadin.ui.themes.Reindeer;
 
@@ -413,6 +414,7 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
                 typeField.setComponentError(null);
                 orgUnitList.setComponentError(null);
                 adminDescriptorAccordion.setComponentError(null);
+                showMessage();
             }
             catch (final EscidocClientException e) {
                 LOG.error(
@@ -422,6 +424,11 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
                         ExceptionUtils.getRootCauseMessage(e)));
             }
         }
+    }
+
+    private void showMessage() {
+        mainWindow.showNotification(new Notification("Info",
+            "Context is updated", Notification.TYPE_TRAY_NOTIFICATION));
     }
 
     private OrganizationalUnitRefs getEnteredOrgUnitRefs() {
