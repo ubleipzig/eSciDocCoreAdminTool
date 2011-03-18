@@ -202,7 +202,7 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
         panel.setContent(form);
 
         form.setSpacing(false);
-        form.setWidth(520, UNITS_PIXELS);
+        form.setWidth(530, UNITS_PIXELS);
 
         editToolbar = new ContextToolbar(this, app, pdpRequest);
         editToolbar.init();

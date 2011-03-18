@@ -3,7 +3,7 @@ Changes since last release:
 1.0.1
 
 show notification after succesful operation.
-
+fixed layout problem in context edit view.
 
 1.0
 
