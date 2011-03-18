@@ -1,5 +1,12 @@
 Changes since last release:
 
+1.0.1
+
+show notification after succesful operation.
+
+
+1.0
+
 * References to users (modifier, creator) are now links. [BWESCIT-60]
 * The user can edit referenced organizational unit in edit view. [BWESCIT-69] 
 * Included request to PDP to just show allowed things. [BWESCIT-95]

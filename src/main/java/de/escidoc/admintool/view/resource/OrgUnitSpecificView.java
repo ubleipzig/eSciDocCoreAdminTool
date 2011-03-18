@@ -31,8 +31,6 @@ import de.escidoc.core.resources.oum.Parents;
 
 public class OrgUnitSpecificView {
 
-    private static final String CITY_LABEL = "city";
-
     private static final long serialVersionUID = -3927641436455665147L;
 
     private static final Logger LOG = LoggerFactory
@@ -204,7 +202,7 @@ public class OrgUnitSpecificView {
         cityField = new TextField(ViewConstants.CITY_LABEL);
         cityField.setWidth(ViewConstants.FIELD_WIDTH);
         configure(cityField);
-        fieldByName.put(CITY_LABEL, cityField);
+        fieldByName.put(ViewConstants.CITY_LABEL, cityField);
         formLayout.addComponent(cityField);
     }
 
@@ -348,8 +346,6 @@ public class OrgUnitSpecificView {
         coordinatesField.setReadOnly(isReadOnly);
         editParentBtn.setVisible(!isReadOnly);
         removeParentBtn.setVisible(!isReadOnly);
-        // predecessorTypeSelect.setReadOnly(isReadOnly);
-        // addPredecessorButton.setVisible(!isReadOnly);
     }
 
     public void setNoParents() {
@@ -368,7 +364,6 @@ public class OrgUnitSpecificView {
         parentsField.setPropertyDataSource(parentPropertyForAddView);
         addOrEditParentModalWindow
             .setParentPropertyForAdd(parentPropertyForAddView);
-
     }
 
     public void addAddParentOkBtnListener() {
