@@ -134,16 +134,6 @@ public class ContextService implements Serializable {
         assert !newType.isEmpty() : "newType can not be empty.";
         assert orgUnitRefs != null : "organizationalUnitRefs can not be null.";
 
-        // final Context updatedContext =
-        // new ContextFactory()
-        // .update(getSelected(objectId)).name(newName)
-        // .description(newDescription).type(newType)
-        // .orgUnits(orgUnitRefs).adminDescriptors(newAdminDescriptors)
-        // .build();
-        //
-        // final Context fromRepository = client.update(updatedContext);
-        // assert fromRepository != null :
-        // "update fails and return Null Pointer";
         final ContextBuilder builder =
             new ContextBuilder(getSelected(objectId));
         final Context updatedContext =
