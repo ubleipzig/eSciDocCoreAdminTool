@@ -215,8 +215,10 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
         final HorizontalLayout hl = new HorizontalLayout();
         hl.addComponent(saveButton);
         hl.addComponent(cancelButton);
+
         footer.addComponent(hl);
         footer.setComponentAlignment(hl, Alignment.MIDDLE_RIGHT);
+
         form.addComponent(footer);
     }
 

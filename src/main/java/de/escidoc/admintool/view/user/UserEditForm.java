@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Preconditions;
 import com.vaadin.data.Item;
-import com.vaadin.data.Property;
 import com.vaadin.data.util.POJOContainer;
 import com.vaadin.terminal.SystemError;
 import com.vaadin.ui.Alignment;
@@ -94,9 +93,10 @@ public class UserEditForm extends CustomComponent implements ClickListener {
     private final Button removeRoleButton = new Button(
         ViewConstants.REMOVE_LABEL, new RemoveRoleButtonListener(this));
 
-    private final Button save = new Button(ViewConstants.SAVE_LABEL, this);
+    private final Button saveButton =
+        new Button(ViewConstants.SAVE_LABEL, this);
 
-    private final Button cancel = new Button(ViewConstants.CANCEL, this);
+    private final Button cancelButton = new Button(ViewConstants.CANCEL, this);
 
     private final Label objIdField = new Label();
 
@@ -396,7 +396,7 @@ public class UserEditForm extends CustomComponent implements ClickListener {
         panel.setContent(form);
 
         form.setSpacing(false);
-        form.setWidth(520, UNITS_PIXELS);
+        form.setWidth(530, UNITS_PIXELS);
         form.addComponent(createHeader());
     }
 
@@ -500,28 +500,39 @@ public class UserEditForm extends CustomComponent implements ClickListener {
     }
 
     private void addFooter() {
-        footer.setSpacing(true);
-        footer.setMargin(true);
-        footer.setVisible(true);
 
-        footer.addComponent(save);
-        footer.addComponent(cancel);
+        footer.setWidth(100, UNITS_PERCENTAGE);
+        final HorizontalLayout hl = new HorizontalLayout();
+        hl.addComponent(saveButton);
+        hl.addComponent(cancelButton);
 
-        footerLayout = new VerticalLayout();
-        footerLayout.addComponent(footer);
-        footerLayout.setComponentAlignment(footer, Alignment.MIDDLE_RIGHT);
+        footer.addComponent(hl);
+        footer.setComponentAlignment(hl, Alignment.MIDDLE_RIGHT);
 
-        panel.addComponent(footerLayout);
+        form.addComponent(footer);
+        // footer.setWidth(100, UNITS_PERCENTAGE);
+        // footer.setSpacing(true);
+        // footer.setMargin(true);
+        // footer.setVisible(true);
+        //
+        // footer.addComponent(save);
+        // footer.addComponent(cancel);
+        //
+        // footerLayout = new VerticalLayout();
+        // footerLayout.addComponent(footer);
+        // footerLayout.setComponentAlignment(footer, Alignment.MIDDLE_RIGHT);
+        //
+        // panel.addComponent(footerLayout);
     }
 
     @Override
     public void buttonClick(final ClickEvent event) {
         final Button source = event.getButton();
-        if (source.equals(cancel)) {
+        if (source.equals(cancelButton)) {
             discardFields();
             removeAllError();
         }
-        else if (source.equals(save) && isValid()) {
+        else if (source.equals(saveButton) && isValid()) {
             updateUserAccount();
             commitFields();
             removeAllError();
@@ -650,10 +661,6 @@ public class UserEditForm extends CustomComponent implements ClickListener {
         bindUserRightsWithView();
     }
 
-    private Property getModifedBy() {
-        return item.getItemProperty(PropertyId.MODIFIED_BY);
-    }
-
     private void bindCreatedOn() {
         createdOn.setCaption(Converter
             .dateTimeToString((org.joda.time.DateTime) item.getItemProperty(
@@ -718,7 +725,7 @@ public class UserEditForm extends CustomComponent implements ClickListener {
         deleteUserBtn.setVisible(isDeleteUserAllowed());
 
         // name
-        nameField.setReadOnly(!isUpdateNotAllowed());
+        nameField.setReadOnly(isUpdateNotAllowed());
         // password
 
         // passwordView
@@ -750,7 +757,7 @@ public class UserEditForm extends CustomComponent implements ClickListener {
     }
 
     private boolean isUpdateNotAllowed() {
-        return !pdpRequest.isPermitted(ActionIdConstants.UPDATE_USER_ACCOUNT,
+        return pdpRequest.isDenied(ActionIdConstants.UPDATE_USER_ACCOUNT,
             getSelectedItemId());
     }
 

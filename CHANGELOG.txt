@@ -2,8 +2,10 @@ Changes since last release:
 
 1.0.1
 
-show notification after succesful operation.
-fixed layout problem in context edit view.
+* show notification after successful create/update operation by Context,
+   Org Unit, User Acconeunt, Context.
+* fixed layout problem in context edit view.
+* allow user to change login name in user account edit view.
 
 1.0
 
@@ -15,7 +17,7 @@ fixed layout problem in context edit view.
 * Hide Purge Button for user with no right [BWESCIT-112] 
 * Show logged-in username near the logout/login button [BWESCIT-115] 
 * added escidocurl parameter i.e. http://[escidoc host name]:[escidoc port
-number]/AdminTool/?escidocurl [BWESCIT-120] 
+number]/AdminTool/?escidocurl=http://[escidoc host name] [BWESCIT-120] 
 * Cancel in New-Organizational Unit View will clear the form. [BWESCIT-125]
 * added scrollbar in Roles View.[BWESCIT-127] 
 * Clicking AdminTask and Resources nodes in navigation tree view, close/open

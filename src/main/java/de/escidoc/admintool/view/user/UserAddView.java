@@ -21,6 +21,7 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.Window.Notification;
 import com.vaadin.ui.themes.Reindeer;
 
 import de.escidoc.admintool.app.AdminToolApplication;
@@ -57,9 +58,10 @@ public class UserAddView extends CustomComponent implements ClickListener {
 
     private final HorizontalLayout footer = new HorizontalLayout();
 
-    private final Button saveBtn = new Button(ViewConstants.SAVE_LABEL, this);
+    private final Button saveButton =
+        new Button(ViewConstants.SAVE_LABEL, this);
 
-    private final Button cancel = new Button(ViewConstants.CANCEL, this);
+    private final Button cancelButton = new Button(ViewConstants.CANCEL, this);
 
     private final UserListView userListView;
 
@@ -260,8 +262,8 @@ public class UserAddView extends CustomComponent implements ClickListener {
         footer.setMargin(true);
         footer.setVisible(true);
 
-        footer.addComponent(saveBtn);
-        footer.addComponent(cancel);
+        footer.addComponent(saveButton);
+        footer.addComponent(cancelButton);
 
         final VerticalLayout verticalLayout = new VerticalLayout();
         verticalLayout.addComponent(footer);
@@ -273,10 +275,10 @@ public class UserAddView extends CustomComponent implements ClickListener {
     @Override
     public void buttonClick(final ClickEvent event) {
         final Button source = event.getButton();
-        if (source == cancel) {
+        if (source == cancelButton) {
             resetFields();
         }
-        else if (source == saveBtn) {
+        else if (source == saveButton) {
             validateAndSave();
         }
     }
@@ -304,6 +306,7 @@ public class UserAddView extends CustomComponent implements ClickListener {
                 "Add new user to the list failed: %s", item);
             resetFields();
             app.showUser(createdUserAccount);
+            showMessage();
         }
         catch (final EscidocException e) {
             if (e instanceof AuthorizationException) {
@@ -325,6 +328,12 @@ public class UserAddView extends CustomComponent implements ClickListener {
             ErrorMessage.show(app.getMainWindow(), "Not Authorized", e);
             LOG.error("An unexpected error occured! See LOG for details.", e);
         }
+    }
+
+    private void showMessage() {
+        app.getMainWindow().showNotification(
+            new Notification("Info", "User Account is created",
+                Notification.TYPE_TRAY_NOTIFICATION));
     }
 
     // START:reference selected org units to created user.
