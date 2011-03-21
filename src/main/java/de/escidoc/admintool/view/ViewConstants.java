@@ -455,5 +455,11 @@ public class ViewConstants {
     public static final String CITY_LABEL = "city";
 
     public static final String ORGANIZATIONAL_UNIT_IS_CREATED =
-    "Organizational unit is created.";
+        "Organizational unit is created.";
+
+    public static final String CONTAINER_LABEL = "Container";
+
+    public static final String ITEM_LABEL = "Item";
+
+    public static final String COMPONENT_LABEL = "Component";
 }
