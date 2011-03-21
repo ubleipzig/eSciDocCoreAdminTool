@@ -12,8 +12,11 @@
 		<param name="file" value="./log/admintool.log" />
 		<param name="MaxFileSize" value="100KB" />
 		<param name="MaxBackupIndex" value="1" />
+		
 		<layout class="org.apache.log4j.PatternLayout">
-			<param name="ConversionPattern" value="%p %t %c - %m%n" />
+		<param name="ConversionPattern"
+				value="%5p [%t] %d{dd MMM yyyy HH:mm:ss,SSS} (%F:%L) - %m%n" />
+		
 		</layout>
 	</appender>
 	<root>
