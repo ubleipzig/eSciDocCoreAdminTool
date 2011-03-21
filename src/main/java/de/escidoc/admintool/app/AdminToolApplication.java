@@ -419,8 +419,11 @@ public class AdminToolApplication extends Application {
     }
 
     public UserAddView newUserAddView() {
-        return new UserAddView(this, userViewComp.getUserView().getUserList(),
-            userService, createResourceTreeView());
+        final UserAddView userAddView =
+            new UserAddView(this, userViewComp.getUserView().getUserList(),
+                userService, createResourceTreeView());
+        userAddView.init();
+        return userAddView;
     }
 
     public void showContextView() {

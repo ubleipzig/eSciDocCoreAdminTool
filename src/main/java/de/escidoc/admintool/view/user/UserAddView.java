@@ -86,25 +86,34 @@ public class UserAddView extends CustomComponent implements ClickListener {
         this.userListView = userListView;
         this.userService = userService;
         this.resourceTreeView = resourceTreeView;
-        init();
     }
 
     public void init() {
-        setCompositionRoot(panel);
+        configureLayout();
         setOrgUnitsCommand = new SetOrgUnitsCommandImpl(userService);
+        addNameField();
+        addLoginField();
+        addOrgUnitWidget();
+        addPasswordFields();
+        addSpace();
+        addFooter();
+    }
+
+    private void configureLayout() {
+        setCompositionRoot(panel);
 
         panel.setStyleName(Reindeer.PANEL_LIGHT);
         panel.setCaption(ViewConstants.USER_ADD_VIEW_CAPTION);
         panel.setContent(form);
 
         form.setSpacing(false);
-        form.setWidth(75, UNITS_PERCENTAGE);
+        // form.setWidth(75, UNITS_PERCENTAGE);
+        form.setWidth(520, UNITS_PIXELS);
+    }
 
-        addNameField();
-        addLoginField();
-        addOrgUnitWidget();
-        addPasswordFields();
-        addFooter();
+    private void addSpace() {
+        form.addComponent(new Label("<br/>", Label.CONTENT_XHTML));
+        form.addComponent(new Label("<br/>", Label.CONTENT_XHTML));
     }
 
     private void addPasswordFields() {
@@ -258,18 +267,28 @@ public class UserAddView extends CustomComponent implements ClickListener {
     }
 
     private void addFooter() {
-        footer.setSpacing(true);
-        footer.setMargin(true);
-        footer.setVisible(true);
+        // footer.setSpacing(true);
+        // footer.setMargin(true);
+        // footer.setVisible(true);
+        //
+        // footer.addComponent(saveButton);
+        // footer.addComponent(cancelButton);
+        //
+        // final VerticalLayout verticalLayout = new VerticalLayout();
+        // verticalLayout.addComponent(footer);
+        // verticalLayout.setComponentAlignment(footer, Alignment.MIDDLE_RIGHT);
+        //
+        // panel.addComponent(verticalLayout);
+        footer.setWidth(100, UNITS_PERCENTAGE);
 
-        footer.addComponent(saveButton);
-        footer.addComponent(cancelButton);
+        final HorizontalLayout hLayout = new HorizontalLayout();
+        hLayout.addComponent(saveButton);
+        hLayout.addComponent(cancelButton);
 
-        final VerticalLayout verticalLayout = new VerticalLayout();
-        verticalLayout.addComponent(footer);
-        verticalLayout.setComponentAlignment(footer, Alignment.MIDDLE_RIGHT);
+        footer.addComponent(hLayout);
+        footer.setComponentAlignment(hLayout, Alignment.MIDDLE_RIGHT);
 
-        panel.addComponent(verticalLayout);
+        form.addComponent(footer);
     }
 
     @Override

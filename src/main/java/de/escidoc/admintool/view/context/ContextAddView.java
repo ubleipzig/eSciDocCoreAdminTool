@@ -102,10 +102,9 @@ public class ContextAddView extends CustomComponent implements ClickListener {
         this.contextListView = contextListView;
         this.contextService = contextService;
         this.addOrgUnitToTheList = addOrgUnitToTheList;
-        init();
     }
 
-    private void init() {
+    public void init() {
         configureLayout();
         addFields();
         addSpace();
