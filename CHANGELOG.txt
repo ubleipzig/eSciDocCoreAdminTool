@@ -6,6 +6,7 @@ Changes since last release:
    Org Unit, User Acconeunt, Context.
 * fixed layout problem in context edit view.
 * allow user to change login name in user account edit view.
+* fixed issue in the Role Management from a Depositor User[BWESCIT-143]
 
 1.0
 
