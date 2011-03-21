@@ -411,11 +411,7 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
                     adminDescriptors);
 
                 nameField.commit();
-                nameField.setComponentError(null);
-                descriptionField.setComponentError(null);
-                typeField.setComponentError(null);
-                orgUnitList.setComponentError(null);
-                adminDescriptorAccordion.setComponentError(null);
+                removeAllErrorMessages();
                 showMessage();
             }
             catch (final EscidocClientException e) {
@@ -426,6 +422,14 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
                         ExceptionUtils.getRootCauseMessage(e)));
             }
         }
+    }
+
+    private void removeAllErrorMessages() {
+        nameField.setComponentError(null);
+        descriptionField.setComponentError(null);
+        typeField.setComponentError(null);
+        orgUnitList.setComponentError(null);
+        adminDescriptorAccordion.setComponentError(null);
     }
 
     private void showMessage() {
