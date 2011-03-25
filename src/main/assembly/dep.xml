@@ -20,6 +20,7 @@
       <outputDirectory></outputDirectory>
       <includes>
         <include>*.war</include>
+        <include>AdminTool-sources*</include>
       </includes>
     </fileSet>
   </fileSets>
