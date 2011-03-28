@@ -336,6 +336,7 @@ public final class LayoutHelper {
         final String labelLeft, final String labelRight,
         final Component compLeft, final Component compRight,
         final int widthLeft, final int widthRight, final boolean required) {
+        // foo
         final HorizontalLayout hor = new HorizontalLayout();
         hor.setHeight(Constants.DEFAULT_HEIGHT);
         hor.addComponent(new Label(" "));
@@ -355,13 +356,13 @@ public final class LayoutHelper {
             hor.addComponent(new Label("&nbsp;&nbsp;", Label.CONTENT_XHTML));
         }
         hor.addComponent(compLeft);
-        hor.setComponentAlignment(compLeft, Alignment.MIDDLE_RIGHT);
+        hor.setComponentAlignment(compLeft, Alignment.BOTTOM_RIGHT);
         hor.addComponent(new Label("&nbsp;", Label.CONTENT_XHTML));
         final String text2 = Constants.P_ALIGN_RIGHT + labelRight + Constants.P;
         hor.addComponent(lr = new Label(text2, Label.CONTENT_XHTML));
         lr.setSizeUndefined();
         lr.setWidth(widthRight + Constants.PX);
-        hor.setComponentAlignment(lr, Alignment.MIDDLE_RIGHT);
+        hor.setComponentAlignment(lr, Alignment.BOTTOM_RIGHT);
         if (required) {
             hor
                 .addComponent(new Label(
@@ -372,7 +373,7 @@ public final class LayoutHelper {
             hor.addComponent(new Label("&nbsp;&nbsp;", Label.CONTENT_XHTML));
         }
         hor.addComponent(compRight);
-        hor.setComponentAlignment(compRight, Alignment.MIDDLE_RIGHT);
+        hor.setComponentAlignment(compRight, Alignment.BOTTOM_RIGHT);
         hor.addComponent(new Label(" "));
         hor.setSpacing(false);
         return hor;

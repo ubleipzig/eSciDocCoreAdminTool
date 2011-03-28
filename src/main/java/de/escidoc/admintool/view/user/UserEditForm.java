@@ -510,19 +510,6 @@ public class UserEditForm extends CustomComponent implements ClickListener {
         footer.setComponentAlignment(hl, Alignment.MIDDLE_RIGHT);
 
         form.addComponent(footer);
-        // footer.setWidth(100, UNITS_PERCENTAGE);
-        // footer.setSpacing(true);
-        // footer.setMargin(true);
-        // footer.setVisible(true);
-        //
-        // footer.addComponent(save);
-        // footer.addComponent(cancel);
-        //
-        // footerLayout = new VerticalLayout();
-        // footerLayout.addComponent(footer);
-        // footerLayout.setComponentAlignment(footer, Alignment.MIDDLE_RIGHT);
-        //
-        // panel.addComponent(footerLayout);
     }
 
     @Override
