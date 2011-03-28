@@ -6,6 +6,7 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.base.Preconditions;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.FormLayout;
@@ -14,10 +15,12 @@ import com.vaadin.ui.Window.Notification;
 
 import de.escidoc.admintool.service.AdminService;
 import de.escidoc.admintool.view.ModalDialog;
+import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
 import de.escidoc.core.resources.Resource;
+import de.escidoc.core.resources.adm.AdminStatus;
 import de.escidoc.core.resources.adm.MessagesStatus;
 
 final class PurgeResourcesListener implements ClickListener {
@@ -29,29 +32,35 @@ final class PurgeResourcesListener implements ClickListener {
 
     private final FormLayout formLayout;
 
+    private final Window mainWindow;
+
     PurgeResourcesListener(final ShowFilterResultCommandImpl command,
         final FormLayout formLayout, final AdminService adminService,
         final Window mainWindow) {
+
+        Preconditions.checkNotNull(command, "command is null: %s", command);
+        Preconditions.checkNotNull(formLayout, "formLayout is null: %s",
+            formLayout);
+        Preconditions.checkNotNull(adminService, "adminService is null: %s",
+            adminService);
+        Preconditions.checkNotNull(mainWindow, "mainWindow is null: %s",
+            mainWindow);
         this.command = command;
         this.formLayout = formLayout;
-
+        this.mainWindow = mainWindow;
     }
 
     private static final long serialVersionUID = 978892007619016520L;
 
     private Set<Resource> selectedResources;
 
-    private MessagesStatus status;
-
     @Override
     public void buttonClick(final ClickEvent event) {
-        // addShowPurgeStatusButton();
-        // addStatusLabel();
-        getSelectedResources();
+        purgeSelectedResources();
     }
 
     @SuppressWarnings("unchecked")
-    private void getSelectedResources() {
+    private void purgeSelectedResources() {
         final Object object = command.filteredList.getValue();
         if (object instanceof Set) {
 
@@ -60,25 +69,19 @@ final class PurgeResourcesListener implements ClickListener {
                 return;
             }
 
-            final Set<String> objectIds = new HashSet<String>();
+            final Set<String> objectIds =
+                new HashSet<String>(selectedResources.size());
             for (final Resource resource : selectedResources) {
-                LOG.debug("Purging: " + resource.getXLinkTitle());
                 objectIds.add(resource.getObjid());
             }
+
             tryPurge(objectIds);
         }
     }
 
     private void tryPurge(final Set<String> objectIds) {
         try {
-            startPurging(objectIds);
-            pollStatus();
-            if (status.getStatusCode() == MessagesStatus.STATUS_FINISHED) {
-                removeResourcesFromContainer();
-            }
-            else {
-                showErrorMessage();
-            }
+            showPurgeStatus(startPurging(objectIds));
         }
         catch (final EscidocException e) {
             LOG.warn("Unexpected error: " + e);
@@ -94,21 +97,33 @@ final class PurgeResourcesListener implements ClickListener {
         }
     }
 
-    private void startPurging(final Set<String> objectIds)
+    private void showPurgeStatus(final MessagesStatus status)
         throws EscidocException, InternalClientException, TransportException {
-        status = command.filterResourceView.adminService.purge(objectIds);
-    }
 
-    private void pollStatus() throws EscidocException, InternalClientException,
-        TransportException {
-        while (status.getStatusCode() == MessagesStatus.STATUS_IN_PROGRESS) {
-            retrievePurgeStatus();
+        if (status.getStatusCode() == AdminStatus.STATUS_INVALID_RESULT) {
+            showErrorMessage(status);
+        }
+        if (status.getStatusCode() == AdminStatus.STATUS_FINISHED) {
+            removeResourcesFromContainer();
+            showSuccessNotification(status);
+        }
+        else if (status.getStatusCode() == AdminStatus.STATUS_IN_PROGRESS) {
+            showPurgeStatus(command.filterResourceView.adminService
+                .retrievePurgeStatus());
+        }
+        else {
+            showErrorMessage(status);
         }
     }
 
-    private void retrievePurgeStatus() throws EscidocException,
-        InternalClientException, TransportException {
-        status = command.filterResourceView.adminService.retrievePurgeStatus();
+    private void showSuccessNotification(final MessagesStatus status) {
+        mainWindow.showNotification(ViewConstants.INFO,
+            status.getStatusMessage(), Notification.TYPE_TRAY_NOTIFICATION);
+    }
+
+    private MessagesStatus startPurging(final Set<String> objectIds)
+        throws EscidocException, InternalClientException, TransportException {
+        return command.filterResourceView.adminService.purge(objectIds);
     }
 
     private void removeResourcesFromContainer() {
@@ -117,9 +132,8 @@ final class PurgeResourcesListener implements ClickListener {
         }
     }
 
-    private void showErrorMessage() {
-        command.filterResourceView.mainWindow
-            .showNotification(new Notification(status.getStatusMessage(),
-                Notification.TYPE_ERROR_MESSAGE));
+    private void showErrorMessage(final AdminStatus status) {
+        mainWindow.showNotification(new Notification(status.getStatusMessage(),
+            Notification.TYPE_ERROR_MESSAGE));
     }
 }

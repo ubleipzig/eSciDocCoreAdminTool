@@ -101,8 +101,6 @@ final class ShowFilterResultCommandImpl implements ShowFilterResultCommand {
         if (isPurgePermitted()) {
             addHintForSelection();
             addPurgeButton();
-            addShowPurgeStatusButton();
-            addStatusLabel();
         }
     }
 
