@@ -63,18 +63,7 @@ public class ReindexResourceViewImpl extends AbstractCustomView
         addClearIndexBox();
         addIndexNameSelection();
         addReindexButton();
-        addShowStatusButton();
-        addStatusLabel();
         addListener();
-    }
-
-    private void addShowStatusButton() {
-        showStatusButton.setWidth(150, UNITS_PIXELS);
-        getViewLayout().addComponent(showStatusButton);
-    }
-
-    private void addStatusLabel() {
-        getViewLayout().addComponent(statusLabel);
     }
 
     private void createShowStatusCommand() {
@@ -110,6 +99,5 @@ public class ReindexResourceViewImpl extends AbstractCustomView
 
     private void addListener() {
         reindexResourceBtn.addListener(listener);
-        showStatusButton.addListener(showStatusListener);
     }
 }

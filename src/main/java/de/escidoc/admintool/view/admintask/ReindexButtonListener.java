@@ -26,8 +26,6 @@ final class ReindexButtonListener implements ClickListener {
 
     private static final long serialVersionUID = -2927507839456545485L;
 
-    private MessagesStatus status;
-
     private final ReindexResourceViewImpl reindexResourceViewImpl;
 
     private final CheckBox clearIndexBox;
@@ -47,7 +45,6 @@ final class ReindexButtonListener implements ClickListener {
     public void buttonClick(final ClickEvent event) {
         checkPreconditions();
         tryReindex();
-        showMessage();
     }
 
     private void checkPreconditions() {
@@ -94,8 +91,9 @@ final class ReindexButtonListener implements ClickListener {
         }
     }
 
-    private MessagesStatus getReindexStatus() {
-        throw new UnsupportedOperationException("Not yet implemented");
+    private MessagesStatus getReindexStatus() throws EscidocException,
+        InternalClientException, TransportException {
+        return reindexResourceViewImpl.adminService.retrieveReindexStatus();
     }
 
     private void showSuccessNotification(final MessagesStatus status) {
@@ -111,10 +109,6 @@ final class ReindexButtonListener implements ClickListener {
 
     private Window getMainWindow() {
         return reindexResourceViewImpl.mainWindow;
-    }
-
-    private void showMessage() {
-        getMainWindow().showNotification(status.getStatusMessage());
     }
 
     private Boolean shouldClearIndex() {
