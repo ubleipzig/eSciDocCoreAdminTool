@@ -30,7 +30,6 @@ import de.escidoc.core.client.interfaces.OrganizationalUnitHandlerClientInterfac
 import de.escidoc.core.resources.common.Filter;
 import de.escidoc.core.resources.common.TaskParam;
 import de.escidoc.core.resources.oum.OrganizationalUnit;
-import de.escidoc.core.resources.oum.OrganizationalUnitList;
 import de.escidoc.core.resources.oum.Predecessor;
 
 public class OrgUnitService {
@@ -262,11 +261,12 @@ public class OrgUnitService {
         return closedContext;
     }
 
-    public OrganizationalUnitList retrieveTopLevelOrgUnits()
+    public List<OrganizationalUnit> retrieveTopLevelOrgUnits()
         throws EscidocException, InternalClientException, TransportException {
-        client.setTransport(TransportProtocol.REST);
-        return client
-            .retrieveOrganizationalUnits(createTaskParamWithTopLevelFilter());
+        final SearchRetrieveRequestType searchRequest =
+            new SearchRetrieveRequestType();
+        searchRequest.setQuery("\"top-level-organizational-units\"=true");
+        return client.retrieveOrganizationalUnitsAsList(searchRequest);
     }
 
     private TaskParam createTaskParamWithTopLevelFilter() {

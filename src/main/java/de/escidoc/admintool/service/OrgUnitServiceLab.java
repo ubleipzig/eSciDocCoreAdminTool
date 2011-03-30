@@ -1,5 +1,7 @@
 package de.escidoc.admintool.service;
 
+import gov.loc.www.zing.srw.SearchRetrieveRequestType;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -62,12 +64,12 @@ public class OrgUnitServiceLab
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
-    @SuppressWarnings("deprecation")
     public Collection<OrganizationalUnit> getTopLevelOrgUnits()
         throws EscidocException, InternalClientException, TransportException {
-
-        return getClient().retrieveOrganizationalUnits(
-            createTaskParamWithTopLevelFilter());
+        final SearchRetrieveRequestType searchRequest =
+            new SearchRetrieveRequestType();
+        searchRequest.setQuery("\"top-level-organizational-units\"=true");
+        return getClient().retrieveOrganizationalUnitsAsList(searchRequest);
     }
 
     private TaskParam createTaskParamWithTopLevelFilter() {
