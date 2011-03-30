@@ -16,6 +16,7 @@ import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.Window.Notification;
 
 import de.escidoc.admintool.service.ResourceService;
 import de.escidoc.admintool.view.ErrorMessage;
@@ -57,7 +58,14 @@ public abstract class AbstractResourceBtnListener
             commitAllFields();
             updateResourceContainer();
             showInEditView();
+            showSuccessMessage();
         }
+
+    }
+
+    private void showSuccessMessage() {
+        data.mainWindow.showNotification(new Notification("Info",
+            getSucessMessage(), Notification.TYPE_TRAY_NOTIFICATION));
     }
 
     protected abstract void showInEditView();

@@ -37,6 +37,7 @@ import com.vaadin.ui.TabSheet.Tab;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.Window.Notification;
 import com.vaadin.ui.themes.BaseTheme;
 import com.vaadin.ui.themes.Reindeer;
 
@@ -201,7 +202,7 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
         panel.setContent(form);
 
         form.setSpacing(false);
-        form.setWidth(520, UNITS_PIXELS);
+        form.setWidth(530, UNITS_PIXELS);
 
         editToolbar = new ContextToolbar(this, app, pdpRequest);
         editToolbar.init();
@@ -214,8 +215,10 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
         final HorizontalLayout hl = new HorizontalLayout();
         hl.addComponent(saveButton);
         hl.addComponent(cancelButton);
+
         footer.addComponent(hl);
         footer.setComponentAlignment(hl, Alignment.MIDDLE_RIGHT);
+
         form.addComponent(footer);
     }
 
@@ -408,11 +411,8 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
                     adminDescriptors);
 
                 nameField.commit();
-                nameField.setComponentError(null);
-                descriptionField.setComponentError(null);
-                typeField.setComponentError(null);
-                orgUnitList.setComponentError(null);
-                adminDescriptorAccordion.setComponentError(null);
+                removeAllErrorMessages();
+                showMessage();
             }
             catch (final EscidocClientException e) {
                 LOG.error(
@@ -422,6 +422,19 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
                         ExceptionUtils.getRootCauseMessage(e)));
             }
         }
+    }
+
+    private void removeAllErrorMessages() {
+        nameField.setComponentError(null);
+        descriptionField.setComponentError(null);
+        typeField.setComponentError(null);
+        orgUnitList.setComponentError(null);
+        adminDescriptorAccordion.setComponentError(null);
+    }
+
+    private void showMessage() {
+        mainWindow.showNotification(new Notification("Info",
+            "Context is updated", Notification.TYPE_TRAY_NOTIFICATION));
     }
 
     private OrganizationalUnitRefs getEnteredOrgUnitRefs() {

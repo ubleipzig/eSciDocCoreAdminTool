@@ -16,6 +16,7 @@ import com.vaadin.ui.Field;
 import com.vaadin.ui.Window;
 
 import de.escidoc.admintool.service.ResourceService;
+import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.resources.Resource;
 import de.escidoc.core.resources.oum.OrganizationalUnit;
@@ -103,7 +104,7 @@ public class CreateOrgUnitBtnListener extends AbstractResourceBtnListener {
 
     @Override
     protected String getSucessMessage() {
-        return "Succesfully created an organizational unit.";
+        return ViewConstants.ORGANIZATIONAL_UNIT_IS_CREATED;
     }
 
     @Override

@@ -21,6 +21,7 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.Window.Notification;
 import com.vaadin.ui.themes.Reindeer;
 
 import de.escidoc.admintool.app.AdminToolApplication;
@@ -57,9 +58,10 @@ public class UserAddView extends CustomComponent implements ClickListener {
 
     private final HorizontalLayout footer = new HorizontalLayout();
 
-    private final Button saveBtn = new Button(ViewConstants.SAVE_LABEL, this);
+    private final Button saveButton =
+        new Button(ViewConstants.SAVE_LABEL, this);
 
-    private final Button cancel = new Button(ViewConstants.CANCEL, this);
+    private final Button cancelButton = new Button(ViewConstants.CANCEL, this);
 
     private final UserListView userListView;
 
@@ -84,25 +86,34 @@ public class UserAddView extends CustomComponent implements ClickListener {
         this.userListView = userListView;
         this.userService = userService;
         this.resourceTreeView = resourceTreeView;
-        init();
     }
 
     public void init() {
-        setCompositionRoot(panel);
+        configureLayout();
         setOrgUnitsCommand = new SetOrgUnitsCommandImpl(userService);
+        addNameField();
+        addLoginField();
+        addOrgUnitWidget();
+        addPasswordFields();
+        addSpace();
+        addFooter();
+    }
+
+    private void configureLayout() {
+        setCompositionRoot(panel);
 
         panel.setStyleName(Reindeer.PANEL_LIGHT);
         panel.setCaption(ViewConstants.USER_ADD_VIEW_CAPTION);
         panel.setContent(form);
 
         form.setSpacing(false);
-        form.setWidth(75, UNITS_PERCENTAGE);
+        // form.setWidth(75, UNITS_PERCENTAGE);
+        form.setWidth(520, UNITS_PIXELS);
+    }
 
-        addNameField();
-        addLoginField();
-        addOrgUnitWidget();
-        addPasswordFields();
-        addFooter();
+    private void addSpace() {
+        form.addComponent(new Label("<br/>", Label.CONTENT_XHTML));
+        form.addComponent(new Label("<br/>", Label.CONTENT_XHTML));
     }
 
     private void addPasswordFields() {
@@ -256,27 +267,37 @@ public class UserAddView extends CustomComponent implements ClickListener {
     }
 
     private void addFooter() {
-        footer.setSpacing(true);
-        footer.setMargin(true);
-        footer.setVisible(true);
+        // footer.setSpacing(true);
+        // footer.setMargin(true);
+        // footer.setVisible(true);
+        //
+        // footer.addComponent(saveButton);
+        // footer.addComponent(cancelButton);
+        //
+        // final VerticalLayout verticalLayout = new VerticalLayout();
+        // verticalLayout.addComponent(footer);
+        // verticalLayout.setComponentAlignment(footer, Alignment.MIDDLE_RIGHT);
+        //
+        // panel.addComponent(verticalLayout);
+        footer.setWidth(100, UNITS_PERCENTAGE);
 
-        footer.addComponent(saveBtn);
-        footer.addComponent(cancel);
+        final HorizontalLayout hLayout = new HorizontalLayout();
+        hLayout.addComponent(saveButton);
+        hLayout.addComponent(cancelButton);
 
-        final VerticalLayout verticalLayout = new VerticalLayout();
-        verticalLayout.addComponent(footer);
-        verticalLayout.setComponentAlignment(footer, Alignment.MIDDLE_RIGHT);
+        footer.addComponent(hLayout);
+        footer.setComponentAlignment(hLayout, Alignment.MIDDLE_RIGHT);
 
-        panel.addComponent(verticalLayout);
+        form.addComponent(footer);
     }
 
     @Override
     public void buttonClick(final ClickEvent event) {
         final Button source = event.getButton();
-        if (source == cancel) {
+        if (source == cancelButton) {
             resetFields();
         }
-        else if (source == saveBtn) {
+        else if (source == saveButton) {
             validateAndSave();
         }
     }
@@ -304,6 +325,7 @@ public class UserAddView extends CustomComponent implements ClickListener {
                 "Add new user to the list failed: %s", item);
             resetFields();
             app.showUser(createdUserAccount);
+            showMessage();
         }
         catch (final EscidocException e) {
             if (e instanceof AuthorizationException) {
@@ -325,6 +347,12 @@ public class UserAddView extends CustomComponent implements ClickListener {
             ErrorMessage.show(app.getMainWindow(), "Not Authorized", e);
             LOG.error("An unexpected error occured! See LOG for details.", e);
         }
+    }
+
+    private void showMessage() {
+        app.getMainWindow().showNotification(
+            new Notification("Info", "User Account is created",
+                Notification.TYPE_TRAY_NOTIFICATION));
     }
 
     // START:reference selected org units to created user.

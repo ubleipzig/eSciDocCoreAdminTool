@@ -1,0 +1,37 @@
+Changes since last release:
+
+1.0.1
+
+* show notification after successful create/update operation by Context,
+   Org Unit, User Acconeunt, Context.
+* fixed layout problem in context edit view.
+* allow user to change login name in user account edit view.
+* fixed issue in the Role Management from a Depositor User[BWESCIT-143]
+
+1.0
+
+* References to users (modifier, creator) are now links. [BWESCIT-60]
+* The user can edit referenced organizational unit in edit view. [BWESCIT-69] 
+* Included request to PDP to just show allowed things. [BWESCIT-95]
+* When a referenced resource no longer exists, it can be removed.
+[BWESCIT-111] 
+* Hide Purge Button for user with no right [BWESCIT-112] 
+* Show logged-in username near the logout/login button [BWESCIT-115] 
+* added escidocurl parameter i.e. http://[escidoc host name]:[escidoc port
+number]/AdminTool/?escidocurl=http://[escidoc host name] [BWESCIT-120] 
+* Cancel in New-Organizational Unit View will clear the form. [BWESCIT-125]
+* added scrollbar in Roles View.[BWESCIT-127] 
+* Clicking AdminTask and Resources nodes in navigation tree view, close/open
+the clicked node.[BWESCIT-130] 
+* added a tooltip that shows examples how the filter query should look
+like.[BWESCIT-132] 
+* Removed "None" in Filter Resource View [BWESCIT-133] 
+* added text to inform the user that multiple selection is possible in filter
+result view. [BWESCIT-134] 
+* added text to warn the user that clicking purge button means deleting
+selected resources forever. [BWESCIT-136] 
+* Change the description text in the filter view.[BWESCIT-137] 
+
+Full list of fixed issue for this release:
+
+https://www.escidoc.org/jira/secure/IssueNavigator.jspa?reset=true&&pid=10021&fixfor=10321&updated%3Aafter=15%2FFeb%2F11&assigneeSelect=issue_current_user&component=10132&sorter/field=status&sorter/order=DESC&sorter/field=updated&sorter/order=DESC&sorter/field=issuekey&sorter/order=ASC

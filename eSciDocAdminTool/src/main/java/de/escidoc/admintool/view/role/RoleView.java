@@ -3,11 +3,9 @@ package de.escidoc.admintool.view.role;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,7 +18,6 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.ComboBox;
-import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.FormLayout;
@@ -40,10 +37,10 @@ import de.escidoc.admintool.service.RoleService;
 import de.escidoc.admintool.service.ServiceContainer;
 import de.escidoc.admintool.service.UserService;
 import de.escidoc.admintool.view.ViewConstants;
+import de.escidoc.admintool.view.admintask.ResourceType;
 import de.escidoc.admintool.view.util.dialog.ErrorDialog;
 import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.client.exceptions.application.notfound.RoleNotFoundException;
-import de.escidoc.core.resources.Resource;
 import de.escidoc.core.resources.aa.role.Role;
 import de.escidoc.core.resources.aa.useraccount.UserAccount;
 import de.escidoc.core.resources.common.reference.ContextRef;
@@ -79,18 +76,18 @@ public class RoleView extends CustomComponent {
 
     private final ComboBox resourceTypeComboBox = new ComboBox("Resouce Type:");
 
-    private final ListSelect resouceResult = new ListSelect();
+    final ListSelect resouceResult = new ListSelect();
 
     private final HorizontalLayout footer = new HorizontalLayout();
 
     private final Button saveBtn = new Button(ViewConstants.SAVE_LABEL,
         new SaveBtnListener());
 
-    private final Window mainWindow;
+    final Window mainWindow;
 
     private final ComponentContainer mainLayout = new FormLayout();
 
-    private final VerticalLayout resourceContainer = new VerticalLayout();
+    final VerticalLayout resourceContainer = new VerticalLayout();
 
     final TextField searchBox = new TextField("Resource Title: ");
 
@@ -108,7 +105,7 @@ public class RoleView extends CustomComponent {
 
     private POJOContainer<UserAccount> userContainer;
 
-    private final ServiceContainer serviceContainer;
+    final ServiceContainer serviceContainer;
 
     // TODO: add logged in user;
     public RoleView(final AdminToolApplication app,
@@ -192,7 +189,6 @@ public class RoleView extends CustomComponent {
         searchButton.setEnabled(false);
         mainLayout.addComponent(searchBox);
         searchButton.addListener(new SearchBtnListener());
-        // mainLayout.addComponent(searchButton);
     }
 
     private void addResourceSelection() {
@@ -249,10 +245,10 @@ public class RoleView extends CustomComponent {
             new BeanItemContainer<ResourceType>(ResourceType.class,
                 Arrays.asList(ResourceType.values()));
         resourceTypeComboBox.setContainerDataSource(resourceTypeContainer);
-        resourceTypeComboBox.addListener(new ResourceTypeListener());
+        resourceTypeComboBox.addListener(new ResourceTypeListener(this));
     }
 
-    private Collection<Context> getAllContexts() {
+    Collection<Context> getAllContexts() {
         try {
             return contextService.getCache();
         }
@@ -422,9 +418,7 @@ public class RoleView extends CustomComponent {
                 // title:[userInput] OR objectID:[userInput]
                 final String userInput = (String) value;
                 foundContexts = seachContextByName(userInput);
-                // final String message = "Not found";
                 if (isContextFound()) {
-                    // message = foundContexts.iterator().next().getObjid();
                     mainWindow.showNotification(foundContexts
                         .iterator().next().getObjid());
                 }
@@ -450,118 +444,5 @@ public class RoleView extends CustomComponent {
             }
             return Collections.emptyList();
         }
-    }
-
-    private class ResourceTypeListener implements ValueChangeListener {
-
-        private static final long serialVersionUID = 2394096937007392588L;
-
-        @Override
-        public void valueChange(final ValueChangeEvent event) {
-            try {
-                onSelectedResourceType(event);
-            }
-            catch (final NotImplementedException e) {
-                mainWindow.addWindow(new ErrorDialog(mainWindow,
-                    ViewConstants.ERROR_DIALOG_CAPTION, e.getMessage()));
-            }
-        }
-
-        private void onSelectedResourceType(final ValueChangeEvent event) {
-            final Object value = event.getProperty().getValue();
-            if (value instanceof ResourceType) {
-                final ResourceType type = (ResourceType) value;
-                mainWindow.showNotification(type.toString());
-
-                Component newComponent = null;
-                switch (type) {
-                    case CONTEXT:
-                        newComponent = resouceResult;
-                        loadContextData();
-                        break;
-                    case ORG_UNIT:
-                        newComponent = resouceResult;
-                        loadOrgUnitData();
-                        break;
-                    default: {
-                        clearResourceContainer();
-                        throw new NotImplementedException("Scoping for " + type
-                            + " is not yet implemented");
-                    }
-                }
-                final Iterator<Component> it =
-                    resourceContainer.getComponentIterator();
-                if (it.hasNext()) {
-                    resourceContainer.replaceComponent(it.next(), newComponent);
-                }
-                else {
-                    resourceContainer.addComponent(newComponent);
-                }
-            }
-        }
-
-        private void loadOrgUnitData() {
-            final Set<Resource> organizationalUnits =
-                getAllOrganizationalUnits();
-            if (isNotEmpty(organizationalUnits)) {
-                final POJOContainer<Resource> container =
-                    new POJOContainer<Resource>(
-                        (Collection<Resource>) organizationalUnits,
-                        PropertyId.NAME);
-                resouceResult.setContainerDataSource(container);
-                resouceResult.setItemCaptionPropertyId(PropertyId.NAME);
-            }
-
-        }
-
-        private boolean isNotEmpty(final Set<Resource> organizationalUnits) {
-            return organizationalUnits != null
-                && organizationalUnits.size() > 0;
-        }
-
-        private Set<Resource> getAllOrganizationalUnits() {
-
-            try {
-                final Set<Resource> all =
-                    serviceContainer.getOrgUnitService().findAll();
-                return all;
-
-            }
-            catch (final EscidocClientException e) {
-                mainWindow.addWindow(new ErrorDialog(mainWindow,
-                    ViewConstants.ERROR_DIALOG_CAPTION, e.getMessage()));
-            }
-            return Collections.emptySet();
-        }
-
-        private void clearResourceContainer() {
-            resourceContainer.removeAllComponents();
-        }
-
-        private void loadContextData() {
-            final POJOContainer<Context> contextContainer =
-                new POJOContainer<Context>(getAllContexts(), PropertyId.NAME);
-            resouceResult.setContainerDataSource(contextContainer);
-            resouceResult.setItemCaptionPropertyId(PropertyId.NAME);
-        }
-
-    }
-
-    private enum ResourceType {
-        ORG_UNIT(ViewConstants.ORGANIZATION_UNITS_LABEL), CONTEXT(
-            ViewConstants.CONTEXTS_LABEL), CONTAINER("Container"), ITEM("Item"), COMPONENT(
-            "Component");
-
-        private String name;
-
-        ResourceType(final String name) {
-            this.name = name;
-        }
-
-        @Override
-        public String toString() {
-            return name;
-        }
-
     }
 }

@@ -32,6 +32,7 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.TabSheet.Tab;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.Window.Notification;
 import com.vaadin.ui.themes.Reindeer;
 
 import de.escidoc.admintool.app.AdminToolApplication;
@@ -101,10 +102,9 @@ public class ContextAddView extends CustomComponent implements ClickListener {
         this.contextListView = contextListView;
         this.contextService = contextService;
         this.addOrgUnitToTheList = addOrgUnitToTheList;
-        init();
     }
 
-    private void init() {
+    public void init() {
         configureLayout();
         addFields();
         addSpace();
@@ -301,6 +301,7 @@ public class ContextAddView extends CustomComponent implements ClickListener {
         try {
             addAndSortContextInListView(createContextInRepository());
             resetFields();
+            showMessage();
         }
         catch (final EscidocClientException e) {
             final String rootCauseMessage =
@@ -318,6 +319,12 @@ public class ContextAddView extends CustomComponent implements ClickListener {
             mainWindow.addWindow(new ErrorDialog(mainWindow, "Error", e
                 .getMessage()));
         }
+    }
+
+    private void showMessage() {
+        app.getMainWindow().showNotification(
+            new Notification("Info", "Context is created",
+                Notification.TYPE_TRAY_NOTIFICATION));
     }
 
     private void addAndSortContextInListView(final Context newContext)

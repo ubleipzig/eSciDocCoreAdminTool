@@ -91,6 +91,7 @@ public class ContextViewFactory {
         contextAddView =
             new ContextAddView(app, mainWindow, contextList, contextService,
                 new AddOrgUnitToTheList(mainWindow, resourceTreeView));
+        contextAddView.init();
         return contextAddView;
     }
 

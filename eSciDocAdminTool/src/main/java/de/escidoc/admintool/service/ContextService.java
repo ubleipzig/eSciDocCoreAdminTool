@@ -1,5 +1,7 @@
 package de.escidoc.admintool.service;
 
+import gov.loc.www.zing.srw.SearchRetrieveRequestType;
+
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
@@ -62,12 +64,11 @@ public class ContextService implements Serializable {
         client.setHandle(handle);
     }
 
-    @SuppressWarnings("deprecation")
     public Collection<Context> findAll() throws EscidocClientException {
         LOG.info("Retrieving Context from repository...");
 
         final Collection<Context> contexts =
-            client.retrieveContexts(createdBySysAdmin());
+            client.retrieveContextsAsList(new SearchRetrieveRequestType());
 
         if (contexts == null || contexts.isEmpty()) {
             return Collections.emptySet(); // NOPMD by CHH on 9/17/10 10:23 AM
@@ -134,10 +135,11 @@ public class ContextService implements Serializable {
         assert !newType.isEmpty() : "newType can not be empty.";
         assert orgUnitRefs != null : "organizationalUnitRefs can not be null.";
 
+        final ContextBuilder builder =
+            new ContextBuilder(getSelected(objectId));
         final Context updatedContext =
-            new ContextFactory()
-                .update(getSelected(objectId)).name(newName)
-                .description(newDescription).type(newType)
+            builder
+                .name(newName).description(newDescription).type(newType)
                 .orgUnits(orgUnitRefs).adminDescriptors(newAdminDescriptors)
                 .build();
 

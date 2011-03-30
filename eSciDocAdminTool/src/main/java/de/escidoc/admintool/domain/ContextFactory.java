@@ -53,7 +53,6 @@ public class ContextFactory {
 
     private boolean isNotSet(final AdminDescriptors adminDescriptors) {
         return adminDescriptors == null;
-        // || adminDescriptors.size() == 0;
     }
 
     public Context build() {
@@ -78,17 +77,6 @@ public class ContextFactory {
 
     public ContextFactory orgUnits(final OrganizationalUnitRefs orgUnitRefs) {
         properties.setOrganizationalUnitRefs(orgUnitRefs);
-
-        // final OrganizationalUnitRefs organizationalUnitRefs =
-        // new OrganizationalUnitRefs();
-        //
-        // for (final OrganizationalUnit orgUnit : newOrgUnits) {
-        // final ResourceRef organizationalUnitRef =
-        // new ResourceRef(orgUnit.getObjid());
-        // organizationalUnitRefs
-        // .addOrganizationalUnitRef(organizationalUnitRef);
-        // }
-
         return this;
     }
 }

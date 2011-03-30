@@ -101,9 +101,6 @@ public class ViewConstants {
     public static final String COUNTRY_LABEL = Messages
         .getString("ViewConstants.31"); //$NON-NLS-1$
 
-    public static final String CITY_LABEL = Messages
-        .getString("ViewConstants.32"); //$NON-NLS-1$
-
     public static final String COORDINATES_ID = Messages
         .getString("ViewConstants.33"); //$NON-NLS-1$
 
@@ -422,7 +419,7 @@ public class ViewConstants {
     public static final String USER_ADD_VIEW_CAPTION = "Add a new User Account";
 
     public static final String SUCCESFULLY_UPDATED_ORGANIZATIONAL_UNIT =
-        "Succesfully updated organizational unit.";
+        "Organizational unit is updated.";
 
     public static final String NOT_AUTHORIZED = "Not Authorized";
 
@@ -434,7 +431,7 @@ public class ViewConstants {
 
     public static final String WELCOME_LABEL = "Welcome";
 
-    public static final int MAX_TITLE_LENGTH = 50;
+    public static final int MAX_TITLE_LENGTH = 255;
 
     public static final int MAX_DESC_LENGTH = 255;
 
@@ -454,4 +451,17 @@ public class ViewConstants {
             + EXAMPLE_QUERY
             + "<br/> filter selected resource type that created by user account with the id exuser1</li>"
             + "</ul>";
+
+    public static final String CITY_LABEL = "city";
+
+    public static final String ORGANIZATIONAL_UNIT_IS_CREATED =
+        "Organizational unit is created.";
+
+    public static final String CONTAINER_LABEL = "Container";
+
+    public static final String ITEM_LABEL = "Item";
+
+    public static final String COMPONENT_LABEL = "Component";
+
+    public static final String INFO = "Info";
 }
