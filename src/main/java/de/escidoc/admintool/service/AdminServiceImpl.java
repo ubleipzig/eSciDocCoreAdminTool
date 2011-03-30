@@ -12,7 +12,7 @@ import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
 import de.escidoc.core.client.interfaces.AdminHandlerClientInterface;
-import de.escidoc.core.client.interfaces.HandlerServiceInterface;
+import de.escidoc.core.client.interfaces.base.HandlerService;
 import de.escidoc.core.resources.adm.LoadExamplesResult.Entry;
 import de.escidoc.core.resources.adm.MessagesStatus;
 import de.escidoc.core.resources.adm.RepositoryInfo;
@@ -24,9 +24,9 @@ public class AdminServiceImpl implements AdminService {
     private static final Logger LOG = LoggerFactory
         .getLogger(AdminServiceImpl.class);
 
-    private final HandlerServiceInterface client;
+    private final HandlerService client;
 
-    public AdminServiceImpl(final HandlerServiceInterface client) {
+    public AdminServiceImpl(final HandlerService client) {
         this.client = client;
     }
 

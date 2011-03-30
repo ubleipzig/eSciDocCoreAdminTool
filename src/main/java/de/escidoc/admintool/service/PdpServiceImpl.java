@@ -29,7 +29,7 @@ public class PdpServiceImpl implements PdpService {
 
     private Set<Subject> subjects;
 
-   public PdpServiceImpl(final String serviceAddress) {
+    public PdpServiceImpl(final String serviceAddress) {
         client = new PolicyDecisionPointHandlerClient(serviceAddress);
         client.setTransport(TransportProtocol.REST);
     }
@@ -79,7 +79,7 @@ public class PdpServiceImpl implements PdpService {
         requests.add(new RequestCtx(subjects, resourceAttrs, actionAttrs,
             Requests.DEFAULT_ENVIRONMENT));
         return getDecisionFrom(client.evaluate(requests)).equals(
-            Decision.permit);
+            Decision.PERMIT);
     }
 
     private Decision getDecisionFrom(final Results results) {

@@ -6,27 +6,21 @@ import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
-import de.escidoc.core.client.interfaces.HandlerServiceInterface;
 import de.escidoc.core.client.interfaces.ItemHandlerClientInterface;
+import de.escidoc.core.client.interfaces.base.HandlerService;
 import de.escidoc.core.resources.Resource;
 import de.escidoc.core.resources.om.item.Item;
 
 public class ItemService
     extends AbstractEscidocService<ItemHandlerClientInterface> {
 
-    public ItemService(final HandlerServiceInterface client) {
+    public ItemService(final HandlerService client) {
         super(client);
     }
 
     @Override
     protected final ItemHandlerClientInterface getClient() {
         return ((ItemHandlerClientInterface) client);
-    }
-
-    @Override
-    protected final Collection<? extends Resource> findPublicOrReleseadResourcesUsingOldFilter()
-        throws EscidocException, InternalClientException, TransportException {
-        return getClient().retrieveItems(withEmptyTaskParam());
     }
 
     @Override

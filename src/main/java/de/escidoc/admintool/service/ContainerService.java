@@ -7,20 +7,14 @@ import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
 import de.escidoc.core.client.interfaces.ContainerHandlerClientInterface;
-import de.escidoc.core.client.interfaces.HandlerServiceInterface;
+import de.escidoc.core.client.interfaces.base.HandlerService;
 import de.escidoc.core.resources.Resource;
 
 public class ContainerService
     extends AbstractEscidocService<ContainerHandlerClientInterface> {
 
-    public ContainerService(final HandlerServiceInterface client) {
+    public ContainerService(final HandlerService client) {
         super(client);
-    }
-
-    @Override
-    Collection<? extends Resource> findPublicOrReleseadResourcesUsingOldFilter()
-        throws EscidocClientException {
-        return getClient().retrieveContainers(withEmptyTaskParam());
     }
 
     @Override

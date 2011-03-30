@@ -3,6 +3,7 @@ package de.escidoc.admintool.service;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import com.google.common.base.Preconditions;
@@ -12,21 +13,20 @@ import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
-import de.escidoc.core.client.interfaces.HandlerServiceInterface;
 import de.escidoc.core.client.interfaces.OrganizationalUnitHandlerClientInterface;
+import de.escidoc.core.client.interfaces.base.HandlerService;
 import de.escidoc.core.resources.Resource;
 import de.escidoc.core.resources.common.Filter;
 import de.escidoc.core.resources.common.Result;
 import de.escidoc.core.resources.common.TaskParam;
 import de.escidoc.core.resources.oum.OrganizationalUnit;
-import de.escidoc.core.resources.oum.OrganizationalUnitList;
 import de.escidoc.core.resources.oum.Parent;
 import de.escidoc.core.resources.oum.Parents;
 
 public class OrgUnitServiceLab
     extends AbstractEscidocService<OrganizationalUnitHandlerClientInterface> {
 
-    public OrgUnitServiceLab(final HandlerServiceInterface client) {
+    public OrgUnitServiceLab(final HandlerService client) {
         super(client);
     }
 
@@ -39,12 +39,6 @@ public class OrgUnitServiceLab
     public Resource create(final Resource resource) throws EscidocException,
         InternalClientException, TransportException {
         return getClient().create((OrganizationalUnit) resource);
-    }
-
-    @Override
-    public Collection<? extends Resource> findPublicOrReleseadResourcesUsingOldFilter()
-        throws EscidocClientException {
-        return getClient().retrieveOrganizationalUnits(withEmptyTaskParam());
     }
 
     @Override
@@ -97,8 +91,8 @@ public class OrgUnitServiceLab
         Preconditions.checkNotNull(objid, "objid is null: %s", objid);
         Preconditions.checkArgument(!objid.isEmpty(), "objid is empty", objid);
 
-        final OrganizationalUnitList children =
-            getClient().retrieveChildObjects(objid);
+        final List<OrganizationalUnit> children =
+            getClient().retrieveChildObjectsAsList(objid);
 
         if (children == null) {
             return Collections.emptySet();

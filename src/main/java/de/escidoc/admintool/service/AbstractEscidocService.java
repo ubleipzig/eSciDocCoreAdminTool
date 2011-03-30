@@ -17,20 +17,19 @@ import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
-import de.escidoc.core.client.exceptions.application.invalid.InvalidSearchQueryException;
 import de.escidoc.core.client.interfaces.ContextHandlerClientInterface;
-import de.escidoc.core.client.interfaces.HandlerServiceInterface;
+import de.escidoc.core.client.interfaces.base.HandlerService;
 import de.escidoc.core.resources.Resource;
 import de.escidoc.core.resources.common.TaskParam;
 
-public abstract class AbstractEscidocService<T extends HandlerServiceInterface>
+public abstract class AbstractEscidocService<T extends HandlerService>
     implements ResourceService, LoginService {
 
-    protected HandlerServiceInterface client;
+    protected HandlerService client;
 
     private Authentication authentification;
 
-    public AbstractEscidocService(final HandlerServiceInterface client) {
+    public AbstractEscidocService(final HandlerService client) {
         Preconditions.checkNotNull(client, "Client is null: %s", client);
         this.client = client;
     }
@@ -61,20 +60,8 @@ public abstract class AbstractEscidocService<T extends HandlerServiceInterface>
 
     @Override
     public Set<Resource> findAll() throws EscidocClientException {
-
-        Collection<? extends Resource> resources;
-        try {
-            resources = findPublicOrReleasedResources();
-        }
-        catch (final EscidocException e) {
-            if (e instanceof InvalidSearchQueryException) {
-                resources = findPublicOrReleseadResourcesUsingOldFilter();
-            }
-            else {
-                throw e;
-            }
-        }
-        return Collections.unmodifiableSet(new HashSet<Resource>(resources));
+        return Collections.unmodifiableSet(new HashSet<Resource>(
+            findPublicOrReleasedResources()));
     }
 
     protected TaskParam withEmptyTaskParam() {
@@ -84,10 +71,6 @@ public abstract class AbstractEscidocService<T extends HandlerServiceInterface>
     protected SearchRetrieveRequestType withEmptyFilter() {
         return new SearchRetrieveRequestType();
     }
-
-    abstract Collection<? extends Resource> findPublicOrReleseadResourcesUsingOldFilter()
-        throws EscidocException, InternalClientException, TransportException,
-        EscidocClientException;
 
     abstract Collection<? extends Resource> findPublicOrReleasedResources()
         throws EscidocException, InternalClientException, TransportException;

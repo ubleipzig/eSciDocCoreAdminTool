@@ -1,5 +1,7 @@
 package de.escidoc.admintool.service;
 
+import gov.loc.www.zing.srw.SearchRetrieveRequestType;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -99,7 +101,9 @@ public class OrgUnitService {
 
     public Collection<OrganizationalUnit> findAll() throws EscidocException,
         InternalClientException, TransportException {
-        orgUnits = client.retrieveOrganizationalUnits(emptyFilter());
+        orgUnits =
+            client
+                .retrieveOrganizationalUnitsAsList(new SearchRetrieveRequestType());
 
         for (final OrganizationalUnit orgUnit : orgUnits) {
             orgUnitById.put(orgUnit.getObjid(), orgUnit);
@@ -284,8 +288,8 @@ public class OrgUnitService {
     public Collection<OrganizationalUnit> retrieveChildren(final String parentId)
         throws EscidocException, InternalClientException, TransportException {
 
-        final OrganizationalUnitList childList =
-            client.retrieveChildObjects(parentId);
+        final List<OrganizationalUnit> childList =
+            client.retrieveChildObjectsAsList(parentId);
 
         if (childList == null) {
             return Collections.emptyList();

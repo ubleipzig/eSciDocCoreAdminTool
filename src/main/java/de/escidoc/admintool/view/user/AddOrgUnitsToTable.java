@@ -11,6 +11,7 @@ import com.vaadin.ui.Window;
 import de.escidoc.admintool.view.ModalDialog;
 import de.escidoc.admintool.view.resource.ResourceRefDisplay;
 import de.escidoc.admintool.view.resource.ResourceTreeView;
+import de.escidoc.core.resources.common.properties.PublicStatus;
 import de.escidoc.core.resources.oum.OrganizationalUnit;
 
 final class AddOrgUnitsToTable implements ClickListener {
@@ -96,7 +97,7 @@ final class AddOrgUnitsToTable implements ClickListener {
     }
 
     private boolean isOpen(final OrganizationalUnit selectedOrgUnit) {
-        return "opened".equalsIgnoreCase(selectedOrgUnit
+        return PublicStatus.OPENED.equals(selectedOrgUnit
             .getProperties().getPublicStatus());
     }
 

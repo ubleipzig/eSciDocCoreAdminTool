@@ -7,14 +7,14 @@ import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
-import de.escidoc.core.client.interfaces.HandlerServiceInterface;
+import de.escidoc.core.client.interfaces.base.HandlerService;
 import de.escidoc.core.resources.Resource;
 import de.escidoc.core.resources.cmm.ContentModel;
 
 public class ContentModelService
     extends AbstractEscidocService<ContentModelHandlerClient> {
 
-    public ContentModelService(final HandlerServiceInterface client) {
+    public ContentModelService(final HandlerService client) {
         super(client);
     }
 
@@ -39,14 +39,6 @@ public class ContentModelService
     @Override
     ContentModelHandlerClient getClient() {
         return (ContentModelHandlerClient) client;
-    }
-
-    @Override
-    Collection<? extends Resource> findPublicOrReleseadResourcesUsingOldFilter()
-        throws EscidocException, InternalClientException, TransportException,
-        EscidocClientException {
-        throw new UnsupportedOperationException("Not yet implemented");
-
     }
 
     @Override

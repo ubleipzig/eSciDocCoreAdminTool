@@ -15,6 +15,7 @@ import de.escidoc.admintool.view.ModalDialog;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.admintool.view.resource.ResourceRefDisplay;
 import de.escidoc.admintool.view.resource.ResourceTreeView;
+import de.escidoc.core.resources.common.properties.PublicStatus;
 import de.escidoc.core.resources.oum.OrganizationalUnit;
 
 public final class AddOrgUnitToTheList implements Button.ClickListener {
@@ -84,7 +85,7 @@ public final class AddOrgUnitToTheList implements Button.ClickListener {
         }
 
         private boolean isOpen(final OrganizationalUnit selectedOrgUnit) {
-            return "opened".equalsIgnoreCase(selectedOrgUnit
+            return PublicStatus.OPENED.equals(selectedOrgUnit
                 .getProperties().getPublicStatus());
         }
 

@@ -16,9 +16,9 @@ import de.escidoc.core.client.exceptions.TransportException;
 import de.escidoc.core.client.exceptions.application.security.AuthenticationException;
 import de.escidoc.core.client.interfaces.ContainerHandlerClientInterface;
 import de.escidoc.core.client.interfaces.ContextHandlerClientInterface;
-import de.escidoc.core.client.interfaces.HandlerServiceInterface;
 import de.escidoc.core.client.interfaces.ItemHandlerClientInterface;
 import de.escidoc.core.client.interfaces.OrganizationalUnitHandlerClientInterface;
+import de.escidoc.core.client.interfaces.base.HandlerService;
 
 public class ServiceFactory {
 
@@ -83,9 +83,9 @@ public class ServiceFactory {
         return adminService;
     }
 
-    private HandlerServiceInterface createAdminClient()
+    private HandlerService createAdminClient()
         throws InternalClientException {
-        final HandlerServiceInterface client =
+        final HandlerService client =
             new AdminHandlerClient(serviceUri);
         client.setTransport(TransportProtocol.REST);
         return client;

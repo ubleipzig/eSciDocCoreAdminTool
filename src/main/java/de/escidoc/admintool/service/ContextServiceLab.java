@@ -7,14 +7,14 @@ import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
 import de.escidoc.core.client.interfaces.ContextHandlerClientInterface;
-import de.escidoc.core.client.interfaces.HandlerServiceInterface;
+import de.escidoc.core.client.interfaces.base.HandlerService;
 import de.escidoc.core.resources.Resource;
 import de.escidoc.core.resources.om.context.Context;
 
 public class ContextServiceLab
     extends AbstractEscidocService<ContextHandlerClientInterface> {
 
-    public ContextServiceLab(final HandlerServiceInterface client) {
+    public ContextServiceLab(final HandlerService client) {
         super(client);
     }
 
@@ -27,13 +27,6 @@ public class ContextServiceLab
     public Resource create(final Resource resource) throws EscidocException,
         InternalClientException, TransportException {
         return getClient().create((Context) resource);
-    }
-
-    @Override
-    Collection<? extends Resource> findPublicOrReleseadResourcesUsingOldFilter()
-        throws EscidocException, InternalClientException, TransportException,
-        EscidocClientException {
-        return getClient().retrieveContexts(withEmptyTaskParam());
     }
 
     @Override

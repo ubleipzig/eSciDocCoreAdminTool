@@ -355,7 +355,7 @@ public class UserService {
         Preconditions.checkNotNull(objectId, "objectId is null: %s", objectId);
         Preconditions.checkNotNull(attribute, "attribute is null: %s",
             attribute);
-        client.deleteAttribute(objectId, attribute);
+        client.deleteAttribute(objectId, attribute.getObjid());
     }
 
 }
