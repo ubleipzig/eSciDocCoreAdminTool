@@ -66,10 +66,14 @@ public class UserService {
     public Collection<UserAccount> findAll() throws EscidocClientException {
         userAccounts =
             client.retrieveUserAccountsAsList(new SearchRetrieveRequestType());
+        putInMap();
+        return userAccounts;
+    }
+
+    private void putInMap() {
         for (final UserAccount user : userAccounts) {
             userAccountById.put(user.getObjid(), user);
         }
-        return userAccounts;
     }
 
     public UserAccount retrieve(final String userObjectId)

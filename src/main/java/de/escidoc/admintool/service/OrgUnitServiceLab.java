@@ -4,9 +4,7 @@ import gov.loc.www.zing.srw.SearchRetrieveRequestType;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import com.google.common.base.Preconditions;
 
@@ -70,14 +68,6 @@ public class OrgUnitServiceLab
             new SearchRetrieveRequestType();
         searchRequest.setQuery("\"top-level-organizational-units\"=true");
         return getClient().retrieveOrganizationalUnitsAsList(searchRequest);
-    }
-
-    private TaskParam createTaskParamWithTopLevelFilter() {
-        final Set<Filter> filters = new HashSet<Filter>();
-        filters.add(createTopLevelFilter());
-        final TaskParam taskParam = new TaskParam();
-        taskParam.setFilters(filters);
-        return taskParam;
     }
 
     private Filter createTopLevelFilter() {
