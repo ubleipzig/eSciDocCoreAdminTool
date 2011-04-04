@@ -8,7 +8,6 @@ import java.util.List;
 
 import com.google.common.base.Preconditions;
 
-import de.escidoc.admintool.app.AppConstants;
 import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
@@ -16,7 +15,6 @@ import de.escidoc.core.client.exceptions.TransportException;
 import de.escidoc.core.client.interfaces.OrganizationalUnitHandlerClientInterface;
 import de.escidoc.core.client.interfaces.base.HandlerService;
 import de.escidoc.core.resources.Resource;
-import de.escidoc.core.resources.common.Filter;
 import de.escidoc.core.resources.common.Result;
 import de.escidoc.core.resources.common.TaskParam;
 import de.escidoc.core.resources.oum.OrganizationalUnit;
@@ -68,14 +66,6 @@ public class OrgUnitServiceLab
             new SearchRetrieveRequestType();
         searchRequest.setQuery("\"top-level-organizational-units\"=true");
         return getClient().retrieveOrganizationalUnitsAsList(searchRequest);
-    }
-
-    private Filter createTopLevelFilter() {
-        final Filter filter = new Filter();
-        filter.setName(AppConstants.TOP_LEVEL_ORGANIZATIONAL_UNITS);
-        filter.setValue(AppConstants.IS_TOP_LEVEL);
-        filter.setIds(Collections.singletonList(""));
-        return filter;
     }
 
     public Collection<OrganizationalUnit> retrieveChildren(final String objid)
