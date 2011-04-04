@@ -57,7 +57,7 @@ public class AppConstants {
 
     public static final String ESCIDOC_LOGO = "images/SchriftLogo.jpg";
 
-    static final String ESCIDOC_URL = "escidocurl";
+    public static final String ESCIDOC_URL = "escidocurl";
 
     public static final String LOGOUT_TARGET = "/aa/logout?target=";
 
