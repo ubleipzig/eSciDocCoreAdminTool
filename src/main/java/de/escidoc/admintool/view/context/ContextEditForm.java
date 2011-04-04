@@ -675,23 +675,49 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
     }
 
     private void bindPublicStatusWithView() {
-        final PublicStatus publicStatus =
-            PublicStatus.valueOf(((String) item.getItemProperty(
-                PropertyId.PUBLIC_STATUS).getValue()).toUpperCase());
-        switch (publicStatus) {
-            case CREATED:
-            case OPENED: {
-                setFormReadOnly(false);
-                footer.setVisible(true);
-                break;
-            }
-            case CLOSED: {
-                setFormReadOnly(true);
-                footer.setVisible(false);
-                break;
-            }
+        // final PublicStatus publicStatus =
+        // PublicStatus.valueOf(((String) item.getItemProperty(
+        // PropertyId.PUBLIC_STATUS).getValue()).toUpperCase());
+        // switch (publicStatus) {
+        // case CREATED:
+        // case OPENED: {
+        // setFormReadOnly(false);
+        // footer.setVisible(true);
+        // break;
+        // }
+        // case CLOSED: {
+        // setFormReadOnly(true);
+        // footer.setVisible(false);
+        // break;
+        // }
+        // }
+        final Object value =
+            item.getItemProperty(PropertyId.PUBLIC_STATUS).getValue();
+        if (!(value instanceof de.escidoc.core.resources.common.properties.PublicStatus)) {
+            throw new RuntimeException(value.getClass()
+                + " is not instance of PublicStatus");
         }
-        editToolbar.setSelected(publicStatus);
+        else {
+
+            final PublicStatus publicStatus =
+                PublicStatus
+                    .convert((de.escidoc.core.resources.common.properties.PublicStatus) value);
+            switch (publicStatus) {
+                case CREATED:
+                case OPENED: {
+                    setFormReadOnly(false);
+                    footer.setVisible(true);
+                    break;
+                }
+                case CLOSED: {
+                    setFormReadOnly(true);
+                    footer.setVisible(false);
+                    break;
+                }
+            }
+            editToolbar.setSelected(publicStatus);
+        }
+
     }
 
     private void bindUserRightWithView() {

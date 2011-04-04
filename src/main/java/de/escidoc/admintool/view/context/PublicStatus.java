@@ -9,12 +9,17 @@ public enum PublicStatus {
 
     private final String name;
 
-    private PublicStatus(final String name) {
+    PublicStatus(final String name) {
         this.name = name;
     }
 
     @Override
     public String toString() {
         return name;
+    }
+
+    public static PublicStatus convert(
+        final de.escidoc.core.resources.common.properties.PublicStatus fromCore) {
+        return PublicStatus.valueOf(fromCore.toString());
     }
 }
