@@ -5,6 +5,7 @@ package de.escidoc.admintool.view.context;
  * 
  */
 public enum PublicStatus {
+
     CREATED("Created"), OPENED("Opened"), CLOSED("Closed");
 
     private final String name;

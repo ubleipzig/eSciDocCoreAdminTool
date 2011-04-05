@@ -1,5 +1,6 @@
 package de.escidoc.admintool.view;
 
+import com.google.common.base.Preconditions;
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
@@ -51,7 +52,12 @@ public class MainView extends CustomComponent {
     public MainView(final AdminToolApplication app,
         final PdpRequest pdpRequest, final UserAccount currentUser,
         final EscidocServiceLocation location) {
-
+        Preconditions.checkNotNull(app, "app is null: %s", app);
+        Preconditions.checkNotNull(pdpRequest, "pdpRequest is null: %s",
+            pdpRequest);
+        Preconditions.checkNotNull(currentUser, "currentUser is null: %s",
+            currentUser);
+        Preconditions.checkNotNull(location, "location is null: %s", location);
         this.app = app;
         this.pdpRequest = pdpRequest;
         this.currentUser = currentUser;

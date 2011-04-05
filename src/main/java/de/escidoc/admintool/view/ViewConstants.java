@@ -464,4 +464,6 @@ public class ViewConstants {
     public static final String COMPONENT_LABEL = "Component";
 
     public static final String INFO = "Info";
+
+    public static final String GUEST = "Guest";
 }

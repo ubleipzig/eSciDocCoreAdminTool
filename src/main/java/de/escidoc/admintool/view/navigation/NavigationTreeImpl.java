@@ -63,7 +63,8 @@ public class NavigationTreeImpl extends CustomComponent
                 addChild(parent, node);
             }
             else if (isEquals(node, ViewConstants.CONTENT_MODELS)
-                && isAllowedToCreateContentModel()) {
+            // && isAllowedToCreateContentModel()
+            ) {
                 addChild(parent, node);
             }
             else {

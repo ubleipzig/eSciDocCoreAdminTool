@@ -11,6 +11,8 @@ import com.vaadin.terminal.ParameterHandler;
 
 public class ParamaterHandlerImpl implements ParameterHandler {
 
+    private static final String EMPTY_TOKEN = AppConstants.EMPTY_STRING;
+
     private static final long serialVersionUID = 6392830954652643671L;
 
     private static final Logger LOG = LoggerFactory
@@ -28,24 +30,31 @@ public class ParamaterHandlerImpl implements ParameterHandler {
 
     @Override
     public void handleParameters(final Map<String, String[]> parameters) {
-        if (isEscidocUrlExists(parameters) && isTokenExist(parameters)) {
+        if (isEscidocUrlExists(parameters) && tokenExist(parameters)) {
             LOG.debug("both escidocurl and token exists");
             app.setEscidocUri(parseEscidocUriFrom(parameters));
             showMainView(parameters);
         }
-        if (isTokenExist(parameters)) {
+        if (tokenExist(parameters)) {
             LOG.debug("only token exists");
             showMainView(parameters);
         }
-        else if (isEscidocUrlExists(parameters) && !isTokenExist(parameters)) {
+        else if (isEscidocUrlExists(parameters)
+            && tokenDoesNotExist(parameters)) {
             LOG.debug("escidocurl exists but no token");
             app.setEscidocUri(parseEscidocUriFrom(parameters));
-            showLoginView();
+            app.loadProtectedResources(EMPTY_TOKEN);
+
         }
-        else if (!isEscidocUrlExists(parameters) && !isTokenExist(parameters)) {
+        else if (!isEscidocUrlExists(parameters)
+            && tokenDoesNotExist(parameters)) {
             LOG.debug("nothing");
             app.showLandingView();
         }
+    }
+
+    private boolean tokenDoesNotExist(final Map<String, String[]> parameters) {
+        return !tokenExist(parameters);
     }
 
     private void showMainView(final Map<String, String[]> parameters) {
@@ -70,7 +79,7 @@ public class ParamaterHandlerImpl implements ParameterHandler {
         return parameters.containsKey(AppConstants.ESCIDOC_URL);
     }
 
-    private boolean isTokenExist(final Map<String, String[]> parameters) {
+    private boolean tokenExist(final Map<String, String[]> parameters) {
         return parameters.containsKey(AppConstants.ESCIDOC_USER_HANDLE);
     }
 }

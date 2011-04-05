@@ -26,9 +26,7 @@ public class ParamaterDecoder {
     private final AdminToolApplication app;
 
     public String parseAndDecodeToken(final Map<String, String[]> parameters) {
-        final String parameter =
-            parameters.get(AppConstants.ESCIDOC_USER_HANDLE)[0];
-        return tryToDecode(parameter);
+        return tryToDecode(parameters.get(AppConstants.ESCIDOC_USER_HANDLE)[0]);
     }
 
     private String tryToDecode(final String parameter) {

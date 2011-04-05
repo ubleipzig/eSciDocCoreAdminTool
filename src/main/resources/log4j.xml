@@ -18,19 +18,19 @@
 				value="%5p [%t] %d{dd MMM yyyy HH:mm:ss,SSS} (%F:%L) - %m%n" />
 		</layout>
 	</appender>
+    <logger name="org.apache">
+        <level value="warn" />
+        <appender-ref ref="console" />
+        <appender-ref ref="R" />
+    </logger>
+    <logger name="httpclient.wire">
+        <level value="warn" />
+        <appender-ref ref="console" />
+        <appender-ref ref="R" />
+    </logger>
 	<root>
 		<priority value="debug" />
 		<appender-ref ref="console" />
 		<appender-ref ref="R" />
 	</root>
-	<logger name="org.apache">
-		<level value="warn" />
-		<appender-ref ref="console" />
-		<appender-ref ref="R" />
-	</logger>
-	<logger name="httpclient.wire">
-		<level value="warn" />
-		<appender-ref ref="console" />
-		<appender-ref ref="R" />
-	</logger>
 </log4j:configuration>

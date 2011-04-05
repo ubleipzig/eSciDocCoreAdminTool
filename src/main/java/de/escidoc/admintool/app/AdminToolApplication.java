@@ -62,6 +62,7 @@ import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
 import de.escidoc.core.client.exceptions.application.security.AuthenticationException;
 import de.escidoc.core.resources.aa.useraccount.UserAccount;
+import de.escidoc.core.resources.aa.useraccount.UserAccountProperties;
 
 public class AdminToolApplication extends Application {
     // TODO refactor this class, reasons: big class, too many fields and methods
@@ -264,6 +265,13 @@ public class AdminToolApplication extends Application {
 
     private void currentUserIsAnon() {
         currentUser = new UserAccount();
+        createAnonUser();
+    }
+
+    private void createAnonUser() {
+        final UserAccountProperties properties = new UserAccountProperties();
+        properties.setLoginName(ViewConstants.GUEST);
+        currentUser.setProperties(properties);
         currentUser.setObjid(AppConstants.EMPTY_STRING);
     }
 
@@ -281,7 +289,8 @@ public class AdminToolApplication extends Application {
 
     private void createServices() throws InternalClientException,
         EscidocException, TransportException {
-        LOG.info("service address: " + escidocServiceLocation.getUri());
+        LOG.info("Using escidoc instance  in: "
+            + escidocServiceLocation.getUri());
         final ServiceFactory serviceFactory =
             new ServiceFactory(escidocServiceLocation, token);
         orgUnitService = serviceFactory.createOrgService();

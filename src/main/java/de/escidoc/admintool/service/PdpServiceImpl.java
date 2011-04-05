@@ -23,15 +23,17 @@ public class PdpServiceImpl implements PdpService {
 
     private final PolicyDecisionPointHandlerClient client;
 
-    private Set<Attribute> actionAttrs;
+    private Set<Attribute> actionAttrs = new HashSet<Attribute>();
 
-    private Set<Attribute> resourceAttrs;
+    private Set<Attribute> resourceAttrs = new HashSet<Attribute>();
 
-    private Set<Subject> subjects;
+    private Set<Subject> subjects = new HashSet<Subject>();
 
+    // FIXME why two constructors?
     public PdpServiceImpl(final String serviceAddress) {
         client = new PolicyDecisionPointHandlerClient(serviceAddress);
         client.setTransport(TransportProtocol.REST);
+
     }
 
     public PdpServiceImpl(final String serviceUri, final String token) {

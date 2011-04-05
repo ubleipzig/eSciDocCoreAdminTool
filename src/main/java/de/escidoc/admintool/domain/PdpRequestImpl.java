@@ -5,6 +5,8 @@ import java.net.URISyntaxException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.base.Preconditions;
+
 import de.escidoc.admintool.service.PdpService;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.core.client.exceptions.EscidocClientException;
@@ -21,6 +23,9 @@ public final class PdpRequestImpl implements PdpRequest {
 
     public PdpRequestImpl(final PdpService service,
         final UserAccount currentUser) {
+        Preconditions.checkNotNull(service, "service is null: %s", service);
+        Preconditions.checkNotNull(currentUser, "currentUser is null: %s",
+            currentUser);
         this.service = service;
         this.currentUser = currentUser;
     }
