@@ -178,7 +178,8 @@ public class AdminToolApplication extends Application {
     }
 
     public void setEscidocUri(final String eSciDocUri) {
-        escidocServiceLocation = new EscidocServiceLocation(eSciDocUri);
+        escidocServiceLocation =
+            new EscidocServiceLocation(eSciDocUri, getURL());
 
         if (eSciDocUri == null) {
             mainWindow.showNotification("eSciDoc URI is unknown",
