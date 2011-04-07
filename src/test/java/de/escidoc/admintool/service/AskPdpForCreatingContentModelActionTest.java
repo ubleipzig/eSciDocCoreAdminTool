@@ -17,6 +17,7 @@ public class AskPdpForCreatingContentModelActionTest {
 
     private final PdpService service = new PdpServiceImpl(LOCALHOST_8080);
 
+    @Ignore("need to adapted for CI: no running eSciDoc")
     @Test
     public void shouldReturnTrueForIsDenied() throws Exception {
         // When:
