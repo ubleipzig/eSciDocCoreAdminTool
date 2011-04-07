@@ -28,6 +28,7 @@ public class AskPdpForCreatingContentModelActionTest {
         assertTrue(isDenied);
     }
 
+    @Ignore("need to adapted for CI: no running eSciDoc")
     @Test
     public void shouldReturnTrueIfSysAdminAskIt() throws Exception {
         // Given:
