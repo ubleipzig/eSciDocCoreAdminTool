@@ -4,6 +4,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.net.URL;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import de.escidoc.admintool.app.AppConstants;
