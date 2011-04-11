@@ -17,6 +17,7 @@ import com.vaadin.ui.HorizontalLayout;
 
 import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.domain.PdpRequest;
+import de.escidoc.admintool.domain.PublicStatus;
 import de.escidoc.admintool.view.context.workflow.AbstractState;
 import de.escidoc.admintool.view.navigation.ActionIdConstants;
 

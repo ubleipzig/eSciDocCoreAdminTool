@@ -1,4 +1,4 @@
-package de.escidoc.admintool.view.context;
+package de.escidoc.admintool.domain;
 
 /**
  * @author ASP
@@ -19,8 +19,15 @@ public enum PublicStatus {
         return name;
     }
 
-    public static PublicStatus convert(
+    public static PublicStatus from(
         final de.escidoc.core.resources.common.properties.PublicStatus fromCore) {
         return PublicStatus.valueOf(fromCore.toString());
+    }
+
+    public static final de.escidoc.core.resources.common.properties.PublicStatus to(
+        final PublicStatus publicStatus) {
+        return de.escidoc.core.resources.common.properties.PublicStatus
+            .valueOf(publicStatus.name().toUpperCase());
+
     }
 }

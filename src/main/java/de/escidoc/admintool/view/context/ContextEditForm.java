@@ -19,6 +19,7 @@ import org.xml.sax.SAXException;
 
 import com.google.common.base.Preconditions;
 import com.vaadin.data.Item;
+import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.terminal.SystemError;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Alignment;
@@ -45,7 +46,7 @@ import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.app.AppConstants;
 import de.escidoc.admintool.app.PropertyId;
 import de.escidoc.admintool.domain.PdpRequest;
-import de.escidoc.admintool.exception.ResourceNotFoundException;
+import de.escidoc.admintool.domain.PublicStatus;
 import de.escidoc.admintool.service.ContextService;
 import de.escidoc.admintool.service.OrgUnitService;
 import de.escidoc.admintool.view.ViewConstants;
@@ -563,8 +564,12 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
     }
 
     private void bindStatus() {
-        status.setPropertyDataSource(item
-            .getItemProperty(PropertyId.PUBLIC_STATUS));
+        status
+            .setPropertyDataSource(new ObjectProperty<PublicStatus>(
+                PublicStatus
+                    .from((de.escidoc.core.resources.common.properties.PublicStatus) item
+                        .getItemProperty(PropertyId.PUBLIC_STATUS).getValue()),
+                PublicStatus.class));
     }
 
     @SuppressWarnings("unchecked")
@@ -675,22 +680,6 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
     }
 
     private void bindPublicStatusWithView() {
-        // final PublicStatus publicStatus =
-        // PublicStatus.valueOf(((String) item.getItemProperty(
-        // PropertyId.PUBLIC_STATUS).getValue()).toUpperCase());
-        // switch (publicStatus) {
-        // case CREATED:
-        // case OPENED: {
-        // setFormReadOnly(false);
-        // footer.setVisible(true);
-        // break;
-        // }
-        // case CLOSED: {
-        // setFormReadOnly(true);
-        // footer.setVisible(false);
-        // break;
-        // }
-        // }
         final Object value =
             item.getItemProperty(PropertyId.PUBLIC_STATUS).getValue();
         if (!(value instanceof de.escidoc.core.resources.common.properties.PublicStatus)) {
@@ -698,10 +687,9 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
                 + " is not instance of PublicStatus");
         }
         else {
-
             final PublicStatus publicStatus =
                 PublicStatus
-                    .convert((de.escidoc.core.resources.common.properties.PublicStatus) value);
+                    .from((de.escidoc.core.resources.common.properties.PublicStatus) value);
             switch (publicStatus) {
                 case CREATED:
                 case OPENED: {
@@ -731,43 +719,6 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
             getSelectedItemId());
     }
 
-    private String findOrgUnitTitle(final OrganizationalUnitRef resourceRef) {
-        try {
-            return orgUnitService.findOrgUnitTitleById(resourceRef.getObjid());
-        }
-        catch (final ResourceNotFoundException e) {
-            LOG
-                .error("root cause: " + ExceptionUtils.getRootCauseMessage(e),
-                    e);
-            mainWindow
-                .addWindow(new ErrorDialog(mainWindow, ViewConstants.ERROR,
-                    "Organizational Unit does not exist anymore."
-                        + e.getMessage()));
-        }
-        catch (final EscidocException e) {
-            LOG
-                .error("root cause: " + ExceptionUtils.getRootCauseMessage(e),
-                    e);
-            mainWindow.addWindow(new ErrorDialog(mainWindow,
-                ViewConstants.ERROR, e.getMessage()));
-        }
-        catch (final InternalClientException e) {
-            LOG
-                .error("root cause: " + ExceptionUtils.getRootCauseMessage(e),
-                    e);
-            mainWindow.addWindow(new ErrorDialog(mainWindow,
-                ViewConstants.ERROR, e.getMessage()));
-        }
-        catch (final TransportException e) {
-            LOG
-                .error("root cause: " + ExceptionUtils.getRootCauseMessage(e),
-                    e);
-            mainWindow.addWindow(new ErrorDialog(mainWindow,
-                ViewConstants.ERROR, e.getMessage()));
-        }
-        return "Organization does exist, please remove.";
-    }
-
     public Context open(final String comment) throws EscidocException,
         InternalClientException, TransportException {
         final Context cachedContext = getContextFromCache();
@@ -792,7 +743,8 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
     }
 
     private void updateEditView(final PublicStatus publicStatus) {
-        item.getItemProperty(PropertyId.PUBLIC_STATUS).setValue(publicStatus);
+        item.getItemProperty(PropertyId.PUBLIC_STATUS).setValue(
+            PublicStatus.to(publicStatus));
         editToolbar.setSelected(publicStatus);
         setSelected(item);
     }
