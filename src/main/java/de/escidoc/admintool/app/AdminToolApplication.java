@@ -273,7 +273,7 @@ public class AdminToolApplication extends Application {
         final UserAccountProperties properties = new UserAccountProperties();
         properties.setLoginName(ViewConstants.GUEST);
         currentUser.setProperties(properties);
-        currentUser.setObjid(AppConstants.EMPTY_STRING);
+        currentUser.setObjid(AppConstants.SPACE);
     }
 
     private boolean isTokenExists() {

@@ -59,13 +59,15 @@ public class NavigationTreeImpl extends CustomComponent
 
     private void addChildren(final String parent, final String[] nodes) {
         for (final String node : nodes) {
-            if (isEquals(node, ViewConstants.ROLE) && isAllowedToGrantRole()) {
-                addChild(parent, node);
+            if (isEquals(node, ViewConstants.ROLE)) {
+                if (isAllowedToGrantRole()) {
+                    addChild(parent, node);
+                }
             }
-            else if (isEquals(node, ViewConstants.CONTENT_MODELS)
-            // && isAllowedToCreateContentModel()
-            ) {
-                addChild(parent, node);
+            else if (isEquals(node, ViewConstants.CONTENT_MODELS)) {
+                if (isAllowedToCreateContentModel()) {
+                    addChild(parent, node);
+                }
             }
             else {
                 addChild(parent, node);

@@ -62,4 +62,6 @@ public class AppConstants {
     public static final String LOGOUT_TARGET = "/aa/logout?target=";
 
     public static final String LOGIN_TARGET = "/aa/login?target=";
+
+    static final String SPACE = " ";
 }
