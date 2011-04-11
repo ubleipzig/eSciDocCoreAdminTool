@@ -93,7 +93,7 @@ public class MainView extends CustomComponent {
     }
 
     private boolean isUserLoggedIn() {
-        return !currentUser.getObjid().equals(AppConstants.EMPTY_STRING);
+        return !currentUser.getObjid().equals(AppConstants.GUEST_OBJECT_ID);
     }
 
     private void show(final Button logOutButton) {
