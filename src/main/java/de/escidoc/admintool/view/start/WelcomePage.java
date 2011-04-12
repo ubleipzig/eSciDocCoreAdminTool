@@ -1,4 +1,4 @@
-package de.escidoc.admintool.view.login;
+package de.escidoc.admintool.view.start;
 
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;

@@ -1,4 +1,4 @@
-package de.escidoc.admintool.view.login;
+package de.escidoc.admintool.view.start;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,7 +8,7 @@ import com.vaadin.ui.AbstractField;
 
 import de.escidoc.admintool.app.AdminToolApplication;
 
-public class StartButtonListenerImpl extends LoginButtonListener {
+public class StartButtonListenerImpl extends AbstractStartButtonListener {
 
     private static final Logger LOG = LoggerFactory
         .getLogger(StartButtonListenerImpl.class);
@@ -21,12 +21,10 @@ public class StartButtonListenerImpl extends LoginButtonListener {
     }
 
     @Override
-    protected void loginMe() {
+    protected void redirectToMainView() {
         final String redirectUri =
             super.getApplication().getURL() + "?escidocurl=" + getEscidocUri();
         LOG.info("redirect to: " + redirectUri);
-        // redirectTo(super.app.escidocLoginUrl +
-        // super.getApplication().getURL());
         redirectTo(redirectUri);
     }
 

@@ -1,4 +1,4 @@
-package de.escidoc.admintool.view.login;
+package de.escidoc.admintool.view.start;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -20,50 +20,40 @@ import com.vaadin.ui.Window.Notification;
 
 import de.escidoc.admintool.app.AdminToolApplication;
 
-public abstract class StartButtonListener implements ClickListener {
+public abstract class AbstractStartButtonListener implements ClickListener {
 
-    private static final String CAN_NOT_CONNECT_TO = "Can not connect to: ";
+    private static final long serialVersionUID = -7482204166398806832L;
+
+    private final static Logger LOG = LoggerFactory
+        .getLogger(AbstractStartButtonListener.class);
 
     private static final int FIVE_SECONDS = 5000;
 
-    private final static Logger LOG = LoggerFactory
-        .getLogger(StartButtonListener.class);
+    protected final AdminToolApplication app;
 
-    private final AbstractField escidocUrlField;
+    private final AbstractField escidocUriField;
 
     private final Window mainWindow;
 
-    private final AdminToolApplication app;
-
-    public StartButtonListener(final AbstractField escidocUrlField,
-        final Window mainWindow, final AdminToolApplication app) {
-
-        Preconditions.checkNotNull(escidocUrlField,
-            "escidocUrlField is null: %s", escidocUrlField);
-        Preconditions.checkNotNull(mainWindow, "mainWindow is null: %s",
-            mainWindow);
+    public AbstractStartButtonListener(final AbstractField escidocUriField,
+        final AdminToolApplication app) {
+        Preconditions.checkNotNull(escidocUriField,
+            "escidocUriField is null: %s", escidocUriField);
         Preconditions.checkNotNull(app, "app is null: %s", app);
-        this.escidocUrlField = escidocUrlField;
-        this.mainWindow = mainWindow;
+        this.escidocUriField = escidocUriField;
         this.app = app;
+        mainWindow = app.getMainWindow();
     }
 
     @Override
     public void buttonClick(final ClickEvent event) {
-        validate(escidocUrlField);
+        validate(escidocUriField);
     }
 
     private void validate(final AbstractField escidocUriField) {
         try {
-            escidocUriField.validate();
-            if (tryToConnect(escidocUriField)) {
-                login();
-            }
-            else {
-                mainWindow.showNotification(new Notification(CAN_NOT_CONNECT_TO
-                    + escidocUriField.getValue(),
-                    Notification.TYPE_WARNING_MESSAGE));
-            }
+            validateInputField(escidocUriField);
+            testConnection(escidocUriField);
 
         }
         catch (final EmptyValueException e) {
@@ -72,24 +62,43 @@ public abstract class StartButtonListener implements ClickListener {
         }
     }
 
-    private void login() {
+    private void testConnection(final AbstractField escidocUriField) {
+        if (validateConnection(escidocUriField)) {
+            initApplication();
+        }
+        else {
+            mainWindow.showNotification(new Window.Notification(
+                "Can not connect to: " + escidocUriField.getValue(),
+                Notification.TYPE_ERROR_MESSAGE));
+        }
+    }
+
+    private void validateInputField(final AbstractField escidocUriField) {
+        escidocUriField.validate();
+    }
+
+    private void initApplication() {
         setEscidocUri();
-        showMainPage();
+        redirectToMainView();
     }
 
     private void setEscidocUri() {
         final String enteredEscidocUri = getUserInput();
-        LOG.debug("login as " + getClass() + " to " + enteredEscidocUri);
+        LOG.debug("using eSciDoc instance in: " + enteredEscidocUri);
         app.setEscidocUri(enteredEscidocUri);
     }
 
-    private String getUserInput() {
-        return (String) escidocUrlField.getValue();
+    protected String getEscidocUri() {
+        return getUserInput();
     }
 
-    protected abstract void showMainPage();
+    private String getUserInput() {
+        return (String) escidocUriField.getValue();
+    }
 
-    private boolean tryToConnect(final AbstractField escidocUriField) {
+    protected abstract void redirectToMainView();
+
+    private boolean validateConnection(final AbstractField escidocUriField) {
         final String strUrl = (String) escidocUriField.getValue();
         URLConnection connection;
         try {
