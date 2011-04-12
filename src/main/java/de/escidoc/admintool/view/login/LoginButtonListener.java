@@ -71,8 +71,12 @@ public abstract class LoginButtonListener implements ClickListener {
 
     private void setEscidocUri() {
         final String enteredEscidocUri = getUserInput();
-        LOG.debug("login as " + getClass() + " to " + enteredEscidocUri);
+        LOG.debug("using eSciDoc instance in: " + enteredEscidocUri);
         app.setEscidocUri(enteredEscidocUri);
+    }
+
+    protected String getEscidocUri() {
+        return getUserInput();
     }
 
     private String getUserInput() {

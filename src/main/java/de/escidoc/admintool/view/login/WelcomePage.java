@@ -75,10 +75,9 @@ public class WelcomePage extends CustomComponent {
 
     private void addStartButton() {
         startButton = new Button(ViewConstants.OK_LABEL);
-        final LoginButtonListener listener =
+        final StartButtonListenerImpl listener =
             new StartButtonListenerImpl(escidocServiceUrl, app);
         startButton.addListener(listener);
-
         footer.addComponent(startButton);
         footer.setComponentAlignment(startButton, Alignment.MIDDLE_RIGHT);
     }

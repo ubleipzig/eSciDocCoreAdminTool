@@ -27,7 +27,7 @@ public abstract class StartButtonListener implements ClickListener {
     private static final int FIVE_SECONDS = 5000;
 
     private final static Logger LOG = LoggerFactory
-        .getLogger(LoginButtonListener.class);
+        .getLogger(StartButtonListener.class);
 
     private final AbstractField escidocUrlField;
 
