@@ -20,6 +20,7 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.BaseTheme;
 
 import de.escidoc.admintool.app.AdminToolApplication;
+import de.escidoc.admintool.domain.PdpRequest;
 import de.escidoc.admintool.view.ViewConstants;
 
 public class PropertiesFieldsImpl extends CustomComponent
@@ -71,12 +72,23 @@ public class PropertiesFieldsImpl extends CustomComponent
 
     private final FieldsBinder binder;
 
+    private PdpRequest pdpRequest;
+
     public PropertiesFieldsImpl(final AdminToolApplication app,
         final VerticalLayout vLayout, final FormLayout formLayout,
-        final Map<String, Field> fieldByName) {
+        final Map<String, Field> fieldByName, final PdpRequest pdpRequest) {
+        Preconditions.checkNotNull(app, "app is null: %s", app);
+        Preconditions.checkNotNull(vLayout, "vLayout is null: %s", vLayout);
+        Preconditions.checkNotNull(formLayout, "formLayout is null: %s",
+            formLayout);
+        Preconditions.checkNotNull(fieldByName, "fieldByName is null: %s",
+            fieldByName);
+        Preconditions.checkNotNull(pdpRequest, "pdpRequest is null: %s",
+            pdpRequest);
         this.app = app;
         this.formLayout = formLayout;
         this.fieldByName = fieldByName;
+        this.pdpRequest = pdpRequest;
         binder = new PropertiesBinder(app, this);
         buildLayout();
         createAndAddPropertiesFields();
@@ -235,5 +247,14 @@ public class PropertiesFieldsImpl extends CustomComponent
     public void setNotEditable(final boolean isReadOnly) {
         titleField.setReadOnly(isReadOnly);
         descField.setReadOnly(isReadOnly);
+    }
+
+    @Override
+    public void setPdpRequest(final PdpRequest pdpRequest) {
+        this.pdpRequest = pdpRequest;
+    }
+
+    public PdpRequest getPdpRequest() {
+        return pdpRequest;
     }
 }

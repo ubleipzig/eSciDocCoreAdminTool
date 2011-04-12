@@ -4,6 +4,7 @@ import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.base.Preconditions;
 import com.vaadin.data.Property;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -12,6 +13,8 @@ import com.vaadin.ui.Label;
 
 import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.app.PropertyId;
+import de.escidoc.admintool.domain.PdpRequest;
+import de.escidoc.admintool.view.navigation.ActionIdConstants;
 import de.escidoc.admintool.view.util.Converter;
 import de.escidoc.core.resources.common.reference.UserAccountRef;
 
@@ -26,10 +29,18 @@ public class PropertiesBinder implements FieldsBinder {
 
     private final AdminToolApplication app;
 
+    private final PdpRequest pdpRequest;
+
     PropertiesBinder(final AdminToolApplication app,
         final PropertiesFieldsImpl propertiesFields) {
+        Preconditions.checkNotNull(app, "app is null: %s", app);
+        Preconditions.checkNotNull(propertiesFields,
+            "propertiesFields is null: %s", propertiesFields);
         this.app = app;
         this.propertiesFields = propertiesFields;
+        pdpRequest = this.propertiesFields.getPdpRequest();
+        Preconditions.checkNotNull(pdpRequest, "pdpRequest is null: %s",
+            pdpRequest);
     }
 
     @Override
@@ -57,15 +68,30 @@ public class PropertiesBinder implements FieldsBinder {
 
     private void bindCreatedBy() {
         propertiesFields.createdBy.setCaption(getCreatedByTitle());
-        propertiesFields.createdBy.addListener(new Button.ClickListener() {
+        if (isRetrieveUserPermitted(getCreatedById())) {
+            propertiesFields.createdBy.addListener(new Button.ClickListener() {
 
-            private static final long serialVersionUID = 3530819267393348554L;
+                private static final long serialVersionUID =
+                    3530819267393348554L;
 
-            @Override
-            public void buttonClick(final ClickEvent event) {
-                app.showUser(getCreatedByValue().getObjid());
-            }
-        });
+                @Override
+                public void buttonClick(final ClickEvent event) {
+                    app.showUser(getCreatedByValue().getObjid());
+                }
+            });
+        }
+        else {
+            propertiesFields.createdBy.setEnabled(false);
+        }
+    }
+
+    private boolean isRetrieveUserPermitted(final String userId) {
+        return pdpRequest.isPermitted(ActionIdConstants.RETRIEVE_USER_ACCOUNT,
+            userId);
+    }
+
+    private String getCreatedById() {
+        return getCreatedByValue().getObjid();
     }
 
     private String getCreatedByTitle() {
@@ -95,17 +121,29 @@ public class PropertiesBinder implements FieldsBinder {
 
     private void bindModifiedByLinkWithData() {
         propertiesFields.modifiedBy.setCaption(getModifiedByTitle());
-        propertiesFields.modifiedBy.addListener(new Button.ClickListener() {
 
-            private static final long serialVersionUID = 3530819267393348554L;
+        if (isRetrieveUserPermitted(getModifierId())) {
+            propertiesFields.modifiedBy.addListener(new Button.ClickListener() {
 
-            @Override
-            public void buttonClick(final ClickEvent event) {
-                LOG.debug("modified by clicked: "
-                    + getModifiedByValue().getObjid());
-                app.showUser(getModifiedByValue().getObjid());
-            }
-        });
+                private static final long serialVersionUID =
+                    3530819267393348554L;
+
+                @Override
+                public void buttonClick(final ClickEvent event) {
+                    LOG.debug("modified by clicked: "
+                        + getModifiedByValue().getObjid());
+                    app.showUser(getModifiedByValue().getObjid());
+                }
+            });
+        }
+        else {
+            propertiesFields.modifiedBy.setEnabled(false);
+        }
+
+    }
+
+    private String getModifierId() {
+        return getModifiedByValue().getObjid();
     }
 
     private String getModifiedByTitle() {

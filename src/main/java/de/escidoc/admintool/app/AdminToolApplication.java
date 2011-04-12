@@ -497,7 +497,7 @@ public class AdminToolApplication extends Application {
             new ContentModelContainer();
         contentModelAddView =
             new ContentModelAddView(this, mainWindow, contentModelService,
-                contentModelContainer);
+                contentModelContainer, pdpRequest);
         contentModelAddView.init();
     }
 

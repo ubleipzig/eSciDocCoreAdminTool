@@ -7,6 +7,8 @@ import com.vaadin.data.Item;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Field;
 
+import de.escidoc.admintool.domain.PdpRequest;
+
 public interface PropertiesFields extends Component {
 
     void bind(Item item);
@@ -18,4 +20,6 @@ public interface PropertiesFields extends Component {
     void setNotEditable(boolean isReadOnly);
 
     void removeOthers();
+
+    void setPdpRequest(PdpRequest pdpRequest);
 }

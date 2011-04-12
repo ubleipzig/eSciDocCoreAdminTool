@@ -24,6 +24,8 @@ public class ResourceViewImpl extends AbstractResourceView {
 
     private final AdminToolApplication app;
 
+    private final PdpRequest pdpRequest;
+
     public ResourceViewImpl(final AdminToolApplication app,
         final Window mainWindow, final ResourceFolderView resourceListView,
         final ResourceService resourceService,
@@ -35,6 +37,7 @@ public class ResourceViewImpl extends AbstractResourceView {
         this.resourceService = resourceService;
         this.resourceListView = resourceListView;
         this.resourceContainer = resourceContainer;
+        this.pdpRequest = pdpRequest;
         resourceEditView =
             new ResourceEditViewImpl(app, mainWindow, this, resourceService,
                 resourceContainer, pdpRequest);
@@ -45,7 +48,7 @@ public class ResourceViewImpl extends AbstractResourceView {
     public void showAddView() {
         getSplitPanel().setSecondComponent(
             new ResourceAddViewImpl(app, mainWindow, this, resourceService,
-                resourceContainer));
+                resourceContainer, pdpRequest));
     }
 
     @Override

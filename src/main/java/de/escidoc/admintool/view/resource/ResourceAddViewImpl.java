@@ -14,6 +14,7 @@ import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.Reindeer;
 
 import de.escidoc.admintool.app.AdminToolApplication;
+import de.escidoc.admintool.domain.PdpRequest;
 import de.escidoc.admintool.service.OrgUnitServiceLab;
 import de.escidoc.admintool.service.ResourceService;
 import de.escidoc.admintool.view.ViewConstants;
@@ -48,7 +49,7 @@ public class ResourceAddViewImpl extends CustomComponent
     public ResourceAddViewImpl(final AdminToolApplication app,
         final Window mainWindow, final ResourceView resourceView,
         final ResourceService resourceService,
-        final ResourceContainer resourceContainer) {
+        final ResourceContainer resourceContainer, final PdpRequest pdpRequest) {
 
         checkPreconditions(mainWindow, resourceView, resourceService,
             resourceContainer);
@@ -59,7 +60,8 @@ public class ResourceAddViewImpl extends CustomComponent
         this.resourceContainer = resourceContainer;
 
         propertyFields =
-            new PropertiesFieldsImpl(app, vLayout, formLayout, fieldByName);
+            new PropertiesFieldsImpl(app, vLayout, formLayout, fieldByName,
+                pdpRequest);
         propertyFields.removeOthers();
 
         createOrgUnitSpecificView(mainWindow, resourceService,

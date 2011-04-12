@@ -19,6 +19,7 @@ import com.vaadin.ui.themes.Reindeer;
 import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.app.ContentModelContainer;
 import de.escidoc.admintool.app.CreateContentModelListener;
+import de.escidoc.admintool.domain.PdpRequest;
 import de.escidoc.admintool.service.ResourceService;
 import de.escidoc.admintool.view.resource.FormLayoutFactory;
 import de.escidoc.admintool.view.resource.PropertiesFields;
@@ -50,9 +51,12 @@ public class ContentModelAddView extends AbstractView<Panel> {
 
     private final AdminToolApplication app;
 
+    private final PdpRequest pdpRequest;
+
     public ContentModelAddView(final AdminToolApplication app,
         final Window mainWindow, final ResourceService contentModelService,
-        final ContentModelContainer contentModelContainer) {
+        final ContentModelContainer contentModelContainer,
+        final PdpRequest pdpRequest) {
         super(new Panel());
         Preconditions.checkNotNull(app, "app is null: %s", app);
         Preconditions.checkNotNull(mainWindow, "mainWindow is null: %s",
@@ -63,6 +67,7 @@ public class ContentModelAddView extends AbstractView<Panel> {
         this.mainWindow = mainWindow;
         this.contentModelService = contentModelService;
         this.contentModelContainer = contentModelContainer;
+        this.pdpRequest = pdpRequest;
     }
 
     public void init() {
@@ -85,7 +90,8 @@ public class ContentModelAddView extends AbstractView<Panel> {
 
     private void createPropertiesFields() {
         propertyFields =
-            new PropertiesFieldsImpl(app, vLayout, formLayout, fieldByName);
+            new PropertiesFieldsImpl(app, vLayout, formLayout, fieldByName,
+                pdpRequest);
         propertyFields.removeOthers();
     }
 

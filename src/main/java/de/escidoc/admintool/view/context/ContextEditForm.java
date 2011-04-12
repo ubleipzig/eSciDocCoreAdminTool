@@ -633,7 +633,6 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
         else {
             createdByLink.setEnabled(false);
         }
-
     }
 
     private void bindModifiedOn() {
