@@ -1,6 +1,5 @@
 package de.escidoc.admintool.view.role;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Set;
@@ -44,7 +43,6 @@ class ResourceTypeListener implements ValueChangeListener {
         final Object value = event.getProperty().getValue();
         if (value instanceof ResourceType) {
             final ResourceType type = (ResourceType) value;
-            roleView.mainWindow.showNotification(type.toString());
 
             Component newComponent = null;
             switch (type) {
@@ -75,22 +73,16 @@ class ResourceTypeListener implements ValueChangeListener {
     }
 
     private void loadOrgUnitData() {
-        final Set<Resource> organizationalUnits = getAllOrganizationalUnits();
-        if (isNotEmpty(organizationalUnits)) {
-            final POJOContainer<Resource> container =
-                new POJOContainer<Resource>(
-                    (Collection<Resource>) organizationalUnits, PropertyId.NAME);
-            roleView.resouceResult.setContainerDataSource(container);
-            roleView.resouceResult.setItemCaptionPropertyId(PropertyId.NAME);
+        final POJOContainer<Resource> orgUnitContainer =
+            new POJOContainer<Resource>(Resource.class, PropertyId.NAME);
+        for (final Resource orgUnit : findAllOrgUnits()) {
+            orgUnitContainer.addItem(orgUnit);
         }
-
+        roleView.resouceResult.setContainerDataSource(orgUnitContainer);
+        roleView.resouceResult.setItemCaptionPropertyId(PropertyId.NAME);
     }
 
-    private boolean isNotEmpty(final Set<Resource> organizationalUnits) {
-        return organizationalUnits != null && organizationalUnits.size() > 0;
-    }
-
-    private Set<Resource> getAllOrganizationalUnits() {
+    private Set<Resource> findAllOrgUnits() {
 
         try {
             final Set<Resource> all =
@@ -111,7 +103,10 @@ class ResourceTypeListener implements ValueChangeListener {
 
     private void loadContextData() {
         final POJOContainer<Resource> contextContainer =
-            new POJOContainer<Resource>(findAllContexts(), PropertyId.NAME);
+            new POJOContainer<Resource>(Resource.class, PropertyId.NAME);
+        for (final Resource context : findAllContexts()) {
+            contextContainer.addItem(context);
+        }
         roleView.resouceResult.setContainerDataSource(contextContainer);
         roleView.resouceResult.setItemCaptionPropertyId(PropertyId.NAME);
     }
