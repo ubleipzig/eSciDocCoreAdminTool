@@ -174,12 +174,14 @@ public class RoleView extends CustomComponent {
         roleComboBox.setRequired(true);
         roleComboBox.addListener(new RoleSelectListener());
         mainLayout.addComponent(roleComboBox);
+
     }
 
     private void addResourceType() {
         resourceTypeComboBox.setEnabled(false);
         resourceTypeComboBox.setWidth(COMPONENT_WIDTH);
         resourceTypeComboBox.setImmediate(true);
+        resourceTypeComboBox.setNullSelectionAllowed(false);
         mainLayout.addComponent(resourceTypeComboBox);
     }
 
