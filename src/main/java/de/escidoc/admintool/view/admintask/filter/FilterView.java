@@ -1,4 +1,4 @@
-package de.escidoc.admintool.view.admintask;
+package de.escidoc.admintool.view.admintask.filter;
 
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
@@ -7,8 +7,9 @@ import com.vaadin.ui.Window;
 import de.escidoc.admintool.domain.PdpRequest;
 import de.escidoc.admintool.service.ServiceContainer;
 import de.escidoc.admintool.view.ViewConstants;
+import de.escidoc.admintool.view.admintask.AbstractAdminTaskView;
+import de.escidoc.admintool.view.admintask.Style;
 import de.escidoc.admintool.view.admintask.Style.H2;
-import de.escidoc.admintool.view.admintask.Style.Ruler;
 
 public class FilterView extends AbstractAdminTaskView {
 
@@ -48,7 +49,7 @@ public class FilterView extends AbstractAdminTaskView {
     }
 
     private void addRuler() {
-        cssLayout.addComponent(new Ruler());
+        cssLayout.addComponent(new Style.Ruler());
     }
 
     private void addHeader() {

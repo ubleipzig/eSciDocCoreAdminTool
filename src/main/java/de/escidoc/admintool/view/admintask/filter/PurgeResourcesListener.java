@@ -1,4 +1,4 @@
-package de.escidoc.admintool.view.admintask;
+package de.escidoc.admintool.view.admintask.filter;
 
 import java.util.HashSet;
 import java.util.Set;

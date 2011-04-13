@@ -1,4 +1,4 @@
-package de.escidoc.admintool.view.admintask;
+package de.escidoc.admintool.view.admintask.filter;
 
 import java.util.Set;
 
@@ -12,6 +12,7 @@ import com.vaadin.ui.Table;
 import de.escidoc.admintool.app.PropertyId;
 import de.escidoc.admintool.domain.PdpRequest;
 import de.escidoc.admintool.view.ViewConstants;
+import de.escidoc.admintool.view.admintask.ShowPurgeStatusListener;
 import de.escidoc.admintool.view.navigation.ActionIdConstants;
 import de.escidoc.core.resources.Resource;
 

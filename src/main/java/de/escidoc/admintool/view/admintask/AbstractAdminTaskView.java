@@ -20,7 +20,7 @@ public abstract class AbstractAdminTaskView extends CustomComponent {
 
     final VerticalLayout mainLayout = new VerticalLayout();
 
-    final CssLayout cssLayout = new CssLayout();
+    protected final CssLayout cssLayout = new CssLayout();
 
     public AbstractAdminTaskView(final ServiceContainer services,
         final Window mainWindow) {

@@ -8,7 +8,7 @@ public abstract class AbstractCustomView extends CustomComponent {
 
     private final VerticalLayout viewLayout = new VerticalLayout();
 
-    AbstractCustomView() {
+    public AbstractCustomView() {
         setCompositionRoot(viewLayout);
     }
 

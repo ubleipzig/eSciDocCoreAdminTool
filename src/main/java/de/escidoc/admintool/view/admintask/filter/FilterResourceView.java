@@ -1,4 +1,4 @@
-package de.escidoc.admintool.view.admintask;
+package de.escidoc.admintool.view.admintask.filter;
 
 import java.util.Arrays;
 
@@ -17,6 +17,8 @@ import de.escidoc.admintool.domain.PdpRequest;
 import de.escidoc.admintool.service.AdminService;
 import de.escidoc.admintool.service.ServiceContainer;
 import de.escidoc.admintool.view.ViewConstants;
+import de.escidoc.admintool.view.admintask.AbstractCustomView;
+import de.escidoc.admintool.view.admintask.ResourceType;
 
 public class FilterResourceView extends AbstractCustomView {
 

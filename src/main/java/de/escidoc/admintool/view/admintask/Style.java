@@ -9,7 +9,7 @@ public class Style {
         // do not init.
     }
 
-    static class Ruler extends Label {
+    public static class Ruler extends Label {
         private static final long serialVersionUID = -4909196895183387829L;
 
         public Ruler() {
@@ -17,7 +17,7 @@ public class Style {
         }
     }
 
-    static class H1 extends Label {
+    public static class H1 extends Label {
         private static final long serialVersionUID = -2843233317747887008L;
 
         public H1(final String caption) {
@@ -27,7 +27,7 @@ public class Style {
         }
     }
 
-    static class H2 extends Label {
+    public static class H2 extends Label {
         private static final long serialVersionUID = 1210257960304559971L;
 
         public H2(final String caption) {

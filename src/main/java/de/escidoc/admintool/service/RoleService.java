@@ -14,6 +14,7 @@ import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
 import de.escidoc.core.client.interfaces.RoleHandlerClientInterface;
 import de.escidoc.core.resources.aa.role.Role;
+import de.escidoc.core.resources.sb.RecordPacking;
 
 public class RoleService {
 
@@ -46,7 +47,9 @@ public class RoleService {
     }
 
     public Collection<Role> findAll() throws EscidocClientException {
-        allRoles = client.retrieveRolesAsList(new SearchRetrieveRequestType());
+        final SearchRetrieveRequestType s = new SearchRetrieveRequestType();
+        s.setRecordPacking(RecordPacking.XML.getXmlValue());
+        allRoles = client.retrieveRolesAsList(s);
         for (final Role r : allRoles) {
             roleById.put(r.getObjid(), r);
         }
