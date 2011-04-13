@@ -14,4 +14,6 @@ public interface ServiceContainer {
 
     ResourceService getOrgUnitService();
 
+    ResourceService getContentModelService();
+
 }

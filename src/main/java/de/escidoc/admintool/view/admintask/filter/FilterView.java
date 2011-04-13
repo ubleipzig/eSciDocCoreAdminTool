@@ -1,5 +1,6 @@
 package de.escidoc.admintool.view.admintask.filter;
 
+import com.google.common.base.Preconditions;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Window;
@@ -20,6 +21,8 @@ public class FilterView extends AbstractAdminTaskView {
     public FilterView(final ServiceContainer services, final Window mainWindow,
         final PdpRequest pdpRequest) {
         super(services, mainWindow);
+        Preconditions.checkNotNull(pdpRequest, "pdpRequest is null: %s",
+            pdpRequest);
         this.pdpRequest = pdpRequest;
     }
 

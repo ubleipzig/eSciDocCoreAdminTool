@@ -67,6 +67,8 @@ public class FilterResourceListener implements ClickListener {
     }
 
     private void showResult() {
+        Preconditions.checkNotNull(resourceService,
+            "resourceService is null: %s", resourceService);
         try {
             if (filterFieldIsEmpty(resourceService)) {
                 command.execute(resourceService.findAll());
@@ -83,7 +85,7 @@ public class FilterResourceListener implements ClickListener {
     }
 
     private boolean filterFieldIsEmpty(final ResourceService resourceService) {
-        return resourceService != null && getRawFilter().isEmpty();
+        return getRawFilter().isEmpty();
     }
 
     private ResourceService getServiceByType() {
@@ -100,9 +102,14 @@ public class FilterResourceListener implements ClickListener {
             case ORGANIZATIONAL_UNIT:
                 resourceService = serviceContainer.getOrgUnitService();
                 break;
+            case CONTENT_MODEL:
+                resourceService = serviceContainer.getContentModelService();
+                break;
             default:
                 break;
         }
+        Preconditions.checkNotNull(resourceService,
+            "resourceService is null: %s", resourceService);
         return resourceService;
     }
 

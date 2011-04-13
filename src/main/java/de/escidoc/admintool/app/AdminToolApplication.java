@@ -310,6 +310,7 @@ public class AdminToolApplication extends Application {
         orgUnitServiceLab = serviceFactory.createOrgUnitService();
         services.add(orgUnitServiceLab);
         contentModelService = serviceFactory.createContentModelService();
+        services.add(contentModelService);
         pdpService = serviceFactory.createPdpService();
     }
 
