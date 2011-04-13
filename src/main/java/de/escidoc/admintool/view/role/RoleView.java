@@ -3,6 +3,7 @@ package de.escidoc.admintool.view.role;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -241,11 +242,18 @@ public class RoleView extends CustomComponent {
     }
 
     private void bindResourceTypeData() {
-        final BeanItemContainer<ResourceType> resourceTypeContainer =
-            new BeanItemContainer<ResourceType>(ResourceType.class,
-                Arrays.asList(ResourceType.values()));
-        resourceTypeComboBox.setContainerDataSource(resourceTypeContainer);
+        resourceTypeComboBox
+            .setContainerDataSource(new BeanItemContainer<ResourceType>(
+                ResourceType.class, newResourceTypeMinusItemList()));
         resourceTypeComboBox.addListener(new ResourceTypeListener(this));
+    }
+
+    private List<ResourceType> newResourceTypeMinusItemList() {
+        final List<ResourceType> resourceTypeList =
+            new LinkedList<ResourceType>(Arrays.asList(ResourceType.values()));
+        resourceTypeList.removeAll(Arrays
+            .asList(new ResourceType[] { ResourceType.ITEM }));
+        return resourceTypeList;
     }
 
     Collection<Context> getAllContexts() {
