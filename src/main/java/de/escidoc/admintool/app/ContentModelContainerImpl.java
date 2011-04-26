@@ -35,4 +35,9 @@ public class ContentModelContainerImpl {
     public Container getDataSource() {
         return itemContainer;
     }
+
+    public void add(final Resource created) {
+        Preconditions.checkNotNull(created, "created is null: %s", created);
+        itemContainer.addItem(created);
+    }
 }

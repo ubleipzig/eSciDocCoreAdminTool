@@ -35,12 +35,12 @@ public class CreateContentModelListener implements ResourceBtnListener {
 
     // private Resource created;
 
-    private final ContentModelContainerImpl contentModelContainerImpl;
+    private final ContentModelContainerImpl container;
 
     public CreateContentModelListener(final Collection<Field> allFields,
         final ResourceService contentModelService,
         final Map<String, Field> fieldByName, final Window mainWindow,
-        final ContentModelContainerImpl contentModelContainerImpl) {
+        final ContentModelContainerImpl container) {
         Preconditions.checkNotNull(mainWindow, "mainWindow is null: %s",
             mainWindow);
         Preconditions.checkNotNull(fieldByName, "fieldByName is null: %s",
@@ -49,21 +49,27 @@ public class CreateContentModelListener implements ResourceBtnListener {
             "contentModelService is null: %s", contentModelService);
         Preconditions.checkNotNull(allFields, "allFields is null: %s",
             allFields);
+        Preconditions.checkNotNull(container, "container is null: %s",
+            container);
 
         this.mainWindow = mainWindow;
         this.contentModelService = contentModelService;
 
         this.allFields = allFields;
         this.fieldByName = fieldByName;
-        this.contentModelContainerImpl = contentModelContainerImpl;
+        this.container = container;
     }
 
     @Override
     public void buttonClick(final ClickEvent event) {
         if (validateAllFields() && saveToReposity()) {
+            addToContainer();
             removeValidationErrors();
             commitAllFields();
         }
+    }
+
+    private void addToContainer() {
     }
 
     private boolean saveToReposity() {
@@ -79,6 +85,7 @@ public class CreateContentModelListener implements ResourceBtnListener {
                     "A new Content Model with the ID " + created.getObjid()
                         + " is created.");
             }
+            container.add(created);
 
             return created != null && created.getObjid() != null;
         }

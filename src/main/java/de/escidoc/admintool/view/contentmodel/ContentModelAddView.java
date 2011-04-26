@@ -39,7 +39,7 @@ public class ContentModelAddView extends AbstractView<Panel> {
 
     private final VerticalLayout vLayout = new VerticalLayout();
 
-    private ResourceBtnListener resourceBtnListener;
+    private ResourceBtnListener saveBtnListener;
 
     private PropertiesFields propertyFields;
 
@@ -76,7 +76,7 @@ public class ContentModelAddView extends AbstractView<Panel> {
         getContent().setStyleName(Reindeer.PANEL_LIGHT);
         createPropertiesFields();
         addPropertiesFields();
-        resourceBtnListener =
+        saveBtnListener =
             new CreateContentModelListener(propertyFields.getAllFields(),
                 contentModelService, fieldByName, mainWindow,
                 contentModelContainerImpl);
@@ -96,7 +96,7 @@ public class ContentModelAddView extends AbstractView<Panel> {
     }
 
     private void addSaveAndCancelButtons() {
-        footers.setOkButtonListener(resourceBtnListener);
+        footers.setOkButtonListener(saveBtnListener);
         footers.getCancelBtn().addListener(new ClickListener() {
             private static final long serialVersionUID = 9116178009548492155L;
 
