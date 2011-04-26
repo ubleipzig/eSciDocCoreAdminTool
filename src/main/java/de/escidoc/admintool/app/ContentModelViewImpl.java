@@ -4,6 +4,8 @@ import com.google.common.base.Preconditions;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.HorizontalSplitPanel;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.VerticalLayout;
 
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.admintool.view.contentmodel.ContentModelAddView;
@@ -11,6 +13,8 @@ import de.escidoc.admintool.view.contentmodel.ContentModelAddView;
 @SuppressWarnings("serial")
 public class ContentModelViewImpl extends CustomComponent
     implements ContentModelView {
+
+    private static final String CONTENT_MODELS_LABEL = "Content Models";
 
     private final HorizontalSplitPanel hSplitPanel = new HorizontalSplitPanel();
 
@@ -30,6 +34,7 @@ public class ContentModelViewImpl extends CustomComponent
         this.addView = addView;
     }
 
+    @Override
     public void init() {
         configureLayout();
         addComponents();
@@ -41,7 +46,16 @@ public class ContentModelViewImpl extends CustomComponent
     }
 
     private void addComponents() {
-        hSplitPanel.addComponent(listView);
+        listView.setSizeFull();
+        addView.setSizeFull();
+
+        VerticalLayout vLayout = new VerticalLayout();
+        vLayout.addComponent(new Label(CONTENT_MODELS_LABEL));
+        vLayout.setHeight(100, UNITS_PERCENTAGE);
+        vLayout.addComponent(listView);
+        vLayout.setExpandRatio(listView, 1.0f);
+
+        hSplitPanel.addComponent(vLayout);
         hSplitPanel.addComponent(addView);
     }
 

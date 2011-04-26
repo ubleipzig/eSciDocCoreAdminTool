@@ -6,6 +6,7 @@ import java.util.Collection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.base.Preconditions;
 import com.vaadin.data.util.POJOContainer;
 import com.vaadin.data.util.POJOItem;
 import com.vaadin.ui.Table;
@@ -35,8 +36,8 @@ public class UserListView extends Table {
 
     public UserListView(final AdminToolApplication app,
         final UserService userService) {
-        assert app != null : "app must not be null.";
-        assert userService != null : "userService must not be null.";
+        Preconditions.checkNotNull(app, "app is null.");
+        Preconditions.checkNotNull(userService, " userService is null.");
         this.app = app;
         this.userService = userService;
         buildView();

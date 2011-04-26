@@ -66,7 +66,7 @@ public class UserViewComponent {
 
     private void createUserView() {
         userView = new UserView(app, listView, getUserEditView());
-        userView.buildUI();
+        userView.init();
     }
 
     private void createEditForm() {

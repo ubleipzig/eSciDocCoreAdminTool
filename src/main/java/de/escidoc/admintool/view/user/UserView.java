@@ -33,22 +33,31 @@ public class UserView extends SplitPanel implements ResourceView {
         this.userEditView = userEditView;
     }
 
-    public void buildUI() {
+    public void init() {
         setSplitPosition(ViewConstants.SPLIT_POSITION_IN_PERCENT);
         setOrientation(ORIENTATION_HORIZONTAL);
 
+        final VerticalLayout vLayout = configureVerticalLayout();
+        addHeader(vLayout);
+        addListView(vLayout);
+        setFirstComponent(vLayout);
+    }
+
+    private void addHeader(final VerticalLayout vLayout) {
+        vLayout.addComponent(new Label("<b>User Accounts</b>",
+            Label.CONTENT_XHTML));
+    }
+
+    private VerticalLayout configureVerticalLayout() {
         final VerticalLayout vLayout = new VerticalLayout();
         vLayout.setHeight(100, UNITS_PERCENTAGE);
-        final Label foo =
-            new Label("<b>User Accounts</b>", Label.CONTENT_XHTML);
-        vLayout.addComponent(foo);
-        userList.setSizeFull();
+        return vLayout;
+    }
 
+    private void addListView(final VerticalLayout vLayout) {
+        userList.setSizeFull();
         vLayout.addComponent(userList);
         vLayout.setExpandRatio(userList, 1.0f);
-        setFirstComponent(vLayout);
-
-        setFirstComponent(vLayout);
     }
 
     public UserListView getUserList() {
