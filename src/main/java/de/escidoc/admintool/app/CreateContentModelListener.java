@@ -10,10 +10,10 @@ import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.Window.Notification;
 
 import de.escidoc.admintool.service.ResourceService;
 import de.escidoc.admintool.view.ModalDialog;
-import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.admintool.view.resource.ResourceBtnListener;
 import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.resources.Resource;
@@ -32,8 +32,6 @@ public class CreateContentModelListener implements ResourceBtnListener {
     private final Map<String, Field> fieldByName;
 
     private final Window mainWindow;
-
-    // private Resource created;
 
     private final ContentModelContainerImpl container;
 
@@ -56,13 +54,9 @@ public class CreateContentModelListener implements ResourceBtnListener {
     @Override
     public void buttonClick(final ClickEvent event) {
         if (validateAllFields() && saveToReposity()) {
-            addToContainer();
             removeValidationErrors();
             commitAllFields();
         }
-    }
-
-    private void addToContainer() {
     }
 
     private boolean saveToReposity() {
@@ -74,18 +68,17 @@ public class CreateContentModelListener implements ResourceBtnListener {
         try {
             final Resource created = contentModelService.create(build);
             if (created != null && created.getObjid() != null) {
-                ModalDialog.showMessage(mainWindow, ViewConstants.EMPTY_STRING, "A new Content Model with the ID "
-                    + created.getObjid() + " is created.");
+                mainWindow.showNotification(new Window.Notification("Info", "A new Content Model with the ID "
+                    + created.getObjid() + " is created.", Notification.TYPE_TRAY_NOTIFICATION));
+                container.add(created);
+                return created != null && created.getObjid() != null;
             }
-            container.add(created);
-
-            return created != null && created.getObjid() != null;
+            return false;
         }
         catch (final EscidocClientException e) {
             ModalDialog.show(mainWindow, e);
             return false;
         }
-
     }
 
     private void createModel() {
@@ -127,5 +120,4 @@ public class CreateContentModelListener implements ResourceBtnListener {
     public void bind(final Item item) {
         throw new UnsupportedOperationException("Not yet implemented");
     }
-
 }

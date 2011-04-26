@@ -4,6 +4,8 @@ import java.util.Collection;
 import java.util.Collections;
 
 import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Preconditions;
 import com.vaadin.data.Container;
@@ -20,6 +22,8 @@ import de.escidoc.core.resources.oum.Parents;
 import de.escidoc.core.resources.oum.Predecessors;
 
 public class ResourceContainerImpl implements ResourceContainer {
+
+    private static final Logger LOG = LoggerFactory.getLogger(ResourceContainerImpl.class);
 
     private final Collection<? extends Resource> topLevelResources;
 
@@ -71,13 +75,13 @@ public class ResourceContainerImpl implements ResourceContainer {
 
         if (alreadyInTree(item)) {
             // child has more that one parents, not yet supported.
+            LOG.warn("Organizational Unit has more than one parent. Currently not supported.");
         }
         else {
             bind(item, child);
             markAsLeaf(child);
             setParentIfAny(parent, child);
         }
-
     }
 
     private boolean alreadyInTree(final Item item) {
