@@ -36,8 +36,8 @@ class ResourceTypeListener implements ValueChangeListener {
             onSelectedResourceType(event);
         }
         catch (final NotImplementedException e) {
-            roleView.mainWindow.addWindow(new ErrorDialog(roleView.mainWindow,
-                ViewConstants.ERROR_DIALOG_CAPTION, e.getMessage()));
+            roleView.mainWindow.addWindow(new ErrorDialog(roleView.mainWindow, ViewConstants.ERROR_DIALOG_CAPTION, e
+                .getMessage()));
         }
     }
 
@@ -62,43 +62,17 @@ class ResourceTypeListener implements ValueChangeListener {
                     break;
                 default: {
                     clearResourceContainer();
-                    throw new NotImplementedException("Scoping for " + type
-                        + " is not yet implemented");
+                    throw new NotImplementedException("Scoping for " + type + " is not yet implemented");
                 }
             }
-            final Iterator<Component> it =
-                roleView.resourceContainer.getComponentIterator();
+            final Iterator<Component> it = roleView.resourceContainer.getComponentIterator();
             if (it.hasNext()) {
-                roleView.resourceContainer.replaceComponent(it.next(),
-                    newComponent);
+                roleView.resourceContainer.replaceComponent(it.next(), newComponent);
             }
             else {
                 roleView.resourceContainer.addComponent(newComponent);
             }
         }
-    }
-
-    private void loadItemData() {
-        final POJOContainer<Resource> itemContainer =
-            new POJOContainer<Resource>(Resource.class,
-                "metadataRecords.escidoc");
-        for (final Resource orgUnit : findAllItems()) {
-            itemContainer.addItem(orgUnit);
-        }
-        roleView.resouceResult.setContainerDataSource(itemContainer);
-        roleView.resouceResult
-            .setItemCaptionPropertyId("metadataRecords.escidoc");
-    }
-
-    private Set<Resource> findAllItems() {
-        try {
-            return roleView.serviceContainer.getItemService().findAll();
-        }
-        catch (final EscidocClientException e) {
-            handleError(e);
-        }
-        return Collections.emptySet();
-
     }
 
     private POJOContainer<Resource> newPojoContainer() {
@@ -130,8 +104,8 @@ class ResourceTypeListener implements ValueChangeListener {
     }
 
     private void handleError(final EscidocClientException e) {
-        roleView.mainWindow.addWindow(new ErrorDialog(roleView.mainWindow,
-            ViewConstants.ERROR_DIALOG_CAPTION, e.getMessage()));
+        roleView.mainWindow.addWindow(new ErrorDialog(roleView.mainWindow, ViewConstants.ERROR_DIALOG_CAPTION, e
+            .getMessage()));
     }
 
     private void loadOrgUnitData() {
