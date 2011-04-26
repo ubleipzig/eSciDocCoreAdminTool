@@ -130,7 +130,7 @@ public class AdminToolApplication extends Application {
 
     private ContextView contextView;
 
-    private ContentModelAddView contentModelAddView;
+    private ContentModelAddView addView;
 
     private ContentModelView contentModelView;
 
@@ -502,17 +502,22 @@ public class AdminToolApplication extends Application {
     }
 
     private void createContentModelView() throws EscidocClientException {
-        final ContentModelContainerImpl contentModelContainerImpl =
+
+        final ContentModelContainerImpl container =
             new ContentModelContainerImpl(contentModelService);
+
         final ContentModelListView listView =
-            new ContentModelListViewImpl(contentModelContainerImpl);
+            new ContentModelListViewImpl(container);
         listView.init();
-        contentModelView = new ContentModelViewImpl(listView);
+
+        addView =
+            new ContentModelAddView(this, mainWindow, contentModelService,
+                container, pdpRequest);
+        addView.init();
+
+        contentModelView = new ContentModelViewImpl(listView, addView);
         contentModelView.init();
-        // contentModelAddView =
-        // new ContentModelAddView(this, mainWindow, contentModelService,
-        // contentModelContainer, pdpRequest);
-        // contentModelAddView.init();
+
     }
 
     private ContentModelView getContentModelView() {
