@@ -21,6 +21,8 @@ public class UserView extends SplitPanel implements ResourceView {
 
     private final UserEditView userEditView;
 
+    private final VerticalLayout vLayout = new VerticalLayout();
+
     public UserView(final AdminToolApplication app,
         final UserListView userListView, final UserEditView userEditView) {
         Preconditions.checkNotNull(app, "app is null: %s", app);
@@ -37,7 +39,7 @@ public class UserView extends SplitPanel implements ResourceView {
         setSplitPosition(ViewConstants.SPLIT_POSITION_IN_PERCENT);
         setOrientation(ORIENTATION_HORIZONTAL);
 
-        final VerticalLayout vLayout = configureVerticalLayout();
+        vLayout.setHeight(100, UNITS_PERCENTAGE);
         addHeader(vLayout);
         addListView(vLayout);
         setFirstComponent(vLayout);
@@ -46,12 +48,6 @@ public class UserView extends SplitPanel implements ResourceView {
     private void addHeader(final VerticalLayout vLayout) {
         vLayout.addComponent(new Label("<b>User Accounts</b>",
             Label.CONTENT_XHTML));
-    }
-
-    private VerticalLayout configureVerticalLayout() {
-        final VerticalLayout vLayout = new VerticalLayout();
-        vLayout.setHeight(100, UNITS_PERCENTAGE);
-        return vLayout;
     }
 
     private void addListView(final VerticalLayout vLayout) {
