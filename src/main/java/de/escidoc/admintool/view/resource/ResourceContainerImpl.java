@@ -13,6 +13,7 @@ import com.vaadin.data.util.HierarchicalContainer;
 import de.escidoc.admintool.app.PropertyId;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.core.resources.Resource;
+import de.escidoc.core.resources.common.properties.PublicStatus;
 import de.escidoc.core.resources.common.reference.UserAccountRef;
 import de.escidoc.core.resources.oum.OrganizationalUnit;
 import de.escidoc.core.resources.oum.Parents;
@@ -136,10 +137,14 @@ public class ResourceContainerImpl implements ResourceContainer {
             DateTime.class, new DateTime());
         container.addContainerProperty(PropertyId.MODIFIED_BY,
             UserAccountRef.class, new UserAccountRef(""));
-        container.addContainerProperty(PropertyId.PUBLIC_STATUS, String.class,
-            ViewConstants.EMPTY_STRING);
+        addPublicStatusProperty();
         container.addContainerProperty(PropertyId.PUBLIC_STATUS_COMMENT,
             String.class, ViewConstants.EMPTY_STRING);
+    }
+
+    private boolean addPublicStatusProperty() {
+        return container.addContainerProperty(PropertyId.PUBLIC_STATUS,
+            PublicStatus.class, ViewConstants.EMPTY_STRING);
     }
 
     private void addObjectIdProperty(final Container container) {

@@ -199,8 +199,15 @@ public class ResourceToolbar extends CustomComponent {
     }
 
     private PublicStatus getPublicStatus() {
-        final String status =
-            (String) item.getItemProperty(PropertyId.PUBLIC_STATUS).getValue();
-        return PublicStatus.valueOf(status.toUpperCase());
+        // final String status =
+        // (String) item.getItemProperty(PropertyId.PUBLIC_STATUS).getValue();
+        // return PublicStatus.valueOf(status.toUpperCase());
+
+        PublicStatus status =
+            PublicStatus
+                .from((de.escidoc.core.resources.common.properties.PublicStatus) item
+                    .getItemProperty(PropertyId.PUBLIC_STATUS).getValue());
+        return status;
+
     }
 }

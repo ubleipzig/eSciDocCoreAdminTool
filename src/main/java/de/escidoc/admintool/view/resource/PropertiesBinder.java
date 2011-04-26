@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Preconditions;
 import com.vaadin.data.Property;
+import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
@@ -14,6 +15,7 @@ import com.vaadin.ui.Label;
 import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.app.PropertyId;
 import de.escidoc.admintool.domain.PdpRequest;
+import de.escidoc.admintool.domain.PublicStatus;
 import de.escidoc.admintool.view.navigation.ActionIdConstants;
 import de.escidoc.admintool.view.util.Converter;
 import de.escidoc.core.resources.common.reference.UserAccountRef;
@@ -62,8 +64,14 @@ public class PropertiesBinder implements FieldsBinder {
     }
 
     private void bindStatus() {
-        bind(propertiesFields.statusField).with(
-            getProperty(PropertyId.PUBLIC_STATUS));
+        // bind(propertiesFields.statusField).with(
+        // getProperty(PropertyId.PUBLIC_STATUS));
+        propertiesFields.statusField
+            .setPropertyDataSource(new ObjectProperty<PublicStatus>(
+                PublicStatus
+                    .from((de.escidoc.core.resources.common.properties.PublicStatus) getProperty(
+                        PropertyId.PUBLIC_STATUS).getValue()),
+                PublicStatus.class));
     }
 
     private void bindCreatedBy() {

@@ -8,6 +8,7 @@ import com.vaadin.ui.Window;
 import de.escidoc.admintool.app.PropertyId;
 import de.escidoc.admintool.service.ResourceService;
 import de.escidoc.core.client.exceptions.EscidocClientException;
+import de.escidoc.core.resources.common.properties.PublicStatus;
 
 public class OpenResourceListener extends AbstractUpdateable
     implements ClickListener {
@@ -39,7 +40,9 @@ public class OpenResourceListener extends AbstractUpdateable
 
     @Override
     public void updateItem() {
-        getItem().getItemProperty(PropertyId.PUBLIC_STATUS).setValue("opened");
+        // getItem().getItemProperty(PropertyId.PUBLIC_STATUS).setValue("opened");
+        getItem().getItemProperty(PropertyId.PUBLIC_STATUS).setValue(
+            PublicStatus.OPENED);
     }
 
     @Override
