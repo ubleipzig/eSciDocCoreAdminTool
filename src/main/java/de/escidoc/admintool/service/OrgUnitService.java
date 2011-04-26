@@ -111,28 +111,6 @@ public class OrgUnitService {
         return orgUnits;
     }
 
-    // FIXME duplicate method in ContextService
-    private TaskParam emptyFilter() {
-        final Set<Filter> filters = new HashSet<Filter>();
-        filters.add(getFilter(AppConstants.CREATED_BY_FILTER,
-            AppConstants.SYSADMIN_OBJECT_ID, null));
-
-        final TaskParam filterParam = new TaskParam();
-        filterParam.setFilters(filters);
-        return filterParam;
-    }
-
-    // FIXME duplicate method in ContextService
-    private Filter getFilter(
-        final String name, final String value, final Collection<String> ids) {
-
-        final Filter filter = new Filter();
-        filter.setName(name);
-        filter.setValue(value);
-        filter.setIds(ids);
-        return filter;
-    }
-
     public OrganizationalUnit create(final OrganizationalUnit orgUnit)
         throws EscidocException, InternalClientException, TransportException {
         final OrganizationalUnit createdOrgUnit = client.create(orgUnit);
