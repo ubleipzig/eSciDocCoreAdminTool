@@ -35,7 +35,14 @@ public class OrgUnitServiceLab extends AbstractEscidocService<OrganizationalUnit
     @Override
     public Resource create(final Resource resource) throws EscidocException, InternalClientException,
         TransportException {
-        return getClient().create((OrganizationalUnit) resource);
+        if (resource instanceof OrganizationalUnit) {
+            final OrganizationalUnit orgUnit = (OrganizationalUnit) resource;
+            return getClient().create(orgUnit);
+        }
+        else {
+            throw new RuntimeException("invalid casting");
+        }
+
     }
 
     @Override
@@ -134,7 +141,10 @@ public class OrgUnitServiceLab extends AbstractEscidocService<OrganizationalUnit
 
     @Override
     public void update(final Resource resource) throws EscidocClientException {
-        getClient().update((OrganizationalUnit) resource);
+        if (resource instanceof OrganizationalUnit) {
+            final OrganizationalUnit orgUnit = (OrganizationalUnit) resource;
+            getClient().update(orgUnit);
+        }
     }
 
     public void delete(final String objectId) throws EscidocClientException {

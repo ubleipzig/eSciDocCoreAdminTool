@@ -31,7 +31,13 @@ public class ItemService extends AbstractEscidocService<ItemHandlerClientInterfa
     @Override
     public Resource create(final Resource resource) throws EscidocException, InternalClientException,
         TransportException {
-        return getClient().create((Item) resource);
+        if (resource instanceof Item) {
+            final Item item = (Item) resource;
+            return getClient().create(item);
+        }
+        else {
+            throw new RuntimeException("invalid casting");
+        }
     }
 
     @Override
@@ -47,8 +53,6 @@ public class ItemService extends AbstractEscidocService<ItemHandlerClientInterfa
 
     @Override
     public void update(final Resource resource) throws EscidocClientException {
-        // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Not yet implemented");
-
     }
 }

@@ -111,7 +111,7 @@ public class AdminToolApplication extends Application {
 
     private ResourceViewComponent containerViewComponent;
 
-    private ResourceService orgUnitServiceLab;
+    private OrgUnitServiceLab orgUnitServiceLab;
 
     private ResourceContainer resourceContainer;
 
@@ -383,8 +383,7 @@ public class AdminToolApplication extends Application {
             resourceViewComponent.init();
             resourceTreeView = new ResourceTreeView(mainWindow, header, resourceContainer);
 
-            resourceTreeView.setCommand(new AddChildrenCommandImpl((OrgUnitServiceLab) orgUnitServiceLab,
-                resourceContainer));
+            resourceTreeView.setCommand(new AddChildrenCommandImpl(orgUnitServiceLab, resourceContainer));
             resourceTreeView.addResourceNodeExpandListener();
         }
         catch (final EscidocClientException e) {

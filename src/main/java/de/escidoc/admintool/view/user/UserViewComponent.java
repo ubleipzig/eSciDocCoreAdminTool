@@ -11,7 +11,6 @@ import com.vaadin.data.Item;
 import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.domain.PdpRequest;
 import de.escidoc.admintool.service.OrgUnitServiceLab;
-import de.escidoc.admintool.service.ResourceService;
 import de.escidoc.admintool.service.UserService;
 import de.escidoc.admintool.view.resource.ResourceTreeView;
 import de.escidoc.core.resources.aa.useraccount.UserAccount;
@@ -41,14 +40,14 @@ public class UserViewComponent {
     private final PdpRequest pdpRequest;
 
     public UserViewComponent(final AdminToolApplication app, final UserService userService,
-        final ResourceService orgUnitService, final ResourceTreeView resourceTreeView, final PdpRequest pdpRequest) {
+        final OrgUnitServiceLab orgUnitService, final ResourceTreeView resourceTreeView, final PdpRequest pdpRequest) {
         Preconditions.checkNotNull(app, "AdminToolApplication is null.");
         Preconditions.checkNotNull(userService, "UserService is null.");
         Preconditions.checkNotNull(orgUnitService, "orgUnitService is null: %s", orgUnitService);
         Preconditions.checkNotNull(pdpRequest, "pdpRequest is null: %s", pdpRequest);
         this.app = app;
         this.userService = userService;
-        this.orgUnitService = (OrgUnitServiceLab) orgUnitService;
+        this.orgUnitService = orgUnitService;
         this.resourceTreeView = resourceTreeView;
         this.pdpRequest = pdpRequest;
     }
