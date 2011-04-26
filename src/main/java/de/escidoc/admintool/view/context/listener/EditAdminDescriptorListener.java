@@ -1,7 +1,7 @@
 /**
  * 
  */
-package de.escidoc.admintool.view.context;
+package de.escidoc.admintool.view.context.listener;
 
 import com.google.common.base.Preconditions;
 import com.vaadin.ui.Accordion;
@@ -11,6 +11,8 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TabSheet.Tab;
 import com.vaadin.ui.Window;
+
+import de.escidoc.admintool.view.context.AdminDescriptorEditView;
 
 /**
  * @author ASP

@@ -12,6 +12,7 @@ import com.vaadin.ui.Window;
 
 import de.escidoc.admintool.view.ErrorMessage;
 import de.escidoc.admintool.view.ViewConstants;
+import de.escidoc.admintool.view.context.listener.CancelClickListener;
 import de.escidoc.core.client.exceptions.EscidocClientException;
 
 public class CloseContextModalWindow extends VerticalLayout {

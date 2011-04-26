@@ -1,4 +1,4 @@
-package de.escidoc.admintool.view.context;
+package de.escidoc.admintool.view.context.listener;
 
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;

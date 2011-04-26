@@ -11,9 +11,9 @@ import com.vaadin.data.Item;
 import com.vaadin.data.util.HierarchicalContainer;
 
 import de.escidoc.admintool.app.PropertyId;
+import de.escidoc.admintool.domain.PublicStatus;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.core.resources.Resource;
-import de.escidoc.core.resources.common.properties.PublicStatus;
 import de.escidoc.core.resources.common.reference.UserAccountRef;
 import de.escidoc.core.resources.oum.OrganizationalUnit;
 import de.escidoc.core.resources.oum.Parents;
@@ -25,18 +25,15 @@ public class ResourceContainerImpl implements ResourceContainer {
 
     private HierarchicalContainer container;
 
-    public ResourceContainerImpl(
-        final Collection<? extends Resource> topLevelResources) {
-        Preconditions.checkNotNull(topLevelResources,
-            "topLevelResources is null: %s", topLevelResources);
+    public ResourceContainerImpl(final Collection<? extends Resource> topLevelResources) {
+        Preconditions.checkNotNull(topLevelResources, "topLevelResources is null: %s", topLevelResources);
 
         this.topLevelResources = topLevelResources;
         toHierarchicalContainer();
     }
 
     private Container toHierarchicalContainer() {
-        Preconditions.checkNotNull(topLevelResources,
-            "topLevelResources is null: %s", topLevelResources);
+        Preconditions.checkNotNull(topLevelResources, "topLevelResources is null: %s", topLevelResources);
 
         if (topLevelResources.isEmpty()) {
             return createHierarchicalContainer();
@@ -53,13 +50,11 @@ public class ResourceContainerImpl implements ResourceContainer {
     private void sortByLatestModificationDate() {
         final boolean[] sort = new boolean[1];
         sort[0] = false;
-        container
-            .sort(new String[] { PropertyId.LAST_MODIFICATION_DATE }, sort);
+        container.sort(new String[] { PropertyId.LAST_MODIFICATION_DATE }, sort);
     }
 
     @Override
-    public void addChildren(
-        final Resource parent, final Collection<OrganizationalUnit> children) {
+    public void addChildren(final Resource parent, final Collection<OrganizationalUnit> children) {
         Preconditions.checkNotNull(parent, "parent is null: %s", parent);
         Preconditions.checkNotNull(children, "children is null: %s", children);
 
@@ -123,41 +118,29 @@ public class ResourceContainerImpl implements ResourceContainer {
 
     private void addGeneralProperties() {
         addObjectIdProperty(container);
-        container.addContainerProperty(PropertyId.OBJECT_ID, String.class,
-            ViewConstants.EMPTY_STRING);
-        container.addContainerProperty(PropertyId.NAME, String.class,
-            ViewConstants.EMPTY_STRING);
-        container.addContainerProperty(PropertyId.DESCRIPTION, String.class,
-            ViewConstants.EMPTY_STRING);
-        container.addContainerProperty(PropertyId.CREATED_ON, DateTime.class,
-            new DateTime());
-        container.addContainerProperty(PropertyId.CREATED_BY,
-            UserAccountRef.class, new UserAccountRef(""));
-        container.addContainerProperty(PropertyId.LAST_MODIFICATION_DATE,
-            DateTime.class, new DateTime());
-        container.addContainerProperty(PropertyId.MODIFIED_BY,
-            UserAccountRef.class, new UserAccountRef(""));
+        container.addContainerProperty(PropertyId.OBJECT_ID, String.class, ViewConstants.EMPTY_STRING);
+        container.addContainerProperty(PropertyId.NAME, String.class, ViewConstants.EMPTY_STRING);
+        container.addContainerProperty(PropertyId.DESCRIPTION, String.class, ViewConstants.EMPTY_STRING);
+        container.addContainerProperty(PropertyId.CREATED_ON, DateTime.class, new DateTime());
+        container.addContainerProperty(PropertyId.CREATED_BY, UserAccountRef.class, new UserAccountRef(""));
+        container.addContainerProperty(PropertyId.LAST_MODIFICATION_DATE, DateTime.class, new DateTime());
+        container.addContainerProperty(PropertyId.MODIFIED_BY, UserAccountRef.class, new UserAccountRef(""));
         addPublicStatusProperty();
-        container.addContainerProperty(PropertyId.PUBLIC_STATUS_COMMENT,
-            String.class, ViewConstants.EMPTY_STRING);
+        container.addContainerProperty(PropertyId.PUBLIC_STATUS_COMMENT, String.class, ViewConstants.EMPTY_STRING);
     }
 
     private boolean addPublicStatusProperty() {
-        return container.addContainerProperty(PropertyId.PUBLIC_STATUS,
-            PublicStatus.class, ViewConstants.EMPTY_STRING);
+        return container.addContainerProperty(PropertyId.PUBLIC_STATUS, PublicStatus.class, ViewConstants.EMPTY_STRING);
     }
 
     private void addObjectIdProperty(final Container container) {
-        container.addContainerProperty(PropertyId.OBJECT_ID, String.class,
-            ViewConstants.EMPTY_STRING);
+        container.addContainerProperty(PropertyId.OBJECT_ID, String.class, ViewConstants.EMPTY_STRING);
     }
 
     private void addOrgUnitProperties() {
-        container.addContainerProperty(PropertyId.PARENTS, Parents.class,
-            new Parents());
+        container.addContainerProperty(PropertyId.PARENTS, Parents.class, new Parents());
 
-        container.addContainerProperty(PropertyId.PREDECESSORS,
-            Predecessors.class, Collections.EMPTY_SET);
+        container.addContainerProperty(PropertyId.PREDECESSORS, Predecessors.class, Collections.EMPTY_SET);
     }
 
     private boolean isOrgUnit() {
@@ -186,27 +169,19 @@ public class ResourceContainerImpl implements ResourceContainer {
         Preconditions.checkNotNull(item, "item is null: %s", item);
         Preconditions.checkNotNull(resource, "resource is null: %s", resource);
         final OrganizationalUnit orgUnit = (OrganizationalUnit) resource;
-        item.getItemProperty(PropertyId.OBJECT_ID)
-            .setValue(resource.getObjid());
-        item.getItemProperty(PropertyId.NAME).setValue(
-            orgUnit.getProperties().getName());
-        item.getItemProperty(PropertyId.DESCRIPTION).setValue(
-            orgUnit.getProperties().getDescription());
-        item.getItemProperty(PropertyId.CREATED_ON).setValue(
-            orgUnit.getProperties().getCreationDate());
-        item.getItemProperty(PropertyId.CREATED_BY).setValue(
-            orgUnit.getProperties().getCreatedBy());
-        item.getItemProperty(PropertyId.LAST_MODIFICATION_DATE).setValue(
-            orgUnit.getLastModificationDate());
-        item.getItemProperty(PropertyId.MODIFIED_BY).setValue(
-            orgUnit.getProperties().getModifiedBy());
+        item.getItemProperty(PropertyId.OBJECT_ID).setValue(resource.getObjid());
+        item.getItemProperty(PropertyId.NAME).setValue(orgUnit.getProperties().getName());
+        item.getItemProperty(PropertyId.DESCRIPTION).setValue(orgUnit.getProperties().getDescription());
+        item.getItemProperty(PropertyId.CREATED_ON).setValue(orgUnit.getProperties().getCreationDate());
+        item.getItemProperty(PropertyId.CREATED_BY).setValue(orgUnit.getProperties().getCreatedBy());
+        item.getItemProperty(PropertyId.LAST_MODIFICATION_DATE).setValue(orgUnit.getLastModificationDate());
+        item.getItemProperty(PropertyId.MODIFIED_BY).setValue(orgUnit.getProperties().getModifiedBy());
         item.getItemProperty(PropertyId.PUBLIC_STATUS).setValue(
-            orgUnit.getProperties().getPublicStatus());
+            PublicStatus.from(orgUnit.getProperties().getPublicStatus()));
         item.getItemProperty(PropertyId.PUBLIC_STATUS_COMMENT).setValue(
             orgUnit.getProperties().getPublicStatusComment());
         item.getItemProperty(PropertyId.PARENTS).setValue(orgUnit.getParents());
-        item.getItemProperty(PropertyId.PREDECESSORS).setValue(
-            orgUnit.getPredecessors());
+        item.getItemProperty(PropertyId.PREDECESSORS).setValue(orgUnit.getPredecessors());
     }
 
     private void markAsLeaf(final Resource topLevel) {
@@ -230,8 +205,7 @@ public class ResourceContainerImpl implements ResourceContainer {
     }
 
     @Override
-    public void updateParent(
-        final OrganizationalUnit child, final OrganizationalUnit newParent) {
+    public void updateParent(final OrganizationalUnit child, final OrganizationalUnit newParent) {
 
         preconditions(child);
 
@@ -240,8 +214,7 @@ public class ResourceContainerImpl implements ResourceContainer {
 
             container.setChildrenAllowed(newParent, true);
             container.setParent(child, newParent);
-            if (!container.hasChildren(oldParent)
-                || container.getChildren(oldParent) == null) {
+            if (!container.hasChildren(oldParent) || container.getChildren(oldParent) == null) {
                 container.setChildrenAllowed(oldParent, false);
             }
 
@@ -263,8 +236,7 @@ public class ResourceContainerImpl implements ResourceContainer {
     public void removeParent(final OrganizationalUnit child) {
         Preconditions.checkNotNull(child, "child is null: %s", child);
 
-        final OrganizationalUnit parent =
-            (OrganizationalUnit) container.getParent(child);
+        final OrganizationalUnit parent = (OrganizationalUnit) container.getParent(child);
 
         container.setParent(child, null);
         if (!container.hasChildren(parent)) {
@@ -277,9 +249,7 @@ public class ResourceContainerImpl implements ResourceContainer {
         final StringBuilder builder = new StringBuilder();
         builder.append("ResourceContainerImpl [");
         if (topLevelResources != null) {
-            builder
-                .append("topLevelResources=").append(topLevelResources)
-                .append(", ");
+            builder.append("topLevelResources=").append(topLevelResources).append(", ");
         }
         if (container != null) {
             builder.append("container=").append(container);
@@ -296,8 +266,7 @@ public class ResourceContainerImpl implements ResourceContainer {
 
         container.removeItem(resource);
 
-        if (!container.hasChildren(parent)
-            || container.getChildren(parent) == null) {
+        if (!container.hasChildren(parent) || container.getChildren(parent) == null) {
             container.setChildrenAllowed(parent, false);
         }
     }
@@ -314,8 +283,7 @@ public class ResourceContainerImpl implements ResourceContainer {
 
     @Override
     public boolean isEmpty() {
-        return container.rootItemIds() == null
-            || container.rootItemIds().isEmpty();
+        return container.rootItemIds() == null || container.rootItemIds().isEmpty();
     }
 
     @Override

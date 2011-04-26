@@ -1,4 +1,4 @@
-package de.escidoc.admintool.view.context;
+package de.escidoc.admintool.view.context.listener;
 
 import org.apache.commons.lang.NotImplementedException;
 

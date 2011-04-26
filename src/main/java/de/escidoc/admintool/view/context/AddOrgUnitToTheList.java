@@ -13,6 +13,7 @@ import com.vaadin.ui.Window;
 
 import de.escidoc.admintool.view.ModalDialog;
 import de.escidoc.admintool.view.ViewConstants;
+import de.escidoc.admintool.view.context.listener.CancelButtonListener;
 import de.escidoc.admintool.view.resource.ResourceRefDisplay;
 import de.escidoc.admintool.view.resource.ResourceTreeView;
 import de.escidoc.core.resources.common.properties.PublicStatus;
@@ -46,8 +47,7 @@ public final class AddOrgUnitToTheList implements Button.ClickListener {
                 }
             }
             else if (selected instanceof OrganizationalUnit) {
-                final OrganizationalUnit selectedOrgUnit =
-                    (OrganizationalUnit) selected;
+                final OrganizationalUnit selectedOrgUnit = (OrganizationalUnit) selected;
                 tryAddToList(selectedOrgUnit);
 
             }
@@ -73,8 +73,7 @@ public final class AddOrgUnitToTheList implements Button.ClickListener {
                     stringBuilder.append(xLinkTitle).append(", ");
                 }
                 stringBuilder.append(" is not in status opened.");
-                ModalDialog.showMessage(mainWindow,
-                    "Can only add organizational unit in status open. ",
+                ModalDialog.showMessage(mainWindow, "Can only add organizational unit in status open. ",
                     stringBuilder.toString());
 
             }
@@ -85,14 +84,11 @@ public final class AddOrgUnitToTheList implements Button.ClickListener {
         }
 
         private boolean isOpen(final OrganizationalUnit selectedOrgUnit) {
-            return PublicStatus.OPENED.equals(selectedOrgUnit
-                .getProperties().getPublicStatus());
+            return PublicStatus.OPENED.equals(selectedOrgUnit.getProperties().getPublicStatus());
         }
 
-        private ResourceRefDisplay toResourceRefDesplay(
-            final OrganizationalUnit selectedOrgUnit) {
-            return new ResourceRefDisplay(selectedOrgUnit.getObjid(),
-                selectedOrgUnit.getProperties().getName());
+        private ResourceRefDisplay toResourceRefDesplay(final OrganizationalUnit selectedOrgUnit) {
+            return new ResourceRefDisplay(selectedOrgUnit.getObjid(), selectedOrgUnit.getProperties().getName());
         }
     }
 
@@ -114,8 +110,7 @@ public final class AddOrgUnitToTheList implements Button.ClickListener {
 
     private Table orgUnitTable;
 
-    public AddOrgUnitToTheList(final Window mainWindow,
-        final ResourceTreeView resourceTreeView) {
+    public AddOrgUnitToTheList(final Window mainWindow, final ResourceTreeView resourceTreeView) {
         this.mainWindow = mainWindow;
         this.resourceTreeView = resourceTreeView;
     }
@@ -153,8 +148,7 @@ public final class AddOrgUnitToTheList implements Button.ClickListener {
     }
 
     private void addCancelButton() {
-        final CancelButtonListener cancelButtonListener =
-            new CancelButtonListener(mainWindow, modalWindow);
+        final CancelButtonListener cancelButtonListener = new CancelButtonListener(mainWindow, modalWindow);
         cancelBtn.addListener(cancelButtonListener);
         buttons.addComponent(cancelBtn);
     }

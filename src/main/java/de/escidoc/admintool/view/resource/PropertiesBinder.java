@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Preconditions;
 import com.vaadin.data.Property;
-import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
@@ -15,15 +14,13 @@ import com.vaadin.ui.Label;
 import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.app.PropertyId;
 import de.escidoc.admintool.domain.PdpRequest;
-import de.escidoc.admintool.domain.PublicStatus;
 import de.escidoc.admintool.view.navigation.ActionIdConstants;
 import de.escidoc.admintool.view.util.Converter;
 import de.escidoc.core.resources.common.reference.UserAccountRef;
 
 public class PropertiesBinder implements FieldsBinder {
 
-    private static final Logger LOG = LoggerFactory
-        .getLogger(PropertiesBinder.class);
+    private static final Logger LOG = LoggerFactory.getLogger(PropertiesBinder.class);
 
     private final PropertiesFieldsImpl propertiesFields;
 
@@ -33,16 +30,13 @@ public class PropertiesBinder implements FieldsBinder {
 
     private final PdpRequest pdpRequest;
 
-    PropertiesBinder(final AdminToolApplication app,
-        final PropertiesFieldsImpl propertiesFields) {
+    PropertiesBinder(final AdminToolApplication app, final PropertiesFieldsImpl propertiesFields) {
         Preconditions.checkNotNull(app, "app is null: %s", app);
-        Preconditions.checkNotNull(propertiesFields,
-            "propertiesFields is null: %s", propertiesFields);
+        Preconditions.checkNotNull(propertiesFields, "propertiesFields is null: %s", propertiesFields);
         this.app = app;
         this.propertiesFields = propertiesFields;
         pdpRequest = this.propertiesFields.getPdpRequest();
-        Preconditions.checkNotNull(pdpRequest, "pdpRequest is null: %s",
-            pdpRequest);
+        Preconditions.checkNotNull(pdpRequest, "pdpRequest is null: %s", pdpRequest);
     }
 
     @Override
@@ -59,19 +53,11 @@ public class PropertiesBinder implements FieldsBinder {
     }
 
     private void bindStatusComment() {
-        bind(propertiesFields.statusComment).with(
-            getProperty(PropertyId.PUBLIC_STATUS_COMMENT));
+        bind(propertiesFields.statusComment).with(getProperty(PropertyId.PUBLIC_STATUS_COMMENT));
     }
 
     private void bindStatus() {
-        // bind(propertiesFields.statusField).with(
-        // getProperty(PropertyId.PUBLIC_STATUS));
-        propertiesFields.statusField
-            .setPropertyDataSource(new ObjectProperty<PublicStatus>(
-                PublicStatus
-                    .from((de.escidoc.core.resources.common.properties.PublicStatus) getProperty(
-                        PropertyId.PUBLIC_STATUS).getValue()),
-                PublicStatus.class));
+        bind(propertiesFields.statusField).with(getProperty(PropertyId.PUBLIC_STATUS));
     }
 
     private void bindCreatedBy() {
@@ -79,8 +65,7 @@ public class PropertiesBinder implements FieldsBinder {
         if (isRetrieveUserPermitted(getCreatedById())) {
             propertiesFields.createdBy.addListener(new Button.ClickListener() {
 
-                private static final long serialVersionUID =
-                    3530819267393348554L;
+                private static final long serialVersionUID = 3530819267393348554L;
 
                 @Override
                 public void buttonClick(final ClickEvent event) {
@@ -94,8 +79,7 @@ public class PropertiesBinder implements FieldsBinder {
     }
 
     private boolean isRetrieveUserPermitted(final String userId) {
-        return pdpRequest.isPermitted(ActionIdConstants.RETRIEVE_USER_ACCOUNT,
-            userId);
+        return pdpRequest.isPermitted(ActionIdConstants.RETRIEVE_USER_ACCOUNT, userId);
     }
 
     private String getCreatedById() {
@@ -115,8 +99,7 @@ public class PropertiesBinder implements FieldsBinder {
     }
 
     private void bindDescriptiond() {
-        bind(propertiesFields.descField).with(
-            getProperty(PropertyId.DESCRIPTION));
+        bind(propertiesFields.descField).with(getProperty(PropertyId.DESCRIPTION));
     }
 
     private void bindName() {
@@ -133,13 +116,11 @@ public class PropertiesBinder implements FieldsBinder {
         if (isRetrieveUserPermitted(getModifierId())) {
             propertiesFields.modifiedBy.addListener(new Button.ClickListener() {
 
-                private static final long serialVersionUID =
-                    3530819267393348554L;
+                private static final long serialVersionUID = 3530819267393348554L;
 
                 @Override
                 public void buttonClick(final ClickEvent event) {
-                    LOG.debug("modified by clicked: "
-                        + getModifiedByValue().getObjid());
+                    LOG.debug("modified by clicked: " + getModifiedByValue().getObjid());
                     app.showUser(getModifiedByValue().getObjid());
                 }
             });
@@ -165,16 +146,13 @@ public class PropertiesBinder implements FieldsBinder {
     private void bindCreatedOn() {
         final Object value = getProperty(PropertyId.CREATED_ON).getValue();
         final DateTime dateTime = (DateTime) value;
-        propertiesFields.createdOn.setCaption(Converter
-            .dateTimeToString(dateTime));
+        propertiesFields.createdOn.setCaption(Converter.dateTimeToString(dateTime));
     }
 
     private void bindModifienOn() {
-        final Object value =
-            getProperty(PropertyId.LAST_MODIFICATION_DATE).getValue();
+        final Object value = getProperty(PropertyId.LAST_MODIFICATION_DATE).getValue();
         final DateTime dateTime = (DateTime) value;
-        propertiesFields.modifiedOn.setCaption(Converter
-            .dateTimeToString(dateTime));
+        propertiesFields.modifiedOn.setCaption(Converter.dateTimeToString(dateTime));
     }
 
     private Property getProperty(final Object id) {
@@ -195,8 +173,7 @@ public class PropertiesBinder implements FieldsBinder {
             button.setCaption((String) itemProperty.getValue());
         }
         else {
-            ((com.vaadin.ui.Field) toBeBind)
-                .setPropertyDataSource(itemProperty);
+            ((com.vaadin.ui.Field) toBeBind).setPropertyDataSource(itemProperty);
         }
     }
 }

@@ -6,23 +6,19 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Window;
 
 import de.escidoc.admintool.app.PropertyId;
+import de.escidoc.admintool.domain.PublicStatus;
 import de.escidoc.admintool.service.ResourceService;
 import de.escidoc.core.client.exceptions.EscidocClientException;
-import de.escidoc.core.resources.common.properties.PublicStatus;
 
-public class CloseResourceListener extends AbstractUpdateable
-    implements ClickListener {
+public class CloseResourceListener extends AbstractUpdateable implements ClickListener {
     private static final long serialVersionUID = -8186132990430106497L;
 
     private final ResourceToolbar resourceToolbar;
 
-    public CloseResourceListener(final Window mainWindow,
-        final ResourceService orgUnitService,
-        final ResourceContainer resourceContainer,
-        final ResourceToolbar resourceToolbar) {
+    public CloseResourceListener(final Window mainWindow, final ResourceService orgUnitService,
+        final ResourceContainer resourceContainer, final ResourceToolbar resourceToolbar) {
         super(mainWindow, orgUnitService, resourceContainer);
-        Preconditions.checkNotNull(resourceToolbar,
-            "resourceToolbar is null: %s", resourceToolbar);
+        Preconditions.checkNotNull(resourceToolbar, "resourceToolbar is null: %s", resourceToolbar);
         this.resourceToolbar = resourceToolbar;
     }
 
@@ -39,14 +35,11 @@ public class CloseResourceListener extends AbstractUpdateable
 
     @Override
     public void updateItem() {
-        // getItem().getItemProperty(PropertyId.PUBLIC_STATUS).setValue("closed");
-        getItem().getItemProperty(PropertyId.PUBLIC_STATUS).setValue(
-            PublicStatus.CLOSED);
+        getItem().getItemProperty(PropertyId.PUBLIC_STATUS).setValue(PublicStatus.CLOSED);
     }
 
     @Override
     public void updateResourceContainer() throws EscidocClientException {
-        // getResourceContainer().getContainer().getItem(orgUnit);
         // TODO
     }
 

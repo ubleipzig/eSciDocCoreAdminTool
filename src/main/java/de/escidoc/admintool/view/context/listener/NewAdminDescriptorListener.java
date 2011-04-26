@@ -1,13 +1,15 @@
 /**
  * 
  */
-package de.escidoc.admintool.view.context;
+package de.escidoc.admintool.view.context.listener;
 
 import com.google.common.base.Preconditions;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Window;
+
+import de.escidoc.admintool.view.context.AdminDescriptorAddView;
 
 /**
  * @author ASP

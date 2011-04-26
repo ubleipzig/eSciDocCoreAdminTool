@@ -1,20 +1,20 @@
-package de.escidoc.admintool.view.context;
+package de.escidoc.admintool.view.context.listener;
 
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Window;
 
-final class CancelButtonListener implements ClickListener {
+public final class CancelButtonListener implements ClickListener {
+    private static final long serialVersionUID = -9187444730054436852L;
+
     private final Window mainWindow;
 
     private final Window modalWindow;
 
-    CancelButtonListener(Window mainWindow, Window modalWindow) {
+    public CancelButtonListener(final Window mainWindow, final Window modalWindow) {
         this.mainWindow = mainWindow;
         this.modalWindow = modalWindow;
     }
-
-    private static final long serialVersionUID = -1211409730229979129L;
 
     public void buttonClick(final ClickEvent event) {
         closeWindow();
