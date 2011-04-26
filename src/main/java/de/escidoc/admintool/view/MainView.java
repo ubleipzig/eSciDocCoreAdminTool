@@ -28,8 +28,7 @@ public class MainView extends CustomComponent {
 
     private final VerticalLayout appLayout = new VerticalLayout();
 
-    private final HorizontalSplitPanel horizontalSplit =
-        new HorizontalSplitPanel();
+    private final HorizontalSplitPanel horizontalSplit = new HorizontalSplitPanel();
 
     private final Button logoutButton = new Button(ViewConstants.LOGOUT);
 
@@ -49,14 +48,11 @@ public class MainView extends CustomComponent {
 
     private final EscidocServiceLocation location;
 
-    public MainView(final AdminToolApplication app,
-        final PdpRequest pdpRequest, final UserAccount currentUser,
+    public MainView(final AdminToolApplication app, final PdpRequest pdpRequest, final UserAccount currentUser,
         final EscidocServiceLocation location) {
         Preconditions.checkNotNull(app, "app is null: %s", app);
-        Preconditions.checkNotNull(pdpRequest, "pdpRequest is null: %s",
-            pdpRequest);
-        Preconditions.checkNotNull(currentUser, "currentUser is null: %s",
-            currentUser);
+        Preconditions.checkNotNull(pdpRequest, "pdpRequest is null: %s", pdpRequest);
+        Preconditions.checkNotNull(currentUser, "currentUser is null: %s", currentUser);
         Preconditions.checkNotNull(location, "location is null: %s", location);
         this.app = app;
         this.pdpRequest = pdpRequest;
@@ -100,8 +96,7 @@ public class MainView extends CustomComponent {
         final HorizontalLayout layout = new HorizontalLayout();
         layout.setSpacing(true);
         layout.setMargin(true);
-        layout.addComponent(new Label("<b>User: "
-            + currentUser.getProperties().getLoginName() + "</b>",
+        layout.addComponent(new Label("<b>User: " + currentUser.getProperties().getLoginName() + "</b>",
             Label.CONTENT_XHTML));
         layout.addComponent(new Label("|", Label.CONTENT_XHTML));
         layout.addComponent(logOutButton);
@@ -120,16 +115,14 @@ public class MainView extends CustomComponent {
 
     private void createLogInButton() {
         loginButton =
-            new Button(ViewConstants.LOGIN_LABEL, new LoginButtonListener(
-                app.getMainWindow(), location.getLoginUri()));
+            new Button(ViewConstants.LOGIN_LABEL, new LoginButtonListener(app.getMainWindow(), location.getLoginUri()));
         loginButton.setStyleName(Reindeer.BUTTON_SMALL);
     }
 
     private void createLogOutButton() {
         logoutButton.setStyleName(Reindeer.BUTTON_SMALL);
         app.setLogoutURL(location.getLogoutUri() + app.getURL());
-        final LogoutButtonListener logoutButtonListener =
-            new LogoutButtonListener(app);
+        final LogoutButtonListener logoutButtonListener = new LogoutButtonListener(app);
         logoutButton.addListener(logoutButtonListener);
     }
 
@@ -140,20 +133,16 @@ public class MainView extends CustomComponent {
     }
 
     private void createNavigationTree() {
-        final NavigationTreeClickListener treeClickListener =
-            new NavigationTreeClickListener(app);
-        navigation =
-            NavigationTreeFactory.createViewFor(treeClickListener, pdpRequest);
-        final ExpandCollapseCommand command =
-            new ExpandCollapseCommandImpl(navigation);
+        final NavigationTreeClickListener treeClickListener = new NavigationTreeClickListener(app);
+        navigation = NavigationTreeFactory.createViewFor(treeClickListener, pdpRequest);
+        final ExpandCollapseCommand command = new ExpandCollapseCommandImpl(navigation);
         treeClickListener.setCommand(command);
     }
 
     private void configureHorizontalSplit() {
         appLayout.addComponent(horizontalSplit);
         appLayout.setExpandRatio(horizontalSplit, 1);
-        horizontalSplit.setSplitPosition(
-            ViewConstants.SPLIT_POSITION_FROM_LEFT, Sizeable.UNITS_PIXELS);
+        horizontalSplit.setSplitPosition(ViewConstants.SPLIT_POSITION_FROM_LEFT, Sizeable.UNITS_PIXELS);
         horizontalSplit.addStyleName(ViewConstants.THIN_SPLIT);
     }
 

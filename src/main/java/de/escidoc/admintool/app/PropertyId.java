@@ -20,15 +20,13 @@ public class PropertyId {
 
     public static final String CREATED_ON = "properties.creationDate";
 
-    public static final String PUBLIC_STATUS_COMMENT =
-        "properties.publicStatusComment";
+    public static final String PUBLIC_STATUS_COMMENT = "properties.publicStatusComment";
 
     public static final String PUBLIC_STATUS = "properties.publicStatus";
 
     public static final String TYPE = "properties.type";
 
-    public static final String ORG_UNIT_REFS =
-        "properties.organizationalUnitRefs";
+    public static final String ORG_UNIT_REFS = "properties.organizationalUnitRefs";
 
     public static final String ADMIN_DESCRIPTORS = "adminDescriptors";
 
@@ -36,19 +34,16 @@ public class PropertyId {
 
     public static final String ACTIVE = "properties.active";
 
-    public static final String ASSIGN_ON =
-        "grantProperties.assignedOn.xLinkTitle";
+    public static final String ASSIGN_ON = "grantProperties.assignedOn.xLinkTitle";
 
-    public static final String GRANT_ROLE_OBJECT_ID =
-        "grantProperties.role.objid";
+    public static final String GRANT_ROLE_OBJECT_ID = "grantProperties.role.objid";
 
     public static final String XLINK_TITLE = "xLinkTitle";
 
     public static final String LABEL = "label";
 
-    public final static String[] GENERIC_PROPERTIES = new String[] { OBJECT_ID,
-        NAME, DESCRIPTION, LAST_MODIFICATION_DATE, MODIFIED_BY, CREATED_BY,
-        CREATED_ON, PUBLIC_STATUS, PUBLIC_STATUS_COMMENT };
+    public final static String[] GENERIC_PROPERTIES = new String[] { OBJECT_ID, NAME, DESCRIPTION,
+        LAST_MODIFICATION_DATE, MODIFIED_BY, CREATED_BY, CREATED_ON, PUBLIC_STATUS, PUBLIC_STATUS_COMMENT };
 
     public static final String X_LINK_TITLE = "xLinkTitle";
 }

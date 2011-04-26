@@ -27,8 +27,7 @@ import de.escidoc.core.resources.oum.Predecessors;
 
 public class OrgUnitBuilder {
 
-    private static final Logger LOG = LoggerFactory
-        .getLogger(OrgUnitBuilder.class);
+    private static final Logger LOG = LoggerFactory.getLogger(OrgUnitBuilder.class);
 
     private OrganizationalUnit oldOrgUnit;
 
@@ -40,10 +39,8 @@ public class OrgUnitBuilder {
         // default constructor
     }
 
-    public OrgUnitBuilder update(
-        final OrganizationalUnit orgUnit, final String title,
-        final String description) throws ParserConfigurationException,
-        SAXException, IOException {
+    public OrgUnitBuilder update(final OrganizationalUnit orgUnit, final String title, final String description)
+        throws ParserConfigurationException, SAXException, IOException {
 
         oldOrgUnit = orgUnit;
         final MetadataRecords mdRecords = new MetadataRecords();
@@ -53,8 +50,8 @@ public class OrgUnitBuilder {
         return this;
     }
 
-    public OrgUnitBuilder with(final String title, final String description)
-        throws ParserConfigurationException, SAXException, IOException {
+    public OrgUnitBuilder with(final String title, final String description) throws ParserConfigurationException,
+        SAXException, IOException {
 
         oldOrgUnit.setProperties(new OrganizationalUnitProperties());
 
@@ -76,18 +73,15 @@ public class OrgUnitBuilder {
 
     private Element mpdlMdRecord; // NOPMD by CHH on 9/16/10 6:41 PM
 
-    private MetadataRecord eSciDocMdRecord(
-        final String title, final String description)
+    private MetadataRecord eSciDocMdRecord(final String title, final String description)
         throws ParserConfigurationException, SAXException, IOException {
 
         final MetadataRecord mdRecord = new MetadataRecord();
         mdRecord.setName("escidoc");
         buildNewDocument();
         mpdlMdRecord =
-            doc
-                .createElementNS(
-                    "http://purl.org/escidoc/metadata/profiles/0.1/organizationalunit",
-                    "organizational-unit");
+            doc.createElementNS("http://purl.org/escidoc/metadata/profiles/0.1/organizationalunit",
+                "organizational-unit");
         mpdlMdRecord.setPrefix("mdou");
 
         mdRecord.setContent(mpdlMdRecord);
@@ -99,8 +93,7 @@ public class OrgUnitBuilder {
     }
 
     private void buildNewDocument() throws ParserConfigurationException {
-        final DocumentBuilderFactory factory =
-            DocumentBuilderFactory.newInstance();
+        final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setNamespaceAware(true);
         factory.setCoalescing(true);
         factory.setValidating(true);
@@ -110,8 +103,7 @@ public class OrgUnitBuilder {
 
     // TODO refactor this: a lot of duplication
     private Node title(final String title) {
-        final Element titleElmt =
-            doc.createElementNS("http://purl.org/dc/elements/1.1/", "title");
+        final Element titleElmt = doc.createElementNS("http://purl.org/dc/elements/1.1/", "title");
         titleElmt.setPrefix("dc");
         titleElmt.setTextContent(title);
         mpdlMdRecord.appendChild(titleElmt);
@@ -119,9 +111,7 @@ public class OrgUnitBuilder {
     }
 
     private Node description(final String description) {
-        final Element descriptionElmt =
-            doc.createElementNS("http://purl.org/dc/elements/1.1/",
-                "description");
+        final Element descriptionElmt = doc.createElementNS("http://purl.org/dc/elements/1.1/", "description");
         descriptionElmt.setPrefix("dc");
         descriptionElmt.setTextContent(description);
         mpdlMdRecord.appendChild(descriptionElmt);
@@ -135,9 +125,7 @@ public class OrgUnitBuilder {
 
         assertNotEmpty(identifier);
 
-        final Element identifierElmt =
-            doc.createElementNS("http://purl.org/dc/elements/1.1/",
-                "identifier");
+        final Element identifierElmt = doc.createElementNS("http://purl.org/dc/elements/1.1/", "identifier");
         identifierElmt.setPrefix("dc");
         identifierElmt.setTextContent(identifier);
         mpdlMdRecord.appendChild(identifierElmt);
@@ -149,8 +137,7 @@ public class OrgUnitBuilder {
     }
 
     public OrgUnitBuilder alternative(final String alternative) {
-        final Element identifierElmt =
-            doc.createElementNS("http://purl.org/dc/terms/", "alternative");
+        final Element identifierElmt = doc.createElementNS("http://purl.org/dc/terms/", "alternative");
         identifierElmt.setPrefix("dcterms");
         identifierElmt.setTextContent(alternative);
         mpdlMdRecord.appendChild(identifierElmt);
@@ -163,9 +150,7 @@ public class OrgUnitBuilder {
     }
 
     public OrgUnitBuilder country(final String country) {
-        final Element element =
-            doc.createElementNS(AppConstants.ESCIDOC_METADATA_TERMS_NS,
-                "country");
+        final Element element = doc.createElementNS(AppConstants.ESCIDOC_METADATA_TERMS_NS, "country");
         element.setPrefix("eterms");
         element.setTextContent(country);
         mpdlMdRecord.appendChild(element);
@@ -173,8 +158,7 @@ public class OrgUnitBuilder {
     }
 
     public OrgUnitBuilder city(final String city) {
-        final Element element =
-            doc.createElementNS(AppConstants.ESCIDOC_METADATA_TERMS_NS, "city");
+        final Element element = doc.createElementNS(AppConstants.ESCIDOC_METADATA_TERMS_NS, "city");
         element.setPrefix("eterms");
         element.setTextContent(city);
         mpdlMdRecord.appendChild(element);
@@ -182,9 +166,7 @@ public class OrgUnitBuilder {
     }
 
     public OrgUnitBuilder type(final String orgType) {
-        final Element element =
-            doc.createElementNS(AppConstants.ESCIDOC_METADATA_TERMS_NS,
-                "organization-type");
+        final Element element = doc.createElementNS(AppConstants.ESCIDOC_METADATA_TERMS_NS, "organization-type");
         element.setPrefix("eterms");
         element.setTextContent(orgType);
         mpdlMdRecord.appendChild(element);
@@ -192,10 +174,7 @@ public class OrgUnitBuilder {
     }
 
     public OrgUnitBuilder coordinates(final String coordinates) {
-        final Element element =
-            doc
-                .createElementNS("http://www.opengis.net/kml/2.2",
-                    "coordinates");
+        final Element element = doc.createElementNS("http://www.opengis.net/kml/2.2", "coordinates");
         element.setPrefix("kml");
         element.setTextContent(coordinates);
         mpdlMdRecord.appendChild(element);
@@ -215,9 +194,7 @@ public class OrgUnitBuilder {
         return this;
     }
 
-    public OrgUnitBuilder predecessors(
-        final Set<String> predecessorsObjectIds,
-        final PredecessorForm predecessorType) {
+    public OrgUnitBuilder predecessors(final Set<String> predecessorsObjectIds, final PredecessorForm predecessorType) {
 
         if (predecessorsObjectIds == null || predecessorsObjectIds.isEmpty()) {
             LOG.info("empty predecessor.");
@@ -226,8 +203,7 @@ public class OrgUnitBuilder {
 
         final Predecessors predecessor = new Predecessors();
         for (final String predecessorId : predecessorsObjectIds) {
-            predecessor.addPredecessorRef(new Predecessor(predecessorId,
-                predecessorType));
+            predecessor.addPredecessorRef(new Predecessor(predecessorId, predecessorType));
         }
 
         oldOrgUnit.setPredecessors(predecessor);

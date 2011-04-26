@@ -38,8 +38,7 @@ public class HistoryDialog extends Window implements Button.ClickListener {
      * @param className
      *            the name of the class.
      */
-    public HistoryDialog(final Window mainWindow, final String caption,
-        final POJOItem<?> pojo, final String className) {
+    public HistoryDialog(final Window mainWindow, final String caption, final POJOItem<?> pojo, final String className) {
         this(mainWindow, caption, 600, 300, pojo, className);
     }
 
@@ -59,9 +58,8 @@ public class HistoryDialog extends Window implements Button.ClickListener {
      * @param className
      *            the name of the class.
      */
-    public HistoryDialog(final Window mainWindow, final String caption,
-        final int width, final int height, final POJOItem<?> pojo,
-        final String className) {
+    public HistoryDialog(final Window mainWindow, final String caption, final int width, final int height,
+        final POJOItem<?> pojo, final String className) {
         this.mainWindow = mainWindow;
         super.setWidth(width + "px");
         super.setHeight(height + "px");
@@ -70,30 +68,26 @@ public class HistoryDialog extends Window implements Button.ClickListener {
         // created
         final SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
         final AbstractComponent createdByField =
-            LayoutHelper.createElement(className, pojo, true,
-                Constants.CREATED_BY);
+            LayoutHelper.createElement(className, pojo, true, Constants.CREATED_BY);
 
-        Object creationDate =
-            pojo.getItemProperty(Constants.CREATED_ON).getValue();
+        Object creationDate = pojo.getItemProperty(Constants.CREATED_ON).getValue();
 
         if (creationDate == null) {
             creationDate = new Date();
         }
 
-        layout.addComponent(LayoutHelper.create("Created:", " by ", new Label(
-            sdf.format(creationDate)), createdByField, 100, 80, false));
+        layout.addComponent(LayoutHelper.create("Created:", " by ", new Label(sdf.format(creationDate)),
+            createdByField, 100, 80, false));
 
         // modified
         final AbstractComponent modifiedByField =
-            LayoutHelper.createElement(className, pojo, true,
-                Constants.MODIFIED_BY);
-        Object modificationDate =
-            pojo.getItemProperty(Constants.MODIFIED_ON).getValue();
+            LayoutHelper.createElement(className, pojo, true, Constants.MODIFIED_BY);
+        Object modificationDate = pojo.getItemProperty(Constants.MODIFIED_ON).getValue();
         if (modificationDate == null) {
             modificationDate = new Date();
         }
-        layout.addComponent(LayoutHelper.create("Modified:", " by ", new Label(
-            sdf.format(modificationDate)), modifiedByField, 100, 80, false));
+        layout.addComponent(LayoutHelper.create("Modified:", " by ", new Label(sdf.format(modificationDate)),
+            modifiedByField, 100, 80, false));
         final Button button = new Button("OK", this);
         layout.addComponent(LayoutHelper.create("", button, 10, false));
         super.addComponent(layout);

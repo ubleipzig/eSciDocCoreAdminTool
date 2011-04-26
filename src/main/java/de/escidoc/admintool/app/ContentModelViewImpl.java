@@ -11,8 +11,7 @@ import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.admintool.view.contentmodel.ContentModelAddView;
 
 @SuppressWarnings("serial")
-public class ContentModelViewImpl extends CustomComponent
-    implements ContentModelView {
+public class ContentModelViewImpl extends CustomComponent implements ContentModelView {
 
     private static final String CONTENT_MODELS_LABEL = "Content Models";
 
@@ -24,8 +23,7 @@ public class ContentModelViewImpl extends CustomComponent
 
     private final Component addView;
 
-    public ContentModelViewImpl(final ContentModelListView listView,
-        final ContentModelAddView addView) {
+    public ContentModelViewImpl(final ContentModelListView listView, final ContentModelAddView addView) {
 
         Preconditions.checkNotNull(listView, "listView is null: %s", listView);
         Preconditions.checkNotNull(addView, "addView is null: %s", addView);
@@ -66,7 +64,6 @@ public class ContentModelViewImpl extends CustomComponent
     }
 
     private void addHeader() {
-        vLayout.addComponent(new Label("<b>" + CONTENT_MODELS_LABEL + "</b>",
-            Label.CONTENT_XHTML));
+        vLayout.addComponent(new Label("<b>" + CONTENT_MODELS_LABEL + "</b>", Label.CONTENT_XHTML));
     }
 }

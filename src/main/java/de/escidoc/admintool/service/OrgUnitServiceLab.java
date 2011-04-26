@@ -21,8 +21,7 @@ import de.escidoc.core.resources.oum.OrganizationalUnit;
 import de.escidoc.core.resources.oum.Parent;
 import de.escidoc.core.resources.oum.Parents;
 
-public class OrgUnitServiceLab
-    extends AbstractEscidocService<OrganizationalUnitHandlerClientInterface> {
+public class OrgUnitServiceLab extends AbstractEscidocService<OrganizationalUnitHandlerClientInterface> {
 
     public OrgUnitServiceLab(final HandlerService client) {
         super(client);
@@ -34,47 +33,43 @@ public class OrgUnitServiceLab
     }
 
     @Override
-    public Resource create(final Resource resource) throws EscidocException,
-        InternalClientException, TransportException {
+    public Resource create(final Resource resource) throws EscidocException, InternalClientException,
+        TransportException {
         return getClient().create((OrganizationalUnit) resource);
     }
 
     @Override
-    public Collection<? extends Resource> findPublicOrReleasedResources()
-        throws EscidocException, InternalClientException, TransportException {
+    public Collection<? extends Resource> findPublicOrReleasedResources() throws EscidocException,
+        InternalClientException, TransportException {
         return getClient().retrieveOrganizationalUnitsAsList(withEmptyFilter());
     }
 
     @Override
-    public Collection<? extends Resource> filterUsingInput(final String query)
-        throws EscidocException, InternalClientException, TransportException {
-        return getClient().retrieveOrganizationalUnitsAsList(
-            userInputToFilter(query));
+    public Collection<? extends Resource> filterUsingInput(final String query) throws EscidocException,
+        InternalClientException, TransportException {
+        return getClient().retrieveOrganizationalUnitsAsList(userInputToFilter(query));
     }
 
-    public void parent(final OrganizationalUnit orgUnitWithParent)
-        throws InternalClientException, TransportException,
+    public void parent(final OrganizationalUnit orgUnitWithParent) throws InternalClientException, TransportException,
         EscidocClientException {
 
         getClient().update(orgUnitWithParent);
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
-    public Collection<OrganizationalUnit> getTopLevelOrgUnits()
-        throws EscidocException, InternalClientException, TransportException {
-        final SearchRetrieveRequestType searchRequest =
-            new SearchRetrieveRequestType();
+    public Collection<OrganizationalUnit> getTopLevelOrgUnits() throws EscidocException, InternalClientException,
+        TransportException {
+        final SearchRetrieveRequestType searchRequest = new SearchRetrieveRequestType();
         searchRequest.setQuery("\"top-level-organizational-units\"=true");
         return getClient().retrieveOrganizationalUnitsAsList(searchRequest);
     }
 
-    public Collection<OrganizationalUnit> retrieveChildren(final String objid)
-        throws EscidocException, InternalClientException, TransportException {
+    public Collection<OrganizationalUnit> retrieveChildren(final String objid) throws EscidocException,
+        InternalClientException, TransportException {
         Preconditions.checkNotNull(objid, "objid is null: %s", objid);
         Preconditions.checkArgument(!objid.isEmpty(), "objid is empty", objid);
 
-        final List<OrganizationalUnit> children =
-            getClient().retrieveChildObjectsAsList(objid);
+        final List<OrganizationalUnit> children = getClient().retrieveChildObjectsAsList(objid);
 
         if (children == null) {
             return Collections.emptySet();
@@ -84,13 +79,11 @@ public class OrgUnitServiceLab
     }
 
     @Override
-    public OrganizationalUnit findById(final String objid)
-        throws EscidocClientException {
+    public OrganizationalUnit findById(final String objid) throws EscidocClientException {
         return getClient().retrieve(objid);
     }
 
-    public Parents updateParent(
-        final OrganizationalUnit child, final OrganizationalUnit parent)
+    public Parents updateParent(final OrganizationalUnit child, final OrganizationalUnit parent)
         throws EscidocClientException {
 
         final Parents parents = new Parents();
@@ -99,15 +92,12 @@ public class OrgUnitServiceLab
         return getClient().updateParents(child, parents);
     }
 
-    public OrganizationalUnit updateParent(
-        final OrganizationalUnit child, final String parentObjectId)
+    public OrganizationalUnit updateParent(final OrganizationalUnit child, final String parentObjectId)
         throws EscidocClientException {
 
         Preconditions.checkNotNull(child, "child is null: %s", child);
-        Preconditions.checkNotNull(parentObjectId,
-            "parentObjectId is null: %s", parentObjectId);
-        Preconditions.checkArgument(!parentObjectId.isEmpty(),
-            "parentObjectId is empty", parentObjectId);
+        Preconditions.checkNotNull(parentObjectId, "parentObjectId is null: %s", parentObjectId);
+        Preconditions.checkArgument(!parentObjectId.isEmpty(), "parentObjectId is empty", parentObjectId);
 
         final Parents parents = new Parents();
         parents.add(new Parent(parentObjectId));
@@ -118,8 +108,7 @@ public class OrgUnitServiceLab
 
     }
 
-    public OrganizationalUnit removeParent(final OrganizationalUnit child)
-        throws EscidocClientException {
+    public OrganizationalUnit removeParent(final OrganizationalUnit child) throws EscidocClientException {
 
         Preconditions.checkNotNull(child, "child is null: %s", child);
 
@@ -129,18 +118,13 @@ public class OrgUnitServiceLab
         return getClient().update(child);
     }
 
-    public Parents updateParent(
-        final String childId, final String parentObjectId)
-        throws EscidocClientException {
+    public Parents updateParent(final String childId, final String parentObjectId) throws EscidocClientException {
 
         Preconditions.checkNotNull(childId, "child is null: %s", childId);
-        Preconditions.checkArgument(!childId.isEmpty(), "childId is empty",
-            childId);
+        Preconditions.checkArgument(!childId.isEmpty(), "childId is empty", childId);
 
-        Preconditions.checkNotNull(parentObjectId,
-            "parentObjectId is null: %s", parentObjectId);
-        Preconditions.checkArgument(!parentObjectId.isEmpty(),
-            "parentObjectId is empty", parentObjectId);
+        Preconditions.checkNotNull(parentObjectId, "parentObjectId is null: %s", parentObjectId);
+        Preconditions.checkArgument(!parentObjectId.isEmpty(), "parentObjectId is empty", parentObjectId);
 
         final Parents parents = new Parents();
         parents.add(new Parent(parentObjectId));
@@ -157,28 +141,19 @@ public class OrgUnitServiceLab
         getClient().delete(objectId);
     }
 
-    public Object open(final String objectId, final String comment)
-        throws EscidocClientException {
-        Preconditions.checkArgument(objectId != null && !objectId.isEmpty(),
-            "objectId must not be null or empty");
-        return getClient().open(objectId,
-            createCommentForStatus(objectId, comment));
+    public Object open(final String objectId, final String comment) throws EscidocClientException {
+        Preconditions.checkArgument(objectId != null && !objectId.isEmpty(), "objectId must not be null or empty");
+        return getClient().open(objectId, createCommentForStatus(objectId, comment));
     }
 
-    public Result close(final String objectId, final String comment)
-        throws EscidocClientException {
-        Preconditions.checkArgument(objectId != null && !objectId.isEmpty(),
-            "objectId must not be null or empty");
-        return getClient().close(objectId,
-            createCommentForStatus(objectId, comment));
+    public Result close(final String objectId, final String comment) throws EscidocClientException {
+        Preconditions.checkArgument(objectId != null && !objectId.isEmpty(), "objectId must not be null or empty");
+        return getClient().close(objectId, createCommentForStatus(objectId, comment));
     }
 
-    private TaskParam createCommentForStatus(
-        final String objectId, final String comment)
-        throws EscidocClientException {
+    private TaskParam createCommentForStatus(final String objectId, final String comment) throws EscidocClientException {
         final TaskParam taskParam = new TaskParam();
-        taskParam.setLastModificationDate(findById(objectId)
-            .getLastModificationDate());
+        taskParam.setLastModificationDate(findById(objectId).getLastModificationDate());
 
         if (!comment.isEmpty()) {
             taskParam.setComment(comment);

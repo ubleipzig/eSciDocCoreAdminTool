@@ -22,8 +22,7 @@ import de.escidoc.core.client.interfaces.base.HandlerService;
 import de.escidoc.core.resources.Resource;
 import de.escidoc.core.resources.common.TaskParam;
 
-public abstract class AbstractEscidocService<T extends HandlerService>
-    implements ResourceService, LoginService {
+public abstract class AbstractEscidocService<T extends HandlerService> implements ResourceService, LoginService {
 
     protected HandlerService client;
 
@@ -34,10 +33,8 @@ public abstract class AbstractEscidocService<T extends HandlerService>
         this.client = client;
     }
 
-    public AbstractEscidocService(
-        final EscidocServiceLocation escidocServiceLocation) {
-        final ContextHandlerClientInterface client =
-            new ContextHandlerClient(escidocServiceLocation.getUri());
+    public AbstractEscidocService(final EscidocServiceLocation escidocServiceLocation) {
+        final ContextHandlerClientInterface client = new ContextHandlerClient(escidocServiceLocation.getUri());
         client.setTransport(TransportProtocol.REST);
         this.client = client;
     }
@@ -60,8 +57,7 @@ public abstract class AbstractEscidocService<T extends HandlerService>
 
     @Override
     public Set<Resource> findAll() throws EscidocClientException {
-        return Collections.unmodifiableSet(new HashSet<Resource>(
-            findPublicOrReleasedResources()));
+        return Collections.unmodifiableSet(new HashSet<Resource>(findPublicOrReleasedResources()));
     }
 
     protected TaskParam withEmptyTaskParam() {
@@ -72,16 +68,15 @@ public abstract class AbstractEscidocService<T extends HandlerService>
         return new SearchRetrieveRequestType();
     }
 
-    abstract Collection<? extends Resource> findPublicOrReleasedResources()
-        throws EscidocException, InternalClientException, TransportException;
+    abstract Collection<? extends Resource> findPublicOrReleasedResources() throws EscidocException,
+        InternalClientException, TransportException;
 
     @Override
-    public abstract Collection<? extends Resource> filterUsingInput(String query)
-        throws EscidocException, InternalClientException, TransportException;
+    public abstract Collection<? extends Resource> filterUsingInput(String query) throws EscidocException,
+        InternalClientException, TransportException;
 
     protected SearchRetrieveRequestType userInputToFilter(final String query) {
-        final SearchRetrieveRequestType filter =
-            new SearchRetrieveRequestType();
+        final SearchRetrieveRequestType filter = new SearchRetrieveRequestType();
         filter.setQuery(query);
         return filter;
     }

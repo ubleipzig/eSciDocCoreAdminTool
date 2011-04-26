@@ -9,14 +9,12 @@ import de.escidoc.admintool.service.ResourceService;
 import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.resources.Resource;
 
-public class DelResourceListener extends AbstractUpdateable
-    implements ClickListener {
+public class DelResourceListener extends AbstractUpdateable implements ClickListener {
 
     private final AdminToolApplication app;
 
-    public DelResourceListener(final AdminToolApplication app,
-        final Window mainWindow, final ResourceService resourceService,
-        final ResourceContainer resourceContainer) {
+    public DelResourceListener(final AdminToolApplication app, final Window mainWindow,
+        final ResourceService resourceService, final ResourceContainer resourceContainer) {
         super(mainWindow, resourceService, resourceContainer);
         this.app = app;
     }

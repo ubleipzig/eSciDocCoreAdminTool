@@ -25,11 +25,9 @@ import de.escidoc.core.resources.om.context.AdminDescriptor;
 @SuppressWarnings("serial")
 public abstract class AdminDescriptorView extends Window {
 
-    private static final Logger LOG = LoggerFactory
-        .getLogger(AdminDescriptorView.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AdminDescriptorView.class);
 
-    protected static final String EDIT_ADMIN_DESCRIPTOR =
-        "Edit Admin Descriptor";
+    protected static final String EDIT_ADMIN_DESCRIPTOR = "Edit Admin Descriptor";
 
     protected final TextField adminDescName = new TextField("Name: ");
 
@@ -51,13 +49,10 @@ public abstract class AdminDescriptorView extends Window {
 
     protected final Window mainWindow;
 
-    public AdminDescriptorView(final Window mainWindow,
-        final Accordion adminDescriptorAccordion) {
+    public AdminDescriptorView(final Window mainWindow, final Accordion adminDescriptorAccordion) {
 
-        Preconditions.checkNotNull(mainWindow,
-            "mainWindow can not be null: %s", mainWindow);
-        Preconditions.checkNotNull(adminDescriptorAccordion,
-            "adminDescriptorAccordion can not be null: %s",
+        Preconditions.checkNotNull(mainWindow, "mainWindow can not be null: %s", mainWindow);
+        Preconditions.checkNotNull(adminDescriptorAccordion, "adminDescriptorAccordion can not be null: %s",
             adminDescriptorAccordion);
 
         this.mainWindow = mainWindow;
@@ -65,18 +60,14 @@ public abstract class AdminDescriptorView extends Window {
         buildMainLayout();
     }
 
-    public AdminDescriptorView(final Window mainWindow,
-        final Accordion adminDescriptorAccordion, final String name,
+    public AdminDescriptorView(final Window mainWindow, final Accordion adminDescriptorAccordion, final String name,
         final String content) {
 
-        Preconditions.checkNotNull(mainWindow,
-            "mainWindow can not be null: %s", mainWindow);
-        Preconditions.checkNotNull(adminDescriptorAccordion,
-            "adminDescriptorAccordion can not be null: %s",
+        Preconditions.checkNotNull(mainWindow, "mainWindow can not be null: %s", mainWindow);
+        Preconditions.checkNotNull(adminDescriptorAccordion, "adminDescriptorAccordion can not be null: %s",
             adminDescriptorAccordion);
         Preconditions.checkNotNull(name, "name can not be null: %s", name);
-        Preconditions.checkNotNull(adminDescriptorAccordion,
-            "content can not be null: %s", content);
+        Preconditions.checkNotNull(adminDescriptorAccordion, "content can not be null: %s", content);
 
         this.mainWindow = mainWindow;
         this.adminDescriptorAccordion = adminDescriptorAccordion;
@@ -137,9 +128,8 @@ public abstract class AdminDescriptorView extends Window {
         public void buttonClick(final ClickEvent event) {
             final String content = (String) adminDescContent.getValue();
             if (validate(content)) {
-                adminDescriptorAccordion.addTab(new Label(content,
-                    Label.CONTENT_PREFORMATTED), (String) adminDescName
-                    .getValue(), null);
+                adminDescriptorAccordion.addTab(new Label(content, Label.CONTENT_PREFORMATTED),
+                    (String) adminDescName.getValue(), null);
                 closeWindow();
             }
         }
@@ -166,14 +156,12 @@ public abstract class AdminDescriptorView extends Window {
         }
         catch (final ParserConfigurationException e) {
             LOG.error("An unexpected error occured! See LOG for details.", e);
-            getApplication().getMainWindow().addWindow(
-                new ErrorDialog(mainWindow, "Error", e.getMessage()));
+            getApplication().getMainWindow().addWindow(new ErrorDialog(mainWindow, "Error", e.getMessage()));
             setComponentError(new SystemError(e.getMessage()));
             return false;
         }
         catch (final SAXException e) {
-            final ErrorDialog errorDialog =
-                new ErrorDialog(mainWindow, "Error", "XML is not well formed.");
+            final ErrorDialog errorDialog = new ErrorDialog(mainWindow, "Error", "XML is not well formed.");
             errorDialog.setWidth("400px");
             errorDialog.setWidth("300px");
 
@@ -187,8 +175,7 @@ public abstract class AdminDescriptorView extends Window {
         }
         catch (final IOException e) {
             LOG.error("An unexpected error occured! See LOG for details.", e);
-            getApplication().getMainWindow().addWindow(
-                new ErrorDialog(mainWindow, "Error", e.getMessage()));
+            getApplication().getMainWindow().addWindow(new ErrorDialog(mainWindow, "Error", e.getMessage()));
             setComponentError(new SystemError(e.getMessage()));
             return false;
         }

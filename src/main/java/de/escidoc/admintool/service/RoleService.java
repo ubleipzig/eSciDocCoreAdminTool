@@ -28,8 +28,7 @@ public class RoleService {
 
     private Collection<Role> allRoles;
 
-    public RoleService(final String eSciDocUri, final String handle)
-        throws InternalClientException {
+    public RoleService(final String eSciDocUri, final String handle) throws InternalClientException {
         this.eSciDocUri = eSciDocUri;
         this.handle = handle;
         initClient();
@@ -41,8 +40,8 @@ public class RoleService {
         client.setHandle(handle);
     }
 
-    public Role retrieve(final String roleObjectId) throws EscidocException,
-        InternalClientException, TransportException {
+    public Role retrieve(final String roleObjectId) throws EscidocException, InternalClientException,
+        TransportException {
         return client.retrieve(roleObjectId);
     }
 

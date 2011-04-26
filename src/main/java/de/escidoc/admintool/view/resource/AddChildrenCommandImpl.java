@@ -18,20 +18,16 @@ public final class AddChildrenCommandImpl implements AddChildrenCommand {
 
     private final ResourceContainer resourceContainer;
 
-    public AddChildrenCommandImpl(final OrgUnitServiceLab orgUnitService,
-        final ResourceContainer resourceContainer) {
+    public AddChildrenCommandImpl(final OrgUnitServiceLab orgUnitService, final ResourceContainer resourceContainer) {
 
-        Preconditions.checkNotNull(orgUnitService,
-            "orgUnitService is null: %s", orgUnitService);
-        Preconditions.checkNotNull(resourceContainer,
-            "resourceContainer is null: %s", resourceContainer);
+        Preconditions.checkNotNull(orgUnitService, "orgUnitService is null: %s", orgUnitService);
+        Preconditions.checkNotNull(resourceContainer, "resourceContainer is null: %s", resourceContainer);
         this.orgUnitService = orgUnitService;
         this.resourceContainer = resourceContainer;
     }
 
     @Override
-    public void addChildrenFor(final Resource parent)
-        throws EscidocClientException {
+    public void addChildrenFor(final Resource parent) throws EscidocClientException {
         if (parent == null) {
             throw new IllegalArgumentException("Parent can not be null.");
         }
@@ -40,8 +36,8 @@ public final class AddChildrenCommandImpl implements AddChildrenCommand {
         resourceContainer.addChildren(parent, children);
     }
 
-    private Collection<OrganizationalUnit> getChildren(final Resource parent)
-        throws EscidocException, InternalClientException, TransportException {
+    private Collection<OrganizationalUnit> getChildren(final Resource parent) throws EscidocException,
+        InternalClientException, TransportException {
         return orgUnitService.retrieveChildren(parent.getObjid());
     }
 }

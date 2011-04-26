@@ -18,18 +18,15 @@ import de.escidoc.core.client.exceptions.TransportException;
 
 public class OpenContextModalWindow extends VerticalLayout {
 
-    private static final Logger LOG = LoggerFactory
-        .getLogger(OpenContextModalWindow.class);
+    private static final Logger LOG = LoggerFactory.getLogger(OpenContextModalWindow.class);
 
     private static final long serialVersionUID = -6815586703714340558L;
 
     private final Window subwindow = new Window(ViewConstants.OPEN);
 
-    private final Button cancelBtn = new Button(ViewConstants.CANCEL,
-        new CancelClickListener(subwindow));
+    private final Button cancelBtn = new Button(ViewConstants.CANCEL, new CancelClickListener(subwindow));
 
-    private final Button submitBtn = new Button(ViewConstants.OPEN,
-        new SubmitOpenContextClickListener());
+    private final Button submitBtn = new Button(ViewConstants.OPEN, new SubmitOpenContextClickListener());
 
     private final ContextEditForm contextForm;
 
@@ -46,8 +43,7 @@ public class OpenContextModalWindow extends VerticalLayout {
         modalWindow().commentTextField().footer();
     }
 
-    private class SubmitOpenContextClickListener
-        implements Button.ClickListener {
+    private class SubmitOpenContextClickListener implements Button.ClickListener {
 
         private static final long serialVersionUID = -8527938690355384964L;
 
@@ -59,16 +55,13 @@ public class OpenContextModalWindow extends VerticalLayout {
                 subwindow.getParent().removeWindow(subwindow);
             }
             catch (final EscidocException e) {
-                LOG.error("An unexpected error occured! See LOG for details.",
-                    e);
+                LOG.error("An unexpected error occured! See LOG for details.", e);
             }
             catch (final InternalClientException e) {
-                LOG.error("An unexpected error occured! See LOG for details.",
-                    e);
+                LOG.error("An unexpected error occured! See LOG for details.", e);
             }
             catch (final TransportException e) {
-                LOG.error("An unexpected error occured! See LOG for details.",
-                    e);
+                LOG.error("An unexpected error occured! See LOG for details.", e);
             }
         }
     }

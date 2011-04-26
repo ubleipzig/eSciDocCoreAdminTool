@@ -26,8 +26,7 @@ public abstract class StartButtonListener implements ClickListener {
 
     private static final int FIVE_SECONDS = 5000;
 
-    private final static Logger LOG = LoggerFactory
-        .getLogger(StartButtonListener.class);
+    private final static Logger LOG = LoggerFactory.getLogger(StartButtonListener.class);
 
     private final AbstractField escidocUrlField;
 
@@ -35,13 +34,11 @@ public abstract class StartButtonListener implements ClickListener {
 
     private final AdminToolApplication app;
 
-    public StartButtonListener(final AbstractField escidocUrlField,
-        final Window mainWindow, final AdminToolApplication app) {
+    public StartButtonListener(final AbstractField escidocUrlField, final Window mainWindow,
+        final AdminToolApplication app) {
 
-        Preconditions.checkNotNull(escidocUrlField,
-            "escidocUrlField is null: %s", escidocUrlField);
-        Preconditions.checkNotNull(mainWindow, "mainWindow is null: %s",
-            mainWindow);
+        Preconditions.checkNotNull(escidocUrlField, "escidocUrlField is null: %s", escidocUrlField);
+        Preconditions.checkNotNull(mainWindow, "mainWindow is null: %s", mainWindow);
         Preconditions.checkNotNull(app, "app is null: %s", app);
         this.escidocUrlField = escidocUrlField;
         this.mainWindow = mainWindow;
@@ -60,15 +57,13 @@ public abstract class StartButtonListener implements ClickListener {
                 login();
             }
             else {
-                mainWindow.showNotification(new Notification(CAN_NOT_CONNECT_TO
-                    + escidocUriField.getValue(),
+                mainWindow.showNotification(new Notification(CAN_NOT_CONNECT_TO + escidocUriField.getValue(),
                     Notification.TYPE_WARNING_MESSAGE));
             }
 
         }
         catch (final EmptyValueException e) {
-            mainWindow.showNotification(new Notification(e.getMessage(),
-                Notification.TYPE_ERROR_MESSAGE));
+            mainWindow.showNotification(new Notification(e.getMessage(), Notification.TYPE_ERROR_MESSAGE));
         }
     }
 
@@ -96,26 +91,22 @@ public abstract class StartButtonListener implements ClickListener {
             connection = new URL(strUrl).openConnection();
             connection.setConnectTimeout(FIVE_SECONDS);
             connection.connect();
-            final int responseCode =
-                ((HttpURLConnection) connection).getResponseCode();
+            final int responseCode = ((HttpURLConnection) connection).getResponseCode();
             return responseCode == 200;
         }
         catch (final IllegalArgumentException e) {
             LOG.warn("Malformed URL: " + e);
-            mainWindow.showNotification(new Notification(e.getMessage(),
-                Notification.TYPE_ERROR_MESSAGE));
+            mainWindow.showNotification(new Notification(e.getMessage(), Notification.TYPE_ERROR_MESSAGE));
             return false;
         }
         catch (final MalformedURLException e) {
             LOG.warn("Malformed URL: " + e);
-            mainWindow.showNotification(new Notification(e.getMessage(),
-                Notification.TYPE_ERROR_MESSAGE));
+            mainWindow.showNotification(new Notification(e.getMessage(), Notification.TYPE_ERROR_MESSAGE));
             return false;
         }
         catch (final IOException e) {
             LOG.warn("IOException: " + e);
-            mainWindow.showNotification(new Notification(e.getMessage(),
-                Notification.TYPE_ERROR_MESSAGE));
+            mainWindow.showNotification(new Notification(e.getMessage(), Notification.TYPE_ERROR_MESSAGE));
             return false;
         }
     }

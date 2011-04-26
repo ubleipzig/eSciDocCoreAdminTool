@@ -15,11 +15,10 @@ public interface ResourceService extends EscidocService {
 
     Set<Resource> findAll() throws EscidocClientException;
 
-    Resource create(Resource resource) throws EscidocException,
-        InternalClientException, TransportException;
+    Resource create(Resource resource) throws EscidocException, InternalClientException, TransportException;
 
-    Collection<? extends Resource> filterUsingInput(final String query)
-        throws EscidocException, InternalClientException, TransportException;
+    Collection<? extends Resource> filterUsingInput(final String query) throws EscidocException,
+        InternalClientException, TransportException;
 
     Resource findById(String objid) throws EscidocClientException;
 

@@ -22,20 +22,17 @@ import de.escidoc.core.resources.aa.useraccount.UserAccount;
 @SuppressWarnings("serial")
 public class UserListView extends Table {
 
-    private static final Logger LOG = LoggerFactory
-        .getLogger(UserListView.class);
+    private static final Logger LOG = LoggerFactory.getLogger(UserListView.class);
 
     private final AdminToolApplication app;
 
     private final UserService userService;
 
-    private final Collection<UserAccount> allUserAccounts =
-        new ArrayList<UserAccount>();
+    private final Collection<UserAccount> allUserAccounts = new ArrayList<UserAccount>();
 
     private POJOContainer<UserAccount> userContainer;
 
-    public UserListView(final AdminToolApplication app,
-        final UserService userService) {
+    public UserListView(final AdminToolApplication app, final UserService userService) {
         Preconditions.checkNotNull(app, "app is null.");
         Preconditions.checkNotNull(userService, " userService is null.");
         this.app = app;
@@ -60,8 +57,7 @@ public class UserListView extends Table {
         }
         catch (final EscidocClientException e) {
             app.getMainWindow().addWindow(
-                new ErrorDialog(app.getMainWindow(), "Error",
-                    "An unexpected error occured! See LOG for details."));
+                new ErrorDialog(app.getMainWindow(), "Error", "An unexpected error occured! See LOG for details."));
             LOG.error("An unexpected error occured! See LOG for details.", e);
 
         }
@@ -79,16 +75,13 @@ public class UserListView extends Table {
 
     private void initUserContainer() {
         userContainer =
-            new POJOContainer<UserAccount>(allUserAccounts,
-                PropertyId.OBJECT_ID, PropertyId.NAME, PropertyId.CREATED_ON,
-                PropertyId.CREATED_BY, PropertyId.LAST_MODIFICATION_DATE,
-                PropertyId.MODIFIED_BY, PropertyId.LOGIN_NAME,
-                PropertyId.ACTIVE);
+            new POJOContainer<UserAccount>(allUserAccounts, PropertyId.OBJECT_ID, PropertyId.NAME,
+                PropertyId.CREATED_ON, PropertyId.CREATED_BY, PropertyId.LAST_MODIFICATION_DATE,
+                PropertyId.MODIFIED_BY, PropertyId.LOGIN_NAME, PropertyId.ACTIVE);
         setContainerDataSource(userContainer);
         setVisibleColumns(new Object[] { PropertyId.NAME });
         setColumnHeader(PropertyId.NAME, ViewConstants.TITLE_LABEL);
-        sort(new Object[] { PropertyId.LAST_MODIFICATION_DATE },
-            new boolean[] { false });
+        sort(new Object[] { PropertyId.LAST_MODIFICATION_DATE }, new boolean[] { false });
     }
 
     public void remove(final UserAccount deletedUser) {
@@ -97,10 +90,8 @@ public class UserListView extends Table {
     }
 
     public POJOItem<UserAccount> addUser(final UserAccount createdUserAccount) {
-        final POJOItem<UserAccount> item =
-            userContainer.addItem(createdUserAccount);
-        sort(new Object[] { PropertyId.LAST_MODIFICATION_DATE },
-            new boolean[] { true });
+        final POJOItem<UserAccount> item = userContainer.addItem(createdUserAccount);
+        sort(new Object[] { PropertyId.LAST_MODIFICATION_DATE }, new boolean[] { true });
         return item;
     }
 }

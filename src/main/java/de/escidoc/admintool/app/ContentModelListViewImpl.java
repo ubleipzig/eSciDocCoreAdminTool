@@ -7,17 +7,15 @@ import com.vaadin.ui.Table;
 import de.escidoc.core.client.exceptions.EscidocClientException;
 
 @SuppressWarnings("serial")
-public class ContentModelListViewImpl extends CustomComponent
-    implements ContentModelListView {
+public class ContentModelListViewImpl extends CustomComponent implements ContentModelListView {
 
     private final Table table = new Table();
 
     private final ContentModelContainerImpl contentModelContainerImpl;
 
-    public ContentModelListViewImpl(
-        final ContentModelContainerImpl contentModelContainerImpl) {
-        Preconditions.checkNotNull(contentModelContainerImpl,
-            "contentModelContainer is null: %s", contentModelContainerImpl);
+    public ContentModelListViewImpl(final ContentModelContainerImpl contentModelContainerImpl) {
+        Preconditions.checkNotNull(contentModelContainerImpl, "contentModelContainer is null: %s",
+            contentModelContainerImpl);
         setCompositionRoot(table);
         this.contentModelContainerImpl = contentModelContainerImpl;
     }

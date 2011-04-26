@@ -39,8 +39,7 @@ public class LoadExample extends AbstractAdminTaskView {
         hLayout.setHeight(100, UNITS_PERCENTAGE);
 
         final LoadExampleView filterView =
-            new LoadExampleResourceViewImpl(mainWindow,
-                services.getAdminService(), command);
+            new LoadExampleResourceViewImpl(mainWindow, services.getAdminService(), command);
         hLayout.addComponent(filterView);
         cssLayout.addComponent(hLayout);
     }

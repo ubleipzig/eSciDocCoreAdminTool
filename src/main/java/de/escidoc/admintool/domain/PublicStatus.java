@@ -19,15 +19,12 @@ public enum PublicStatus {
         return name;
     }
 
-    public static PublicStatus from(
-        final de.escidoc.core.resources.common.properties.PublicStatus fromCore) {
+    public static PublicStatus from(final de.escidoc.core.resources.common.properties.PublicStatus fromCore) {
         return PublicStatus.valueOf(fromCore.toString());
     }
 
-    public static final de.escidoc.core.resources.common.properties.PublicStatus to(
-        final PublicStatus publicStatus) {
-        return de.escidoc.core.resources.common.properties.PublicStatus
-            .valueOf(publicStatus.name().toUpperCase());
+    public static final de.escidoc.core.resources.common.properties.PublicStatus to(final PublicStatus publicStatus) {
+        return de.escidoc.core.resources.common.properties.PublicStatus.valueOf(publicStatus.name().toUpperCase());
 
     }
 }

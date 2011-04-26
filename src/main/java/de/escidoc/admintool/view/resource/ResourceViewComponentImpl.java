@@ -14,8 +14,7 @@ import de.escidoc.core.client.exceptions.EscidocClientException;
 
 public class ResourceViewComponentImpl implements ResourceViewComponent {
 
-    private final FolderHeader header = new FolderHeaderImpl(
-        "Organizational Units");
+    private final FolderHeader header = new FolderHeaderImpl("Organizational Units");
 
     private ResourceViewImpl resourceView;
 
@@ -35,17 +34,12 @@ public class ResourceViewComponentImpl implements ResourceViewComponent {
 
     private final PdpRequest pdpRequest;
 
-    public ResourceViewComponentImpl(final AdminToolApplication app,
-        final Window mainWindow, final ResourceService resourceService,
-        final ResourceContainer resourceContainer, final PdpRequest pdpRequest) {
-        Preconditions.checkNotNull(mainWindow, "mainWindow is null: %s",
-            mainWindow);
-        Preconditions.checkNotNull(resourceService,
-            "resourceService is null: %s", resourceService);
-        Preconditions.checkNotNull(resourceContainer,
-            "resourceContainer is null: %s", resourceContainer);
-        Preconditions.checkNotNull(pdpRequest, "pdpRequest is null: %s",
-            pdpRequest);
+    public ResourceViewComponentImpl(final AdminToolApplication app, final Window mainWindow,
+        final ResourceService resourceService, final ResourceContainer resourceContainer, final PdpRequest pdpRequest) {
+        Preconditions.checkNotNull(mainWindow, "mainWindow is null: %s", mainWindow);
+        Preconditions.checkNotNull(resourceService, "resourceService is null: %s", resourceService);
+        Preconditions.checkNotNull(resourceContainer, "resourceContainer is null: %s", resourceContainer);
+        Preconditions.checkNotNull(pdpRequest, "pdpRequest is null: %s", pdpRequest);
         this.app = app;
         this.mainWindow = mainWindow;
         this.resourceService = resourceService;
@@ -56,8 +50,7 @@ public class ResourceViewComponentImpl implements ResourceViewComponent {
     public void init() throws EscidocClientException {
         addChildrenCommand = createAddChildrenCommand(resourceContainer);
         resourceView =
-            new ResourceViewImpl(app, mainWindow, createFolderView(),
-                resourceService, resourceContainer, pdpRequest);
+            new ResourceViewImpl(app, mainWindow, createFolderView(), resourceService, resourceContainer, pdpRequest);
     }
 
     private ResourceFolderView createFolderView() {
@@ -67,8 +60,7 @@ public class ResourceViewComponentImpl implements ResourceViewComponent {
                 resourceView.showEditView(item);
             }
         };
-        resourceTreeView =
-            new ResourceTreeView(mainWindow, header, resourceContainer);
+        resourceTreeView = new ResourceTreeView(mainWindow, header, resourceContainer);
         resourceTreeView.setEditView(showEditResourceView);
         resourceTreeView.setCommand(addChildrenCommand);
         resourceTreeView.addResourceNodeExpandListener();
@@ -80,10 +72,8 @@ public class ResourceViewComponentImpl implements ResourceViewComponent {
         return resourceView;
     }
 
-    private AddChildrenCommandImpl createAddChildrenCommand(
-        final ResourceContainer resourceContainer) {
-        return new AddChildrenCommandImpl((OrgUnitServiceLab) resourceService,
-            resourceContainer);
+    private AddChildrenCommandImpl createAddChildrenCommand(final ResourceContainer resourceContainer) {
+        return new AddChildrenCommandImpl((OrgUnitServiceLab) resourceService, resourceContainer);
     }
 
     @Override

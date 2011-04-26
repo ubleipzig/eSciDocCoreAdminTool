@@ -5,8 +5,7 @@ import com.vaadin.event.ItemClickEvent;
 
 import de.escidoc.admintool.view.context.ResourceSelectListener;
 
-public abstract class AbstractResourceSelectListener
-    implements ResourceSelectListener {
+public abstract class AbstractResourceSelectListener implements ResourceSelectListener {
 
     private static final long serialVersionUID = -3920068730830520162L;
 

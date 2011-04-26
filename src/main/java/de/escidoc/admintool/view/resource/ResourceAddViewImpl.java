@@ -19,8 +19,7 @@ import de.escidoc.admintool.service.OrgUnitServiceLab;
 import de.escidoc.admintool.service.ResourceService;
 import de.escidoc.admintool.view.ViewConstants;
 
-public class ResourceAddViewImpl extends CustomComponent
-    implements ResourceAddView {
+public class ResourceAddViewImpl extends CustomComponent implements ResourceAddView {
 
     private static final long serialVersionUID = 8760011504724749455L;
 
@@ -46,42 +45,32 @@ public class ResourceAddViewImpl extends CustomComponent
 
     private ResourceBtnListener createOrgUnitBtnListener;
 
-    public ResourceAddViewImpl(final AdminToolApplication app,
-        final Window mainWindow, final ResourceView resourceView,
-        final ResourceService resourceService,
+    public ResourceAddViewImpl(final AdminToolApplication app, final Window mainWindow,
+        final ResourceView resourceView, final ResourceService resourceService,
         final ResourceContainer resourceContainer, final PdpRequest pdpRequest) {
 
-        checkPreconditions(mainWindow, resourceView, resourceService,
-            resourceContainer);
+        checkPreconditions(mainWindow, resourceView, resourceService, resourceContainer);
 
         this.mainWindow = mainWindow;
         this.resourceView = resourceView;
         this.resourceService = resourceService;
         this.resourceContainer = resourceContainer;
 
-        propertyFields =
-            new PropertiesFieldsImpl(app, vLayout, formLayout, fieldByName,
-                pdpRequest);
+        propertyFields = new PropertiesFieldsImpl(app, vLayout, formLayout, fieldByName, pdpRequest);
         propertyFields.removeOthers();
 
-        createOrgUnitSpecificView(mainWindow, resourceService,
-            resourceContainer);
+        createOrgUnitSpecificView(mainWindow, resourceService, resourceContainer);
 
         buildView();
     }
 
     private void checkPreconditions(
-        final Window mainWindow, final ResourceView resourceViewImpl,
-        final ResourceService orgUnitService,
+        final Window mainWindow, final ResourceView resourceViewImpl, final ResourceService orgUnitService,
         final ResourceContainer resourceContainer) {
-        Preconditions.checkNotNull(mainWindow, "mainWindow is null: %s",
-            mainWindow);
-        Preconditions.checkNotNull(resourceViewImpl,
-            "resourceViewImpl is null: %s", resourceViewImpl);
-        Preconditions.checkNotNull(orgUnitService,
-            "orgUnitService is null: %s", orgUnitService);
-        Preconditions.checkNotNull(resourceContainer,
-            "resourceContainer is null: %s", resourceContainer);
+        Preconditions.checkNotNull(mainWindow, "mainWindow is null: %s", mainWindow);
+        Preconditions.checkNotNull(resourceViewImpl, "resourceViewImpl is null: %s", resourceViewImpl);
+        Preconditions.checkNotNull(orgUnitService, "orgUnitService is null: %s", orgUnitService);
+        Preconditions.checkNotNull(resourceContainer, "resourceContainer is null: %s", resourceContainer);
     }
 
     private void buildView() {
@@ -101,24 +90,20 @@ public class ResourceAddViewImpl extends CustomComponent
 
     private void addSaveAndCancelButtons() {
         createOrgUnitBtnListener =
-            new CreateOrgUnitBtnListener(propertyFields.getAllFields(),
-                fieldByName, mainWindow, resourceView, resourceService,
-                resourceContainer);
+            new CreateOrgUnitBtnListener(propertyFields.getAllFields(), fieldByName, mainWindow, resourceView,
+                resourceService, resourceContainer);
         footers.setOkButtonListener(createOrgUnitBtnListener);
 
-        footers.getCancelBtn().addListener(
-            new CancelResourceAddView(fieldByName));
+        footers.getCancelBtn().addListener(new CancelResourceAddView(fieldByName));
         formLayout.addComponent(footers);
     }
 
     private OrgUnitSpecificView createOrgUnitSpecificView(
-        final Window mainWindow, final ResourceService orgUnitService,
-        final ResourceContainer resourceContainer) {
+        final Window mainWindow, final ResourceService orgUnitService, final ResourceContainer resourceContainer) {
 
         final OrgUnitSpecificView orgUnitSpecificView =
-            new OrgUnitSpecificView(mainWindow,
-                (OrgUnitServiceLab) orgUnitService, resourceContainer,
-                formLayout, fieldByName);
+            new OrgUnitSpecificView(mainWindow, (OrgUnitServiceLab) orgUnitService, resourceContainer, formLayout,
+                fieldByName);
         orgUnitSpecificView.init();
         orgUnitSpecificView.addAddParentOkBtnListener();
         orgUnitSpecificView.setNoParents();

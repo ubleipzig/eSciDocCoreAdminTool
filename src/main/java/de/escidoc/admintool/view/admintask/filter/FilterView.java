@@ -18,11 +18,9 @@ public class FilterView extends AbstractAdminTaskView {
 
     private final PdpRequest pdpRequest;
 
-    public FilterView(final ServiceContainer services, final Window mainWindow,
-        final PdpRequest pdpRequest) {
+    public FilterView(final ServiceContainer services, final Window mainWindow, final PdpRequest pdpRequest) {
         super(services, mainWindow);
-        Preconditions.checkNotNull(pdpRequest, "pdpRequest is null: %s",
-            pdpRequest);
+        Preconditions.checkNotNull(pdpRequest, "pdpRequest is null: %s", pdpRequest);
         this.pdpRequest = pdpRequest;
     }
 
@@ -39,16 +37,14 @@ public class FilterView extends AbstractAdminTaskView {
         hLayout.setWidth(100, UNITS_PERCENTAGE);
         hLayout.setHeight(100, UNITS_PERCENTAGE);
 
-        final FilterResourceView filterView =
-            new FilterResourceView(services, mainWindow, pdpRequest);
+        final FilterResourceView filterView = new FilterResourceView(services, mainWindow, pdpRequest);
         filterView.init();
         hLayout.addComponent(filterView);
         cssLayout.addComponent(hLayout);
     }
 
     private void addDescription() {
-        cssLayout.addComponent(new Label(ViewConstants.FILTER_DESCRIPTION_TEXT,
-            Label.CONTENT_XHTML));
+        cssLayout.addComponent(new Label(ViewConstants.FILTER_DESCRIPTION_TEXT, Label.CONTENT_XHTML));
     }
 
     private void addRuler() {

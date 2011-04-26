@@ -46,10 +46,8 @@ public class EscidocMdRecord extends MetadataRecord {
             escidocMdRecord.setName("escidoc");
             buildNewDocument();
             pubman =
-                doc
-                    .createElementNS(
-                        "http://purl.org/escidoc/metadata/profiles/0.1/organizationalunit",
-                        "organizational-unit");
+                doc.createElementNS("http://purl.org/escidoc/metadata/profiles/0.1/organizationalunit",
+                    "organizational-unit");
             pubman.setPrefix("mdou");
 
             escidocMdRecord.setContent(pubman);
@@ -68,36 +66,28 @@ public class EscidocMdRecord extends MetadataRecord {
         }
 
         private void addCity() {
-            final Element element =
-                doc.createElementNS(AppConstants.ESCIDOC_METADATA_TERMS_NS,
-                    "city");
+            final Element element = doc.createElementNS(AppConstants.ESCIDOC_METADATA_TERMS_NS, "city");
             element.setPrefix("eterms");
             element.setTextContent(city);
             pubman.appendChild(element);
         }
 
         private void addCoordinates() {
-            final Element element =
-                doc.createElementNS("http://www.opengis.net/kml/2.2",
-                    "coordinates");
+            final Element element = doc.createElementNS("http://www.opengis.net/kml/2.2", "coordinates");
             element.setPrefix("kml");
             element.setTextContent(coordinates);
             pubman.appendChild(element);
         }
 
         private void addOrgType() {
-            final Element element =
-                doc.createElementNS(AppConstants.ESCIDOC_METADATA_TERMS_NS,
-                    "organization-type");
+            final Element element = doc.createElementNS(AppConstants.ESCIDOC_METADATA_TERMS_NS, "organization-type");
             element.setPrefix("eterms");
             element.setTextContent(orgType);
             pubman.appendChild(element);
         }
 
         private void addIdentifier() {
-            final Element identifierElmt =
-                doc.createElementNS("http://purl.org/dc/elements/1.1/",
-                    "identifier");
+            final Element identifierElmt = doc.createElementNS("http://purl.org/dc/elements/1.1/", "identifier");
             identifierElmt.setPrefix("dc");
             identifierElmt.setTextContent(identifier);
             pubman.appendChild(identifierElmt);
@@ -105,27 +95,21 @@ public class EscidocMdRecord extends MetadataRecord {
         }
 
         private void addCountry() {
-            final Element element =
-                doc.createElementNS(AppConstants.ESCIDOC_METADATA_TERMS_NS,
-                    "country");
+            final Element element = doc.createElementNS(AppConstants.ESCIDOC_METADATA_TERMS_NS, "country");
             element.setPrefix("eterms");
             element.setTextContent(country);
             pubman.appendChild(element);
         }
 
         private void addAlternative() {
-            final Element alternativeElement =
-                doc.createElementNS("http://purl.org/dc/terms/", "alternative");
+            final Element alternativeElement = doc.createElementNS("http://purl.org/dc/terms/", "alternative");
             alternativeElement.setPrefix("dcterms");
             alternativeElement.setTextContent(alternative);
             pubman.appendChild(alternativeElement);
         }
 
         private Node title(final String title) {
-            final Element titleElmt =
-                doc
-                    .createElementNS("http://purl.org/dc/elements/1.1/",
-                        "title");
+            final Element titleElmt = doc.createElementNS("http://purl.org/dc/elements/1.1/", "title");
             titleElmt.setPrefix("dc");
             titleElmt.setTextContent(title);
             pubman.appendChild(titleElmt);
@@ -133,9 +117,7 @@ public class EscidocMdRecord extends MetadataRecord {
         }
 
         private Node description(final String description) {
-            final Element descriptionElmt =
-                doc.createElementNS("http://purl.org/dc/elements/1.1/",
-                    "description");
+            final Element descriptionElmt = doc.createElementNS("http://purl.org/dc/elements/1.1/", "description");
             descriptionElmt.setPrefix("dc");
             descriptionElmt.setTextContent(description);
             pubman.appendChild(descriptionElmt);
@@ -173,8 +155,7 @@ public class EscidocMdRecord extends MetadataRecord {
         }
 
         private void buildNewDocument() throws ParserConfigurationException {
-            final DocumentBuilderFactory factory =
-                DocumentBuilderFactory.newInstance();
+            final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             factory.setNamespaceAware(true);
             factory.setCoalescing(true);
             factory.setValidating(true);

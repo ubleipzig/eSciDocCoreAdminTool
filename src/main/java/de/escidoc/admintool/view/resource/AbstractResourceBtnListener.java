@@ -25,16 +25,14 @@ import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.client.exceptions.application.security.AuthorizationException;
 
-public abstract class AbstractResourceBtnListener
-    implements ResourceBtnListener {
+public abstract class AbstractResourceBtnListener implements ResourceBtnListener {
 
     private static final long serialVersionUID = -4962907806742105879L;
 
     private final ResourceBtnListenerData data = new ResourceBtnListenerData();
 
-    protected AbstractResourceBtnListener(final Collection<Field> allFields,
-        final Map<String, Field> fieldByName, final Window mainWindow,
-        final ResourceView resourceView, final ResourceService resourceService) {
+    protected AbstractResourceBtnListener(final Collection<Field> allFields, final Map<String, Field> fieldByName,
+        final Window mainWindow, final ResourceView resourceView, final ResourceService resourceService) {
         data.allFields = allFields;
         data.fieldByName = fieldByName;
         data.mainWindow = mainWindow;
@@ -64,8 +62,8 @@ public abstract class AbstractResourceBtnListener
     }
 
     private void showSuccessMessage() {
-        data.mainWindow.showNotification(new Notification("Info",
-            getSucessMessage(), Notification.TYPE_TRAY_NOTIFICATION));
+        data.mainWindow.showNotification(new Notification("Info", getSucessMessage(),
+            Notification.TYPE_TRAY_NOTIFICATION));
     }
 
     protected abstract void showInEditView();
@@ -82,8 +80,7 @@ public abstract class AbstractResourceBtnListener
                 field.validate();
             }
             catch (final Exception e) {
-                ((AbstractComponent) field).setComponentError(new UserError(
-                    field.getCaption() + " is required"));
+                ((AbstractComponent) field).setComponentError(new UserError(field.getCaption() + " is required"));
                 return false;
             }
         }
@@ -120,8 +117,8 @@ public abstract class AbstractResourceBtnListener
 
     protected abstract void commitAllFields();
 
-    protected abstract void updateModel() throws ParserConfigurationException,
-        SAXException, IOException, EscidocClientException;
+    protected abstract void updateModel() throws ParserConfigurationException, SAXException, IOException,
+        EscidocClientException;
 
     protected abstract void updatePersistence() throws EscidocClientException;
 
@@ -162,8 +159,7 @@ public abstract class AbstractResourceBtnListener
     }
 
     protected Set<String> getParents() {
-        return Collections.singleton((String) getData().fieldByName.get(
-            "parents").getValue());
+        return Collections.singleton((String) getData().fieldByName.get("parents").getValue());
     }
 
     public ResourceView getResourceView() {

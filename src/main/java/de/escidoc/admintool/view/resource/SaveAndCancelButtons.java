@@ -28,13 +28,11 @@ public class SaveAndCancelButtons extends CustomComponent {
         footers.setComponentAlignment(hl, Alignment.MIDDLE_RIGHT);
     }
 
-    public void setOkButtonListener(
-        final ResourceBtnListener resourceBtnListener) {
+    public void setOkButtonListener(final ResourceBtnListener resourceBtnListener) {
         saveBtn.addListener(resourceBtnListener);
     }
 
-    public void setCancelButtonListener(
-        final CancelButtonListener cancelButtonListener) {
+    public void setCancelButtonListener(final CancelButtonListener cancelButtonListener) {
         cancelBtn.addListener(cancelButtonListener);
     }
 

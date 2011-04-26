@@ -57,13 +57,11 @@ public class RoleView extends CustomComponent {
 
     private static final int RESOURCE_SELECTION_HEIGHT_IN_INTEGER = 400;
 
-    private static final String RESOURCE_SELECTION_HEIGHT =
-        RESOURCE_SELECTION_HEIGHT_IN_INTEGER + "px";
+    private static final String RESOURCE_SELECTION_HEIGHT = RESOURCE_SELECTION_HEIGHT_IN_INTEGER + "px";
 
     private static final int COMPONENT_WIDTH_IN_INTEGER = 300;
 
-    private static final String COMPONENT_WIDTH = COMPONENT_WIDTH_IN_INTEGER
-        + "px";
+    private static final String COMPONENT_WIDTH = COMPONENT_WIDTH_IN_INTEGER + "px";
 
     private static final String CAPTION = "Role Management";
 
@@ -81,8 +79,7 @@ public class RoleView extends CustomComponent {
 
     private final HorizontalLayout footer = new HorizontalLayout();
 
-    private final Button saveBtn = new Button(ViewConstants.SAVE_LABEL,
-        new SaveBtnListener());
+    private final Button saveBtn = new Button(ViewConstants.SAVE_LABEL, new SaveBtnListener());
 
     final Window mainWindow;
 
@@ -109,19 +106,13 @@ public class RoleView extends CustomComponent {
     final ServiceContainer serviceContainer;
 
     // TODO: add logged in user;
-    public RoleView(final AdminToolApplication app,
-        final RoleService roleService, final UserService userService,
-        final ContextService contextService,
-        final ServiceContainer serviceContainer) {
+    public RoleView(final AdminToolApplication app, final RoleService roleService, final UserService userService,
+        final ContextService contextService, final ServiceContainer serviceContainer) {
         Preconditions.checkNotNull(app, "app is null: %s", app);
-        Preconditions.checkNotNull(roleService, "roleService is null: %s",
-            roleService);
-        Preconditions.checkNotNull(userService, "userService is null: %s",
-            userService);
-        Preconditions.checkNotNull(contextService,
-            "contextService is null: %s", contextService);
-        Preconditions.checkNotNull(serviceContainer,
-            "serviceContainer is null: %s", serviceContainer);
+        Preconditions.checkNotNull(roleService, "roleService is null: %s", roleService);
+        Preconditions.checkNotNull(userService, "userService is null: %s", userService);
+        Preconditions.checkNotNull(contextService, "contextService is null: %s", contextService);
+        Preconditions.checkNotNull(serviceContainer, "serviceContainer is null: %s", serviceContainer);
         this.app = app;
         this.roleService = roleService;
         this.userService = userService;
@@ -186,8 +177,7 @@ public class RoleView extends CustomComponent {
     }
 
     private void addResourceSearchBox() {
-        searchBox.setWidth(Integer.toString(3 / 2 * COMPONENT_WIDTH_IN_INTEGER)
-            + "px");
+        searchBox.setWidth(Integer.toString(3 / 2 * COMPONENT_WIDTH_IN_INTEGER) + "px");
         searchBox.setEnabled(false);
         searchButton.setEnabled(false);
         mainLayout.addComponent(searchBox);
@@ -201,8 +191,7 @@ public class RoleView extends CustomComponent {
 
         resouceResult.addListener(new ResourceSelectionListener(this));
         resourceContainer.setStyleName(Reindeer.PANEL_LIGHT);
-        resourceContainer.setWidth(Integer
-            .toString(3 / 2 * COMPONENT_WIDTH_IN_INTEGER) + "px");
+        resourceContainer.setWidth(Integer.toString(3 / 2 * COMPONENT_WIDTH_IN_INTEGER) + "px");
         resourceContainer.setHeight(RESOURCE_SELECTION_HEIGHT);
         mainLayout.addComponent(resourceContainer);
     }
@@ -223,8 +212,7 @@ public class RoleView extends CustomComponent {
     }
 
     private void bindUserAccountData() {
-        userContainer =
-            new POJOContainer<UserAccount>(UserAccount.class, PropertyId.NAME);
+        userContainer = new POJOContainer<UserAccount>(UserAccount.class, PropertyId.NAME);
         for (final UserAccount user : getAllUserAccounts()) {
             userContainer.addPOJO(user);
         }
@@ -234,8 +222,7 @@ public class RoleView extends CustomComponent {
 
     private void bindRoleData() {
         final POJOContainer<Role> roleContainer =
-            new POJOContainer<Role>(Role.class, PropertyId.OBJECT_ID,
-                PropertyId.NAME);
+            new POJOContainer<Role>(Role.class, PropertyId.OBJECT_ID, PropertyId.NAME);
         for (final Role role : getAllRoles()) {
             roleContainer.addPOJO(role);
         }
@@ -244,17 +231,14 @@ public class RoleView extends CustomComponent {
     }
 
     private void bindResourceTypeData() {
-        resourceTypeComboBox
-            .setContainerDataSource(new BeanItemContainer<ResourceType>(
-                ResourceType.class, newResourceTypeMinusItemList()));
+        resourceTypeComboBox.setContainerDataSource(new BeanItemContainer<ResourceType>(ResourceType.class,
+            newResourceTypeMinusItemList()));
         resourceTypeComboBox.addListener(new ResourceTypeListener(this));
     }
 
     private List<ResourceType> newResourceTypeMinusItemList() {
-        final List<ResourceType> resourceTypeList =
-            new LinkedList<ResourceType>(Arrays.asList(ResourceType.values()));
-        resourceTypeList.removeAll(Arrays
-            .asList(new ResourceType[] { ResourceType.ITEM }));
+        final List<ResourceType> resourceTypeList = new LinkedList<ResourceType>(Arrays.asList(ResourceType.values()));
+        resourceTypeList.removeAll(Arrays.asList(new ResourceType[] { ResourceType.ITEM }));
         return resourceTypeList;
     }
 
@@ -263,8 +247,7 @@ public class RoleView extends CustomComponent {
             return contextService.getCache();
         }
         catch (final EscidocClientException e) {
-            mainWindow.addWindow(new ErrorDialog(mainWindow,
-                ViewConstants.ERROR_DIALOG_CAPTION, e.getMessage()));
+            mainWindow.addWindow(new ErrorDialog(mainWindow, ViewConstants.ERROR_DIALOG_CAPTION, e.getMessage()));
         }
         return Collections.emptyList();
     }
@@ -274,8 +257,7 @@ public class RoleView extends CustomComponent {
             return (List<Role>) roleService.findAll();
         }
         catch (final EscidocClientException e) {
-            mainWindow.addWindow(new ErrorDialog(mainWindow,
-                ViewConstants.ERROR_DIALOG_CAPTION, e.getMessage()));
+            mainWindow.addWindow(new ErrorDialog(mainWindow, ViewConstants.ERROR_DIALOG_CAPTION, e.getMessage()));
         }
         return Collections.emptyList();
     }
@@ -285,8 +267,7 @@ public class RoleView extends CustomComponent {
             return userService.findAll();
         }
         catch (final EscidocClientException e) {
-            mainWindow.addWindow(new ErrorDialog(mainWindow,
-                ViewConstants.ERROR_DIALOG_CAPTION, e.getMessage()));
+            mainWindow.addWindow(new ErrorDialog(mainWindow, ViewConstants.ERROR_DIALOG_CAPTION, e.getMessage()));
         }
         return Collections.emptyList();
     }
@@ -312,24 +293,20 @@ public class RoleView extends CustomComponent {
         private void assignRole() {
             try {
                 userService
-                    .assign(getSelectedUser()).withRole(getSelectedRole())
-                    .onResources(getSelectedResources()).execute();
+                    .assign(getSelectedUser()).withRole(getSelectedRole()).onResources(getSelectedResources())
+                    .execute();
                 app.showUser(getSelectedUser());
             }
             catch (final RoleNotFoundException e) {
                 app.getMainWindow().addWindow(
-                    new ErrorDialog(app.getMainWindow(),
-                        ViewConstants.ERROR_DIALOG_CAPTION,
+                    new ErrorDialog(app.getMainWindow(), ViewConstants.ERROR_DIALOG_CAPTION,
                         ViewConstants.REQUESTED_ROLE_HAS_NO_SCOPE_DEFINITIONS));
-                LOG.error("An unexpected error occured! See LOG for details.",
-                    e);
+                LOG.error("An unexpected error occured! See LOG for details.", e);
             }
             catch (final EscidocClientException e) {
                 app.getMainWindow().addWindow(
-                    new ErrorDialog(app.getMainWindow(),
-                        ViewConstants.ERROR_DIALOG_CAPTION, e.getMessage()));
-                LOG.error("An unexpected error occured! See LOG for details.",
-                    e);
+                    new ErrorDialog(app.getMainWindow(), ViewConstants.ERROR_DIALOG_CAPTION, e.getMessage()));
+                LOG.error("An unexpected error occured! See LOG for details.", e);
             }
         }
 
@@ -351,8 +328,7 @@ public class RoleView extends CustomComponent {
         private Set<ContextRef> getSelectedResources() {
             final Object value = resouceResult.getValue();
             if (value instanceof Context) {
-                return Collections.singleton(new ContextRef(((Context) value)
-                    .getObjid()));
+                return Collections.singleton(new ContextRef(((Context) value).getObjid()));
             }
             return Collections.emptySet();
         }
@@ -391,10 +367,8 @@ public class RoleView extends CustomComponent {
         }
 
         private boolean isScopingEnable(final Role role) {
-            if (role.getObjid().equals(
-                RoleType.SYSTEM_ADMINISTRATOR.getObjectId())
-                || role.getObjid().equals(
-                    RoleType.SYSTEM_INSPECTOR.getObjectId())) {
+            if (role.getObjid().equals(RoleType.SYSTEM_ADMINISTRATOR.getObjectId())
+                || role.getObjid().equals(RoleType.SYSTEM_INSPECTOR.getObjectId())) {
                 return false;
             }
             else {
@@ -429,8 +403,7 @@ public class RoleView extends CustomComponent {
                 final String userInput = (String) value;
                 foundContexts = seachContextByName(userInput);
                 if (isContextFound()) {
-                    mainWindow.showNotification(foundContexts
-                        .iterator().next().getObjid());
+                    mainWindow.showNotification(foundContexts.iterator().next().getObjid());
                 }
                 mainWindow.showNotification("Not found");
             }
@@ -446,11 +419,9 @@ public class RoleView extends CustomComponent {
             }
             catch (final EscidocClientException e) {
                 app.getMainWindow().addWindow(
-                    new ErrorDialog(app.getMainWindow(),
-                        ViewConstants.ERROR_DIALOG_CAPTION,
+                    new ErrorDialog(app.getMainWindow(), ViewConstants.ERROR_DIALOG_CAPTION,
                         "An unexpected error occured! See LOG for details."));
-                LOG.error("An unexpected error occured! See LOG for details.",
-                    e);
+                LOG.error("An unexpected error occured! See LOG for details.", e);
             }
             return Collections.emptyList();
         }

@@ -18,8 +18,7 @@ import de.escidoc.core.resources.aa.useraccount.UserAccount;
 
 public class UserViewComponent {
 
-    private static final Logger LOG = LoggerFactory
-        .getLogger(UserViewComponent.class);
+    private static final Logger LOG = LoggerFactory.getLogger(UserViewComponent.class);
 
     private UserEditForm userEditForm;
 
@@ -41,15 +40,12 @@ public class UserViewComponent {
 
     private final PdpRequest pdpRequest;
 
-    public UserViewComponent(final AdminToolApplication app,
-        final UserService userService, final ResourceService orgUnitService,
-        final ResourceTreeView resourceTreeView, final PdpRequest pdpRequest) {
+    public UserViewComponent(final AdminToolApplication app, final UserService userService,
+        final ResourceService orgUnitService, final ResourceTreeView resourceTreeView, final PdpRequest pdpRequest) {
         Preconditions.checkNotNull(app, "AdminToolApplication is null.");
         Preconditions.checkNotNull(userService, "UserService is null.");
-        Preconditions.checkNotNull(orgUnitService,
-            "orgUnitService is null: %s", orgUnitService);
-        Preconditions.checkNotNull(pdpRequest, "pdpRequest is null: %s",
-            pdpRequest);
+        Preconditions.checkNotNull(orgUnitService, "orgUnitService is null: %s", orgUnitService);
+        Preconditions.checkNotNull(pdpRequest, "pdpRequest is null: %s", pdpRequest);
         this.app = app;
         this.userService = userService;
         this.orgUnitService = (OrgUnitServiceLab) orgUnitService;
@@ -70,9 +66,7 @@ public class UserViewComponent {
     }
 
     private void createEditForm() {
-        editForm =
-            new UserEditForm(app, userService, orgUnitService,
-                resourceTreeView, pdpRequest);
+        editForm = new UserEditForm(app, userService, orgUnitService, resourceTreeView, pdpRequest);
         editForm.init();
         setUserEditForm(editForm);
         setUserEditView(new UserEditView(getUserEditForm()));
@@ -95,8 +89,7 @@ public class UserViewComponent {
     }
 
     private Item getFirstItem() {
-        return listView
-            .getContainerDataSource().getItem(listView.firstItemId());
+        return listView.getContainerDataSource().getItem(listView.firstItemId());
     }
 
     /**
@@ -147,18 +140,15 @@ public class UserViewComponent {
     }
 
     private void showUserFoundUserInEditView(final UserAccount userAccount) {
-        userView.showEditView(listView.getContainerDataSource().getItem(
-            userAccount));
+        userView.showEditView(listView.getContainerDataSource().getItem(userAccount));
     }
 
     @SuppressWarnings("unchecked")
     private Collection<UserAccount> getAllUserAccountsFromContainer() {
-        return (Collection<UserAccount>) listView
-            .getContainerDataSource().getItemIds();
+        return (Collection<UserAccount>) listView.getContainerDataSource().getItemIds();
     }
 
-    private boolean hasEqualsId(
-        final UserAccount user, final UserAccount userAccount) {
+    private boolean hasEqualsId(final UserAccount user, final UserAccount userAccount) {
         return user.getObjid().equalsIgnoreCase(userAccount.getObjid());
     }
 }

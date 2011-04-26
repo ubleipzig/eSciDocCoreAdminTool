@@ -40,22 +40,17 @@ public class PubmanWindow extends Window {
 
     CssLayout pubman = new CssLayout();
 
-    protected final TextField alternativeField = new TextField(
-        ViewConstants.ALTERNATIVE_LABEL);
+    protected final TextField alternativeField = new TextField(ViewConstants.ALTERNATIVE_LABEL);
 
-    protected final TextField identifierField = new TextField(
-        ViewConstants.IDENTIFIER_LABEL);
+    protected final TextField identifierField = new TextField(ViewConstants.IDENTIFIER_LABEL);
 
-    protected final TextField orgTypeField = new TextField(
-        ViewConstants.ORGANIZATION_TYPE);
+    protected final TextField orgTypeField = new TextField(ViewConstants.ORGANIZATION_TYPE);
 
     private final TextField cityField = new TextField(ViewConstants.CITY_LABEL);
 
-    private final TextField countryField = new TextField(
-        ViewConstants.COUNTRY_LABEL);
+    private final TextField countryField = new TextField(ViewConstants.COUNTRY_LABEL);
 
-    protected final TextField coordinatesField = new TextField(
-        ViewConstants.COORDINATES_LABEL);
+    protected final TextField coordinatesField = new TextField(ViewConstants.COORDINATES_LABEL);
 
     FormLayout fl = new FormLayout();
 

@@ -33,8 +33,7 @@ public class OrgUnitSpecificView {
 
     private static final long serialVersionUID = -3927641436455665147L;
 
-    private static final Logger LOG = LoggerFactory
-        .getLogger(OrgUnitSpecificView.class);
+    private static final Logger LOG = LoggerFactory.getLogger(OrgUnitSpecificView.class);
 
     private final FormLayout formLayout;
 
@@ -82,13 +81,10 @@ public class OrgUnitSpecificView {
 
     private ObjectProperty<ResourceRefDisplay> parentProperty;
 
-    public OrgUnitSpecificView(final Window mainWindow,
-        final OrgUnitServiceLab orgUnitService,
-        final ResourceContainer resourceContainer, final FormLayout formLayout,
-        final Map<String, Field> fieldByName) {
+    public OrgUnitSpecificView(final Window mainWindow, final OrgUnitServiceLab orgUnitService,
+        final ResourceContainer resourceContainer, final FormLayout formLayout, final Map<String, Field> fieldByName) {
 
-        checkPreconditions(mainWindow, orgUnitService, resourceContainer,
-            formLayout);
+        checkPreconditions(mainWindow, orgUnitService, resourceContainer, formLayout);
 
         this.mainWindow = mainWindow;
         this.orgUnitService = orgUnitService;
@@ -98,18 +94,13 @@ public class OrgUnitSpecificView {
     }
 
     private void checkPreconditions(
-        final Window mainWindow, final OrgUnitServiceLab orgUnitService,
-        final ResourceContainer resourceContainer, final FormLayout formLayout) {
-        Preconditions.checkNotNull(mainWindow, "mainWindow is null: %s",
-            mainWindow);
-        Preconditions.checkNotNull(orgUnitService,
-            "orgUnitService is null: %s", orgUnitService);
-        Preconditions.checkNotNull(resourceContainer,
-            "resourceContainer is null: %s", resourceContainer);
-        Preconditions.checkNotNull(formLayout, "formLayout is null: %s",
-            formLayout);
-        Preconditions.checkNotNull(formLayout, "formLayout is null: %s",
-            formLayout);
+        final Window mainWindow, final OrgUnitServiceLab orgUnitService, final ResourceContainer resourceContainer,
+        final FormLayout formLayout) {
+        Preconditions.checkNotNull(mainWindow, "mainWindow is null: %s", mainWindow);
+        Preconditions.checkNotNull(orgUnitService, "orgUnitService is null: %s", orgUnitService);
+        Preconditions.checkNotNull(resourceContainer, "resourceContainer is null: %s", resourceContainer);
+        Preconditions.checkNotNull(formLayout, "formLayout is null: %s", formLayout);
+        Preconditions.checkNotNull(formLayout, "formLayout is null: %s", formLayout);
     }
 
     public void init() {
@@ -145,11 +136,9 @@ public class OrgUnitSpecificView {
 
     private void createEditParentListener() {
         addOrEditParentModalWindow =
-            new AddOrEditParentModalWindow(this, resourceContainer,
-                orgUnitService, mainWindow);
+            new AddOrEditParentModalWindow(this, resourceContainer, orgUnitService, mainWindow);
         addOrEditParentModalWindow.addUpdateParentOkListener();
-        editParentListener =
-            new EditParentListener(mainWindow, addOrEditParentModalWindow);
+        editParentListener = new EditParentListener(mainWindow, addOrEditParentModalWindow);
     }
 
     private void addRemoveParentListener() {
@@ -227,8 +216,7 @@ public class OrgUnitSpecificView {
     }
 
     private void configure(final TextField field) {
-        field.setPropertyDataSource(new ObjectProperty<String>(
-            ViewConstants.EMPTY_STRING));
+        field.setPropertyDataSource(new ObjectProperty<String>(ViewConstants.EMPTY_STRING));
         field.setImmediate(false);
         field.setInvalidCommitted(false);
         field.setNullRepresentation(ViewConstants.EMPTY_STRING);
@@ -259,12 +247,10 @@ public class OrgUnitSpecificView {
 
     private ObjectProperty<ResourceRefDisplay> createParentProperty() {
         final ObjectProperty<ResourceRefDisplay> parentProperty =
-            new ObjectProperty<ResourceRefDisplay>(new ResourceRefDisplay(),
-                ResourceRefDisplay.class, false);
+            new ObjectProperty<ResourceRefDisplay>(new ResourceRefDisplay(), ResourceRefDisplay.class, false);
         if (hasParents(getParentsFromItem())) {
             final Parent parent = getParentsFromItem().get(0);
-            parentProperty.setValue(new ResourceRefDisplay(parent.getObjid(),
-                parent.getXLinkTitle()));
+            parentProperty.setValue(new ResourceRefDisplay(parent.getObjid(), parent.getXLinkTitle()));
         }
         return parentProperty;
     }
@@ -285,8 +271,7 @@ public class OrgUnitSpecificView {
     }
 
     private void bindCoodinates() {
-        coordinatesField
-            .setPropertyDataSource(createObjectProperty(AppConstants.KML_COORDINATES));
+        coordinatesField.setPropertyDataSource(createObjectProperty(AppConstants.KML_COORDINATES));
     }
 
     private ObjectProperty<String> createObjectProperty(final String value) {
@@ -294,29 +279,24 @@ public class OrgUnitSpecificView {
     }
 
     private void bindType() {
-        typeField
-            .setPropertyDataSource(createObjectProperty(AppConstants.ETERMS_ORGANIZATION_TYPE));
+        typeField.setPropertyDataSource(createObjectProperty(AppConstants.ETERMS_ORGANIZATION_TYPE));
 
     }
 
     private void bindIdentifier() {
-        identifierField
-            .setPropertyDataSource(createObjectProperty(AppConstants.DC_IDENTIFIER));
+        identifierField.setPropertyDataSource(createObjectProperty(AppConstants.DC_IDENTIFIER));
     }
 
     private void bindAlternativeTitle() {
-        alternativeField
-            .setPropertyDataSource(createObjectProperty(AppConstants.DCTERMS_ALTERNATIVE));
+        alternativeField.setPropertyDataSource(createObjectProperty(AppConstants.DCTERMS_ALTERNATIVE));
     }
 
     private void bindCity() {
-        cityField
-            .setPropertyDataSource(createObjectProperty(AppConstants.ETERMS_CITY));
+        cityField.setPropertyDataSource(createObjectProperty(AppConstants.ETERMS_CITY));
     }
 
     private void bindCountry() {
-        countryField
-            .setPropertyDataSource(createObjectProperty(AppConstants.ETERMS_COUNTRY));
+        countryField.setPropertyDataSource(createObjectProperty(AppConstants.ETERMS_COUNTRY));
     }
 
     private OrganizationalUnit getSelectedOrgUnit() {
@@ -358,12 +338,10 @@ public class OrgUnitSpecificView {
     private void bindParentsForAddView() {
         final ResourceRefDisplay resourceRefDisplay = new ResourceRefDisplay();
         final ObjectProperty<ResourceRefDisplay> parentPropertyForAddView =
-            new ObjectProperty<ResourceRefDisplay>(resourceRefDisplay,
-                ResourceRefDisplay.class, false);
+            new ObjectProperty<ResourceRefDisplay>(resourceRefDisplay, ResourceRefDisplay.class, false);
 
         parentsField.setPropertyDataSource(parentPropertyForAddView);
-        addOrEditParentModalWindow
-            .setParentPropertyForAdd(parentPropertyForAddView);
+        addOrEditParentModalWindow.setParentPropertyForAdd(parentPropertyForAddView);
     }
 
     public void addAddParentOkBtnListener() {
@@ -378,8 +356,7 @@ public class OrgUnitSpecificView {
 
             @Override
             public void buttonClick(final ClickEvent event) {
-                parentsField.getPropertyDataSource().setValue(
-                    new ResourceRefDisplay());
+                parentsField.getPropertyDataSource().setValue(new ResourceRefDisplay());
                 removeParentBtn.setVisible(false);
             }
         });

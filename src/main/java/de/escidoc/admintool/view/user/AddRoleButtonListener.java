@@ -12,8 +12,7 @@ import de.escidoc.core.client.exceptions.EscidocClientException;
 
 final class AddRoleButtonListener implements Button.ClickListener {
 
-    private static final Logger LOG = LoggerFactory
-        .getLogger(AddRoleButtonListener.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AddRoleButtonListener.class);
 
     private final UserEditForm userEditForm;
 
@@ -27,14 +26,11 @@ final class AddRoleButtonListener implements Button.ClickListener {
     public void buttonClick(final ClickEvent event) {
         try {
             userEditForm.app.showRoleView();
-            userEditForm.app.showRoleView(userEditForm.userService
-                .getUserById(userEditForm.userObjectId));
+            userEditForm.app.showRoleView(userEditForm.userService.getUserById(userEditForm.userObjectId));
         }
         catch (final EscidocClientException e) {
             ModalDialog.show(userEditForm.app.getMainWindow(), e);
-            LOG.error(
-                ViewConstants.AN_UNEXPECTED_ERROR_OCCURED_SEE_LOG_FOR_DETAILS,
-                e);
+            LOG.error(ViewConstants.AN_UNEXPECTED_ERROR_OCCURED_SEE_LOG_FOR_DETAILS, e);
         }
     }
 }

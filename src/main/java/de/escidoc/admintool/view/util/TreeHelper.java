@@ -22,13 +22,11 @@ public final class TreeHelper {
      * @param child
      *            the child.
      * @param childrenAllowed
-     *            true if more children under the child are allowed, false
-     *            otherwise.
+     *            true if more children under the child are allowed, false otherwise.
      * @return the appended child.
      */
     public static Object addChildren(
-        final Tree tree, final Object parent, final Object child,
-        final boolean childrenAllowed) {
+        final Tree tree, final Object parent, final Object child, final boolean childrenAllowed) {
         tree.addItem(child);
         tree.setParent(child, parent);
         tree.setChildrenAllowed(child, childrenAllowed);
@@ -49,8 +47,7 @@ public final class TreeHelper {
      * @deprecated does the same as addRoot. Somebody copied it.
      */
     @Deprecated
-    public static Object addChildren(
-        final Tree tree, final Object child, final boolean childrenAllowed) {
+    public static Object addChildren(final Tree tree, final Object child, final boolean childrenAllowed) {
         tree.addItem(child);
         tree.setChildrenAllowed(child, childrenAllowed);
         return child;
@@ -67,8 +64,7 @@ public final class TreeHelper {
      *            are children under this node allowed.
      * @return the root node.
      */
-    public static Object addRoot(
-        final Tree tree, final Object child, final boolean childrenAllowed) {
+    public static Object addRoot(final Tree tree, final Object child, final boolean childrenAllowed) {
         tree.addItem(child);
         tree.setChildrenAllowed(child, childrenAllowed);
         return child;
@@ -88,8 +84,7 @@ public final class TreeHelper {
      * @return the child.
      */
     public static Object addChildrenNotExpand(
-        final Tree tree, final Object parent, final Object child,
-        final boolean childrenAllowed) {
+        final Tree tree, final Object parent, final Object child, final boolean childrenAllowed) {
         tree.addItem(child);
         tree.setParent(child, parent);
         tree.setChildrenAllowed(child, childrenAllowed);

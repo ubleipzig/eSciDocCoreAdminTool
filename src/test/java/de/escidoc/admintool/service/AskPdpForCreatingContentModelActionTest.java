@@ -23,8 +23,7 @@ public class AskPdpForCreatingContentModelActionTest {
         // When:
         final boolean isDenied =
             service
-                .isAction(ActionIdConstants.CREATE_CONTENT_MODEL)
-                .forResource(AppConstants.EMPTY_STRING)
+                .isAction(ActionIdConstants.CREATE_CONTENT_MODEL).forResource(AppConstants.EMPTY_STRING)
                 .forUser(AppConstants.EMPTY_STRING).denied();
         // AssertThat:
         assertTrue(isDenied);
@@ -34,16 +33,14 @@ public class AskPdpForCreatingContentModelActionTest {
     @Test
     public void shouldReturnTrueIfSysAdminAskIt() throws Exception {
         // Given:
-        final Authentication authentication =
-            new Authentication(new URL(LOCALHOST_8080), "sysadmin", "escidoc");
+        final Authentication authentication = new Authentication(new URL(LOCALHOST_8080), "sysadmin", "escidoc");
         final String handle = authentication.getHandle();
         service.loginWith(handle);
 
         // When:
         final boolean isDenied =
             service
-                .isAction(ActionIdConstants.CREATE_CONTENT_MODEL)
-                .forResource(AppConstants.EMPTY_STRING)
+                .isAction(ActionIdConstants.CREATE_CONTENT_MODEL).forResource(AppConstants.EMPTY_STRING)
                 .forUser(AppConstants.EMPTY_STRING).denied();
 
         // AssertThat:

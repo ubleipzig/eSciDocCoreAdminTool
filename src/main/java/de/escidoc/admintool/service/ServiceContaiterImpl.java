@@ -51,33 +51,22 @@ public class ServiceContaiterImpl implements ServiceContainer {
             builder.append("services=").append(services).append(", ");
         }
         if (getAdminService() != null) {
-            builder
-                .append("getAdminService()=").append(getAdminService())
-                .append(", ");
+            builder.append("getAdminService()=").append(getAdminService()).append(", ");
         }
         if (getContainerService() != null) {
-            builder
-                .append("getContainerService()=").append(getContainerService())
-                .append(", ");
+            builder.append("getContainerService()=").append(getContainerService()).append(", ");
         }
         if (getItemService() != null) {
-            builder
-                .append("getItemService()=").append(getItemService())
-                .append(", ");
+            builder.append("getItemService()=").append(getItemService()).append(", ");
         }
         if (getContextService() != null) {
-            builder
-                .append("getContextService()=").append(getContextService())
-                .append(", ");
+            builder.append("getContextService()=").append(getContextService()).append(", ");
         }
         if (getOrgUnitService() != null) {
-            builder
-                .append("getOrgUnitService()=").append(getOrgUnitService())
-                .append(", ");
+            builder.append("getOrgUnitService()=").append(getOrgUnitService()).append(", ");
         }
         if (getContentModelService() != null) {
-            builder.append("getContentModelService()=").append(
-                getContentModelService());
+            builder.append("getContentModelService()=").append(getContentModelService());
         }
         builder.append("]");
         return builder.toString();

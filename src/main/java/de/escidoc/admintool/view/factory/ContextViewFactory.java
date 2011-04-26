@@ -24,8 +24,7 @@ import de.escidoc.core.client.exceptions.TransportException;
 
 public class ContextViewFactory {
 
-    private static final Logger LOG = LoggerFactory
-        .getLogger(ContextViewFactory.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ContextViewFactory.class);
 
     private final Window mainWindow;
 
@@ -37,16 +36,12 @@ public class ContextViewFactory {
 
     private final PdpRequest pdpRequest;
 
-    public ContextViewFactory(final AdminToolApplication app,
-        final Window mainWindow, final OrgUnitService orgUnitService,
-        final ContextService contextService, final PdpRequest pdpRequest) {
+    public ContextViewFactory(final AdminToolApplication app, final Window mainWindow,
+        final OrgUnitService orgUnitService, final ContextService contextService, final PdpRequest pdpRequest) {
         Preconditions.checkNotNull(app, "app is null: %s", app);
-        Preconditions.checkNotNull(mainWindow, "mainWindow is null: %s",
-            mainWindow);
-        Preconditions.checkNotNull(orgUnitService,
-            "orgUnitService is null: %s", orgUnitService);
-        Preconditions.checkNotNull(contextService,
-            "contextService is null: %s", contextService);
+        Preconditions.checkNotNull(mainWindow, "mainWindow is null: %s", mainWindow);
+        Preconditions.checkNotNull(orgUnitService, "orgUnitService is null: %s", orgUnitService);
+        Preconditions.checkNotNull(contextService, "contextService is null: %s", contextService);
         this.app = app;
         this.mainWindow = mainWindow;
         this.orgUnitService = orgUnitService;
@@ -68,8 +63,7 @@ public class ContextViewFactory {
             createContextEditForm(resourceTreeView);
             contextForm.setContextList(contextList);
             createContextAddView(resourceTreeView);
-            return new ContextView(app, contextList, contextForm,
-                contextAddView, pdpRequest);
+            return new ContextView(app, contextList, contextForm, contextAddView, pdpRequest);
         }
         catch (final EscidocException e) {
             ModalDialog.show(mainWindow, e);
@@ -86,26 +80,23 @@ public class ContextViewFactory {
         return contextView;
     }
 
-    public ContextAddView createContextAddView(
-        final ResourceTreeView resourceTreeView) {
+    public ContextAddView createContextAddView(final ResourceTreeView resourceTreeView) {
         contextAddView =
-            new ContextAddView(app, mainWindow, contextList, contextService,
-                new AddOrgUnitToTheList(mainWindow, resourceTreeView));
+            new ContextAddView(app, mainWindow, contextList, contextService, new AddOrgUnitToTheList(mainWindow,
+                resourceTreeView));
         contextAddView.init();
         return contextAddView;
     }
 
     private void createContextEditForm(final ResourceTreeView resourceTreeView) {
         final ContextEditForm contextEditForm =
-            new ContextEditForm(app, mainWindow, contextService,
-                orgUnitService, new AddOrgUnitToTheList(mainWindow,
-                    resourceTreeView), pdpRequest);
+            new ContextEditForm(app, mainWindow, contextService, orgUnitService, new AddOrgUnitToTheList(mainWindow,
+                resourceTreeView), pdpRequest);
         contextEditForm.init();
         contextForm = contextEditForm;
     }
 
-    private void createContextListView() throws EscidocException,
-        InternalClientException, TransportException {
+    private void createContextListView() throws EscidocException, InternalClientException, TransportException {
         contextList = new ContextListView(app, contextService);
     }
 }

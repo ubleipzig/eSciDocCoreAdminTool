@@ -10,18 +10,15 @@ public class AppConstants {
 
     public static final String ESCIDOC_THEME = "escidoc";
 
-    public static final String ESCIDOC_METADATA_TERMS_NS =
-        "http://purl.org/escidoc/metadata/terms/0.1/";
+    public static final String ESCIDOC_METADATA_TERMS_NS = "http://purl.org/escidoc/metadata/terms/0.1/";
 
-    public static final String CREATED_BY_FILTER =
-        "http://escidoc.de/core/01/structural-relations/created-by";
+    public static final String CREATED_BY_FILTER = "http://escidoc.de/core/01/structural-relations/created-by";
 
     public static final String SYSADMIN_OBJECT_ID = "escidoc:exuser1";
 
     public static final String IS_TOP_LEVEL = "true";
 
-    public static final String TOP_LEVEL_ORGANIZATIONAL_UNITS =
-        "top-level-organizational-units";
+    public static final String TOP_LEVEL_ORGANIZATIONAL_UNITS = "top-level-organizational-units";
 
     public static final String DC_IDENTIFIER = "dc:identifier";
 
@@ -35,8 +32,7 @@ public class AppConstants {
 
     public static final String TYPE = "";
 
-    public static final String ETERMS_ORGANIZATION_TYPE =
-        "eterms:organization-type";
+    public static final String ETERMS_ORGANIZATION_TYPE = "eterms:organization-type";
 
     public static final String DEFAULT_ORG_UNIT_ATTRIBUTE_NAME = "o";
 
@@ -44,14 +40,11 @@ public class AppConstants {
 
     public static final String ORGANIZATIONAL_UNIT_DEFAULT_ATTRIBUTE_NAME = "o";
 
-    public static final String XACML_ACTION_ID =
-        "urn:oasis:names:tc:xacml:1.0:action:action-id";
+    public static final String XACML_ACTION_ID = "urn:oasis:names:tc:xacml:1.0:action:action-id";
 
-    public static final String SUBJECT_ID =
-        "urn:oasis:names:tc:xacml:1.0:subject:subject-id";
+    public static final String SUBJECT_ID = "urn:oasis:names:tc:xacml:1.0:subject:subject-id";
 
-    public static final String RESOURCE_ID =
-        "urn:oasis:names:tc:xacml:1.0:resource:resource-id";
+    public static final String RESOURCE_ID = "urn:oasis:names:tc:xacml:1.0:resource:resource-id";
 
     public static final String SMALL_BUTTON = "small";
 
@@ -65,5 +58,5 @@ public class AppConstants {
 
     static final String SPACE = " ";
 
-    public static    final String GUEST_OBJECT_ID = SPACE;
+    public static final String GUEST_OBJECT_ID = SPACE;
 }

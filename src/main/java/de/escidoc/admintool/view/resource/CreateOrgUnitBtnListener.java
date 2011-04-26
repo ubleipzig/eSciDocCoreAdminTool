@@ -23,8 +23,7 @@ import de.escidoc.core.resources.oum.OrganizationalUnit;
 
 public class CreateOrgUnitBtnListener extends AbstractResourceBtnListener {
 
-    private static final Logger LOG = LoggerFactory
-        .getLogger(CreateOrgUnitBtnListener.class);
+    private static final Logger LOG = LoggerFactory.getLogger(CreateOrgUnitBtnListener.class);
 
     private static final long serialVersionUID = 6514709536247207829L;
 
@@ -36,9 +35,8 @@ public class CreateOrgUnitBtnListener extends AbstractResourceBtnListener {
 
     private String parentId;
 
-    protected CreateOrgUnitBtnListener(final Collection<Field> allFields,
-        final Map<String, Field> fieldByName, final Window mainWindow,
-        final ResourceView resourceView, final ResourceService resourceService,
+    protected CreateOrgUnitBtnListener(final Collection<Field> allFields, final Map<String, Field> fieldByName,
+        final Window mainWindow, final ResourceView resourceView, final ResourceService resourceService,
         final ResourceContainer rContainer) {
         super(allFields, fieldByName, mainWindow, resourceView, resourceService);
         this.rContainer = rContainer;
@@ -58,21 +56,15 @@ public class CreateOrgUnitBtnListener extends AbstractResourceBtnListener {
             if (!parentId.isEmpty()) {
                 parents.add(parentId);
                 build =
-                    new de.escidoc.admintool.domain.OrgUnit.BuilderImpl(
-                        getTitle(), getDescription())
-                        .parents(parents).country(getCountry()).city(getCity())
-                        .alternative(getAlternative())
-                        .identifier(getIdentifier())
-                        .coordinates(getCoordinates()).type(getType()).build();
+                    new de.escidoc.admintool.domain.OrgUnit.BuilderImpl(getTitle(), getDescription())
+                        .parents(parents).country(getCountry()).city(getCity()).alternative(getAlternative())
+                        .identifier(getIdentifier()).coordinates(getCoordinates()).type(getType()).build();
             }
             else {
                 build =
-                    new de.escidoc.admintool.domain.OrgUnit.BuilderImpl(
-                        getTitle(), getDescription())
-                        .country(getCountry()).city(getCity())
-                        .alternative(getAlternative())
-                        .identifier(getIdentifier())
-                        .coordinates(getCoordinates()).type(getType()).build();
+                    new de.escidoc.admintool.domain.OrgUnit.BuilderImpl(getTitle(), getDescription())
+                        .country(getCountry()).city(getCity()).alternative(getAlternative())
+                        .identifier(getIdentifier()).coordinates(getCoordinates()).type(getType()).build();
             }
 
         }

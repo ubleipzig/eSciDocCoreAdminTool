@@ -40,17 +40,13 @@ public class ContextToolbar extends CustomComponent {
 
     private final HorizontalLayout header = new HorizontalLayout();
 
-    private final Button newContextBtn = new Button(NEW,
-        new NewContextListener());
+    private final Button newContextBtn = new Button(NEW, new NewContextListener());
 
-    private final Button deleteContextBtn = new Button(DELETE,
-        new DeleteContextListener());
+    private final Button deleteContextBtn = new Button(DELETE, new DeleteContextListener());
 
-    private final Button openContextBtn = new Button(OPEN,
-        new OpenContextListener());
+    private final Button openContextBtn = new Button(OPEN, new OpenContextListener());
 
-    private final Button closeContextBtn = new Button(CLOSE,
-        new CloseContextListener());
+    private final Button closeContextBtn = new Button(CLOSE, new CloseContextListener());
 
     private final ContextEditForm contextEditForm;
 
@@ -60,10 +56,9 @@ public class ContextToolbar extends CustomComponent {
 
     private String selectedItemId;
 
-    public ContextToolbar(final ContextEditForm contextEditForm,
-        final AdminToolApplication app, final PdpRequest pdpRequest) {
-        Preconditions.checkNotNull(contextEditForm,
-            "contextEditForm can not be null.");
+    public ContextToolbar(final ContextEditForm contextEditForm, final AdminToolApplication app,
+        final PdpRequest pdpRequest) {
+        Preconditions.checkNotNull(contextEditForm, "contextEditForm can not be null.");
         Preconditions.checkNotNull(app, "app can not be null.");
         Preconditions.checkNotNull(pdpRequest, "pdpRequest can not be null.");
 
@@ -85,18 +80,13 @@ public class ContextToolbar extends CustomComponent {
 
     // TODO refactor this to Map and factory pattern.
     public void setSelected(final PublicStatus publicStatus) {
-        final Class<?>[] buttonArgsClass =
-            new Class<?>[] { Button.class, Button.class, Button.class };
-        final Object[] buttonArgs =
-            new Object[] { deleteContextBtn, openContextBtn, closeContextBtn };
+        final Class<?>[] buttonArgsClass = new Class<?>[] { Button.class, Button.class, Button.class };
+        final Object[] buttonArgs = new Object[] { deleteContextBtn, openContextBtn, closeContextBtn };
         try {
-            final String path =
-                "de.escidoc.admintool.view.context.workflow."
-                    + publicStatus.toString() + "State";
+            final String path = "de.escidoc.admintool.view.context.workflow." + publicStatus.toString() + "State";
 
             final Class<?> c = Class.forName(path);
-            final Constructor<?> constructor =
-                c.getConstructor(buttonArgsClass);
+            final Constructor<?> constructor = c.getConstructor(buttonArgsClass);
             final Object object = constructor.newInstance(buttonArgs);
             final AbstractState workflowState = (AbstractState) object;
             workflowState.changeState();
@@ -127,16 +117,14 @@ public class ContextToolbar extends CustomComponent {
     private class OpenContextListener implements Button.ClickListener {
         @Override
         public void buttonClick(final ClickEvent event) {
-            app.getMainWindow().addWindow(
-                new OpenContextModalWindow(contextEditForm).getSubWindow());
+            app.getMainWindow().addWindow(new OpenContextModalWindow(contextEditForm).getSubWindow());
         }
     }
 
     private class CloseContextListener implements Button.ClickListener {
         @Override
         public void buttonClick(final ClickEvent event) {
-            app.getMainWindow().addWindow(
-                new CloseContextModalWindow(contextEditForm).getSubWindow());
+            app.getMainWindow().addWindow(new CloseContextModalWindow(contextEditForm).getSubWindow());
 
         }
     }
@@ -172,18 +160,15 @@ public class ContextToolbar extends CustomComponent {
     }
 
     private boolean isOpenNotAllowed() {
-        return pdpRequest.isDenied(ActionIdConstants.OPEN_CONTEXT,
-            selectedItemId);
+        return pdpRequest.isDenied(ActionIdConstants.OPEN_CONTEXT, selectedItemId);
     }
 
     private boolean isDeleteNotAllowed() {
-        return pdpRequest.isDenied(ActionIdConstants.DELETE_CONTEXT,
-            selectedItemId);
+        return pdpRequest.isDenied(ActionIdConstants.DELETE_CONTEXT, selectedItemId);
     }
 
     private boolean isCloseContextNotAllowed() {
-        return pdpRequest.isDenied(ActionIdConstants.CLOSE_CONTEXT,
-            selectedItemId);
+        return pdpRequest.isDenied(ActionIdConstants.CLOSE_CONTEXT, selectedItemId);
     }
 
     private boolean isCreateNotAllowed() {

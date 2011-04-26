@@ -33,20 +33,17 @@ final class RemoveRoleButtonListener implements Button.ClickListener {
         if (selectedGrants instanceof Set<?>) {
             for (final Object grant : ((Set<?>) selectedGrants)) {
                 if (grant instanceof Grant) {
-                    this.userEditForm.app.getMainWindow().addWindow(
-                        createModalWindow((Grant) grant).getModalWindow());
+                    this.userEditForm.app.getMainWindow().addWindow(createModalWindow((Grant) grant).getModalWindow());
                 }
             }
         }
     }
 
     private RevokeGrantWindow createModalWindow(final Grant grant) {
-        return new RevokeGrantWindow(createRevokeGrantCommand(grant), grant,
-            this.userEditForm.grantContainer);
+        return new RevokeGrantWindow(createRevokeGrantCommand(grant), grant, this.userEditForm.grantContainer);
     }
 
     private Command createRevokeGrantCommand(final Grant grant) {
-        return new RevokeGrantCommand(this.userEditForm.userService,
-            this.userEditForm.userObjectId, grant);
+        return new RevokeGrantCommand(this.userEditForm.userService, this.userEditForm.userObjectId, grant);
     }
 }

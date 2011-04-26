@@ -21,8 +21,7 @@ import de.escidoc.core.resources.common.TaskParam;
 
 public class AdminServiceImpl implements AdminService {
 
-    private static final Logger LOG = LoggerFactory
-        .getLogger(AdminServiceImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AdminServiceImpl.class);
 
     private final HandlerService client;
 
@@ -31,8 +30,8 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public MessagesResult<Entry> loadCommonExamples() throws EscidocException,
-        InternalClientException, TransportException {
+    public MessagesResult<Entry> loadCommonExamples() throws EscidocException, InternalClientException,
+        TransportException {
         return getClient().loadExamples();
     }
 
@@ -46,8 +45,7 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public Map<String, String> getRepositoryInfo() throws EscidocException,
-        InternalClientException, TransportException {
+    public Map<String, String> getRepositoryInfo() throws EscidocException, InternalClientException, TransportException {
         final RepositoryInfo repositoryInfo = getClient().getRepositoryInfo();
 
         for (final String val : repositoryInfo.values()) {
@@ -59,8 +57,8 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public MessagesStatus purge(final Set<String> list)
-        throws EscidocException, InternalClientException, TransportException {
+    public MessagesStatus purge(final Set<String> list) throws EscidocException, InternalClientException,
+        TransportException {
         return getClient().deleteObjects(usingTaskParam(list));
     }
 
@@ -74,32 +72,27 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public MessagesStatus retrievePurgeStatus() throws EscidocException,
-        InternalClientException, TransportException {
+    public MessagesStatus retrievePurgeStatus() throws EscidocException, InternalClientException, TransportException {
         return getClient().getPurgeStatus();
     }
 
     @Override
-    public MessagesStatus reindexAll(final boolean shouldClearIndex)
-        throws EscidocException, InternalClientException, TransportException {
+    public MessagesStatus reindexAll(final boolean shouldClearIndex) throws EscidocException, InternalClientException,
+        TransportException {
         return getClient().reindexAll(shouldClearIndex);
     }
 
     @Override
-    public MessagesStatus retrieveReindexStatus() throws EscidocException,
-        InternalClientException, TransportException {
+    public MessagesStatus retrieveReindexStatus() throws EscidocException, InternalClientException, TransportException {
         return getClient().getReindexStatus();
     }
 
     @Override
-    public MessagesStatus reindex(
-        final Boolean shouldClearIndex, final String indexNamePrefix)
+    public MessagesStatus reindex(final Boolean shouldClearIndex, final String indexNamePrefix)
         throws EscidocException, InternalClientException, TransportException {
-        Preconditions.checkNotNull(indexNamePrefix,
-            "indexNamePrefix can not be null: %s", indexNamePrefix);
-        Preconditions.checkArgument(!indexNamePrefix.isEmpty(),
-            "indexNamePrefix can not be empty: %s", indexNamePrefix);
-        return getClient().reindex(shouldClearIndex.booleanValue(),
-            indexNamePrefix);
+        Preconditions.checkNotNull(indexNamePrefix, "indexNamePrefix can not be null: %s", indexNamePrefix);
+        Preconditions
+            .checkArgument(!indexNamePrefix.isEmpty(), "indexNamePrefix can not be empty: %s", indexNamePrefix);
+        return getClient().reindex(shouldClearIndex.booleanValue(), indexNamePrefix);
     }
 }

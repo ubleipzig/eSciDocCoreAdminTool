@@ -38,10 +38,8 @@ public class ServiceFactory {
 
     private ItemHandlerClientInterface itemClient;
 
-    public ServiceFactory(final EscidocServiceLocation escidocServiceLocation,
-        final String token) {
-        Preconditions.checkNotNull(escidocServiceLocation,
-            "escidocServiceLocation can not be null: %s",
+    public ServiceFactory(final EscidocServiceLocation escidocServiceLocation, final String token) {
+        Preconditions.checkNotNull(escidocServiceLocation, "escidocServiceLocation can not be null: %s",
             escidocServiceLocation);
         Preconditions.checkNotNull(token, "token can not be null: %s", token);
 
@@ -53,23 +51,19 @@ public class ServiceFactory {
         return new OrgUnitService(serviceUri, token);
     }
 
-    public UserService createUserService() throws EscidocException,
-        InternalClientException, TransportException {
+    public UserService createUserService() throws EscidocException, InternalClientException, TransportException {
         return new UserService(serviceUri, token);
     }
 
-    public ContextService createContextService() throws EscidocException,
-        TransportException, InternalClientException {
+    public ContextService createContextService() throws EscidocException, TransportException, InternalClientException {
         return new ContextService(serviceUri, token);
     }
 
-    public RoleService createRoleService() throws EscidocException,
-        InternalClientException, TransportException {
+    public RoleService createRoleService() throws EscidocException, InternalClientException, TransportException {
         return new RoleService(serviceUri, token);
     }
 
-    public EscidocService createContainerService()
-        throws InternalClientException {
+    public EscidocService createContainerService() throws InternalClientException {
         client = new ContainerHandlerClient(serviceUri);
         client.setTransport(TransportProtocol.REST);
         final ContainerService containerService = new ContainerService(client);
@@ -83,10 +77,8 @@ public class ServiceFactory {
         return adminService;
     }
 
-    private HandlerService createAdminClient()
-        throws InternalClientException {
-        final HandlerService client =
-            new AdminHandlerClient(serviceUri);
+    private HandlerService createAdminClient() throws InternalClientException {
+        final HandlerService client = new AdminHandlerClient(serviceUri);
         client.setTransport(TransportProtocol.REST);
         return client;
     }
@@ -99,30 +91,24 @@ public class ServiceFactory {
         return itemService;
     }
 
-    public ContextServiceLab createContextServiceLab()
-        throws InternalClientException {
-        final ContextHandlerClientInterface client =
-            new ContextHandlerClient(serviceUri);
+    public ContextServiceLab createContextServiceLab() throws InternalClientException {
+        final ContextHandlerClientInterface client = new ContextHandlerClient(serviceUri);
         client.setTransport(TransportProtocol.REST);
         final ContextServiceLab contextService = new ContextServiceLab(client);
         contextService.loginWith(token);
         return contextService;
     }
 
-    public OrgUnitServiceLab createOrgUnitService()
-        throws InternalClientException {
-        final OrganizationalUnitHandlerClientInterface client =
-            new OrganizationalUnitHandlerClient(serviceUri);
+    public OrgUnitServiceLab createOrgUnitService() throws InternalClientException {
+        final OrganizationalUnitHandlerClientInterface client = new OrganizationalUnitHandlerClient(serviceUri);
         client.setTransport(TransportProtocol.REST);
         final OrgUnitServiceLab orgUnitService = new OrgUnitServiceLab(client);
         orgUnitService.loginWith(token);
         return orgUnitService;
     }
 
-    public ResourceService createContentModelService()
-        throws InternalClientException {
-        final ContentModelHandlerClient client =
-            new ContentModelHandlerClient(serviceUri);
+    public ResourceService createContentModelService() throws InternalClientException {
+        final ContentModelHandlerClient client = new ContentModelHandlerClient(serviceUri);
         client.setTransport(TransportProtocol.REST);
 
         final ResourceService service = new ContentModelService(client);
@@ -130,8 +116,7 @@ public class ServiceFactory {
         return service;
     }
 
-    public PdpService createPdpService() throws AuthenticationException,
-        TransportException {
+    public PdpService createPdpService() throws AuthenticationException, TransportException {
         final PdpServiceImpl pdpService = new PdpServiceImpl(serviceUri);
         pdpService.loginWith(token);
         return pdpService;

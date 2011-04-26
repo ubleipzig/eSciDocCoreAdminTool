@@ -17,16 +17,14 @@ public class ContentModelContainerImpl {
     private POJOContainer<Resource> itemContainer;
 
     public ContentModelContainerImpl(final ResourceService contentModelService) {
-        Preconditions.checkNotNull(contentModelService,
-            "contentModelService is null: %s", contentModelService);
+        Preconditions.checkNotNull(contentModelService, "contentModelService is null: %s", contentModelService);
         this.contentModelService = contentModelService;
 
     }
 
     public void reload() throws EscidocClientException {
         final Set<Resource> allContentModels = contentModelService.findAll();
-        itemContainer =
-            new POJOContainer<Resource>(Resource.class, PropertyId.X_LINK_TITLE);
+        itemContainer = new POJOContainer<Resource>(Resource.class, PropertyId.X_LINK_TITLE);
         for (final Resource resource : allContentModels) {
             itemContainer.addItem(resource);
         }

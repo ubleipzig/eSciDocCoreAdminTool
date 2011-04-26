@@ -15,8 +15,7 @@ public final class LoginButtonListener implements Button.ClickListener {
     private final String loginUrl;
 
     public LoginButtonListener(final Window mainWindow, final String loginUrl) {
-        Preconditions.checkNotNull(mainWindow, "mainWindow is null: %s",
-            mainWindow);
+        Preconditions.checkNotNull(mainWindow, "mainWindow is null: %s", mainWindow);
         Preconditions.checkNotNull(loginUrl, "loginUrl is null: %s", loginUrl);
         this.mainWindow = mainWindow;
         this.loginUrl = loginUrl;

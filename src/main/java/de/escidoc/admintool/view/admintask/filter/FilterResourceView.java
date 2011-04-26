@@ -24,13 +24,11 @@ public class FilterResourceView extends AbstractCustomView {
 
     private static final long serialVersionUID = -1412202753685048760L;
 
-    private final OptionGroup resourceOption = new OptionGroup(
-        ViewConstants.PLEASE_SELECT_A_RESOURCE_TYPE);
+    private final OptionGroup resourceOption = new OptionGroup(ViewConstants.PLEASE_SELECT_A_RESOURCE_TYPE);
 
     private final TextField rawFilterTextArea = new TextField();
 
-    private final Button filterResourceBtn = new Button(
-        ViewConstants.FILTER_LABEL);
+    private final Button filterResourceBtn = new Button(ViewConstants.FILTER_LABEL);
 
     private final ShowFilterResultCommand command;
 
@@ -42,8 +40,8 @@ public class FilterResourceView extends AbstractCustomView {
 
     private HorizontalLayout filterLayout;
 
-    public FilterResourceView(final ServiceContainer serviceContainer,
-        final Window mainWindow, final PdpRequest pdpRequest) {
+    public FilterResourceView(final ServiceContainer serviceContainer, final Window mainWindow,
+        final PdpRequest pdpRequest) {
         preconditions(serviceContainer, mainWindow, pdpRequest);
         this.mainWindow = mainWindow;
         adminService = serviceContainer.getAdminService();
@@ -52,14 +50,10 @@ public class FilterResourceView extends AbstractCustomView {
     }
 
     private void preconditions(
-        final ServiceContainer serviceContainer, final Window mainWindow,
-        final PdpRequest pdpRequest) {
-        Preconditions.checkNotNull(serviceContainer,
-            "serviceContainer is null: %s", serviceContainer);
-        Preconditions.checkNotNull(mainWindow, "mainWindow is null: %s",
-            mainWindow);
-        Preconditions.checkNotNull(pdpRequest, "pdpRequest is null: %s",
-            pdpRequest);
+        final ServiceContainer serviceContainer, final Window mainWindow, final PdpRequest pdpRequest) {
+        Preconditions.checkNotNull(serviceContainer, "serviceContainer is null: %s", serviceContainer);
+        Preconditions.checkNotNull(mainWindow, "mainWindow is null: %s", mainWindow);
+        Preconditions.checkNotNull(pdpRequest, "pdpRequest is null: %s", pdpRequest);
     }
 
     public void init() {
@@ -74,9 +68,7 @@ public class FilterResourceView extends AbstractCustomView {
         filterLayout = new HorizontalLayout();
         filterLayout.setMargin(true);
         filterLayout.setSpacing(true);
-        final Label popUpContent =
-            new Label(ViewConstants.FILTER_EXAMPLE_TOOLTIP_TEXT,
-                Label.CONTENT_XHTML);
+        final Label popUpContent = new Label(ViewConstants.FILTER_EXAMPLE_TOOLTIP_TEXT, Label.CONTENT_XHTML);
         popUpContent.setWidth(400, UNITS_PIXELS);
         final PopupView popup = new PopupView("Tip", popUpContent);
         filterLayout.addComponent(popup);
@@ -84,9 +76,8 @@ public class FilterResourceView extends AbstractCustomView {
     }
 
     private void addResourceTypeOption() {
-        resourceOption
-            .setContainerDataSource(new BeanItemContainer<ResourceType>(
-                ResourceType.class, Arrays.asList(ResourceType.values())));
+        resourceOption.setContainerDataSource(new BeanItemContainer<ResourceType>(ResourceType.class, Arrays
+            .asList(ResourceType.values())));
         resourceOption.setItemCaptionPropertyId(PropertyId.LABEL);
         resourceOption.select(ResourceType.ITEM);
         getViewLayout().addComponent(resourceOption);

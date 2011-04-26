@@ -15,8 +15,7 @@ final class ShowReindexingStatusListener implements Button.ClickListener {
 
     private final ReindexResourceViewImpl reindexResourceViewImpl;
 
-    ShowReindexingStatusListener(
-        final ReindexResourceViewImpl reindexResourceViewImpl) {
+    ShowReindexingStatusListener(final ReindexResourceViewImpl reindexResourceViewImpl) {
         this.reindexResourceViewImpl = reindexResourceViewImpl;
     }
 
@@ -42,8 +41,7 @@ final class ShowReindexingStatusListener implements Button.ClickListener {
         catch (final TransportException e) {
             ModalDialog.show(reindexResourceViewImpl.mainWindow, e);
         }
-        return new MessagesStatus(new Result(),
-            MessagesStatus.STATUS_INVALID_RESULT);
+        return new MessagesStatus(new Result(), MessagesStatus.STATUS_INVALID_RESULT);
     }
 
     private String toString(final MessagesStatus messagesStatus) {

@@ -24,8 +24,7 @@ public abstract class AbstractStartButtonListener implements ClickListener {
 
     private static final long serialVersionUID = -7482204166398806832L;
 
-    private final static Logger LOG = LoggerFactory
-        .getLogger(AbstractStartButtonListener.class);
+    private final static Logger LOG = LoggerFactory.getLogger(AbstractStartButtonListener.class);
 
     private static final int FIVE_SECONDS = 5000;
 
@@ -35,10 +34,8 @@ public abstract class AbstractStartButtonListener implements ClickListener {
 
     private final Window mainWindow;
 
-    public AbstractStartButtonListener(final AbstractField escidocUriField,
-        final AdminToolApplication app) {
-        Preconditions.checkNotNull(escidocUriField,
-            "escidocUriField is null: %s", escidocUriField);
+    public AbstractStartButtonListener(final AbstractField escidocUriField, final AdminToolApplication app) {
+        Preconditions.checkNotNull(escidocUriField, "escidocUriField is null: %s", escidocUriField);
         Preconditions.checkNotNull(app, "app is null: %s", app);
         this.escidocUriField = escidocUriField;
         this.app = app;
@@ -57,8 +54,7 @@ public abstract class AbstractStartButtonListener implements ClickListener {
 
         }
         catch (final EmptyValueException e) {
-            mainWindow.showNotification(new Notification(e.getMessage(),
-                Notification.TYPE_ERROR_MESSAGE));
+            mainWindow.showNotification(new Notification(e.getMessage(), Notification.TYPE_ERROR_MESSAGE));
         }
     }
 
@@ -67,8 +63,7 @@ public abstract class AbstractStartButtonListener implements ClickListener {
             initApplication();
         }
         else {
-            mainWindow.showNotification(new Window.Notification(
-                "Can not connect to: " + escidocUriField.getValue(),
+            mainWindow.showNotification(new Window.Notification("Can not connect to: " + escidocUriField.getValue(),
                 Notification.TYPE_ERROR_MESSAGE));
         }
     }
@@ -105,26 +100,22 @@ public abstract class AbstractStartButtonListener implements ClickListener {
             connection = new URL(strUrl).openConnection();
             connection.setConnectTimeout(FIVE_SECONDS);
             connection.connect();
-            final int responseCode =
-                ((HttpURLConnection) connection).getResponseCode();
+            final int responseCode = ((HttpURLConnection) connection).getResponseCode();
             return responseCode == 200;
         }
         catch (final IllegalArgumentException e) {
             LOG.warn("Malformed URL: " + e);
-            mainWindow.showNotification(new Notification(e.getMessage(),
-                Notification.TYPE_ERROR_MESSAGE));
+            mainWindow.showNotification(new Notification(e.getMessage(), Notification.TYPE_ERROR_MESSAGE));
             return false;
         }
         catch (final MalformedURLException e) {
             LOG.warn("Malformed URL: " + e);
-            mainWindow.showNotification(new Notification(e.getMessage(),
-                Notification.TYPE_ERROR_MESSAGE));
+            mainWindow.showNotification(new Notification(e.getMessage(), Notification.TYPE_ERROR_MESSAGE));
             return false;
         }
         catch (final IOException e) {
             LOG.warn("IOException: " + e);
-            mainWindow.showNotification(new Notification(e.getMessage(),
-                Notification.TYPE_ERROR_MESSAGE));
+            mainWindow.showNotification(new Notification(e.getMessage(), Notification.TYPE_ERROR_MESSAGE));
             return false;
         }
     }

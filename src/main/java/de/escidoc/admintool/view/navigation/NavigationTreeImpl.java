@@ -8,8 +8,7 @@ import com.vaadin.ui.Tree;
 import de.escidoc.admintool.domain.PdpRequest;
 import de.escidoc.admintool.view.ViewConstants;
 
-public class NavigationTreeImpl extends CustomComponent
-    implements NavigationTree {
+public class NavigationTreeImpl extends CustomComponent implements NavigationTree {
 
     private static final long serialVersionUID = -5022424682917592102L;
 
@@ -19,11 +18,9 @@ public class NavigationTreeImpl extends CustomComponent
 
     private final PdpRequest pdpRequest;
 
-    public NavigationTreeImpl(final ItemClickListener listener,
-        final PdpRequest pdpRequest) {
+    public NavigationTreeImpl(final ItemClickListener listener, final PdpRequest pdpRequest) {
         Preconditions.checkNotNull(listener, "listener is null: %s", listener);
-        Preconditions.checkNotNull(pdpRequest, "pdpRequest is null: %s",
-            pdpRequest);
+        Preconditions.checkNotNull(pdpRequest, "pdpRequest is null: %s", pdpRequest);
         this.listener = listener;
         this.pdpRequest = pdpRequest;
     }

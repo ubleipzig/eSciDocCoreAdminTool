@@ -15,8 +15,7 @@ public class ParamaterHandlerImpl implements ParameterHandler {
 
     private static final long serialVersionUID = 6392830954652643671L;
 
-    private static final Logger LOG = LoggerFactory
-        .getLogger(ParamaterHandlerImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ParamaterHandlerImpl.class);
 
     private final AdminToolApplication app;
 
@@ -39,15 +38,13 @@ public class ParamaterHandlerImpl implements ParameterHandler {
             LOG.debug("only token exists");
             showMainView(parameters);
         }
-        else if (isEscidocUrlExists(parameters)
-            && tokenDoesNotExist(parameters)) {
+        else if (isEscidocUrlExists(parameters) && tokenDoesNotExist(parameters)) {
             LOG.debug("escidocurl exists but no token");
             app.setEscidocUri(parseEscidocUriFrom(parameters));
             app.loadProtectedResources(EMPTY_TOKEN);
 
         }
-        else if (!isEscidocUrlExists(parameters)
-            && tokenDoesNotExist(parameters)) {
+        else if (!isEscidocUrlExists(parameters) && tokenDoesNotExist(parameters)) {
             LOG.debug("nothing");
             app.showLandingView();
         }
@@ -58,9 +55,7 @@ public class ParamaterHandlerImpl implements ParameterHandler {
     }
 
     private void showMainView(final Map<String, String[]> parameters) {
-        app
-            .loadProtectedResources(paramDecoder
-                .parseAndDecodeToken(parameters));
+        app.loadProtectedResources(paramDecoder.parseAndDecodeToken(parameters));
     }
 
     protected void showLoginView() {

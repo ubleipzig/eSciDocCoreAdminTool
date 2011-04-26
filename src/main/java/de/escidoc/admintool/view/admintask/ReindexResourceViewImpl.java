@@ -12,27 +12,21 @@ import de.escidoc.admintool.service.AdminService;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.core.resources.adm.MessagesStatus;
 
-public class ReindexResourceViewImpl extends AbstractCustomView
-    implements ReindexResourceView {
+public class ReindexResourceViewImpl extends AbstractCustomView implements ReindexResourceView {
 
     private static final long serialVersionUID = 2997054515640202370L;
 
     private final Button reindexResourceBtn = new Button(ViewConstants.REINDEX);
 
-    private final ClickListener showStatusListener =
-        new ShowReindexingStatusListener(this);
+    private final ClickListener showStatusListener = new ShowReindexingStatusListener(this);
 
-    private final Button showStatusButton = new Button(
-        ViewConstants.SHOW_STATUS);
+    private final Button showStatusButton = new Button(ViewConstants.SHOW_STATUS);
 
-    private final CheckBox clearIndexBox = new CheckBox(
-        ViewConstants.CLEAR_INDEX);
+    private final CheckBox clearIndexBox = new CheckBox(ViewConstants.CLEAR_INDEX);
 
-    private final ComboBox indexNameSelect = new ComboBox(
-        ViewConstants.INDEX_NAME, ViewConstants.INDEX_NAMES);
+    private final ComboBox indexNameSelect = new ComboBox(ViewConstants.INDEX_NAME, ViewConstants.INDEX_NAMES);
 
-    private final ReindexButtonListener listener = new ReindexButtonListener(
-        this, clearIndexBox, indexNameSelect);
+    private final ReindexButtonListener listener = new ReindexButtonListener(this, clearIndexBox, indexNameSelect);
 
     final Label statusLabel = new Label(ViewConstants.STATUS);
 
@@ -42,20 +36,16 @@ public class ReindexResourceViewImpl extends AbstractCustomView
 
     private ShowStatusCommand showStatusCommand;
 
-    public ReindexResourceViewImpl(final AdminService adminService,
-        final Window mainWindow) {
+    public ReindexResourceViewImpl(final AdminService adminService, final Window mainWindow) {
         preconditions(adminService, mainWindow);
         this.adminService = adminService;
         this.mainWindow = mainWindow;
         init();
     }
 
-    private void preconditions(
-        final AdminService adminService, final Window mainWindow) {
-        Preconditions.checkNotNull(adminService,
-            "adminService can not be null: %s", adminService);
-        Preconditions.checkNotNull(adminService,
-            "mainWindow can not be null: %s", mainWindow);
+    private void preconditions(final AdminService adminService, final Window mainWindow) {
+        Preconditions.checkNotNull(adminService, "adminService can not be null: %s", adminService);
+        Preconditions.checkNotNull(adminService, "mainWindow can not be null: %s", mainWindow);
     }
 
     private void init() {

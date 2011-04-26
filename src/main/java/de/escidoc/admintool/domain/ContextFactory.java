@@ -25,8 +25,7 @@ public class ContextFactory {
     }
 
     public ContextFactory create(
-        final String name, final String description, final String contextType,
-        final OrganizationalUnitRefs orgUnitRefs)
+        final String name, final String description, final String contextType, final OrganizationalUnitRefs orgUnitRefs)
         throws ParserConfigurationException {
         context = new Context();
 
@@ -42,8 +41,7 @@ public class ContextFactory {
         return this;
     }
 
-    public ContextFactory adminDescriptors(
-        final AdminDescriptors adminDescriptors) {
+    public ContextFactory adminDescriptors(final AdminDescriptors adminDescriptors) {
         if (isNotSet(adminDescriptors)) {
             return this;
         }

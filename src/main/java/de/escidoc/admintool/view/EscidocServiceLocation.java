@@ -18,8 +18,7 @@ public class EscidocServiceLocation {
     }
 
     public EscidocServiceLocation(final String escidocUri, final URL appUri) {
-        Preconditions.checkNotNull(escidocUri, "eSciDocUri is null: %s",
-            escidocUri);
+        Preconditions.checkNotNull(escidocUri, "eSciDocUri is null: %s", escidocUri);
         Preconditions.checkNotNull(appUri, "appUri is null: %s", appUri);
         this.escidocUri = escidocUri;
         this.appUri = appUri;

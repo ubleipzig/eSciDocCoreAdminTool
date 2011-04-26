@@ -8,9 +8,8 @@ import com.vaadin.ui.Window;
 @SuppressWarnings("serial")
 public class AdminDescriptorEditView extends AdminDescriptorView {
 
-    public AdminDescriptorEditView(final Window mainWindow,
-        final Accordion adminDescriptorAccordion, final String name,
-        final String content) {
+    public AdminDescriptorEditView(final Window mainWindow, final Accordion adminDescriptorAccordion,
+        final String name, final String content) {
         super(mainWindow, adminDescriptorAccordion, name, content);
     }
 
@@ -24,15 +23,13 @@ public class AdminDescriptorEditView extends AdminDescriptorView {
         final String content = (String) adminDescContent.getValue();
         if (validate(content)) {
             getTabTitle().setCaption((String) adminDescName.getValue());
-            adminDescriptorAccordion.replaceComponent(adminDescriptorAccordion
-                .getSelectedTab(), new Label(content,
+            adminDescriptorAccordion.replaceComponent(adminDescriptorAccordion.getSelectedTab(), new Label(content,
                 Label.CONTENT_PREFORMATTED));
             closeWindow();
         }
     }
 
     private Tab getTabTitle() {
-        return adminDescriptorAccordion.getTab(adminDescriptorAccordion
-            .getSelectedTab());
+        return adminDescriptorAccordion.getTab(adminDescriptorAccordion.getSelectedTab());
     }
 }

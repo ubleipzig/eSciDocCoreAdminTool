@@ -22,8 +22,7 @@ import de.escidoc.core.resources.Resource;
 
 public class FilterResourceListener implements ClickListener {
 
-    private static final Logger LOG = LoggerFactory
-        .getLogger(FilterResourceListener.class);
+    private static final Logger LOG = LoggerFactory.getLogger(FilterResourceListener.class);
 
     private static final long serialVersionUID = 2859820395161737640L;
 
@@ -39,8 +38,7 @@ public class FilterResourceListener implements ClickListener {
 
     private ResourceService resourceService;
 
-    public FilterResourceListener(final Window mainWindow,
-        final ServiceContainer serviceContainer) {
+    public FilterResourceListener(final Window mainWindow, final ServiceContainer serviceContainer) {
 
         preconditions(mainWindow, serviceContainer);
 
@@ -48,11 +46,9 @@ public class FilterResourceListener implements ClickListener {
         this.serviceContainer = serviceContainer;
     }
 
-    private void preconditions(
-        final Window mainWindow, final ServiceContainer serviceContainer) {
+    private void preconditions(final Window mainWindow, final ServiceContainer serviceContainer) {
         Preconditions.checkNotNull(mainWindow, "mainWindow can not be null.");
-        Preconditions.checkNotNull(serviceContainer,
-            "serviceContainer can not be null.");
+        Preconditions.checkNotNull(serviceContainer, "serviceContainer can not be null.");
     }
 
     @Override
@@ -67,15 +63,13 @@ public class FilterResourceListener implements ClickListener {
     }
 
     private void showResult() {
-        Preconditions.checkNotNull(resourceService,
-            "resourceService is null: %s", resourceService);
+        Preconditions.checkNotNull(resourceService, "resourceService is null: %s", resourceService);
         try {
             if (filterFieldIsEmpty(resourceService)) {
                 command.execute(resourceService.findAll());
             }
             else {
-                command.execute(new HashSet<Resource>(resourceService
-                    .filterUsingInput(getRawFilter())));
+                command.execute(new HashSet<Resource>(resourceService.filterUsingInput(getRawFilter())));
             }
         }
         catch (final EscidocClientException e) {
@@ -108,21 +102,17 @@ public class FilterResourceListener implements ClickListener {
             default:
                 break;
         }
-        Preconditions.checkNotNull(resourceService,
-            "resourceService is null: %s", resourceService);
+        Preconditions.checkNotNull(resourceService, "resourceService is null: %s", resourceService);
         return resourceService;
     }
 
     private void checkPreConditions() {
-        Preconditions
-            .checkArgument(serviceContainer.getContainerService() != null,
-                "container service is null",
-                serviceContainer.getContainerService());
-        Preconditions.checkArgument(serviceContainer.getItemService() != null,
-            "item service is null", serviceContainer.getItemService());
-        Preconditions.checkArgument(
-            serviceContainer.getContextService() != null,
-            "context service is null", serviceContainer.getContextService());
+        Preconditions.checkArgument(serviceContainer.getContainerService() != null, "container service is null",
+            serviceContainer.getContainerService());
+        Preconditions.checkArgument(serviceContainer.getItemService() != null, "item service is null",
+            serviceContainer.getItemService());
+        Preconditions.checkArgument(serviceContainer.getContextService() != null, "context service is null",
+            serviceContainer.getContextService());
     }
 
     private ResourceType getSelectedType() {

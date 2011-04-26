@@ -14,8 +14,7 @@ final class ResourceSelectedListener implements ItemClickListener {
 
     AddOrEditParentModalWindow addOrEditParentModalWindow;
 
-    ResourceSelectedListener(
-        final AddOrEditParentModalWindow addOrEditParentModalWindow) {
+    ResourceSelectedListener(final AddOrEditParentModalWindow addOrEditParentModalWindow) {
         this.addOrEditParentModalWindow = addOrEditParentModalWindow;
     }
 
@@ -28,8 +27,7 @@ final class ResourceSelectedListener implements ItemClickListener {
     }
 
     private String getSelectedParent(final Item item) {
-        final String selectedParent =
-            (String) item.getItemProperty(PropertyId.OBJECT_ID).getValue();
+        final String selectedParent = (String) item.getItemProperty(PropertyId.OBJECT_ID).getValue();
         return selectedParent;
     }
 }
