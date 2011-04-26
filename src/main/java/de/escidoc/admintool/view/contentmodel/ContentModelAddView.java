@@ -17,7 +17,7 @@ import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.Reindeer;
 
 import de.escidoc.admintool.app.AdminToolApplication;
-import de.escidoc.admintool.app.ContentModelContainer;
+import de.escidoc.admintool.app.ContentModelContainerImpl;
 import de.escidoc.admintool.app.CreateContentModelListener;
 import de.escidoc.admintool.domain.PdpRequest;
 import de.escidoc.admintool.service.ResourceService;
@@ -47,7 +47,7 @@ public class ContentModelAddView extends AbstractView<Panel> {
 
     private final ResourceService contentModelService;
 
-    private final ContentModelContainer contentModelContainer;
+    private final ContentModelContainerImpl contentModelContainerImpl;
 
     private final AdminToolApplication app;
 
@@ -55,7 +55,7 @@ public class ContentModelAddView extends AbstractView<Panel> {
 
     public ContentModelAddView(final AdminToolApplication app,
         final Window mainWindow, final ResourceService contentModelService,
-        final ContentModelContainer contentModelContainer,
+        final ContentModelContainerImpl contentModelContainerImpl,
         final PdpRequest pdpRequest) {
         super(new Panel());
         Preconditions.checkNotNull(app, "app is null: %s", app);
@@ -66,7 +66,7 @@ public class ContentModelAddView extends AbstractView<Panel> {
         this.app = app;
         this.mainWindow = mainWindow;
         this.contentModelService = contentModelService;
-        this.contentModelContainer = contentModelContainer;
+        this.contentModelContainerImpl = contentModelContainerImpl;
         this.pdpRequest = pdpRequest;
     }
 
@@ -79,7 +79,7 @@ public class ContentModelAddView extends AbstractView<Panel> {
         resourceBtnListener =
             new CreateContentModelListener(propertyFields.getAllFields(),
                 contentModelService, fieldByName, mainWindow,
-                contentModelContainer);
+                contentModelContainerImpl);
         addSaveAndCancelButtons();
     }
 

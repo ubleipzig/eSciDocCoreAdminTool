@@ -35,12 +35,12 @@ public class CreateContentModelListener implements ResourceBtnListener {
 
     // private Resource created;
 
-    private final ContentModelContainer contentModelContainer;
+    private final ContentModelContainerImpl contentModelContainerImpl;
 
     public CreateContentModelListener(final Collection<Field> allFields,
         final ResourceService contentModelService,
         final Map<String, Field> fieldByName, final Window mainWindow,
-        final ContentModelContainer contentModelContainer) {
+        final ContentModelContainerImpl contentModelContainerImpl) {
         Preconditions.checkNotNull(mainWindow, "mainWindow is null: %s",
             mainWindow);
         Preconditions.checkNotNull(fieldByName, "fieldByName is null: %s",
@@ -55,7 +55,7 @@ public class CreateContentModelListener implements ResourceBtnListener {
 
         this.allFields = allFields;
         this.fieldByName = fieldByName;
-        this.contentModelContainer = contentModelContainer;
+        this.contentModelContainerImpl = contentModelContainerImpl;
     }
 
     @Override

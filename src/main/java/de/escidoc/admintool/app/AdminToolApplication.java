@@ -132,6 +132,8 @@ public class AdminToolApplication extends Application {
 
     private ContentModelAddView contentModelAddView;
 
+    private ContentModelView contentModelView;
+
     private ResourceService contentModelService;
 
     private PdpRequest pdpRequest;
@@ -489,21 +491,32 @@ public class AdminToolApplication extends Application {
 
     // Content Model View
     public void showContentModelView() {
-        createContentModelView();
-        setMainView(getContentModelView());
+        try {
+            createContentModelView();
+            setMainView(getContentModelView());
+
+        }
+        catch (final EscidocClientException e) {
+            handleException(e);
+        }
     }
 
-    private void createContentModelView() {
-        final ContentModelContainer contentModelContainer =
-            new ContentModelContainer();
-        contentModelAddView =
-            new ContentModelAddView(this, mainWindow, contentModelService,
-                contentModelContainer, pdpRequest);
-        contentModelAddView.init();
+    private void createContentModelView() throws EscidocClientException {
+        final ContentModelContainerImpl contentModelContainerImpl =
+            new ContentModelContainerImpl(contentModelService);
+        final ContentModelListView listView =
+            new ContentModelListViewImpl(contentModelContainerImpl);
+        listView.init();
+        contentModelView = new ContentModelViewImpl(listView);
+        contentModelView.init();
+        // contentModelAddView =
+        // new ContentModelAddView(this, mainWindow, contentModelService,
+        // contentModelContainer, pdpRequest);
+        // contentModelAddView.init();
     }
 
-    private Component getContentModelView() {
-        return contentModelAddView;
+    private ContentModelView getContentModelView() {
+        return contentModelView;
     }
 
     public void showUserView() {

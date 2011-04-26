@@ -49,4 +49,6 @@ public class PropertyId {
     public final static String[] GENERIC_PROPERTIES = new String[] { OBJECT_ID,
         NAME, DESCRIPTION, LAST_MODIFICATION_DATE, MODIFIED_BY, CREATED_BY,
         CREATED_ON, PUBLIC_STATUS, PUBLIC_STATUS_COMMENT };
+
+    public static final String X_LINK_TITLE = "xLinkTitle";
 }

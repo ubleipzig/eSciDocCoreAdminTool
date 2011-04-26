@@ -60,7 +60,6 @@ public class ContextListView extends Table {
         setImmediate(true);
         addListener(new ContextSelectListener(app));
         setNullSelectionAllowed(false);
-
     }
 
     private void bindDataSource() {
