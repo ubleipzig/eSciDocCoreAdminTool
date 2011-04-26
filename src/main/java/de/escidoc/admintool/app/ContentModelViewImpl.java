@@ -18,6 +18,8 @@ public class ContentModelViewImpl extends CustomComponent
 
     private final HorizontalSplitPanel hSplitPanel = new HorizontalSplitPanel();
 
+    private final VerticalLayout vLayout = new VerticalLayout();
+
     private final ContentModelListView listView;
 
     private final Component addView;
@@ -48,16 +50,23 @@ public class ContentModelViewImpl extends CustomComponent
 
     private void addComponents() {
         listView.setSizeFull();
-        addView.setSizeFull();
+        // addView.setSizeFull();
 
-        VerticalLayout vLayout = new VerticalLayout();
-        vLayout.addComponent(new Label("<b>" + CONTENT_MODELS_LABEL + "</b>",
-            Label.CONTENT_XHTML));
         vLayout.setHeight(100, UNITS_PERCENTAGE);
-        vLayout.addComponent(listView);
-        vLayout.setExpandRatio(listView, 1.0f);
+        addHeader();
+        addListView();
 
         hSplitPanel.addComponent(vLayout);
-        // hSplitPanel.addComponent(addView);
+        hSplitPanel.addComponent(addView);
+    }
+
+    private void addListView() {
+        vLayout.addComponent(listView);
+        vLayout.setExpandRatio(listView, 1.0f);
+    }
+
+    private void addHeader() {
+        vLayout.addComponent(new Label("<b>" + CONTENT_MODELS_LABEL + "</b>",
+            Label.CONTENT_XHTML));
     }
 }

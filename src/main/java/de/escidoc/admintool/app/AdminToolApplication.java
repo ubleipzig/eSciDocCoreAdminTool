@@ -517,6 +517,7 @@ public class AdminToolApplication extends Application {
 
         contentModelView = new ContentModelViewImpl(listView, addView);
         contentModelView.init();
+        contentModelView.setSizeFull();
 
     }
 
