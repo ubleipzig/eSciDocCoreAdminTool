@@ -392,4 +392,6 @@ public class ViewConstants {
     public static final String INFO = "Info";
 
     public static final String GUEST = "Guest";
+
+    public static final String X_LINK_TITLE = "xLinkTitle";
 }

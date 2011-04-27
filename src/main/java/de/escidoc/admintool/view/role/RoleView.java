@@ -238,7 +238,7 @@ public class RoleView extends CustomComponent {
 
     private List<ResourceType> newResourceTypeMinusItemList() {
         final List<ResourceType> resourceTypeList = new LinkedList<ResourceType>(Arrays.asList(ResourceType.values()));
-        resourceTypeList.removeAll(Arrays.asList(new ResourceType[] { ResourceType.ITEM }));
+        // resourceTypeList.removeAll(Arrays.asList(new ResourceType[] { ResourceType.ITEM }));
         return resourceTypeList;
     }
 

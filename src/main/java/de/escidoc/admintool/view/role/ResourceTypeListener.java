@@ -60,6 +60,10 @@ class ResourceTypeListener implements ValueChangeListener {
                     newComponent = assignComponent();
                     loadContainerData();
                     break;
+                case ITEM:
+                    newComponent = assignComponent();
+                    loadItemData();
+                    break;
                 default: {
                     clearResourceContainer();
                     throw new NotImplementedException("Scoping for " + type + " is not yet implemented");
@@ -73,6 +77,27 @@ class ResourceTypeListener implements ValueChangeListener {
                 roleView.resourceContainer.addComponent(newComponent);
             }
         }
+    }
+
+    private void loadItemData() {
+        final POJOContainer<Resource> itemContainer = new POJOContainer<Resource>(Resource.class, ViewConstants.X_LINK_TITLE);
+        for (final Resource item : findAllItems()) {
+            itemContainer.addItem(item);
+        }
+
+        roleView.resouceResult.setContainerDataSource(itemContainer);
+        roleView.resouceResult.setItemCaptionPropertyId(ViewConstants.X_LINK_TITLE);
+    }
+
+    private Set<Resource> findAllItems() {
+        try {
+            return roleView.serviceContainer.getItemService().findAll();
+        }
+        catch (final EscidocClientException e) {
+
+            handleError(e);
+        }
+        return Collections.emptySet();
     }
 
     private POJOContainer<Resource> newPojoContainer() {
