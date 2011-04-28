@@ -1,4 +1,4 @@
-package de.escidoc.admintool.app;
+package de.escidoc.admintool.view.contentmodel;
 
 import com.vaadin.data.Container;
 

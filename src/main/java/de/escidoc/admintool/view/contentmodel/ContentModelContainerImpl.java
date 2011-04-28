@@ -1,4 +1,4 @@
-package de.escidoc.admintool.app;
+package de.escidoc.admintool.view.contentmodel;
 
 import java.util.Set;
 
@@ -6,6 +6,7 @@ import com.google.common.base.Preconditions;
 import com.vaadin.data.Container;
 import com.vaadin.data.util.POJOContainer;
 
+import de.escidoc.admintool.app.PropertyId;
 import de.escidoc.admintool.service.ResourceService;
 import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.resources.Resource;

@@ -17,8 +17,6 @@ import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.Reindeer;
 
 import de.escidoc.admintool.app.AdminToolApplication;
-import de.escidoc.admintool.app.ContentModelContainerImpl;
-import de.escidoc.admintool.app.CreateContentModelListener;
 import de.escidoc.admintool.domain.PdpRequest;
 import de.escidoc.admintool.service.ResourceService;
 import de.escidoc.admintool.view.resource.FormLayoutFactory;

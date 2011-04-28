@@ -1,9 +1,10 @@
-package de.escidoc.admintool.app;
+package de.escidoc.admintool.view.contentmodel;
 
 import com.google.common.base.Preconditions;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Table;
 
+import de.escidoc.admintool.app.PropertyId;
 import de.escidoc.core.client.exceptions.EscidocClientException;
 
 @SuppressWarnings("serial")

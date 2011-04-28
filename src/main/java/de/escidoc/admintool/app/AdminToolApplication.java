@@ -40,6 +40,12 @@ import de.escidoc.admintool.view.admintask.ReindexView;
 import de.escidoc.admintool.view.admintask.RepositoryInfoFooView;
 import de.escidoc.admintool.view.admintask.filter.FilterView;
 import de.escidoc.admintool.view.contentmodel.ContentModelAddView;
+import de.escidoc.admintool.view.contentmodel.ContentModelContainerImpl;
+import de.escidoc.admintool.view.contentmodel.ContentModelEditView;
+import de.escidoc.admintool.view.contentmodel.ContentModelListView;
+import de.escidoc.admintool.view.contentmodel.ContentModelListViewImpl;
+import de.escidoc.admintool.view.contentmodel.ContentModelView;
+import de.escidoc.admintool.view.contentmodel.ContentModelViewImpl;
 import de.escidoc.admintool.view.context.ContextAddView;
 import de.escidoc.admintool.view.context.ContextView;
 import de.escidoc.admintool.view.factory.ContextViewFactory;
@@ -480,9 +486,13 @@ public class AdminToolApplication extends Application {
         addView = new ContentModelAddView(this, mainWindow, contentModelService, container, pdpRequest);
         addView.init();
 
-        contentModelView = new ContentModelViewImpl(listView, addView);
+        final ContentModelEditView editView = new ContentModelEditView();
+
+        contentModelView = new ContentModelViewImpl(listView, addView, editView);
         contentModelView.init();
         contentModelView.setSizeFull();
+
+        editView.setContentModelView(contentModelView);
 
     }
 

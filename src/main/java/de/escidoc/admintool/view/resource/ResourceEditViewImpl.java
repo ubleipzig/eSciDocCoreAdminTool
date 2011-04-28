@@ -58,7 +58,9 @@ public class ResourceEditViewImpl extends CustomComponent implements ResourceEdi
     public ResourceEditViewImpl(final AdminToolApplication app, final Window mainWindow,
         final ResourceViewImpl resourceView, final ResourceService orgUnitService,
         final ResourceContainer resourceContainer, final PdpRequest pdpRequest) {
+
         checkPreconditions(mainWindow, resourceView, orgUnitService, resourceContainer, pdpRequest);
+
         this.app = app;
         this.mainWindow = mainWindow;
         this.resourceView = resourceView;
@@ -68,6 +70,7 @@ public class ResourceEditViewImpl extends CustomComponent implements ResourceEdi
 
         resourceToolbar =
             new ResourceToolbar(app, resourceView, mainWindow, orgUnitService, resourceContainer, pdpRequest);
+
         propertyFields = new PropertiesFieldsImpl(app, vLayout, formLayout, fieldByName, pdpRequest);
         resourceSpecific = createOrgUnitSpecificView(mainWindow, orgUnitService, resourceContainer);
 

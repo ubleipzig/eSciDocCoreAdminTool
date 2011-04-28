@@ -1,4 +1,4 @@
-package de.escidoc.admintool.app;
+package de.escidoc.admintool.view.contentmodel;
 
 import de.escidoc.core.resources.cmm.ContentModel;
 import de.escidoc.core.resources.cmm.ContentModelProperties;
