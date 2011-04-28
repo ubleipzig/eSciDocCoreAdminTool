@@ -62,13 +62,12 @@ public class ContentModelEditView extends CustomComponent implements ResourceEdi
         toolbar = new ContentModelToolbar(pdpRequest);
         setCompositionRoot(panel);
         panel.setStyleName(Reindeer.PANEL_LIGHT);
-        init();
     }
 
     private boolean isUpdateNotAllowed() {
         Preconditions.checkNotNull(pdpRequest, "pdpRequest is null: %s", pdpRequest);
         Preconditions.checkNotNull(getContentModelId(), "getContentModelId() is null: %s", getContentModelId());
-        return pdpRequest.isDenied(ActionIdConstants.UPDATE_CONTEXT, getContentModelId());
+        return pdpRequest.isDenied(ActionIdConstants.UPDATE_CONTENT_MODEL, getContentModelId());
     }
 
     private String getContentModelId() {

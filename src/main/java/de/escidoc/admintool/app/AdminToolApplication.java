@@ -174,7 +174,7 @@ public class AdminToolApplication extends Application {
         appLayout.setSizeFull();
     }
 
-    public void showLandingView() {
+    protected void showLandingView() {
         welcomePage = new WelcomePage(this);
         welcomePage.init();
         viewManager.setLandingView(welcomePage);
@@ -487,6 +487,7 @@ public class AdminToolApplication extends Application {
         addView.init();
 
         final ContentModelEditView editView = new ContentModelEditView(contentModelService, mainWindow, pdpRequest);
+        editView.init();
 
         contentModelView = new ContentModelViewImpl(listView, addView, editView);
         contentModelView.init();

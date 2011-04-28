@@ -180,7 +180,7 @@ public class UserEditForm extends CustomComponent implements ClickListener {
 
     // OrgUnit START
 
-    final Table orgUnitTable = new Table();
+    private final Table orgUnitTable = new Table();
 
     private final Button editOrgUnitButton = new Button(ViewConstants.ADD_LABEL);
 

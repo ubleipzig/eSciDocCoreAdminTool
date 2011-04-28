@@ -130,7 +130,6 @@ public class ActionIdConstants {
     // "info:escidoc/names:aa:1.0:action:unlock-item"
     // "info:escidoc/names:aa:1.0:action:update-aggregation-definition"
     // "info:escidoc/names:aa:1.0:action:update-container"
-    // "info:escidoc/names:aa:1.0:action:update-content-model"
     // "info:escidoc/names:aa:1.0:action:update-content-relation"
     // "info:escidoc/names:aa:1.0:action:update-context"
     // "info:escidoc/names:aa:1.0:action:update-item"
@@ -191,5 +190,7 @@ public class ActionIdConstants {
     public static final String RETRIEVE_USER_ACCOUNT = "info:escidoc/names:aa:1.0:action:retrieve-user-account";
 
     public static final String PURGE_RESOURCES = "info:escidoc/names:aa:1.0:action:delete-objects";
+
+    public static final String UPDATE_CONTENT_MODEL = "info:escidoc/names:aa:1.0:action:update-content-model";
 
 }
