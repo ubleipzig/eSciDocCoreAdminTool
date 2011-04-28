@@ -79,7 +79,7 @@ public class CreateContentModelListener implements ResourceBtnListener {
                     + created.getObjid() + " is created.", Notification.TYPE_TRAY_NOTIFICATION));
                 container.add(created);
                 showInEditView(created);
-                return created != null && created.getObjid() != null;
+                return true;
             }
             return false;
         }

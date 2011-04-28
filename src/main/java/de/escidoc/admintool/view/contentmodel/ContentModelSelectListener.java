@@ -1,6 +1,7 @@
 package de.escidoc.admintool.view.contentmodel;
 
 import com.google.common.base.Preconditions;
+import com.vaadin.data.Item;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.ui.Window;
@@ -28,12 +29,14 @@ public final class ContentModelSelectListener implements ItemClickListener {
     @Override
     public void itemClick(final ItemClickEvent event) {
         final Object itemId = event.getItemId();
+        final Item item = event.getItem();
 
         if (!(itemId instanceof ContentModel)) {
             throw new UnsupportedOperationException("Not yet implemented");
         }
 
         contentModelView.showEditView(tryFindContentModelById(itemId));
+        contentModelView.showEditView(item);
     }
 
     private Resource tryFindContentModelById(final Object object) {

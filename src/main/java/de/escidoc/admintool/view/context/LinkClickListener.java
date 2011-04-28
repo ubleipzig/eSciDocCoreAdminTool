@@ -20,7 +20,7 @@ public final class LinkClickListener implements Button.ClickListener {
 
     @Override
     public void buttonClick(final ClickEvent event) {
-        final Object source = event.getSource();
+        Preconditions.checkNotNull(app, "app is null: %s", app);
         Preconditions.checkNotNull(userId, "userId is null: %s", userId);
         app.showUser(userId);
     }

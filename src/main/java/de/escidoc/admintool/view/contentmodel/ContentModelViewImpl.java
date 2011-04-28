@@ -1,6 +1,7 @@
 package de.escidoc.admintool.view.contentmodel;
 
 import com.google.common.base.Preconditions;
+import com.vaadin.data.Item;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.HorizontalSplitPanel;
@@ -84,8 +85,15 @@ public class ContentModelViewImpl extends CustomComponent implements ContentMode
 
     @Override
     public void showEditView(final Resource contentModel) {
+        Preconditions.checkNotNull(contentModel, "contentModel is null: %s", contentModel);
         listView.setContentModel(contentModel);
         editView.setContentModel(contentModel);
         hSplitPanel.setSecondComponent(editView);
+    }
+
+    @Override
+    public void showEditView(final Item item) {
+        Preconditions.checkNotNull(item, "item is null: %s", item);
+        editView.bind(item);
     }
 }

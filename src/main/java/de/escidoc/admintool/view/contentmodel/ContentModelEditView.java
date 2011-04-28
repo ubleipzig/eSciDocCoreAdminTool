@@ -14,6 +14,7 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.Reindeer;
 
+import de.escidoc.admintool.app.PropertyId;
 import de.escidoc.admintool.service.ContentModelService;
 import de.escidoc.admintool.service.ResourceService;
 import de.escidoc.admintool.view.ViewConstants;
@@ -142,7 +143,7 @@ public class ContentModelEditView extends CustomComponent implements ResourceEdi
     }
 
     private void bindName(final Resource resource) {
-        nameField.setValue(resource.getXLinkTitle());
+        // nameField.setValue(resource.getXLinkTitle());
     }
 
     private void bindDescription(final Resource resource) {
@@ -158,7 +159,7 @@ public class ContentModelEditView extends CustomComponent implements ResourceEdi
 
     @Override
     public void bind(final Item item) {
-        throw new UnsupportedOperationException("Not yet implemented");
+        nameField.setPropertyDataSource(item.getItemProperty(PropertyId.XLINK_TITLE));
     }
 
     @Override
