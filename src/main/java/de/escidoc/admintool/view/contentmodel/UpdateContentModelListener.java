@@ -118,6 +118,9 @@ public final class UpdateContentModelListener implements Button.ClickListener {
 
     public void setContentModel(final Resource toBeUpdated) {
         Preconditions.checkNotNull(toBeUpdated, "toBeUpdated is null: %s", toBeUpdated);
+        if (toBeUpdated instanceof ContentModel) {
+            throw new RuntimeException("Not instance of content model." + toBeUpdated);
+        }
         this.toBeUpdated = (ContentModel) toBeUpdated;
 
     }

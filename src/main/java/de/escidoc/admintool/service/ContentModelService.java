@@ -52,17 +52,25 @@ public class ContentModelService extends AbstractEscidocService<ContentModelHand
     @Override
     public Resource create(final Resource resource) throws EscidocException, InternalClientException,
         TransportException {
+        Preconditions.checkNotNull(resource, "resource is null: %s", resource);
+        if (resource instanceof ContentModel) {
+            throw new RuntimeException("Not instance of content model." + resource);
+        }
         return getClient().create((ContentModel) resource);
     }
 
     @Override
     public Resource findById(final String objid) throws EscidocClientException {
+        Preconditions.checkNotNull(objid, "objid is null: %s", objid);
         return getClient().retrieve(objid);
     }
 
     @Override
     public void update(final Resource resource) throws EscidocClientException {
         Preconditions.checkNotNull(resource, "resource is null: %s", resource);
+        if (resource instanceof ContentModel) {
+            throw new RuntimeException("Not instance of content model." + resource);
+        }
         getClient().update((ContentModel) resource);
     }
 
@@ -80,7 +88,7 @@ public class ContentModelService extends AbstractEscidocService<ContentModelHand
     @Override
     public Collection<? extends Resource> filterUsingInput(final String query) throws EscidocException,
         InternalClientException, TransportException {
-        throw new UnsupportedOperationException("Not yet implemented");
+        return getClient().retrieveContentModelsAsList(userInputToFilter(query));
     }
 
     @Override
