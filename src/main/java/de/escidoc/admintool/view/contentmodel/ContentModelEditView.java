@@ -1,11 +1,15 @@
 package de.escidoc.admintool.view.contentmodel;
 
+import java.util.ArrayList;
+
 import com.google.common.base.Preconditions;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.ObjectProperty;
+import com.vaadin.ui.AbstractTextField;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CustomComponent;
+import com.vaadin.ui.Field;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
@@ -21,6 +25,7 @@ import de.escidoc.admintool.service.ContentModelService;
 import de.escidoc.admintool.service.ResourceService;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.admintool.view.navigation.ActionIdConstants;
+import de.escidoc.admintool.view.resource.CancelButtonListener;
 import de.escidoc.admintool.view.resource.ResourceEditView;
 import de.escidoc.core.resources.Resource;
 import de.escidoc.core.resources.cmm.ContentModel;
@@ -54,6 +59,8 @@ public class ContentModelEditView extends CustomComponent implements ResourceEdi
 
     private Resource resource;
 
+    private CancelButtonListener cancelListener;
+
     public ContentModelEditView(final ResourceService contentModelService, final Window mainWindow,
         final PdpRequest pdpRequest) {
         Preconditions.checkNotNull(contentModelService, "contentModelService is null: %s", contentModelService);
@@ -85,7 +92,6 @@ public class ContentModelEditView extends CustomComponent implements ResourceEdi
         panel.addComponent(formLayout);
         addSpace();
         addFields();
-        // addSpace();
         addFooter();
     }
 
@@ -105,6 +111,11 @@ public class ContentModelEditView extends CustomComponent implements ResourceEdi
     }
 
     private void addCancelButton() {
+        final ArrayList<Field> list = new ArrayList<Field>();
+        list.add(nameField);
+        list.add(descriptionField);
+        cancelListener = new CancelButtonListener(list);
+        cancelBtn.addListener(cancelListener);
         buttonLayout.addComponent(cancelBtn);
     }
 
@@ -120,7 +131,6 @@ public class ContentModelEditView extends CustomComponent implements ResourceEdi
 
     private void addFields() {
         addNameField();
-        // addSpace();
         addDescriptionField();
     }
 
@@ -128,7 +138,7 @@ public class ContentModelEditView extends CustomComponent implements ResourceEdi
         descriptionField.setWidth(ViewConstants.FIELD_WIDTH);
         descriptionField.setMaxLength(ViewConstants.MAX_TITLE_LENGTH);
         descriptionField.setRequired(true);
-        configure(nameField);
+        configure(descriptionField);
 
         formLayout.addComponent(descriptionField);
     }
@@ -141,7 +151,7 @@ public class ContentModelEditView extends CustomComponent implements ResourceEdi
         formLayout.addComponent(nameField);
     }
 
-    private void configure(final TextField field) {
+    private void configure(final AbstractTextField field) {
         field.setPropertyDataSource(new ObjectProperty<String>(ViewConstants.EMPTY_STRING));
         field.setImmediate(false);
         field.setInvalidCommitted(false);
@@ -182,7 +192,7 @@ public class ContentModelEditView extends CustomComponent implements ResourceEdi
             if (description == null) {
                 description = ViewConstants.EMPTY_STRING;
             }
-            descriptionField.setValue(description);
+            descriptionField.setPropertyDataSource(new ObjectProperty<String>(description));
         }
     }
 
