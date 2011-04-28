@@ -1,6 +1,7 @@
 package de.escidoc.admintool.view.contentmodel;
 
 import com.google.common.base.Preconditions;
+import com.vaadin.data.Item;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Table;
 
@@ -50,6 +51,22 @@ public class ContentModelListViewImpl extends CustomComponent implements Content
     public void setContentModel(final Resource contentModel) {
         Preconditions.checkNotNull(contentModel, "contentModel is null: %s", contentModel);
         table.select(contentModel);
+    }
+
+    @Override
+    public void selectFirstItem() {
+        final Object firstItemId = table.firstItemId();
+        table.select(firstItemId);
+    }
+
+    @Override
+    public Resource firstItemId() {
+        return (Resource) table.firstItemId();
+    }
+
+    @Override
+    public Item firstItem() {
+        return table.getItem(table.firstItemId());
     }
 
 }

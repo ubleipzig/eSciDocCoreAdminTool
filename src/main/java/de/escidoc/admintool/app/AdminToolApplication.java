@@ -469,7 +469,6 @@ public class AdminToolApplication extends Application {
         try {
             createContentModelView();
             setMainView(getContentModelView());
-
         }
         catch (final EscidocClientException e) {
             handleException(e);
@@ -499,6 +498,7 @@ public class AdminToolApplication extends Application {
     }
 
     private ContentModelView getContentModelView() {
+        contentModelView.selectFirstItem();
         return contentModelView;
     }
 

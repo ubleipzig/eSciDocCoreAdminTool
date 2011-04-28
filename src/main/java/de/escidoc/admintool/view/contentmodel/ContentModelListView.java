@@ -1,5 +1,6 @@
 package de.escidoc.admintool.view.contentmodel;
 
+import com.vaadin.data.Item;
 import com.vaadin.ui.Component;
 
 import de.escidoc.core.client.exceptions.EscidocClientException;
@@ -11,4 +12,10 @@ public interface ContentModelListView extends Component {
     void setContentModelView(ContentModelView view);
 
     void setContentModel(Resource contentModel);
+
+    void selectFirstItem();
+
+    Resource firstItemId();
+
+    Item firstItem();
 }

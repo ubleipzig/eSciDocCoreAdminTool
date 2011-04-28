@@ -95,4 +95,19 @@ public class ContentModelViewImpl extends CustomComponent implements ContentMode
         Preconditions.checkNotNull(item, "item is null: %s", item);
         editView.bind(item);
     }
+
+    @Override
+    public void selectFirstItem() {
+        Preconditions.checkNotNull(listView, "listView is null: %s", listView);
+        Preconditions.checkNotNull(editView, "editView is null: %s", editView);
+
+        if (listView.firstItemId() == null) {
+            showAddView();
+            return;
+        }
+
+        listView.selectFirstItem();
+        editView.setContentModel(listView.firstItemId());
+        editView.bind(listView.firstItem());
+    }
 }

@@ -13,4 +13,6 @@ public interface ContentModelView extends Component {
     void showEditView(Resource contentModel);
 
     void showEditView(Item item);
+
+    void selectFirstItem();
 }
