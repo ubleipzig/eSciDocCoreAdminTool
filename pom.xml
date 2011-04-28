@@ -271,6 +271,35 @@
 					</reportPlugins>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>com.mycila.maven-license-plugin</groupId>
+				<artifactId>maven-license-plugin</artifactId>
+				<version>1.9.0</version>
+				<configuration>
+					<header>etc/header.txt</header>
+					<strictCheck>true</strictCheck>
+					<includes>
+						<include>src/**</include>
+						<include>**/test/**</include>
+					</includes>
+					<excludes>
+						<exclude>src/main/java/biz/**</exclude>
+						<exclude>target/**</exclude>
+						<exclude>src/main/resources/**</exclude>
+						<exclude>src/main/javadoc/**</exclude>
+						<exclude>src/main/webapp/**</exclude>
+						<exclude>src/site/**</exclude>
+						<exclude>.clover/**</exclude>
+					</excludes>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>check</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 		<finalName>${project.artifactId}</finalName>
 	</build>
