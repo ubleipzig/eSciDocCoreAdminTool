@@ -103,7 +103,7 @@ public class PropertiesBinder implements FieldsBinder {
     }
 
     private void bindName() {
-        bind(propertiesFields.titleField).with(getProperty(PropertyId.NAME));
+        bind(propertiesFields.nameField).with(getProperty(PropertyId.NAME));
     }
 
     private void bindModifiedBy() {

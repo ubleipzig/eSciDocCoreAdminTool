@@ -22,7 +22,6 @@ import de.escidoc.admintool.service.ResourceService;
 import de.escidoc.admintool.view.resource.FormLayoutFactory;
 import de.escidoc.admintool.view.resource.PropertiesFields;
 import de.escidoc.admintool.view.resource.PropertiesFieldsImpl;
-import de.escidoc.admintool.view.resource.ResourceBtnListener;
 import de.escidoc.admintool.view.resource.SaveAndCancelButtons;
 
 public class ContentModelAddView extends AbstractView<Panel> {
@@ -37,7 +36,7 @@ public class ContentModelAddView extends AbstractView<Panel> {
 
     private final VerticalLayout vLayout = new VerticalLayout();
 
-    private ResourceBtnListener saveBtnListener;
+    private CreateContentModelListener saveBtnListener;
 
     private PropertiesFields propertyFields;
 
@@ -77,6 +76,11 @@ public class ContentModelAddView extends AbstractView<Panel> {
         addSaveAndCancelButtons();
     }
 
+    public void setContentModelView(final ContentModelView contentModelView) {
+        Preconditions.checkNotNull(contentModelView, "contentModelView is null: %s", contentModelView);
+        saveBtnListener.setContentModelView(contentModelView);
+    }
+
     private void addPropertiesFields() {
         getContent().setWidth(500, UNITS_PIXELS);
         getContent().addComponent(propertyFields);
@@ -84,6 +88,7 @@ public class ContentModelAddView extends AbstractView<Panel> {
 
     private void createPropertiesFields() {
         propertyFields = new PropertiesFieldsImpl(app, vLayout, formLayout, fieldByName, pdpRequest);
+        propertyFields.setDescriptionRequired();
         propertyFields.removeOthers();
     }
 

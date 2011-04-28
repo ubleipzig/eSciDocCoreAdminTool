@@ -8,6 +8,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 
 import de.escidoc.admintool.view.ViewConstants;
+import de.escidoc.core.resources.Resource;
 
 @SuppressWarnings("serial")
 public class ContentModelViewImpl extends CustomComponent implements ContentModelView {
@@ -79,5 +80,12 @@ public class ContentModelViewImpl extends CustomComponent implements ContentMode
         // addView = new ContentModelAddView(this, mainWindow, contentModelService, container, pdpRequest);
         // addView.init();
         return addView;
+    }
+
+    @Override
+    public void showEditView(final Resource contentModel) {
+        listView.setContentModel(contentModel);
+        editView.setContentModel(contentModel);
+        hSplitPanel.setSecondComponent(editView);
     }
 }

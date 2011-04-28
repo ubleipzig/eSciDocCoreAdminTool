@@ -22,4 +22,6 @@ public interface PropertiesFields extends Component {
     void removeOthers();
 
     void setPdpRequest(PdpRequest pdpRequest);
+
+    void setDescriptionRequired();
 }

@@ -31,7 +31,7 @@ public class PropertiesFieldsImpl extends CustomComponent implements PropertiesF
 
     private final List<Field> allFields = new ArrayList<Field>();
 
-    final TextField titleField = new TextField(ViewConstants.TITLE_LABEL);
+    final TextField nameField = new TextField(ViewConstants.NAME_LABEL);
 
     final TextField descField = new TextField(ViewConstants.DESCRIPTION_LABEL);
 
@@ -92,7 +92,7 @@ public class PropertiesFieldsImpl extends CustomComponent implements PropertiesF
     }
 
     private void createAndAddPropertiesFields() {
-        addTitleField();
+        addNameField();
         addDescriptionField();
         addOthers();
     }
@@ -113,13 +113,13 @@ public class PropertiesFieldsImpl extends CustomComponent implements PropertiesF
         formLayout.removeComponent(statusComment);
     }
 
-    private void addTitleField() {
-        titleField.setWidth(ViewConstants.FIELD_WIDTH);
-        titleField.setMaxLength(ViewConstants.MAX_TITLE_LENGTH);
-        configure(titleField);
-        formLayout.addComponent(titleField);
-        fieldByName.put("title", titleField);
-        titleField.setRequired(true);
+    private void addNameField() {
+        nameField.setWidth(ViewConstants.FIELD_WIDTH);
+        nameField.setMaxLength(ViewConstants.MAX_TITLE_LENGTH);
+        configure(nameField);
+        formLayout.addComponent(nameField);
+        fieldByName.put("title", nameField);
+        nameField.setRequired(true);
     }
 
     private void addDescriptionField() {
@@ -235,7 +235,7 @@ public class PropertiesFieldsImpl extends CustomComponent implements PropertiesF
 
     @Override
     public void setNotEditable(final boolean isReadOnly) {
-        titleField.setReadOnly(isReadOnly);
+        nameField.setReadOnly(isReadOnly);
         descField.setReadOnly(isReadOnly);
     }
 
@@ -246,5 +246,10 @@ public class PropertiesFieldsImpl extends CustomComponent implements PropertiesF
 
     public PdpRequest getPdpRequest() {
         return pdpRequest;
+    }
+
+    @Override
+    public void setDescriptionRequired() {
+        descField.setRequired(true);
     }
 }

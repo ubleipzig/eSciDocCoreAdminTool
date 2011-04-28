@@ -5,23 +5,30 @@ import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Table;
 
 import de.escidoc.admintool.app.PropertyId;
+import de.escidoc.admintool.service.ResourceService;
 import de.escidoc.core.client.exceptions.EscidocClientException;
+import de.escidoc.core.resources.Resource;
 
 @SuppressWarnings("serial")
 public class ContentModelListViewImpl extends CustomComponent implements ContentModelListView {
 
     private final Table table = new Table();
 
+    private final ContentModelSelectListener listener;
+
     private final ContentModelContainerImpl contentModelContainerImpl;
 
-    public ContentModelListViewImpl(final ContentModelContainerImpl contentModelContainerImpl) {
+    public ContentModelListViewImpl(final ContentModelContainerImpl contentModelContainerImpl,
+        final ResourceService contentModelService) {
         Preconditions.checkNotNull(contentModelContainerImpl, "contentModelContainer is null: %s",
             contentModelContainerImpl);
-        setCompositionRoot(table);
+        Preconditions.checkNotNull(contentModelService, "contentModelService is null: %s", contentModelService);
         this.contentModelContainerImpl = contentModelContainerImpl;
+        listener = new ContentModelSelectListener(contentModelService);
     }
 
     public void init() throws EscidocClientException {
+        setCompositionRoot(table);
         table.setSizeFull();
         table.setSelectable(true);
         table.setImmediate(true);
@@ -30,5 +37,19 @@ public class ContentModelListViewImpl extends CustomComponent implements Content
         table.setContainerDataSource(contentModelContainerImpl.getDataSource());
         table.setVisibleColumns(new Object[] { PropertyId.X_LINK_TITLE });
         table.setColumnHeaderMode(Table.COLUMN_HEADER_MODE_HIDDEN);
+        table.addListener(listener);
     }
+
+    @Override
+    public void setContentModelView(final ContentModelView view) {
+        Preconditions.checkNotNull(view, "view is null: %s", view);
+        listener.setContentModelView(view);
+    }
+
+    @Override
+    public void setContentModel(final Resource contentModel) {
+        Preconditions.checkNotNull(contentModel, "contentModel is null: %s", contentModel);
+        table.select(contentModel);
+    }
+
 }

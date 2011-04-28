@@ -480,20 +480,21 @@ public class AdminToolApplication extends Application {
 
         final ContentModelContainerImpl container = new ContentModelContainerImpl(contentModelService);
 
-        final ContentModelListView listView = new ContentModelListViewImpl(container);
+        final ContentModelListView listView = new ContentModelListViewImpl(container, contentModelService);
         listView.init();
 
         addView = new ContentModelAddView(this, mainWindow, contentModelService, container, pdpRequest);
         addView.init();
 
-        final ContentModelEditView editView = new ContentModelEditView();
+        final ContentModelEditView editView = new ContentModelEditView(contentModelService, mainWindow);
 
         contentModelView = new ContentModelViewImpl(listView, addView, editView);
         contentModelView.init();
         contentModelView.setSizeFull();
 
         editView.setContentModelView(contentModelView);
-
+        addView.setContentModelView(contentModelView);
+        listView.setContentModelView(contentModelView);
     }
 
     private ContentModelView getContentModelView() {

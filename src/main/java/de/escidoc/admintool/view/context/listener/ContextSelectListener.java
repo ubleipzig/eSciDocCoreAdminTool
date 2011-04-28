@@ -25,6 +25,7 @@ public class ContextSelectListener extends AbstractResourceSelectListener {
         return app.getContextView();
     }
 
+    @SuppressWarnings("unused")
     private class EmptyView extends VerticalLayout implements ResourceView {
 
         private static final long serialVersionUID = -2661185418534655185L;

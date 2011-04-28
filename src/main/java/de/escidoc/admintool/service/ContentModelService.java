@@ -4,6 +4,8 @@ import gov.loc.www.zing.srw.SearchRetrieveRequestType;
 
 import java.util.Collection;
 
+import com.google.common.base.Preconditions;
+
 import de.escidoc.core.client.ContentModelHandlerClient;
 import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.client.exceptions.EscidocException;
@@ -27,14 +29,13 @@ public class ContentModelService extends AbstractEscidocService<ContentModelHand
 
     @Override
     public Resource findById(final String objid) throws EscidocClientException {
-        throw new UnsupportedOperationException("Not yet implemented");
-
+        return getClient().retrieve(objid);
     }
 
     @Override
     public void update(final Resource resource) throws EscidocClientException {
-        throw new UnsupportedOperationException("Not yet implemented");
-
+        Preconditions.checkNotNull(resource, "resource is null: %s", resource);
+        getClient().update((ContentModel) resource);
     }
 
     @Override

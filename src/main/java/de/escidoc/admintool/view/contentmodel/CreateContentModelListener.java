@@ -35,6 +35,8 @@ public class CreateContentModelListener implements ResourceBtnListener {
 
     private final ContentModelContainerImpl container;
 
+    private ContentModelView contentModelView;
+
     public CreateContentModelListener(final Collection<Field> allFields, final ResourceService contentModelService,
         final Map<String, Field> fieldByName, final Window mainWindow, final ContentModelContainerImpl container) {
         Preconditions.checkNotNull(mainWindow, "mainWindow is null: %s", mainWindow);
@@ -49,6 +51,11 @@ public class CreateContentModelListener implements ResourceBtnListener {
         this.allFields = allFields;
         this.fieldByName = fieldByName;
         this.container = container;
+    }
+
+    public void setContentModelView(final ContentModelView contentModelView) {
+        Preconditions.checkNotNull(contentModelView, "contentModelView is null: %s", contentModelView);
+        this.contentModelView = contentModelView;
     }
 
     @Override
@@ -71,6 +78,7 @@ public class CreateContentModelListener implements ResourceBtnListener {
                 mainWindow.showNotification(new Window.Notification("Info", "A new Content Model with the ID "
                     + created.getObjid() + " is created.", Notification.TYPE_TRAY_NOTIFICATION));
                 container.add(created);
+                showInEditView(created);
                 return created != null && created.getObjid() != null;
             }
             return false;
@@ -79,6 +87,13 @@ public class CreateContentModelListener implements ResourceBtnListener {
             ModalDialog.show(mainWindow, e);
             return false;
         }
+    }
+
+    private void showInEditView(final Resource created) {
+        Preconditions.checkNotNull(created, "created is null: %s", created);
+        Preconditions.checkNotNull(contentModelView, "contentModelView is null: %s", contentModelView);
+
+        contentModelView.showEditView(created);
     }
 
     private void createModel() {
