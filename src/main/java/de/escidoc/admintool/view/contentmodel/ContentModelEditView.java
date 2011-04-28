@@ -15,9 +15,11 @@ import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.Reindeer;
 
 import de.escidoc.admintool.app.PropertyId;
+import de.escidoc.admintool.domain.PdpRequest;
 import de.escidoc.admintool.service.ContentModelService;
 import de.escidoc.admintool.service.ResourceService;
 import de.escidoc.admintool.view.ViewConstants;
+import de.escidoc.admintool.view.navigation.ActionIdConstants;
 import de.escidoc.admintool.view.resource.ResourceEditView;
 import de.escidoc.core.resources.Resource;
 import de.escidoc.core.resources.cmm.ContentModel;
@@ -31,8 +33,6 @@ public class ContentModelEditView extends CustomComponent implements ResourceEdi
 
     private final TextArea descriptionField = new TextArea(ViewConstants.DESCRIPTION_LABEL);
 
-    private final ContentModelToolbar toolbar = new ContentModelToolbar();
-
     private final HorizontalLayout buttonLayout = new HorizontalLayout();
 
     private final Button saveBtn = new Button(ViewConstants.SAVE_LABEL);
@@ -45,14 +45,35 @@ public class ContentModelEditView extends CustomComponent implements ResourceEdi
 
     private UpdateContentModelListener listener;
 
-    public ContentModelEditView(final ResourceService contentModelService, final Window mainWindow) {
+    private final PdpRequest pdpRequest;
+
+    private final ContentModelToolbar toolbar;
+
+    private Resource resource;
+
+    public ContentModelEditView(final ResourceService contentModelService, final Window mainWindow,
+        final PdpRequest pdpRequest) {
         Preconditions.checkNotNull(contentModelService, "contentModelService is null: %s", contentModelService);
         Preconditions.checkNotNull(mainWindow, "mainWindow is null: %s", mainWindow);
+        Preconditions.checkNotNull(pdpRequest, "pdpRequest is null: %s", pdpRequest);
         this.contentModelService = (ContentModelService) contentModelService;
         this.mainWindow = mainWindow;
+        this.pdpRequest = pdpRequest;
+        toolbar = new ContentModelToolbar(pdpRequest);
         setCompositionRoot(panel);
         panel.setStyleName(Reindeer.PANEL_LIGHT);
         init();
+    }
+
+    private boolean isUpdateNotAllowed() {
+        Preconditions.checkNotNull(pdpRequest, "pdpRequest is null: %s", pdpRequest);
+        Preconditions.checkNotNull(getContentModelId(), "getContentModelId() is null: %s", getContentModelId());
+        return pdpRequest.isDenied(ActionIdConstants.UPDATE_CONTEXT, getContentModelId());
+    }
+
+    private String getContentModelId() {
+        Preconditions.checkNotNull(resource, "resource is null: %s", resource);
+        return resource.getObjid();
     }
 
     public void init() {
@@ -137,13 +158,18 @@ public class ContentModelEditView extends CustomComponent implements ResourceEdi
     }
 
     public void setContentModel(final Resource resource) {
-        bindName(resource);
+        Preconditions.checkNotNull(resource, "resource is null: %s", resource);
+        this.resource = resource;
         bindDescription(resource);
+
+        bindUserRightWithView();
         listener.setContentModel(resource);
     }
 
-    private void bindName(final Resource resource) {
-        // nameField.setValue(resource.getXLinkTitle());
+    private void bindUserRightWithView() {
+        toolbar.bind(getContentModelId());
+        setFormReadOnly(isUpdateNotAllowed());
+        buttonLayout.setVisible(!isUpdateNotAllowed());
     }
 
     private void bindDescription(final Resource resource) {
@@ -163,8 +189,9 @@ public class ContentModelEditView extends CustomComponent implements ResourceEdi
     }
 
     @Override
-    public void setFormReadOnly(final boolean b) {
-        throw new UnsupportedOperationException("Not yet implemented");
+    public void setFormReadOnly(final boolean isReadOnly) {
+        nameField.setReadOnly(isReadOnly);
+        descriptionField.setReadOnly(isReadOnly);
     }
 
     @Override

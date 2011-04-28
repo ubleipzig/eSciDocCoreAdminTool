@@ -78,8 +78,7 @@ public class ContentModelViewImpl extends CustomComponent implements ContentMode
     }
 
     private Component createAddView() {
-        // addView = new ContentModelAddView(this, mainWindow, contentModelService, container, pdpRequest);
-        // addView.init();
+        addView.resetFields();
         return addView;
     }
 

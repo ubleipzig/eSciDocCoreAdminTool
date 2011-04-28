@@ -486,7 +486,7 @@ public class AdminToolApplication extends Application {
         addView = new ContentModelAddView(this, mainWindow, contentModelService, container, pdpRequest);
         addView.init();
 
-        final ContentModelEditView editView = new ContentModelEditView(contentModelService, mainWindow);
+        final ContentModelEditView editView = new ContentModelEditView(contentModelService, mainWindow, pdpRequest);
 
         contentModelView = new ContentModelViewImpl(listView, addView, editView);
         contentModelView.init();

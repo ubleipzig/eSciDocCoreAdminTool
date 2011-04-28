@@ -120,4 +120,8 @@ public class ContentModelAddView extends AbstractView<Panel> {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
+    public void resetFields() {
+        propertyFields.resetFields();
+    }
+
 }

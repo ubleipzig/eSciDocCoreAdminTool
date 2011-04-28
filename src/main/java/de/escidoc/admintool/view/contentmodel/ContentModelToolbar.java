@@ -5,7 +5,9 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.HorizontalLayout;
 
+import de.escidoc.admintool.domain.PdpRequest;
 import de.escidoc.admintool.view.ViewConstants;
+import de.escidoc.admintool.view.navigation.ActionIdConstants;
 
 @SuppressWarnings("serial")
 public class ContentModelToolbar extends CustomComponent {
@@ -14,9 +16,13 @@ public class ContentModelToolbar extends CustomComponent {
 
     private final ShowNewContentModelViewListener listener = new ShowNewContentModelViewListener();
 
+    private final PdpRequest pdpRequest;
+
     private Button newBtn;
 
-    public ContentModelToolbar() {
+    public ContentModelToolbar(final PdpRequest pdpRequest) {
+        Preconditions.checkNotNull(pdpRequest, "pdpRequest is null: %s", pdpRequest);
+        this.pdpRequest = pdpRequest;
         setCompositionRoot(hLayout);
     }
 
@@ -42,5 +48,13 @@ public class ContentModelToolbar extends CustomComponent {
     public void setContentModelView(final ContentModelView contentModelView) {
         Preconditions.checkNotNull(contentModelView, "contentModelView is null: %s", contentModelView);
         listener.setContentModelView(contentModelView);
+    }
+
+    public void bind(final String contentModelId) {
+        newBtn.setVisible(isCreateAllowed());
+    }
+
+    private boolean isCreateAllowed() {
+        return pdpRequest.isPermitted(ActionIdConstants.CREATE_CONTENT_MODEL);
     }
 }

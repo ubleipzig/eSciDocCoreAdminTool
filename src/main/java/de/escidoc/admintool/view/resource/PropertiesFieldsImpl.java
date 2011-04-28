@@ -252,4 +252,11 @@ public class PropertiesFieldsImpl extends CustomComponent implements PropertiesF
     public void setDescriptionRequired() {
         descField.setRequired(true);
     }
+
+    @Override
+    public void resetFields() {
+        for (final Field field : getAllFields()) {
+            field.setValue(ViewConstants.EMPTY_STRING);
+        }
+    }
 }

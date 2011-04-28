@@ -61,19 +61,10 @@ public class NavigationTreeImpl extends CustomComponent implements NavigationTre
                     addChild(parent, node);
                 }
             }
-            else if (isEquals(node, ViewConstants.CONTENT_MODELS)) {
-                if (isAllowedToCreateContentModel()) {
-                    addChild(parent, node);
-                }
-            }
             else {
                 addChild(parent, node);
             }
         }
-    }
-
-    private boolean isAllowedToCreateContentModel() {
-        return pdpRequest.isPermitted(ActionIdConstants.CREATE_CONTENT_MODEL);
     }
 
     private boolean isAllowedToGrantRole() {
