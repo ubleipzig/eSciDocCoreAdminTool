@@ -276,6 +276,7 @@
 				<configuration>
 					<header>${basedir}/etc/header.txt</header>
 					<strictCheck>true</strictCheck>
+                    <failIfMissing>false</failIfMissing>
 					<includes>
 						<include>src/**</include>
 						<include>**/test/**</include>
