@@ -283,12 +283,15 @@
 						<include>**/test/**</include>
 					</includes>
 					<excludes>
-						<exclude>src/main/java/biz/**</exclude>
 						<exclude>target/**</exclude>
+						<exclude>src/main/java/biz/**</exclude>
 						<exclude>src/main/resources/**</exclude>
 						<exclude>src/main/javadoc/**</exclude>
 						<exclude>src/main/webapp/**</exclude>
+						<exclude>src/main/assembly/**</exclude>
 						<exclude>src/site/**</exclude>
+						<exclude>src/test/javadoc/**</exclude>
+						<exclude>src/test/site/**</exclude>
 						<exclude>.clover/**</exclude>
 					</excludes>
 				</configuration>
