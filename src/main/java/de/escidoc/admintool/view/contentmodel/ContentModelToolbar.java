@@ -16,9 +16,9 @@ public class ContentModelToolbar extends CustomComponent {
 
     private final ShowNewContentModelViewListener listener = new ShowNewContentModelViewListener();
 
-    private final PdpRequest pdpRequest;
+    private final Button newBtn = new Button(ViewConstants.NEW, listener);
 
-    private Button newBtn;
+    private final PdpRequest pdpRequest;
 
     public ContentModelToolbar(final PdpRequest pdpRequest) {
         Preconditions.checkNotNull(pdpRequest, "pdpRequest is null: %s", pdpRequest);
@@ -28,16 +28,11 @@ public class ContentModelToolbar extends CustomComponent {
 
     public void init() {
         configureLayout();
-        createNewButton();
         addNewButton();
     }
 
     private void addNewButton() {
         hLayout.addComponent(newBtn);
-    }
-
-    private void createNewButton() {
-        newBtn = new Button(ViewConstants.NEW, listener);
     }
 
     private void configureLayout() {

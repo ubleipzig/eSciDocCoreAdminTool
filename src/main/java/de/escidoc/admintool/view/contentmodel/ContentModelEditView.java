@@ -6,6 +6,7 @@ import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CustomComponent;
+import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
@@ -29,6 +30,8 @@ public class ContentModelEditView extends CustomComponent implements ResourceEdi
 
     private final Panel panel = new Panel(ViewConstants.EDIT_CONTENT_MODEL);
 
+    private final FormLayout formLayout = new FormLayout();
+
     private final TextField nameField = new TextField(ViewConstants.NAME_LABEL);
 
     private final TextArea descriptionField = new TextArea(ViewConstants.DESCRIPTION_LABEL);
@@ -43,11 +46,11 @@ public class ContentModelEditView extends CustomComponent implements ResourceEdi
 
     private final Window mainWindow;
 
-    private UpdateContentModelListener listener;
-
     private final PdpRequest pdpRequest;
 
     private final ContentModelToolbar toolbar;
+
+    private UpdateContentModelListener updateListener;
 
     private Resource resource;
 
@@ -60,8 +63,6 @@ public class ContentModelEditView extends CustomComponent implements ResourceEdi
         this.mainWindow = mainWindow;
         this.pdpRequest = pdpRequest;
         toolbar = new ContentModelToolbar(pdpRequest);
-        setCompositionRoot(panel);
-        panel.setStyleName(Reindeer.PANEL_LIGHT);
     }
 
     private boolean isUpdateNotAllowed() {
@@ -76,19 +77,22 @@ public class ContentModelEditView extends CustomComponent implements ResourceEdi
     }
 
     public void init() {
+        setCompositionRoot(panel);
+        panel.setStyleName(Reindeer.PANEL_LIGHT);
+
         addToolbar();
+
+        panel.addComponent(formLayout);
         addSpace();
         addFields();
-        addSpace();
+        // addSpace();
         addFooter();
     }
 
     private void addFooter() {
         final HorizontalLayout footerLayout = new HorizontalLayout();
-        footerLayout.setWidth(100, UNITS_PERCENTAGE);
-
+        footerLayout.setWidth(480, UNITS_PIXELS);
         addButtons(footerLayout);
-
         panel.addComponent(footerLayout);
     }
 
@@ -97,7 +101,7 @@ public class ContentModelEditView extends CustomComponent implements ResourceEdi
         addCancelButton();
 
         footerLayout.addComponent(buttonLayout);
-        footerLayout.setComponentAlignment(buttonLayout, Alignment.BOTTOM_LEFT);
+        footerLayout.setComponentAlignment(buttonLayout, Alignment.BOTTOM_RIGHT);
     }
 
     private void addCancelButton() {
@@ -105,8 +109,8 @@ public class ContentModelEditView extends CustomComponent implements ResourceEdi
     }
 
     private void addSaveButton() {
-        listener = new UpdateContentModelListener(this, contentModelService, mainWindow);
-        saveBtn.addListener(listener);
+        updateListener = new UpdateContentModelListener(this, contentModelService, mainWindow);
+        saveBtn.addListener(updateListener);
         buttonLayout.addComponent(saveBtn);
     }
 
@@ -116,7 +120,7 @@ public class ContentModelEditView extends CustomComponent implements ResourceEdi
 
     private void addFields() {
         addNameField();
-        addSpace();
+        // addSpace();
         addDescriptionField();
     }
 
@@ -126,7 +130,7 @@ public class ContentModelEditView extends CustomComponent implements ResourceEdi
         descriptionField.setRequired(true);
         configure(nameField);
 
-        panel.addComponent(descriptionField);
+        formLayout.addComponent(descriptionField);
     }
 
     private void addNameField() {
@@ -134,7 +138,7 @@ public class ContentModelEditView extends CustomComponent implements ResourceEdi
         nameField.setMaxLength(ViewConstants.MAX_TITLE_LENGTH);
         nameField.setRequired(true);
         configure(nameField);
-        panel.addComponent(nameField);
+        formLayout.addComponent(nameField);
     }
 
     private void configure(final TextField field) {
@@ -162,7 +166,7 @@ public class ContentModelEditView extends CustomComponent implements ResourceEdi
         bindDescription(resource);
 
         bindUserRightWithView();
-        listener.setContentModel(resource);
+        updateListener.setContentModel(resource);
     }
 
     private void bindUserRightWithView() {
