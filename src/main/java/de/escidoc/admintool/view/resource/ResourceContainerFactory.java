@@ -43,7 +43,7 @@ public class ResourceContainerFactory {
 
     public ResourceContainerFactory(final ResourceService resourceService) {
         Preconditions.checkNotNull(resourceService, "resourceService is null: %s", resourceService);
-        if (resourceService instanceof OrgUnitServiceLab) {
+        if (!(resourceService instanceof OrgUnitServiceLab)) {
             throw new RuntimeException("Not instance of OrgUnitServiceLab." + resourceService);
         }
         this.resourceService = (OrgUnitServiceLab) resourceService;

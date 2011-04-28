@@ -47,11 +47,13 @@ public final class ContentModelSelectListener implements ItemClickListener {
 
     private ContentModelView contentModelView;
 
-    private Window mainWindow;
+    private final Window mainWindow;
 
-    public ContentModelSelectListener(final ResourceService contentModelService) {
+    public ContentModelSelectListener(final ResourceService contentModelService, final Window mainWindow) {
         Preconditions.checkNotNull(contentModelService, "contentModelService is null: %s", contentModelService);
+        Preconditions.checkNotNull(mainWindow, "mainWindow is null: %s", mainWindow);
         this.contentModelService = contentModelService;
+        this.mainWindow = mainWindow;
     }
 
     @Override

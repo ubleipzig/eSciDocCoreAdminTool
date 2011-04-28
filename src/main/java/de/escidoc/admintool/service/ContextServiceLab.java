@@ -53,7 +53,7 @@ public class ContextServiceLab extends AbstractEscidocService<ContextHandlerClie
     @Override
     public Resource create(final Resource resource) throws EscidocException, InternalClientException,
         TransportException {
-        if (resource instanceof Context) {
+        if (!(resource instanceof Context)) {
             throw new RuntimeException("Not instance of Context." + resource);
         }
         return getClient().create((Context) resource);

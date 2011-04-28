@@ -34,7 +34,6 @@ import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Table;
 
 import de.escidoc.admintool.app.PropertyId;
-import de.escidoc.admintool.service.ResourceService;
 import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.resources.Resource;
 
@@ -48,12 +47,12 @@ public class ContentModelListViewImpl extends CustomComponent implements Content
     private final ContentModelContainerImpl contentModelContainerImpl;
 
     public ContentModelListViewImpl(final ContentModelContainerImpl contentModelContainerImpl,
-        final ResourceService contentModelService) {
+        final ContentModelSelectListener listener) {
         Preconditions.checkNotNull(contentModelContainerImpl, "contentModelContainer is null: %s",
             contentModelContainerImpl);
-        Preconditions.checkNotNull(contentModelService, "contentModelService is null: %s", contentModelService);
+        Preconditions.checkNotNull(listener, "listener is null: %s", listener);
         this.contentModelContainerImpl = contentModelContainerImpl;
-        listener = new ContentModelSelectListener(contentModelService);
+        this.listener = listener;
     }
 
     public void init() throws EscidocClientException {
@@ -96,5 +95,4 @@ public class ContentModelListViewImpl extends CustomComponent implements Content
     public Item firstItem() {
         return table.getItem(table.firstItemId());
     }
-
 }

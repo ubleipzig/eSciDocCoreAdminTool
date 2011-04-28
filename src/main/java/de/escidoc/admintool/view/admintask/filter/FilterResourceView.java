@@ -48,9 +48,8 @@ import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.admintool.view.admintask.AbstractCustomView;
 import de.escidoc.admintool.view.admintask.ResourceType;
 
+@SuppressWarnings("serial")
 public class FilterResourceView extends AbstractCustomView {
-
-    private static final long serialVersionUID = -1412202753685048760L;
 
     private final OptionGroup resourceOption = new OptionGroup(ViewConstants.PLEASE_SELECT_A_RESOURCE_TYPE);
 
@@ -58,7 +57,7 @@ public class FilterResourceView extends AbstractCustomView {
 
     private final Button filterResourceBtn = new Button(ViewConstants.FILTER_LABEL);
 
-    private final ShowFilterResultCommand command;
+    private final ShowFilterResultCommandImpl command;
 
     final AdminService adminService;
 

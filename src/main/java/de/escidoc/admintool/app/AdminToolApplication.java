@@ -72,6 +72,7 @@ import de.escidoc.admintool.view.contentmodel.ContentModelContainerImpl;
 import de.escidoc.admintool.view.contentmodel.ContentModelEditView;
 import de.escidoc.admintool.view.contentmodel.ContentModelListView;
 import de.escidoc.admintool.view.contentmodel.ContentModelListViewImpl;
+import de.escidoc.admintool.view.contentmodel.ContentModelSelectListener;
 import de.escidoc.admintool.view.contentmodel.ContentModelView;
 import de.escidoc.admintool.view.contentmodel.ContentModelViewImpl;
 import de.escidoc.admintool.view.context.ContextAddView;
@@ -507,7 +508,9 @@ public class AdminToolApplication extends Application {
 
         final ContentModelContainerImpl container = new ContentModelContainerImpl(contentModelService);
 
-        final ContentModelListView listView = new ContentModelListViewImpl(container, contentModelService);
+        final ContentModelListView listView =
+            new ContentModelListViewImpl(container, new ContentModelSelectListener(contentModelService, mainWindow));
+
         listView.init();
 
         addView = new ContentModelAddView(this, mainWindow, contentModelService, container, pdpRequest);

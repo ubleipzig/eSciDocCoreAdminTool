@@ -94,7 +94,7 @@ public class ContentModelEditView extends CustomComponent implements ResourceEdi
         Preconditions.checkNotNull(contentModelService, "contentModelService is null: %s", contentModelService);
         Preconditions.checkNotNull(mainWindow, "mainWindow is null: %s", mainWindow);
         Preconditions.checkNotNull(pdpRequest, "pdpRequest is null: %s", pdpRequest);
-        if (contentModelService instanceof ContentModelService) {
+        if (!(contentModelService instanceof ContentModelService)) {
             throw new RuntimeException("Not instance of ContentModelService." + contentModelService);
         }
         this.contentModelService = (ContentModelService) contentModelService;

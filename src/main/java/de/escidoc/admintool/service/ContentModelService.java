@@ -53,7 +53,7 @@ public class ContentModelService extends AbstractEscidocService<ContentModelHand
     public Resource create(final Resource resource) throws EscidocException, InternalClientException,
         TransportException {
         Preconditions.checkNotNull(resource, "resource is null: %s", resource);
-        if (resource instanceof ContentModel) {
+        if (!(resource instanceof ContentModel)) {
             throw new RuntimeException("Not instance of content model." + resource);
         }
         return getClient().create((ContentModel) resource);
@@ -68,7 +68,7 @@ public class ContentModelService extends AbstractEscidocService<ContentModelHand
     @Override
     public void update(final Resource resource) throws EscidocClientException {
         Preconditions.checkNotNull(resource, "resource is null: %s", resource);
-        if (resource instanceof ContentModel) {
+        if (!(resource instanceof ContentModel)) {
             throw new RuntimeException("Not instance of content model." + resource);
         }
         getClient().update((ContentModel) resource);
