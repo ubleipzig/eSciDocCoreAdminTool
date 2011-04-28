@@ -1,11 +1,9 @@
 build/*
-
 bin
 bin/*
 target/*
 reports/*
 bin/*
-etc/*
 script/*
 .settings/*
 *.log*
