@@ -7,7 +7,6 @@
 	<version>1.1-SNAPSHOT</version>
 	<packaging>war</packaging>
 	<dependencies>
-
 		<!-- Vaadin -->
 		<dependency>
 			<groupId>com.vaadin</groupId>
@@ -52,7 +51,6 @@
 			<version>1.6.1</version>
 			<scope>runtime</scope>
 		</dependency>
-
 
 		<!-- escidoc -->
 		<dependency>
@@ -276,7 +274,7 @@
 				<artifactId>maven-license-plugin</artifactId>
 				<version>1.9.0</version>
 				<configuration>
-					<header>etc/header.txt</header>
+					<header>${basedir}/etc/header.txt</header>
 					<strictCheck>true</strictCheck>
 					<includes>
 						<include>src/**</include>
