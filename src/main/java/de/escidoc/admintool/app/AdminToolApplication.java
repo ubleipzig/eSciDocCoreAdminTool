@@ -43,6 +43,7 @@ import de.escidoc.admintool.domain.PdpRequest;
 import de.escidoc.admintool.domain.PdpRequestImpl;
 import de.escidoc.admintool.messages.Messages;
 import de.escidoc.admintool.service.AdminService;
+import de.escidoc.admintool.service.ContentModelService;
 import de.escidoc.admintool.service.ContextService;
 import de.escidoc.admintool.service.ContextServiceLab;
 import de.escidoc.admintool.service.EscidocService;
@@ -75,6 +76,7 @@ import de.escidoc.admintool.view.contentmodel.ContentModelListViewImpl;
 import de.escidoc.admintool.view.contentmodel.ContentModelSelectListener;
 import de.escidoc.admintool.view.contentmodel.ContentModelView;
 import de.escidoc.admintool.view.contentmodel.ContentModelViewImpl;
+import de.escidoc.admintool.view.contentmodel.DeleteContentModelListener;
 import de.escidoc.admintool.view.context.ContextAddView;
 import de.escidoc.admintool.view.context.ContextView;
 import de.escidoc.admintool.view.factory.ContextViewFactory;
@@ -516,7 +518,11 @@ public class AdminToolApplication extends Application {
         addView = new ContentModelAddView(this, mainWindow, contentModelService, container, pdpRequest);
         addView.init();
 
-        final ContentModelEditView editView = new ContentModelEditView(contentModelService, mainWindow, pdpRequest);
+        final DeleteContentModelListener deleteListener =
+            new DeleteContentModelListener((ContentModelService) contentModelService, container, this);
+
+        final ContentModelEditView editView =
+            new ContentModelEditView(contentModelService, mainWindow, pdpRequest, deleteListener);
         editView.init();
 
         contentModelView = new ContentModelViewImpl(listView, addView, editView);

@@ -46,17 +46,29 @@ public class ContentModelToolbar extends CustomComponent {
 
     private final Button newBtn = new Button(ViewConstants.NEW, listener);
 
+    private final DeleteContentModelListener deleteListener;
+
+    private final Button deleteBtn = new Button(ViewConstants.DELETE);
+
     private final PdpRequest pdpRequest;
 
-    public ContentModelToolbar(final PdpRequest pdpRequest) {
+    protected ContentModelToolbar(final PdpRequest pdpRequest, final DeleteContentModelListener deleteListener) {
         Preconditions.checkNotNull(pdpRequest, "pdpRequest is null: %s", pdpRequest);
+        Preconditions.checkNotNull(deleteListener, "deleteListener is null: %s", deleteListener);
         this.pdpRequest = pdpRequest;
-        setCompositionRoot(hLayout);
+        this.deleteListener = deleteListener;
     }
 
-    public void init() {
+    protected void init() {
+        setCompositionRoot(hLayout);
         configureLayout();
         addNewButton();
+        addDeleteButton();
+    }
+
+    private void addDeleteButton() {
+        deleteBtn.addListener(deleteListener);
+        hLayout.addComponent(deleteBtn);
     }
 
     private void addNewButton() {
@@ -73,8 +85,14 @@ public class ContentModelToolbar extends CustomComponent {
         listener.setContentModelView(contentModelView);
     }
 
-    public void bind(final String contentModelId) {
+    protected void bind(final String contentModelId) {
         newBtn.setVisible(isCreateAllowed());
+        deleteBtn.setVisible(isDeleteAllowed());
+        deleteListener.setContentModelId(contentModelId);
+    }
+
+    private boolean isDeleteAllowed() {
+        return pdpRequest.isPermitted(ActionIdConstants.DELETE_CONTENT_MODEL);
     }
 
     private boolean isCreateAllowed() {

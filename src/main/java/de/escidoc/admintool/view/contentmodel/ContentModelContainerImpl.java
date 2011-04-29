@@ -51,7 +51,7 @@ public class ContentModelContainerImpl {
 
     }
 
-    public void reload() throws EscidocClientException {
+    protected void reload() throws EscidocClientException {
         final Set<Resource> allContentModels = contentModelService.findAll();
         itemContainer = new POJOContainer<Resource>(Resource.class, PropertyId.X_LINK_TITLE);
         for (final Resource resource : allContentModels) {
@@ -63,8 +63,13 @@ public class ContentModelContainerImpl {
         return itemContainer;
     }
 
-    public void add(final Resource created) {
+    protected void add(final Resource created) {
         Preconditions.checkNotNull(created, "created is null: %s", created);
         itemContainer.addItem(created);
+    }
+
+    protected void remove(final Resource toBeRemoved) {
+        Preconditions.checkNotNull(toBeRemoved, "toBeRemoved is null: %s", toBeRemoved);
+        itemContainer.removeItem(toBeRemoved);
     }
 }

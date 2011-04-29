@@ -92,17 +92,18 @@ public class ContentModelEditView extends CustomComponent implements ResourceEdi
     private CancelButtonListener cancelListener;
 
     public ContentModelEditView(final ResourceService contentModelService, final Window mainWindow,
-        final PdpRequest pdpRequest) {
+        final PdpRequest pdpRequest, final DeleteContentModelListener deleteListener) {
         Preconditions.checkNotNull(contentModelService, "contentModelService is null: %s", contentModelService);
         Preconditions.checkNotNull(mainWindow, "mainWindow is null: %s", mainWindow);
         Preconditions.checkNotNull(pdpRequest, "pdpRequest is null: %s", pdpRequest);
+        Preconditions.checkNotNull(deleteListener, "deleteListener is null: %s", deleteListener);
         if (!(contentModelService instanceof ContentModelService)) {
             throw new RuntimeException("Not instance of ContentModelService." + contentModelService);
         }
         this.contentModelService = (ContentModelService) contentModelService;
         this.mainWindow = mainWindow;
         this.pdpRequest = pdpRequest;
-        toolbar = new ContentModelToolbar(pdpRequest);
+        toolbar = new ContentModelToolbar(pdpRequest, deleteListener);
     }
 
     private boolean isUpdateNotAllowed() {

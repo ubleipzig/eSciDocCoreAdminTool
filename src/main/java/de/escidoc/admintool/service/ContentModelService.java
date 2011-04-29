@@ -101,4 +101,8 @@ public class ContentModelService extends AbstractEscidocService<ContentModelHand
         builder.append("]");
         return builder.toString();
     }
+
+    public void delete(final String selectedId) throws EscidocClientException {
+        getClient().delete(selectedId);
+    }
 }
