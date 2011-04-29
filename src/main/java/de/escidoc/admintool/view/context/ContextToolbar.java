@@ -46,6 +46,7 @@ import com.vaadin.ui.HorizontalLayout;
 import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.domain.PdpRequest;
 import de.escidoc.admintool.domain.PublicStatus;
+import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.admintool.view.context.workflow.AbstractState;
 import de.escidoc.admintool.view.navigation.ActionIdConstants;
 
@@ -54,13 +55,6 @@ import de.escidoc.admintool.view.navigation.ActionIdConstants;
  * 
  */
 public class ContextToolbar extends CustomComponent {
-    private static final String CLOSE = "Close";
-
-    private static final String OPEN = "Open";
-
-    private static final String DELETE = "Delete";
-
-    private static final String NEW = "New";
 
     private static final long serialVersionUID = -4522925443822439322L;
 
@@ -68,13 +62,13 @@ public class ContextToolbar extends CustomComponent {
 
     private final HorizontalLayout header = new HorizontalLayout();
 
-    private final Button newContextBtn = new Button(NEW, new NewContextListener());
+    private final Button newContextBtn = new Button(ViewConstants.NEW, new NewContextListener());
 
-    private final Button deleteContextBtn = new Button(DELETE, new DeleteContextListener());
+    private final Button deleteContextBtn = new Button(ViewConstants.DELETE, new DeleteContextListener());
 
-    private final Button openContextBtn = new Button(OPEN, new OpenContextListener());
+    private final Button openContextBtn = new Button(ViewConstants.OPEN, new OpenContextListener());
 
-    private final Button closeContextBtn = new Button(CLOSE, new CloseContextListener());
+    private final Button closeContextBtn = new Button(ViewConstants.CLOSE, new CloseContextListener());
 
     private final ContextEditForm contextEditForm;
 
@@ -153,7 +147,6 @@ public class ContextToolbar extends CustomComponent {
         @Override
         public void buttonClick(final ClickEvent event) {
             app.getMainWindow().addWindow(new CloseContextModalWindow(contextEditForm).getSubWindow());
-
         }
     }
 

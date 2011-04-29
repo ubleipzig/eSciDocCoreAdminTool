@@ -160,7 +160,7 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
 
     private Item item;
 
-    final Window mainWindow;
+    private final Window mainWindow;
 
     private final AddOrgUnitToTheList addOrgUnitToTheList;
 
@@ -663,7 +663,6 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
             }
             editToolbar.setSelected(publicStatus);
         }
-
     }
 
     private void bindUserRightWithView() {
@@ -676,7 +675,7 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
         return pdpRequest.isDenied(ActionIdConstants.UPDATE_CONTEXT, getSelectedItemId());
     }
 
-    public Context open(final String comment) throws EscidocException, InternalClientException, TransportException {
+    protected Context open(final String comment) throws EscidocException, InternalClientException, TransportException {
         final Context cachedContext = getContextFromCache();
         final Context openedContext = openContext(comment);
         updateContextList(cachedContext, openedContext);
@@ -703,12 +702,13 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
         setSelected(item);
     }
 
-    public Context close(final String comment) throws EscidocClientException {
+    protected Context close(final String comment) throws EscidocClientException {
         final Context cachedContext = getContextFromCache();
         final Context closedContext = closeContext(comment);
         updateContextList(cachedContext, closedContext);
         updateEditView(PublicStatus.CLOSED);
 
+        setFormReadOnly(true);
         footer.setVisible(false);
         return closedContext;
     }
@@ -739,7 +739,7 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
         this.contextList = contextList;
     }
 
-    public void deleteContext() {
+    protected void deleteContext() {
         try {
             final Context selected = contextService.getSelected(getSelectedItemId());
             contextService.delete(getSelectedItemId());

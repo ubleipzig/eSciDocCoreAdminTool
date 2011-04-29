@@ -211,17 +211,9 @@ public class ViewConstants {
 
     public static final String EDIT = "Edit ";
 
-    public static final String OPEN = "Open";
-
-    public static final String CLOSE = "Close";
-
     public static final String PREDESSOR_TYPE = "Predessor Type";
 
     public static final String ADD_PARENT_LABEL = "Add Parent";
-
-    public static final String DELETE = "Delete";
-
-    public static final String NEW = "New";
 
     public static final String ROLES_LABEL = "Roles";
 
@@ -426,4 +418,12 @@ public class ViewConstants {
     public static final String EDIT_CONTENT_MODEL = "Edit Content Model";
 
     public static final String ADD_CONTENT_MODEL_LABEL = "Add Content Model";
+
+    public static final String CLOSE = "Close";
+
+    public static final String OPEN = "Open";
+
+    public static final String DELETE = "Delete";
+
+    public static final String NEW = "New";
 }
