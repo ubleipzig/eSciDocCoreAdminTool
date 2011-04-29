@@ -31,9 +31,6 @@ package de.escidoc.admintool.view.admintask;
 import java.util.Collections;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Window;
@@ -48,8 +45,6 @@ import de.escidoc.core.client.exceptions.TransportException;
 public class RepoInfoClickListener implements ClickListener {
 
     private static final long serialVersionUID = 3487193092482071418L;
-
-    private static final Logger LOG = LoggerFactory.getLogger(RepoInfoClickListener.class);
 
     private final AdminService adminService;
 

@@ -50,12 +50,6 @@ import de.escidoc.core.client.interfaces.base.HandlerService;
 
 public class ServiceFactory {
 
-    private static final String SYSADMIN_PASSWORD_ESCIDEV_6 = "escidoc";
-
-    private static final String SYSADMIN_PASSWORD_LOCAL = "eSciDoc";
-
-    private static final String SYSADMIN_LOGIN_NAME = "sysadmin";
-
     private final String serviceUri;
 
     private final String token;
