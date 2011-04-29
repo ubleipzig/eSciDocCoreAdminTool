@@ -69,6 +69,8 @@ public class ContentModelEditView extends CustomComponent implements ResourceEdi
 
     private final TextArea descriptionField = new TextArea(ViewConstants.DESCRIPTION_LABEL);
 
+    private final TextField idField = new TextField(ViewConstants.OBJECT_ID_LABEL);
+
     private final HorizontalLayout buttonLayout = new HorizontalLayout();
 
     private final Button saveBtn = new Button(ViewConstants.SAVE_LABEL);
@@ -163,6 +165,14 @@ public class ContentModelEditView extends CustomComponent implements ResourceEdi
     private void addFields() {
         addNameField();
         addDescriptionField();
+        addIdField();
+    }
+
+    private void addIdField() {
+        idField.setWidth(ViewConstants.FIELD_WIDTH);
+        idField.setReadOnly(true);
+        configure(idField);
+        formLayout.addComponent(idField);
     }
 
     private void addDescriptionField() {
@@ -205,9 +215,15 @@ public class ContentModelEditView extends CustomComponent implements ResourceEdi
         Preconditions.checkNotNull(resource, "resource is null: %s", resource);
         this.resource = resource;
         bindDescription(resource);
-
+        bindId();
         bindUserRightWithView();
         updateListener.setContentModel(resource);
+    }
+
+    private void bindId() {
+        if (resource instanceof ContentModel) {
+            idField.setPropertyDataSource(new ObjectProperty<String>(((ContentModel) resource).getObjid()));
+        }
     }
 
     private void bindUserRightWithView() {
