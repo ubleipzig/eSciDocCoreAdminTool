@@ -113,8 +113,10 @@ public class ContentModelViewImpl extends CustomComponent implements ContentMode
     @Override
     public void showEditView(final Resource contentModel) {
         Preconditions.checkNotNull(contentModel, "contentModel is null: %s", contentModel);
+
         listView.setContentModel(contentModel);
         editView.setContentModel(contentModel);
+        showEditView(listView.getItem(contentModel));
         hSplitPanel.setSecondComponent(editView);
     }
 

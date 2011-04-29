@@ -47,15 +47,13 @@ import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.resources.Resource;
 import de.escidoc.core.resources.cmm.ContentModel;
 
-public class CreateContentModelListener implements ResourceBtnListener {
+class CreateContentModelListener implements ResourceBtnListener {
 
     private static final long serialVersionUID = 1978422911316028641L;
 
     private final Collection<Field> allFields;
 
     private final ResourceService contentModelService;
-
-    private ContentModel build;
 
     private final Map<String, Field> fieldByName;
 
@@ -65,7 +63,9 @@ public class CreateContentModelListener implements ResourceBtnListener {
 
     private ContentModelView contentModelView;
 
-    public CreateContentModelListener(final Collection<Field> allFields, final ResourceService contentModelService,
+    private ContentModel build;
+
+    protected CreateContentModelListener(final Collection<Field> allFields, final ResourceService contentModelService,
         final Map<String, Field> fieldByName, final Window mainWindow, final ContentModelContainerImpl container) {
         Preconditions.checkNotNull(mainWindow, "mainWindow is null: %s", mainWindow);
         Preconditions.checkNotNull(fieldByName, "fieldByName is null: %s", fieldByName);
@@ -132,7 +132,7 @@ public class CreateContentModelListener implements ResourceBtnListener {
         return (String) fieldByName.get("description").getValue();
     }
 
-    protected String getTitle() {
+    private String getTitle() {
         return (String) fieldByName.get("title").getValue();
     }
 

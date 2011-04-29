@@ -47,6 +47,7 @@ import com.vaadin.ui.themes.Reindeer;
 import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.domain.PdpRequest;
 import de.escidoc.admintool.service.ResourceService;
+import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.admintool.view.resource.FormLayoutFactory;
 import de.escidoc.admintool.view.resource.PropertiesFields;
 import de.escidoc.admintool.view.resource.PropertiesFieldsImpl;
@@ -94,7 +95,7 @@ public class ContentModelAddView extends AbstractView<Panel> {
 
     public void init() {
         getContent().setContent(vLayout);
-        getContent().setCaption("Add Content Model");
+        getContent().setCaption(ViewConstants.ADD_CONTENT_MODEL_LABEL);
         getContent().setStyleName(Reindeer.PANEL_LIGHT);
         createPropertiesFields();
         addPropertiesFields();

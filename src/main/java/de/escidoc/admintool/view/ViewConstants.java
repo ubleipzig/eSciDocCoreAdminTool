@@ -424,4 +424,6 @@ public class ViewConstants {
     public static final String X_LINK_TITLE = "xLinkTitle";
 
     public static final String EDIT_CONTENT_MODEL = "Edit Content Model";
+
+    public static final String ADD_CONTENT_MODEL_LABEL = "Add Content Model";
 }

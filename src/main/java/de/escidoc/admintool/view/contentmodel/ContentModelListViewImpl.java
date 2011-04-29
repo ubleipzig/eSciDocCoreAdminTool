@@ -95,4 +95,11 @@ public class ContentModelListViewImpl extends CustomComponent implements Content
     public Item firstItem() {
         return table.getItem(table.firstItemId());
     }
+
+    @Override
+    public Item getItem(final Resource contentModel) {
+        Preconditions.checkNotNull(contentModel, "contentModel is null: %s", contentModel);
+        Preconditions.checkNotNull(table, "table is null: %s", table);
+        return table.getItem(contentModel);
+    }
 }

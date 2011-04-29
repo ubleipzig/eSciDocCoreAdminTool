@@ -46,4 +46,6 @@ public interface ContentModelListView extends Component {
     Resource firstItemId();
 
     Item firstItem();
+
+    Item getItem(Resource contentModel);
 }
