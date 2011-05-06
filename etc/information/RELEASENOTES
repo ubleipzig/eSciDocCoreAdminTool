@@ -1,0 +1,54 @@
+
+Release Notes - Admin Tool - Version V1.1 RC1
+
+** Bug
+    * [ADMTOOL-1] - "Show Status" gives "purging finished at .."
+    * [ADMTOOL-17] - Removing referenced organizational units in context edit view does not work.
+    * [ADMTOOL-128] - Do not "Show status of reindexing", if the user hasn't started reindexing
+    * [ADMTOOL-132] - Fix RuntimeError 
+    * [ADMTOOL-141] - Inconsistent Field Background
+    * [ADMTOOL-142] - Missing Scrollbar on Input Field
+    * [ADMTOOL-143] - Browse User Accounts fail
+    * [ADMTOOL-146] - Role Management view should not visible for user who doesn't have the rights to assign Role
+    * [ADMTOOL-147] - When the user is not logged in, the user should see a login button
+    * [ADMTOOL-149] - Public status of context should be shown in lowercase letters
+    * [ADMTOOL-150] - Modifier and Creator in Org. Unit Edit View should be shown as Label if the user can not retrieve the modifier/creator
+    * [ADMTOOL-151] - Selecting Context in ResourceType in RoleManagement view does not work
+    * [ADMTOOL-152] - Public status of Org Unit should be shown in lowercase letters
+    * [ADMTOOL-157] - Organisational Units are not shown 
+    * [ADMTOOL-169] - Context should not editable after being closed.
+
+** Improvement
+    * [ADMTOOL-94] - Enable other users than sysadmin to use Admin Tool
+    * [ADMTOOL-99] - List Content Models
+    * [ADMTOOL-111] - Allow anonymous user to access AdminTool
+    * [ADMTOOL-133] - Bind User right with Content Model View
+    * [ADMTOOL-161] - When the user changes the status of org unit, the view should be updated
+    * [ADMTOOL-168] - After creating a content model, the content should be shown in edit view
+    * [ADMTOOL-170] - Show Content Model ID in edit view.
+
+** New Feature
+    * [ADMTOOL-57] - Use eSciDoc Infrastructure 1.3
+    * [ADMTOOL-153] - When the user click the Ok button in Welcome Page, she should see the MainView as Guest
+    * [ADMTOOL-154] - The user should be able to assign grant to Item and Container
+    * [ADMTOOL-162] - Show Name and Description on Content Model on Selection
+    * [ADMTOOL-171] - The user with an approriate grant should be able to delete content model
+
+** Task
+    * [ADMTOOL-84] - SLF4J: Class path contains multiple SLF4J bindings.
+    * [ADMTOOL-85] - Fix FindBugs Warning: Critical and Major 
+    * [ADMTOOL-148] - Fix Build Failure in Hudson
+
+** Sub-task
+    * [ADMTOOL-130] - Fix java.lang.ExceptionInInitializerError
+    * [ADMTOOL-131] - Fix NoClassDefFoundError
+    * [ADMTOOL-134] - Asking PDP as not-logged-in user if she can create a content model does not work
+    * [ADMTOOL-136] - Show eSciDoc Login Page, if the user clicks the login button
+    * [ADMTOOL-155] - An authorized user should be able to assign grant with the scope item
+    * [ADMTOOL-156] - An authorized user should be able to assign grant with the scope container
+    * [ADMTOOL-159] - Add header in the list.
+    * [ADMTOOL-160] - Make the list full size
+    * [ADMTOOL-163] - Bind name property with list and edit view
+    * [ADMTOOL-164] - Change Layout from Vertical to Form Layout
+    * [ADMTOOL-165] - Check access using PDP for content model retrieve and update.
+    * [ADMTOOL-166] - Select the first content model by default
