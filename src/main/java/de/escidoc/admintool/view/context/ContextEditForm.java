@@ -106,7 +106,7 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
 
     private static final int LABEL_WIDTH = 111;
 
-    public static final int HEIGHT = 15;
+    private static final int HEIGHT = 15;
 
     private final List<Field> fields = new ArrayList<Field>();
 

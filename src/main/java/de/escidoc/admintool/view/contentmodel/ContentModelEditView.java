@@ -55,6 +55,7 @@ import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.admintool.view.navigation.ActionIdConstants;
 import de.escidoc.admintool.view.resource.CancelButtonListener;
 import de.escidoc.admintool.view.resource.ResourceEditView;
+import de.escidoc.admintool.view.util.Converter;
 import de.escidoc.core.resources.Resource;
 import de.escidoc.core.resources.cmm.ContentModel;
 
@@ -71,7 +72,9 @@ public class ContentModelEditView extends CustomComponent implements ResourceEdi
 
     private final TextField idField = new TextField(ViewConstants.OBJECT_ID_LABEL);
 
-    private final AbstractTextField creatorField = new TextField(ViewConstants.CREATED_BY_LABEL);
+    private final AbstractTextField creatorField = new TextField(ViewConstants.BY);
+
+    private final AbstractTextField createdOnField = new TextField(ViewConstants.CREATED_ON_LABEL);
 
     private final HorizontalLayout buttonLayout = new HorizontalLayout();
 
@@ -89,7 +92,7 @@ public class ContentModelEditView extends CustomComponent implements ResourceEdi
 
     private UpdateContentModelListener updateListener;
 
-    private Resource resource;
+    private ContentModel resource;
 
     private CancelButtonListener cancelListener;
 
@@ -170,7 +173,15 @@ public class ContentModelEditView extends CustomComponent implements ResourceEdi
         addNameField();
         addDescriptionField();
         addIdField();
+        addCreatedOn();
         addCreator();
+    }
+
+    private void addCreatedOn() {
+        createdOnField.setWidth(ViewConstants.FIELD_WIDTH);
+        createdOnField.setReadOnly(true);
+        configure(createdOnField);
+        formLayout.addComponent(createdOnField);
     }
 
     private void addCreator() {
@@ -225,26 +236,30 @@ public class ContentModelEditView extends CustomComponent implements ResourceEdi
 
     public void setContentModel(final Resource resource) {
         Preconditions.checkNotNull(resource, "resource is null: %s", resource);
-        this.resource = resource;
-        bindDescription(resource);
-        bindId();
-        bindCreator();
-        bindUserRightWithView();
-        updateListener.setContentModel(resource);
+        if (resource instanceof ContentModel) {
+            this.resource = (ContentModel) resource;
+            bindDescription(resource);
+            bindId();
+            bindCreator();
+            bindCreatedOn();
+            bindUserRightWithView();
+            updateListener.setContentModel(resource);
+        }
+    }
+
+    private void bindCreatedOn() {
+        createdOnField.setPropertyDataSource(new ObjectProperty<String>(Converter.dateTimeToString(resource
+            .getProperties().getCreationDate())));
+
     }
 
     private void bindCreator() {
-        if (resource instanceof ContentModel) {
-            final ContentModel contentModel = (ContentModel) resource;
-            final String creatorName = contentModel.getProperties().getCreatedBy().getXLinkTitle();
-            creatorField.setPropertyDataSource(new ObjectProperty<String>(creatorName));
-        }
+        creatorField.setPropertyDataSource(new ObjectProperty<String>(resource
+            .getProperties().getCreatedBy().getXLinkTitle()));
     }
 
     private void bindId() {
-        if (resource instanceof ContentModel) {
-            idField.setPropertyDataSource(new ObjectProperty<String>(((ContentModel) resource).getObjid()));
-        }
+        idField.setPropertyDataSource(new ObjectProperty<String>((resource).getObjid()));
     }
 
     private void bindUserRightWithView() {

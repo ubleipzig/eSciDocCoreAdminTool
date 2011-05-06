@@ -84,8 +84,6 @@ public class ViewConstants {
 
     public static final String IS_ACTIVE_LABEL = Messages.getString("ViewConstants.21"); //$NON-NLS-1$
 
-    public static final String CREATED_ON_LABEL = "Created on";
-
     public static final String CREATED_BY_LABEL = Messages.getString("ViewConstants.23"); //$NON-NLS-1$
 
     public static final String MODIFIED_ON_LABEL = "Modified on";
@@ -426,4 +424,8 @@ public class ViewConstants {
     public static final String DELETE = "Delete";
 
     public static final String NEW = "New";
+
+    public static final String BY = "By";
+
+    public static final String CREATED_ON_LABEL = "Created On";
 }
