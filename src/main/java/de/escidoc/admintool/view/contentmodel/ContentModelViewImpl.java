@@ -36,7 +36,9 @@ import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 
+import de.escidoc.admintool.domain.PdpRequest;
 import de.escidoc.admintool.view.ViewConstants;
+import de.escidoc.admintool.view.navigation.ActionIdConstants;
 import de.escidoc.core.resources.Resource;
 
 @SuppressWarnings("serial")
@@ -54,18 +56,22 @@ public class ContentModelViewImpl extends CustomComponent implements ContentMode
 
     private final ContentModelEditView editView;
 
+    private final PdpRequest pdpRequest;
+
     public ContentModelViewImpl(final ContentModelListView listView, final ContentModelAddView addView,
-        final ContentModelEditView editView) {
+        final ContentModelEditView editView, final PdpRequest pdpRequest) {
 
         Preconditions.checkNotNull(listView, "listView is null: %s", listView);
         Preconditions.checkNotNull(addView, "addView is null: %s", addView);
         Preconditions.checkNotNull(editView, "editView is null: %s", editView);
+        Preconditions.checkNotNull(pdpRequest, "pdpRequest is null: %s", pdpRequest);
 
         setCompositionRoot(hSplitPanel);
 
         this.listView = listView;
         this.addView = addView;
         this.editView = editView;
+        this.pdpRequest = pdpRequest;
     }
 
     @Override
@@ -102,7 +108,13 @@ public class ContentModelViewImpl extends CustomComponent implements ContentMode
 
     @Override
     public void showAddView() {
-        hSplitPanel.replaceComponent(editView, createAddView());
+        if (pdpRequest.isPermitted(ActionIdConstants.CREATE_CONTENT_MODEL)) {
+            hSplitPanel.replaceComponent(editView, createAddView());
+        }
+        else {
+            hSplitPanel.replaceComponent(editView, new BlankView());
+
+        }
     }
 
     private Component createAddView() {
