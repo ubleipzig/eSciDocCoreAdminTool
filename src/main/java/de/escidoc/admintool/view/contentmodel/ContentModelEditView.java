@@ -71,6 +71,8 @@ public class ContentModelEditView extends CustomComponent implements ResourceEdi
 
     private final TextField idField = new TextField(ViewConstants.OBJECT_ID_LABEL);
 
+    private final AbstractTextField creatorField = new TextField(ViewConstants.CREATED_BY_LABEL);
+
     private final HorizontalLayout buttonLayout = new HorizontalLayout();
 
     private final Button saveBtn = new Button(ViewConstants.SAVE_LABEL);
@@ -124,6 +126,7 @@ public class ContentModelEditView extends CustomComponent implements ResourceEdi
         addToolbar();
 
         panel.addComponent(formLayout);
+
         addSpace();
         addFields();
         addFooter();
@@ -167,6 +170,14 @@ public class ContentModelEditView extends CustomComponent implements ResourceEdi
         addNameField();
         addDescriptionField();
         addIdField();
+        addCreator();
+    }
+
+    private void addCreator() {
+        creatorField.setWidth(ViewConstants.FIELD_WIDTH);
+        creatorField.setReadOnly(true);
+        configure(creatorField);
+        formLayout.addComponent(creatorField);
     }
 
     private void addIdField() {
@@ -217,8 +228,17 @@ public class ContentModelEditView extends CustomComponent implements ResourceEdi
         this.resource = resource;
         bindDescription(resource);
         bindId();
+        bindCreator();
         bindUserRightWithView();
         updateListener.setContentModel(resource);
+    }
+
+    private void bindCreator() {
+        if (resource instanceof ContentModel) {
+            final ContentModel contentModel = (ContentModel) resource;
+            final String creatorName = contentModel.getProperties().getCreatedBy().getXLinkTitle();
+            creatorField.setPropertyDataSource(new ObjectProperty<String>(creatorName));
+        }
     }
 
     private void bindId() {
