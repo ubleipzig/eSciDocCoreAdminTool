@@ -428,4 +428,6 @@ public class ViewConstants {
     public static final String BY = "By";
 
     public static final String CREATED_ON_LABEL = "Created On";
+
+    public static final String VERSION = "Version";
 }

@@ -58,6 +58,7 @@ import de.escidoc.admintool.view.resource.ResourceEditView;
 import de.escidoc.admintool.view.util.Converter;
 import de.escidoc.core.resources.Resource;
 import de.escidoc.core.resources.cmm.ContentModel;
+import de.escidoc.core.resources.interfaces.common.Version;
 
 @SuppressWarnings("serial")
 public class ContentModelEditView extends CustomComponent implements ResourceEditView {
@@ -75,6 +76,14 @@ public class ContentModelEditView extends CustomComponent implements ResourceEdi
     private final AbstractTextField creatorField = new TextField(ViewConstants.BY);
 
     private final AbstractTextField createdOnField = new TextField(ViewConstants.CREATED_ON_LABEL);
+
+    private final AbstractTextField versionNumberField = new TextField(ViewConstants.VERSION);
+
+    private final AbstractTextField versionDateField = new TextField(ViewConstants.MODIFIED_ON_LABEL);
+
+    private final AbstractTextField versionModifiedBy = new TextField(ViewConstants.BY);
+
+    private final AbstractTextField versionStatus = new TextField(ViewConstants.PUBLIC_STATUS_LABEL);
 
     private final HorizontalLayout buttonLayout = new HorizontalLayout();
 
@@ -175,6 +184,21 @@ public class ContentModelEditView extends CustomComponent implements ResourceEdi
         addIdField();
         addCreatedOn();
         addCreator();
+        addVersion();
+    }
+
+    private void addVersion() {
+        addReadOnlyField(versionNumberField);
+        addReadOnlyField(versionDateField);
+        addReadOnlyField(versionModifiedBy);
+        addReadOnlyField(versionStatus);
+    }
+
+    private void addReadOnlyField(final AbstractTextField textField) {
+        textField.setWidth(ViewConstants.FIELD_WIDTH);
+        textField.setReadOnly(true);
+        configure(textField);
+        formLayout.addComponent(textField);
     }
 
     private void addCreatedOn() {
@@ -242,9 +266,19 @@ public class ContentModelEditView extends CustomComponent implements ResourceEdi
             bindId();
             bindCreator();
             bindCreatedOn();
+            bindVersion();
             bindUserRightWithView();
             updateListener.setContentModel(resource);
         }
+    }
+
+    private void bindVersion() {
+        final Version version = resource.getProperties().getVersion();
+        versionNumberField.setPropertyDataSource(new ObjectProperty<String>(version.getNumber()));
+        versionDateField
+            .setPropertyDataSource(new ObjectProperty<String>(Converter.dateTimeToString(version.getDate())));
+        versionModifiedBy.setPropertyDataSource(new ObjectProperty<String>(version.getModifiedBy().getXLinkTitle()));
+        versionStatus.setPropertyDataSource(new ObjectProperty<String>(version.getStatus()));
     }
 
     private void bindCreatedOn() {
