@@ -42,7 +42,7 @@ import de.escidoc.core.resources.common.MetadataRecord;
 public class EscidocMdRecord extends MetadataRecord {
 
     public static class BuilderImpl implements Builder<MetadataRecord> {
-        final MetadataRecord escidocMdRecord = new MetadataRecord();
+        MetadataRecord escidocMdRecord;
 
         private final String title;
 
@@ -70,8 +70,8 @@ public class EscidocMdRecord extends MetadataRecord {
         }
 
         public MetadataRecord build() throws ParserConfigurationException {
+            escidocMdRecord = new MetadataRecord(AppConstants.ESCIDOC_DEFAULT_METADATA_NAME);
 
-            escidocMdRecord.setName("escidoc");
             buildNewDocument();
             pubman =
                 doc.createElementNS("http://purl.org/escidoc/metadata/profiles/0.1/organizationalunit",

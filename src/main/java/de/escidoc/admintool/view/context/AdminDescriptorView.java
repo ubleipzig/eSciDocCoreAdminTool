@@ -176,7 +176,7 @@ public abstract class AdminDescriptorView extends Window {
     }
 
     private boolean enteredAdminDescriptors(final String value) {
-        final AdminDescriptor adminDescriptor = new AdminDescriptor();
+        final AdminDescriptor adminDescriptor = new AdminDescriptor((String) adminDescName.getValue());
         adminDescriptor.setName((String) adminDescName.getValue());
         try {
             adminDescriptor.setContent(value);

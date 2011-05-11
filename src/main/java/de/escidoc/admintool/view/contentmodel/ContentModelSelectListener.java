@@ -82,6 +82,11 @@ public final class ContentModelSelectListener implements ItemClickListener {
             public ResourceType getResourceType() {
                 throw new UnsupportedOperationException("Not yet implemented");
             }
+
+            @Override
+            public void generateXLinkHref(final String parentPath) {
+                throw new UnsupportedOperationException("Not yet implemented");
+            }
         };
     }
 

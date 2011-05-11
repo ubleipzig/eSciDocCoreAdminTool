@@ -36,6 +36,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
+import de.escidoc.admintool.app.AppConstants;
 import de.escidoc.core.resources.common.MetadataRecord;
 import de.escidoc.core.resources.common.MetadataRecords;
 
@@ -45,13 +46,13 @@ public class MdRecord {
 
     private static Document doc;
 
-    public static MetadataRecords createEscidocMdRecords(String name, String disc) throws ParserConfigurationException {
+    public static MetadataRecords createEscidocMdRecords(final String name, final String disc)
+        throws ParserConfigurationException {
 
         final MetadataRecords mdRecords = new MetadataRecords();
-        final MetadataRecord escidocMdRecord = new MetadataRecord();
+        final MetadataRecord escidocMdRecord = new MetadataRecord(AppConstants.ESCIDOC_DEFAULT_METADATA_NAME);
         mdRecords.add(escidocMdRecord);
 
-        escidocMdRecord.setName("escidoc");
         buildNewDocument();
 
         pubman =

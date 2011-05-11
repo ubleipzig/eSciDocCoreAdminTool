@@ -205,7 +205,7 @@ public class UserService {
 
     public Collection<Grant> retrieveCurrentGrants(final String objectId) throws InternalClientException,
         TransportException, EscidocClientException {
-        return getRestClient().retrieveCurrentGrants(objectId).getGrants();
+        return getRestClient().retrieveCurrentGrants(objectId);
     }
 
     private UserAccountHandlerClientInterface getRestClient() {

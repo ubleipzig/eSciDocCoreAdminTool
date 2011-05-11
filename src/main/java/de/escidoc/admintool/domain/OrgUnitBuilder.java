@@ -104,8 +104,7 @@ public class OrgUnitBuilder {
     private MetadataRecord eSciDocMdRecord(final String title, final String description)
         throws ParserConfigurationException, SAXException, IOException {
 
-        final MetadataRecord mdRecord = new MetadataRecord();
-        mdRecord.setName("escidoc");
+        final MetadataRecord mdRecord = new MetadataRecord(AppConstants.ESCIDOC_DEFAULT_METADATA_NAME);
         buildNewDocument();
         mpdlMdRecord =
             doc.createElementNS("http://purl.org/escidoc/metadata/profiles/0.1/organizationalunit",
@@ -231,7 +230,7 @@ public class OrgUnitBuilder {
 
         final Predecessors predecessor = new Predecessors();
         for (final String predecessorId : predecessorsObjectIds) {
-            predecessor.addPredecessorRef(new Predecessor(predecessorId, predecessorType));
+            predecessor.add(new Predecessor(predecessorId, predecessorType));
         }
 
         oldOrgUnit.setPredecessors(predecessor);

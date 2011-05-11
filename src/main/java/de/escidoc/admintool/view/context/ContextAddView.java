@@ -371,7 +371,7 @@ public class ContextAddView extends CustomComponent implements ClickListener {
             if (contentComp instanceof Label) {
                 adminDescContent = ((String) ((Label) contentComp).getValue());
             }
-            final AdminDescriptor adminDescriptor = new AdminDescriptor();
+            final AdminDescriptor adminDescriptor = new AdminDescriptor(adminDescName);
             adminDescriptor.setName(adminDescName);
             try {
                 adminDescriptor.setContent(adminDescContent);

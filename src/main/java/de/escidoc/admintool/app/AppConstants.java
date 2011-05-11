@@ -87,4 +87,6 @@ public class AppConstants {
     static final String SPACE = " ";
 
     public static final String GUEST_OBJECT_ID = SPACE;
+
+    public static final String ESCIDOC_DEFAULT_METADATA_NAME = "escidoc";
 }
