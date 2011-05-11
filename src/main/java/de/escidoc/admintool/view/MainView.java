@@ -41,7 +41,6 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.Reindeer;
 
 import de.escidoc.admintool.app.AdminToolApplication;
-import de.escidoc.admintool.app.AppConstants;
 import de.escidoc.admintool.domain.PdpRequest;
 import de.escidoc.admintool.view.factory.ToolbarFactory;
 import de.escidoc.admintool.view.navigation.ExpandCollapseCommand;
@@ -117,7 +116,7 @@ public class MainView extends CustomComponent {
     }
 
     private boolean isUserLoggedIn() {
-        return !currentUser.getObjid().equals(AppConstants.GUEST_OBJECT_ID);
+        return currentUser.getObjid() != null;
     }
 
     private void show(final Button logOutButton) {

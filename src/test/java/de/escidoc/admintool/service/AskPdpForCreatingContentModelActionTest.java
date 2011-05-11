@@ -30,8 +30,10 @@ package de.escidoc.admintool.service;
 
 import static org.junit.Assert.assertTrue;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -43,7 +45,12 @@ public class AskPdpForCreatingContentModelActionTest {
 
     private static final String LOCALHOST_8080 = "http://localhost:8080";
 
-    private final PdpService service = new PdpServiceImpl(LOCALHOST_8080);
+    private PdpService service;
+
+    @Before
+    public void setup() throws MalformedURLException {
+        service = new PdpServiceImpl(new URL(LOCALHOST_8080));
+    }
 
     @Ignore("need to adapted for CI: no running eSciDoc")
     @Test
@@ -51,8 +58,8 @@ public class AskPdpForCreatingContentModelActionTest {
         // When:
         final boolean isDenied =
             service
-                .isAction(ActionIdConstants.CREATE_CONTENT_MODEL).forResource(AppConstants.EMPTY_STRING)
-                .forUser(AppConstants.EMPTY_STRING).denied();
+                .isAction(ActionIdConstants.CREATE_CONTENT_MODEL).forResource(AppConstants.EMPTY_STRING).forUser(" ")
+                .denied();
         // AssertThat:
         assertTrue(isDenied);
     }
@@ -74,4 +81,5 @@ public class AskPdpForCreatingContentModelActionTest {
         // AssertThat:
         assertTrue(isDenied);
     }
+
 }

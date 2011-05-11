@@ -28,6 +28,8 @@
  */
 package de.escidoc.admintool.app;
 
+import java.net.MalformedURLException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.vaadin.appfoundation.view.ViewHandler;
@@ -257,15 +259,18 @@ public class AdminToolApplication extends Application {
         catch (final EscidocClientException e) {
             handleException(e);
         }
+        catch (final MalformedURLException e) {
+            handleException(e);
+        }
     }
 
-    private void handleException(final EscidocClientException e) {
+    private void handleException(final Exception e) {
         LOG.error(ViewConstants.SERVER_INTERNAL_ERROR, e);
         ModalDialog.show(mainWindow, e);
     }
 
     private void initApplication() throws InternalClientException, EscidocException, TransportException,
-        EscidocClientException {
+        EscidocClientException, MalformedURLException {
         createServices();
         setCurrentUser();
         createPdpRequest();
@@ -315,7 +320,8 @@ public class AdminToolApplication extends Application {
         contextViewFactory = new ContextViewFactory(this, mainWindow, orgUnitService, contextService, pdpRequest);
     }
 
-    private void createServices() throws InternalClientException, EscidocException, TransportException {
+    private void createServices() throws InternalClientException, EscidocException, TransportException,
+        MalformedURLException {
         LOG.info("Using escidoc instance  in: " + escidocServiceLocation.getUri());
         final ServiceFactory serviceFactory = new ServiceFactory(escidocServiceLocation, token);
         orgUnitService = serviceFactory.createOrgService();

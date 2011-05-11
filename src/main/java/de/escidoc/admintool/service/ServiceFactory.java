@@ -28,6 +28,9 @@
  */
 package de.escidoc.admintool.service;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import com.google.common.base.Preconditions;
 
 import de.escidoc.admintool.view.EscidocServiceLocation;
@@ -138,8 +141,8 @@ public class ServiceFactory {
         return service;
     }
 
-    public PdpService createPdpService() throws AuthenticationException, TransportException {
-        final PdpServiceImpl pdpService = new PdpServiceImpl(serviceUri);
+    public PdpService createPdpService() throws AuthenticationException, TransportException, MalformedURLException {
+        final PdpServiceImpl pdpService = new PdpServiceImpl(new URL(serviceUri));
         pdpService.loginWith(token);
         return pdpService;
     }
