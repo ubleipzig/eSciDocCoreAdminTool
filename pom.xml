@@ -44,12 +44,14 @@
 			<artifactId>slf4j-api</artifactId>
 			<version>1.6.1</version>
 			<scope>compile</scope>
+			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
 			<version>1.6.1</version>
 			<scope>runtime</scope>
+			<optional>true</optional>
 		</dependency>
 
 		<!-- escidoc -->
@@ -276,7 +278,7 @@
 				<configuration>
 					<header>${basedir}/etc/header.txt</header>
 					<strictCheck>true</strictCheck>
-                    <failIfMissing>false</failIfMissing>
+					<failIfMissing>false</failIfMissing>
 					<includes>
 						<include>src/**</include>
 						<include>**/test/**</include>
