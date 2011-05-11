@@ -79,7 +79,15 @@ public class PdpServiceImpl implements PdpService {
     @Override
     public PdpService forUser(final String userId) throws URISyntaxException {
         final Set<Attribute> subjectAttributes = new HashSet<Attribute>();
-        subjectAttributes.add(new Attribute(new URI(AppConstants.SUBJECT_ID), null, null, new StringAttribute(userId)));
+
+        if (userId == null) {
+            subjectAttributes
+                .add(new Attribute(new URI(AppConstants.SUBJECT_ID), null, null, new StringAttribute(" ")));
+        }
+        else {
+            subjectAttributes.add(new Attribute(new URI(AppConstants.SUBJECT_ID), null, null, new StringAttribute(
+                userId)));
+        }
         subjects = new HashSet<Subject>();
         subjects.add(new Subject(Subject.DEFAULT_CATEGORY, subjectAttributes));
         return this;
