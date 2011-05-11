@@ -57,31 +57,27 @@ public class ResourceEditViewImpl extends CustomComponent implements ResourceEdi
 
     private final VerticalLayout vLayout = new VerticalLayout();
 
-    private final PropertiesFields propertyFields;
-
     private final SaveAndCancelButtons footers = new SaveAndCancelButtons();
-
-    private final ResourceToolbar resourceToolbar;
-
-    private OrgUnitSpecificView resourceSpecific;
-
-    private final FormLayout formLayout = FormLayoutFactory.create();
-
-    private final Window mainWindow;
-
-    private final ResourceService orgUnitService;
-
-    private ResourceBtnListener updateOrgUnitBtnListener;
 
     private final Map<String, Field> fieldByName = new HashMap<String, Field>();
 
     private final Panel panel = new Panel(ViewConstants.EDIT_ORG_UNIT);
 
+    private final FormLayout formLayout = FormLayoutFactory.create();
+
+    private final PropertiesFields propertyFields;
+
+    private final ResourceToolbar resourceToolbar;
+
+    private final Window mainWindow;
+
+    private final ResourceService orgUnitService;
+
     private final ResourceView resourceView;
 
-    private final AdminToolApplication app;
+    private ResourceBtnListener updateOrgUnitBtnListener;
 
-    private final PdpRequest pdpRequest;
+    private OrgUnitSpecificView resourceSpecific;
 
     public ResourceEditViewImpl(final AdminToolApplication app, final Window mainWindow,
         final ResourceViewImpl resourceView, final ResourceService orgUnitService,
@@ -89,11 +85,9 @@ public class ResourceEditViewImpl extends CustomComponent implements ResourceEdi
 
         checkPreconditions(mainWindow, resourceView, orgUnitService, resourceContainer, pdpRequest);
 
-        this.app = app;
         this.mainWindow = mainWindow;
         this.resourceView = resourceView;
         this.orgUnitService = orgUnitService;
-        this.pdpRequest = pdpRequest;
         formLayout.setWidth(75, UNITS_PERCENTAGE);
 
         resourceToolbar =

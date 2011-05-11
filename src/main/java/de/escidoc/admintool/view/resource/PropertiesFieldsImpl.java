@@ -93,8 +93,6 @@ public class PropertiesFieldsImpl extends CustomComponent implements PropertiesF
 
     Label objectId;
 
-    private final AdminToolApplication app;
-
     private final FieldsBinder binder;
 
     private PdpRequest pdpRequest;
@@ -106,7 +104,6 @@ public class PropertiesFieldsImpl extends CustomComponent implements PropertiesF
         Preconditions.checkNotNull(formLayout, "formLayout is null: %s", formLayout);
         Preconditions.checkNotNull(fieldByName, "fieldByName is null: %s", fieldByName);
         Preconditions.checkNotNull(pdpRequest, "pdpRequest is null: %s", pdpRequest);
-        this.app = app;
         this.formLayout = formLayout;
         this.fieldByName = fieldByName;
         this.pdpRequest = pdpRequest;

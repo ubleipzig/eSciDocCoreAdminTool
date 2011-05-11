@@ -42,7 +42,6 @@ import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.client.exceptions.application.invalid.InvalidStatusException;
 import de.escidoc.core.resources.oum.OrganizationalUnit;
-import de.escidoc.core.resources.oum.Parent;
 import de.escidoc.core.resources.oum.Parents;
 
 final class RemoveParentListener implements ClickListener {
@@ -79,8 +78,7 @@ final class RemoveParentListener implements ClickListener {
         }
         catch (final EscidocClientException e) {
             if (e instanceof InvalidStatusException) {
-                ModalDialog.show(orgUnitSpecificView.mainWindow, "Parent of " + selectedOrgUnit.getXLinkTitle()
-                    + " is not in status opened.");
+                ModalDialog.show(orgUnitSpecificView.mainWindow, e.getMessage());
             }
             else {
                 LOG.warn("Internal server error.", e);
@@ -90,19 +88,10 @@ final class RemoveParentListener implements ClickListener {
     }
 
     private void updateItem() {
-        final Parent parent = null;
-        if (parent == null) {
-            getParentProperty().setValue(new ResourceRefDisplay());
-        }
-
         final Item updateItem = orgUnitSpecificView.item;
 
         final Property itemProperty = updateItem.getItemProperty(PropertyId.PARENTS);
         itemProperty.setValue(new Parents());
-    }
-
-    private Property getParentProperty() {
-        return parentProperty;
     }
 
     protected void updatePersistence() throws EscidocClientException {

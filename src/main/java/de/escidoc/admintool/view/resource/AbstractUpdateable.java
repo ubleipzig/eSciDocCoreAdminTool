@@ -42,9 +42,9 @@ import de.escidoc.core.resources.Resource;
 
 public abstract class AbstractUpdateable implements Updateable {
 
-    private Item item;
-
     private final Window mainWindow;
+
+    private Item item;
 
     private ResourceService orgUnitService;
 
@@ -69,9 +69,7 @@ public abstract class AbstractUpdateable implements Updateable {
         }
         catch (final EscidocClientException e) {
             if (e instanceof InvalidStatusException) {
-                final String eMessage =
-                    "Parent of organizational unit with the ID " + getChildId() + " is not in status opened.";
-                ModalDialog.show(mainWindow, eMessage);
+                ModalDialog.show(mainWindow, e.getMessage());
             }
             else {
                 ModalDialog.show(mainWindow, e);

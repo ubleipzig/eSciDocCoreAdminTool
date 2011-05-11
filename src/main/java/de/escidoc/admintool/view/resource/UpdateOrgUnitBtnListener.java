@@ -97,6 +97,10 @@ public class UpdateOrgUnitBtnListener extends AbstractResourceBtnListener {
     @Override
     protected void commitAllFields() {
         for (final Field field : getData().allFields) {
+            // FIX ME: this is a hack, please repair it.
+            if (field.getCaption().equals(ViewConstants.PUBLIC_STATUS_LABEL)) {
+                return;
+            }
             field.commit();
         }
     }
