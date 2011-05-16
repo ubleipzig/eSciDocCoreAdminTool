@@ -32,4 +32,6 @@ import com.vaadin.ui.Component;
 
 public interface ReindexResourceView extends Component {
 
+    void init();
+
 }

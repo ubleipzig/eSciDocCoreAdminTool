@@ -51,17 +51,18 @@ import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.domain.PdpRequest;
 import de.escidoc.admintool.view.ViewConstants;
 
+@SuppressWarnings("serial")
 public class PropertiesFieldsImpl extends CustomComponent implements PropertiesFields {
-
-    private static final long serialVersionUID = -1808186834466896787L;
-
-    private final FormLayout formLayout;
-
-    private final List<Field> allFields = new ArrayList<Field>();
 
     final TextField nameField = new TextField(ViewConstants.NAME_LABEL);
 
     final TextField descField = new TextField(ViewConstants.DESCRIPTION_LABEL);
+
+    final TextField statusField = new TextField(ViewConstants.PUBLIC_STATUS_LABEL);
+
+    final TextField statusComment = new TextField(ViewConstants.PUBLIC_STATUS_COMMENT_LABEL);
+
+    private final List<Field> allFields = new ArrayList<Field>();
 
     private final HorizontalLayout objectIdLayout = new HorizontalLayout();
 
@@ -73,7 +74,13 @@ public class PropertiesFieldsImpl extends CustomComponent implements PropertiesF
 
     private final HorizontalLayout createdByLayout = new HorizontalLayout();
 
+    private final FormLayout formLayout;
+
     private final Map<String, Field> fieldByName;
+
+    private final FieldsBinder binder;
+
+    private PdpRequest pdpRequest;
 
     Label modifiedOn;
 
@@ -83,19 +90,11 @@ public class PropertiesFieldsImpl extends CustomComponent implements PropertiesF
 
     Label createdOn;
 
-    Item item;
-
-    final TextField statusField = new TextField(ViewConstants.PUBLIC_STATUS_LABEL);
-
-    final TextField statusComment = new TextField(ViewConstants.PUBLIC_STATUS_COMMENT_LABEL);
-
     Label publicStatusValue;
 
     Label objectId;
 
-    private final FieldsBinder binder;
-
-    private PdpRequest pdpRequest;
+    Item item;
 
     public PropertiesFieldsImpl(final AdminToolApplication app, final VerticalLayout vLayout,
         final FormLayout formLayout, final Map<String, Field> fieldByName, final PdpRequest pdpRequest) {

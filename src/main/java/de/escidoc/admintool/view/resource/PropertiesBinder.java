@@ -52,17 +52,18 @@ public class PropertiesBinder implements FieldsBinder {
 
     private final PropertiesFieldsImpl propertiesFields;
 
-    private Component toBeBind;
-
     private final AdminToolApplication app;
 
     private final PdpRequest pdpRequest;
+
+    private Component toBeBind;
 
     PropertiesBinder(final AdminToolApplication app, final PropertiesFieldsImpl propertiesFields) {
         Preconditions.checkNotNull(app, "app is null: %s", app);
         Preconditions.checkNotNull(propertiesFields, "propertiesFields is null: %s", propertiesFields);
         this.app = app;
         this.propertiesFields = propertiesFields;
+
         pdpRequest = this.propertiesFields.getPdpRequest();
         Preconditions.checkNotNull(pdpRequest, "pdpRequest is null: %s", pdpRequest);
     }

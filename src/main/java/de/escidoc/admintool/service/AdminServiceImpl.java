@@ -43,7 +43,6 @@ import de.escidoc.core.client.interfaces.AdminHandlerClientInterface;
 import de.escidoc.core.client.interfaces.base.HandlerService;
 import de.escidoc.core.resources.adm.LoadExamplesResult.Entry;
 import de.escidoc.core.resources.adm.MessagesStatus;
-import de.escidoc.core.resources.adm.RepositoryInfo;
 import de.escidoc.core.resources.common.MessagesResult;
 import de.escidoc.core.resources.common.TaskParam;
 
@@ -74,14 +73,7 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public Map<String, String> getRepositoryInfo() throws EscidocException, InternalClientException, TransportException {
-        final RepositoryInfo repositoryInfo = getClient().getRepositoryInfo();
-
-        for (final String val : repositoryInfo.values()) {
-            LOG.debug("" + val);
-
-        }
-
-        return repositoryInfo;
+        return getClient().getRepositoryInfo();
     }
 
     @Override

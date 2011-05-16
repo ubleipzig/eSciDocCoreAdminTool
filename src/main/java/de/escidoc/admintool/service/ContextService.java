@@ -30,7 +30,6 @@ package de.escidoc.admintool.service;
 
 import gov.loc.www.zing.srw.SearchRetrieveRequestType;
 
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
@@ -58,7 +57,7 @@ import de.escidoc.core.resources.om.context.AdminDescriptors;
 import de.escidoc.core.resources.om.context.Context;
 import de.escidoc.core.resources.om.context.OrganizationalUnitRefs;
 
-public class ContextService implements Serializable {
+public class ContextService {
 
     private static final Logger LOG = LoggerFactory.getLogger(ContextService.class);
 

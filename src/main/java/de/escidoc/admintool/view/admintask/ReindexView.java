@@ -62,6 +62,7 @@ public class ReindexView extends AbstractAdminTaskView {
 
         final ReindexResourceView reindexResourceView =
             new ReindexResourceViewImpl(services.getAdminService(), mainWindow);
+        reindexResourceView.init();
         hLayout.addComponent(reindexResourceView);
 
         cssLayout.addComponent(hLayout);

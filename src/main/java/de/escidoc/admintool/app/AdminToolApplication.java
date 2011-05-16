@@ -91,6 +91,7 @@ import de.escidoc.admintool.view.resource.ResourceViewComponent;
 import de.escidoc.admintool.view.resource.ResourceViewComponentImpl;
 import de.escidoc.admintool.view.role.RoleView;
 import de.escidoc.admintool.view.start.WelcomePage;
+import de.escidoc.admintool.view.user.SetOrgUnitsCommandImpl;
 import de.escidoc.admintool.view.user.UserAddView;
 import de.escidoc.admintool.view.user.UserView;
 import de.escidoc.admintool.view.user.UserViewComponent;
@@ -102,9 +103,9 @@ import de.escidoc.core.client.exceptions.application.security.AuthenticationExce
 import de.escidoc.core.resources.aa.useraccount.UserAccount;
 import de.escidoc.core.resources.aa.useraccount.UserAccountProperties;
 
+@SuppressWarnings("serial")
 public class AdminToolApplication extends Application {
     // TODO refactor this class, reasons: big class, too many fields and methods
-    private static final long serialVersionUID = 6246642594303110049L;
 
     private static final Logger LOG = LoggerFactory.getLogger(AdminToolApplication.class);
 
@@ -448,7 +449,8 @@ public class AdminToolApplication extends Application {
 
     public UserAddView newUserAddView() {
         final UserAddView userAddView =
-            new UserAddView(this, userViewComp.getUserView().getUserList(), userService, createResourceTreeView());
+            new UserAddView(this, userViewComp.getUserView().getUserList(), userService, createResourceTreeView(),
+                new SetOrgUnitsCommandImpl(userService));
         userAddView.init();
         return userAddView;
     }

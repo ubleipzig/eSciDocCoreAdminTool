@@ -72,10 +72,9 @@ import de.escidoc.core.client.exceptions.application.security.AuthorizationExcep
 import de.escidoc.core.client.exceptions.application.violated.UniqueConstraintViolationException;
 import de.escidoc.core.resources.aa.useraccount.UserAccount;
 
+@SuppressWarnings("serial")
 public class UserAddView extends CustomComponent implements ClickListener {
     private static final int LEFT_MARGIN = 111;
-
-    private static final long serialVersionUID = 3007285643463919742L;
 
     private static final Logger LOG = LoggerFactory.getLogger(UserAddView.class);
 
@@ -105,17 +104,24 @@ public class UserAddView extends CustomComponent implements ClickListener {
 
     private ObjectProperty<String> loginNameProperty;
 
+    private final SetOrgUnitsCommand setOrgUnitsCommand;
+
     public UserAddView(final AdminToolApplication app, final UserListView userListView, final UserService userService,
-        final ResourceTreeView resourceTreeView) {
+        final ResourceTreeView resourceTreeView, final SetOrgUnitsCommand setOrgUnitsCommand) {
+        Preconditions.checkNotNull(app, "app is null: %s", app);
+        Preconditions.checkNotNull(userListView, "userListView is null: %s", userListView);
+        Preconditions.checkNotNull(userService, "userService is null: %s", userService);
+        Preconditions.checkNotNull(resourceTreeView, "resourceTreeView is null: %s", resourceTreeView);
+        Preconditions.checkNotNull(setOrgUnitsCommand, "setOrgUnitsCommand is null: %s", setOrgUnitsCommand);
         this.app = app;
         this.userListView = userListView;
         this.userService = userService;
         this.resourceTreeView = resourceTreeView;
+        this.setOrgUnitsCommand = setOrgUnitsCommand;
     }
 
     public void init() {
         configureLayout();
-        setOrgUnitsCommand = new SetOrgUnitsCommandImpl(userService);
         addNameField();
         addLoginField();
         addOrgUnitWidget();
@@ -132,7 +138,6 @@ public class UserAddView extends CustomComponent implements ClickListener {
         panel.setContent(form);
 
         form.setSpacing(false);
-        // form.setWidth(75, UNITS_PERCENTAGE);
         form.setWidth(520, UNITS_PIXELS);
     }
 
@@ -284,18 +289,6 @@ public class UserAddView extends CustomComponent implements ClickListener {
     }
 
     private void addFooter() {
-        // footer.setSpacing(true);
-        // footer.setMargin(true);
-        // footer.setVisible(true);
-        //
-        // footer.addComponent(saveButton);
-        // footer.addComponent(cancelButton);
-        //
-        // final VerticalLayout verticalLayout = new VerticalLayout();
-        // verticalLayout.addComponent(footer);
-        // verticalLayout.setComponentAlignment(footer, Alignment.MIDDLE_RIGHT);
-        //
-        // panel.addComponent(verticalLayout);
         footer.setWidth(100, UNITS_PERCENTAGE);
 
         final HorizontalLayout hLayout = new HorizontalLayout();
@@ -370,7 +363,6 @@ public class UserAddView extends CustomComponent implements ClickListener {
     }
 
     // START:reference selected org units to created user.
-    private SetOrgUnitsCommand setOrgUnitsCommand;
 
     private void initSetOrgUnitsCommand(final UserAccount createdUserAccount) {
         Preconditions.checkNotNull(createdUserAccount, "createdUserAccount is null: %s", createdUserAccount);
