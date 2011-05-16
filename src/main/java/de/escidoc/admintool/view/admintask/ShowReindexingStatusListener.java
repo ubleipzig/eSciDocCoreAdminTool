@@ -34,9 +34,7 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
 
 import de.escidoc.admintool.view.ModalDialog;
-import de.escidoc.core.client.exceptions.EscidocException;
-import de.escidoc.core.client.exceptions.InternalClientException;
-import de.escidoc.core.client.exceptions.TransportException;
+import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.resources.adm.MessagesStatus;
 import de.escidoc.core.resources.common.Result;
 
@@ -68,13 +66,7 @@ final class ShowReindexingStatusListener implements Button.ClickListener {
         try {
             return reindexResourceViewImpl.adminService.retrieveReindexStatus();
         }
-        catch (final EscidocException e) {
-            ModalDialog.show(reindexResourceViewImpl.mainWindow, e);
-        }
-        catch (final InternalClientException e) {
-            ModalDialog.show(reindexResourceViewImpl.mainWindow, e);
-        }
-        catch (final TransportException e) {
+        catch (final EscidocClientException e) {
             ModalDialog.show(reindexResourceViewImpl.mainWindow, e);
         }
         return new MessagesStatus(new Result(), MessagesStatus.STATUS_INVALID_RESULT);

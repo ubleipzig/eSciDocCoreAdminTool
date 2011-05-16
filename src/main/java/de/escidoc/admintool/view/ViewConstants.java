@@ -28,9 +28,6 @@
  */
 package de.escidoc.admintool.view;
 
-import java.util.Arrays;
-import java.util.List;
-
 import de.escidoc.admintool.messages.Messages;
 
 public class ViewConstants {
@@ -281,17 +278,6 @@ public class ViewConstants {
 
     public static final String SHOW_STATUS = "Show status";
 
-    public static final String REINDEX_ESCIDOC_OAI_PMH = "escidocoaipmh";
-
-    public static final String REINDEX_ESCIDOC_OU = "escidocou";
-
-    public static final String REINDEX_ESCIDOC = "escidoc";
-
-    public static final String REINDEX_ALL = "all";
-
-    public static final List<String> INDEX_NAMES = Arrays.asList(new String[] { REINDEX_ALL, REINDEX_ESCIDOC,
-        REINDEX_ESCIDOC_OU, REINDEX_ESCIDOC_OAI_PMH });
-
     public static final String ORG_UNITS = "Organizational Units";
 
     public static final String CONTENT_MODELS = "Content Models";
@@ -430,4 +416,5 @@ public class ViewConstants {
     public static final String CREATED_ON_LABEL = "Created On";
 
     public static final String VERSION = "Version";
+
 }

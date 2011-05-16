@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
@@ -53,8 +54,7 @@ public interface AdminService extends EscidocService {
     MessagesStatus reindexAll(boolean shouldClearIndex) throws EscidocException, InternalClientException,
         TransportException;
 
-    MessagesStatus retrieveReindexStatus() throws EscidocException, InternalClientException, TransportException;
+    MessagesStatus retrieveReindexStatus() throws EscidocClientException;
 
-    MessagesStatus reindex(Boolean shouldClearIndex, String indexNamePrefix) throws EscidocException,
-        InternalClientException, TransportException;
+    MessagesStatus reindex(Boolean shouldClearIndex, String indexNamePrefix) throws EscidocClientException;
 }

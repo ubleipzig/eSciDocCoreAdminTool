@@ -31,9 +31,6 @@ package de.escidoc.admintool.service;
 import java.util.Map;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.google.common.base.Preconditions;
 
 import de.escidoc.core.client.exceptions.EscidocException;
@@ -48,11 +45,10 @@ import de.escidoc.core.resources.common.TaskParam;
 
 public class AdminServiceImpl implements AdminService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(AdminServiceImpl.class);
-
     private final HandlerService client;
 
     public AdminServiceImpl(final HandlerService client) {
+        Preconditions.checkNotNull(client, "client is null: %s", client);
         this.client = client;
     }
 
@@ -62,12 +58,13 @@ public class AdminServiceImpl implements AdminService {
         return getClient().loadExamples();
     }
 
-    AdminHandlerClientInterface getClient() {
+    private AdminHandlerClientInterface getClient() {
         return (AdminHandlerClientInterface) client;
     }
 
     @Override
     public void loginWith(final String handle) throws InternalClientException {
+        Preconditions.checkNotNull(handle, "handle is null: %s", handle);
         client.setHandle(handle);
     }
 
@@ -77,9 +74,10 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public MessagesStatus purge(final Set<String> list) throws EscidocException, InternalClientException,
+    public MessagesStatus purge(final Set<String> objectIdSet) throws EscidocException, InternalClientException,
         TransportException {
-        return getClient().deleteObjects(usingTaskParam(list));
+        Preconditions.checkNotNull(objectIdSet, "list is null: %s", objectIdSet);
+        return getClient().deleteObjects(usingTaskParam(objectIdSet));
     }
 
     private TaskParam usingTaskParam(final Set<String> ids) {

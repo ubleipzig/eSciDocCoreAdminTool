@@ -45,7 +45,7 @@ public class ReindexResourceViewImpl extends AbstractCustomView implements Reind
 
     private final CheckBox clearIndexBox = new CheckBox(ViewConstants.CLEAR_INDEX);
 
-    private final ComboBox indexNameSelect = new ComboBox(ViewConstants.INDEX_NAME, ViewConstants.INDEX_NAMES);
+    private final ComboBox indexNameSelect = new ComboBox(ViewConstants.INDEX_NAME, INDEX_NAME.ALL_NAME);
 
     private final ReindexButtonListener listener = new ReindexButtonListener(this, clearIndexBox, indexNameSelect);
 
@@ -79,7 +79,7 @@ public class ReindexResourceViewImpl extends AbstractCustomView implements Reind
     // TODO refactor index name to ENUM
     private void addIndexNameSelection() {
         indexNameSelect.setNullSelectionAllowed(false);
-        indexNameSelect.select(ViewConstants.REINDEX_ALL);
+        indexNameSelect.select(INDEX_NAME.REINDEX_ALL);
         getViewLayout().addComponent(indexNameSelect);
     }
 
