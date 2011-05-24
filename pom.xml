@@ -199,6 +199,9 @@
 					</execution>
 				</executions>
 			</plugin>
+            <!-- uncomment this plugin section to compile client side widget
+              after upgrading vaadin version.-->
+            <!--
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>gwt-maven-plugin</artifactId>
@@ -228,6 +231,7 @@
 					</execution>
 				</executions>
 			</plugin>
+        -->
 			<plugin>
 				<groupId>com.vaadin</groupId>
 				<artifactId>vaadin-maven-plugin</artifactId>
@@ -240,11 +244,6 @@
 					</execution>
 				</executions>
 			</plugin>
-			<!-- plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-javadoc-plugin</artifactId> 
-				<version>2.7</version> <configuration> <encoding>UTF-8</encoding> <links> 
-				<link>http://java.sun.com/javase/6/docs/api/</link> </links> </configuration> 
-				<executions> <execution> <id>attach-javadocs</id> <phase>verify</phase> <goals> 
-				<goal>jar</goal> </goals> </execution> </executions> </plugin -->
 			<plugin>
 				<artifactId>maven-clean-plugin</artifactId>
 				<version>2.4.1</version>
