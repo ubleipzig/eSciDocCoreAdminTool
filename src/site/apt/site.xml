@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+  <bannerRight>
+    <name>eSciDoc</name>
+    <src>http://tib.fiz-karlsruhe.de/escidoc-logo.jpg</src>
+    <href>http://www.escidoc.org</href>
+  </bannerRight>
+  <bannerLeft>
+  	<name>${project.name}</name>
+  </bannerLeft>
+  <body>
+
+    <links>
+      <item name="eSciDoc" href="http://www.eSciDoc.org/" />
+      <item name="FIZ Karlsruhe" href="http://www.fiz-karlsruhe.de"/>
+    </links>
+
+    <menu name="${project.name}">
+      <item name="Introduction" href="index.html"/>
+      <item name="Developer Wiki" href="http://escidev6.fiz-karlsruhe.de/wiki/Category:Applications"/>
+    </menu>
+
+  </body>
+</project>
