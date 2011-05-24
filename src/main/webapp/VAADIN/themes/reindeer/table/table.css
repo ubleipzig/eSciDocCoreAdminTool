@@ -68,13 +68,22 @@
 	background: transparent;
 	border-right: 1px solid #c2c3c4;
 }
-.v-table-header-cell-asc .v-table-caption-container {
+
+.v-table-sort-indicator {
+	background: transparent;
+	width: 0px;
+	height: 20px;
+}
+
+.v-table-header-cell-asc .v-table-sort-indicator {
 	background: transparent no-repeat right 7px;
 	background-image: url(img/asc-light.png); /** sprite-ref: verticals; sprite-alignment: right; sprite-margin-top: 7px; sprite-margin-bottom: 6px; sprite-margin-right: 6px; */
+	width: 16px;
 }
-.v-table-header-cell-desc .v-table-caption-container {
+.v-table-header-cell-desc .v-table-sort-indicator {
 	background: transparent no-repeat right 7px;
 	background-image: url(img/desc-light.png); /** sprite-ref: verticals; sprite-alignment: right; sprite-margin-top: 7px; sprite-margin-bottom: 6px; sprite-margin-right: 6px; */
+	width: 16px;
 }
 .v-table-body,
 .white .v-table-body {
@@ -164,9 +173,9 @@
 	-webkit-border-bottom-right-radius: 4px;
 	height: 13px;
 	padding: 4px 30px;
+	white-space: nowrap;
 	color: #222;
 	text-shadow: #fff 0 1px 0;
-	width: 100px;
 	position: relative;
 	top: 1px;
 	-webkit-box-shadow: rgba(0,0,0,.5) 0 1px 2px;
@@ -207,10 +216,10 @@
 .v-table-strong .v-table-resizer {
 	border-right-color: #1c1f21;
 }
-.v-table-strong .v-table-header-cell-asc .v-table-caption-container {
+.v-table-strong .v-table-header-cell-asc .v-table-sort-indicator {
 	background-image: url(img/asc.png); /** sprite-ref: verticals; sprite-alignment: right; sprite-margin-top: 7px; sprite-margin-bottom: 6px; sprite-margin-right: 6px; */
 }
-.v-table-strong .v-table-header-cell-desc .v-table-caption-container {
+.v-table-strong .v-table-header-cell-desc .v-table-sort-indicator {
 	background-image: url(img/desc.png); /** sprite-ref: verticals; sprite-alignment: right; sprite-margin-top: 7px; sprite-margin-bottom: 6px; sprite-margin-right: 6px; */
 }
 .v-table-strong .v-table-column-selector {
@@ -240,10 +249,10 @@
 .black .v-table-resizer {
 	border-right-color: #252729;
 }
-.black .v-table-header-cell-asc .v-table-caption-container {
+.black .v-table-header-cell-asc .v-table-sort-indicator {
 	background-image: url(img/asc.png); /** sprite-ref: black-verticals; sprite-alignment: right; sprite-margin-top: 7px; sprite-margin-bottom: 6px; sprite-margin-right: 6px; */
 }
-.black .v-table-header-cell-desc .v-table-caption-container {
+.black .v-table-header-cell-desc .v-table-sort-indicator {
 	background-image: url(img/desc.png); /** sprite-ref: black-verticals; sprite-alignment: right; sprite-margin-top: 7px; sprite-margin-bottom: 6px; sprite-margin-right: 6px; */
 }
 .black .v-table-column-selector {
