@@ -74,8 +74,6 @@ public class ContainerService extends AbstractEscidocService<ContainerHandlerCli
 
     @Override
     public void update(final Resource resource) throws EscidocClientException {
-        // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Not yet implemented");
-
     }
 }

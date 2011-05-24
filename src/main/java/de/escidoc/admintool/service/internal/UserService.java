@@ -37,6 +37,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.apache.axis.types.NonNegativeInteger;
 import org.joda.time.DateTime;
 
 import com.google.common.base.Preconditions;
@@ -90,9 +91,15 @@ public class UserService {
     }
 
     public Collection<UserAccount> findAll() throws EscidocClientException {
-        userAccounts = client.retrieveUserAccountsAsList(new SearchRetrieveRequestType());
+        userAccounts = client.retrieveUserAccountsAsList(withEmptyFilter());
         putInMap();
         return userAccounts;
+    }
+
+    private SearchRetrieveRequestType withEmptyFilter() {
+        final SearchRetrieveRequestType request = new SearchRetrieveRequestType();
+        request.setMaximumRecords(new NonNegativeInteger(AppConstants.MAX_RESULT_SIZE));
+        return request;
     }
 
     private void putInMap() {

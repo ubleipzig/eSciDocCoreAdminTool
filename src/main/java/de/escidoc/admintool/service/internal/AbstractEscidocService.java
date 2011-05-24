@@ -61,16 +61,6 @@ public abstract class AbstractEscidocService<T extends HandlerService> implement
         this.client = client;
     }
 
-    // public AbstractEscidocService(final EscidocServiceLocation escidocServiceLocation) {
-    // final ContextHandlerClientInterface client = new ContextHandlerClient(escidocServiceLocation.getUri());
-    // client.setTransport(TransportProtocol.REST);
-    // this.client = client;
-    // }
-
-    public AbstractEscidocService(final Authentication authentication) {
-        this.authentification = authentication;
-    }
-
     @Override
     public void login() throws InternalClientException {
         client.setHandle(authentification.getHandle());
@@ -80,6 +70,7 @@ public abstract class AbstractEscidocService<T extends HandlerService> implement
 
     @Override
     public void loginWith(final String handle) throws InternalClientException {
+        Preconditions.checkNotNull(handle, "handle is null: %s", handle);
         client.setHandle(handle);
     }
 
