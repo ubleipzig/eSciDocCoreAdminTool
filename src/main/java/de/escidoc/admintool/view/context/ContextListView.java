@@ -40,7 +40,7 @@ import com.vaadin.ui.Table;
 
 import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.app.PropertyId;
-import de.escidoc.admintool.service.ContextService;
+import de.escidoc.admintool.service.internal.ContextService;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.admintool.view.context.listener.ContextSelectListener;
 import de.escidoc.admintool.view.util.dialog.ErrorDialog;

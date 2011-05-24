@@ -29,7 +29,7 @@
 package de.escidoc.admintool.view.role;
 
 import de.escidoc.admintool.app.Command;
-import de.escidoc.admintool.service.UserService;
+import de.escidoc.admintool.service.internal.UserService;
 import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.resources.aa.useraccount.Grant;
 

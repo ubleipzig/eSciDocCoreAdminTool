@@ -39,7 +39,7 @@ import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.app.PropertyId;
 import de.escidoc.admintool.domain.PdpRequest;
 import de.escidoc.admintool.domain.PublicStatus;
-import de.escidoc.admintool.service.ResourceService;
+import de.escidoc.admintool.service.internal.ResourceService;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.admintool.view.navigation.ActionIdConstants;
 

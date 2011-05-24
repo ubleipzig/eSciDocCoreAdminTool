@@ -49,8 +49,8 @@ import com.vaadin.ui.themes.Reindeer;
 
 import de.escidoc.admintool.app.PropertyId;
 import de.escidoc.admintool.domain.PdpRequest;
-import de.escidoc.admintool.service.ContentModelService;
-import de.escidoc.admintool.service.ResourceService;
+import de.escidoc.admintool.service.internal.ContentModelService;
+import de.escidoc.admintool.service.internal.ResourceService;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.admintool.view.navigation.ActionIdConstants;
 import de.escidoc.admintool.view.resource.CancelButtonListener;

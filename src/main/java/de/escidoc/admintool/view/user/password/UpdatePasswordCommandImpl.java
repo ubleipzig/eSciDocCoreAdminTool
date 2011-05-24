@@ -30,7 +30,7 @@ package de.escidoc.admintool.view.user.password;
 
 import org.joda.time.DateTime;
 
-import de.escidoc.admintool.service.UserService;
+import de.escidoc.admintool.service.internal.UserService;
 import de.escidoc.core.client.exceptions.EscidocClientException;
 
 public class UpdatePasswordCommandImpl implements UpdatePasswordCommand {

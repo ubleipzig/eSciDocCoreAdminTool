@@ -26,7 +26,7 @@
  * Gesellschaft zur Foerderung der Wissenschaft e.V.
  * All rights reserved.  Use is subject to license terms.
  */
-package de.escidoc.admintool.service;
+package de.escidoc.admintool.service.internal;
 
 import gov.loc.www.zing.srw.SearchRetrieveRequestType;
 
@@ -37,6 +37,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.axis.types.NonNegativeInteger;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,6 +45,7 @@ import org.slf4j.LoggerFactory;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 
+import de.escidoc.admintool.app.AppConstants;
 import de.escidoc.admintool.domain.ContextFactory;
 import de.escidoc.core.client.ContextHandlerClient;
 import de.escidoc.core.client.TransportProtocol;
@@ -84,21 +86,22 @@ public class ContextService {
     }
 
     public Collection<Context> findAll() throws EscidocClientException {
-        LOG.info("Retrieving Context from repository...");
+        LOG.debug("Retrieving Context from repository...");
 
-        final Collection<Context> contexts = client.retrieveContextsAsList(new SearchRetrieveRequestType());
+        final SearchRetrieveRequestType request = new SearchRetrieveRequestType();
+        request.setMaximumRecords(new NonNegativeInteger(AppConstants.MAX_RESULT_SIZE));
+        final Collection<Context> contexts = client.retrieveContextsAsList(request);
 
         if (contexts == null || contexts.isEmpty()) {
             return Collections.emptySet(); // NOPMD by CHH on 9/17/10 10:23 AM
         }
 
         for (final Context context : contexts) {
-            // FIXME: createContextView only one cache/Map for both
             contextById.put(context.getObjid(), context);
             contextByTitle.put(context.getProperties().getName(), context);
         }
 
-        LOG.info("Retrieval is finished, got: " + contexts.size() + " contexts");
+        LOG.debug("Retrieval is finished, got: " + contexts.size() + " contexts");
         return contexts;
     }
 
@@ -179,13 +182,7 @@ public class ContextService {
         return openedContext;
     }
 
-    private TaskParam lastModificationDate(final DateTime lastModificationDate) { // NOPMD
-                                                                                  // by
-                                                                                  // CHH
-                                                                                  // on
-                                                                                  // 9/17/10
-                                                                                  // 10:24
-                                                                                  // AM
+    private TaskParam lastModificationDate(final DateTime lastModificationDate) {
         final TaskParam taskParam = new TaskParam();
         taskParam.setLastModificationDate(lastModificationDate);
         return taskParam;

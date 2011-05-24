@@ -49,7 +49,7 @@ import com.vaadin.ui.themes.Reindeer;
 import de.escidoc.admintool.app.AppConstants;
 import de.escidoc.admintool.app.PropertyId;
 import de.escidoc.admintool.domain.MetadataExtractor;
-import de.escidoc.admintool.service.OrgUnitServiceLab;
+import de.escidoc.admintool.service.internal.OrgUnitServiceLab;
 import de.escidoc.admintool.view.ModalDialog;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.core.client.exceptions.EscidocClientException;

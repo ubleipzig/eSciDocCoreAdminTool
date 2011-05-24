@@ -26,11 +26,12 @@
  * Gesellschaft zur Foerderung der Wissenschaft e.V.
  * All rights reserved.  Use is subject to license terms.
  */
-package de.escidoc.admintool.service;
+package de.escidoc.admintool.service.internal;
 
 import java.util.Collection;
 import java.util.Set;
 
+import de.escidoc.admintool.service.EscidocService;
 import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;

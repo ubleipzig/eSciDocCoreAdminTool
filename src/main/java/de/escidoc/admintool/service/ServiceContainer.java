@@ -28,6 +28,8 @@
  */
 package de.escidoc.admintool.service;
 
+import de.escidoc.admintool.service.internal.ResourceService;
+
 public interface ServiceContainer {
 
     void add(EscidocService containerService);

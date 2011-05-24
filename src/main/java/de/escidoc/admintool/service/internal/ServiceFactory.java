@@ -26,13 +26,16 @@
  * Gesellschaft zur Foerderung der Wissenschaft e.V.
  * All rights reserved.  Use is subject to license terms.
  */
-package de.escidoc.admintool.service;
+package de.escidoc.admintool.service.internal;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 
 import com.google.common.base.Preconditions;
 
+import de.escidoc.admintool.service.AdminService;
+import de.escidoc.admintool.service.EscidocService;
+import de.escidoc.admintool.service.PdpService;
 import de.escidoc.admintool.view.EscidocServiceLocation;
 import de.escidoc.core.client.AdminHandlerClient;
 import de.escidoc.core.client.ContainerHandlerClient;

@@ -37,7 +37,7 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Window;
 
-import de.escidoc.admintool.service.OrgUnitServiceLab;
+import de.escidoc.admintool.service.internal.OrgUnitServiceLab;
 import de.escidoc.admintool.view.ViewConstants;
 
 public class AddOrEditParentModalWindow extends Window {

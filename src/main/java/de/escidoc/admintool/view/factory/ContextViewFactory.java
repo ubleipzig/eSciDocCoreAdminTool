@@ -36,8 +36,8 @@ import com.vaadin.ui.Window;
 
 import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.domain.PdpRequest;
-import de.escidoc.admintool.service.ContextService;
-import de.escidoc.admintool.service.OrgUnitService;
+import de.escidoc.admintool.service.internal.ContextService;
+import de.escidoc.admintool.service.internal.OrgUnitService;
 import de.escidoc.admintool.view.ModalDialog;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.admintool.view.context.AddOrgUnitToTheList;

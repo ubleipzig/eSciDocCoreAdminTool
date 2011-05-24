@@ -64,7 +64,7 @@ import com.vaadin.ui.Window.Notification;
 import com.vaadin.ui.themes.Reindeer;
 
 import de.escidoc.admintool.app.AdminToolApplication;
-import de.escidoc.admintool.service.ContextService;
+import de.escidoc.admintool.service.internal.ContextService;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.admintool.view.context.listener.EditAdminDescriptorListener;
 import de.escidoc.admintool.view.context.listener.NewAdminDescriptorListener;

@@ -41,7 +41,7 @@ import com.vaadin.ui.Table;
 
 import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.app.PropertyId;
-import de.escidoc.admintool.service.UserService;
+import de.escidoc.admintool.service.internal.UserService;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.admintool.view.util.dialog.ErrorDialog;
 import de.escidoc.core.client.exceptions.EscidocClientException;

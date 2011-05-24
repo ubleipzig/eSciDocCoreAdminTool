@@ -43,8 +43,8 @@ import com.vaadin.ui.themes.Reindeer;
 
 import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.domain.PdpRequest;
-import de.escidoc.admintool.service.OrgUnitServiceLab;
-import de.escidoc.admintool.service.ResourceService;
+import de.escidoc.admintool.service.internal.OrgUnitServiceLab;
+import de.escidoc.admintool.service.internal.ResourceService;
 import de.escidoc.admintool.view.ViewConstants;
 
 public class ResourceAddViewImpl extends CustomComponent implements ResourceAddView {

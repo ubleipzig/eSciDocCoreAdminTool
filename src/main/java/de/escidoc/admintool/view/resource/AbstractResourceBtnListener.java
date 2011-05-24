@@ -46,7 +46,7 @@ import com.vaadin.ui.Field;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.Notification;
 
-import de.escidoc.admintool.service.ResourceService;
+import de.escidoc.admintool.service.internal.ResourceService;
 import de.escidoc.admintool.view.ErrorMessage;
 import de.escidoc.admintool.view.ModalDialog;
 import de.escidoc.admintool.view.ViewConstants;

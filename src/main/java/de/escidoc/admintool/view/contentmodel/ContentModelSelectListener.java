@@ -34,7 +34,7 @@ import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.ui.Window;
 
-import de.escidoc.admintool.service.ResourceService;
+import de.escidoc.admintool.service.internal.ResourceService;
 import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.resources.Resource;
 import de.escidoc.core.resources.ResourceType;

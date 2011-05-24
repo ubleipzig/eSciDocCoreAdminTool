@@ -32,8 +32,8 @@ import java.util.Collection;
 
 import com.google.common.base.Preconditions;
 
-import de.escidoc.admintool.service.OrgUnitServiceLab;
-import de.escidoc.admintool.service.ResourceService;
+import de.escidoc.admintool.service.internal.OrgUnitServiceLab;
+import de.escidoc.admintool.service.internal.ResourceService;
 import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.resources.oum.OrganizationalUnit;
 

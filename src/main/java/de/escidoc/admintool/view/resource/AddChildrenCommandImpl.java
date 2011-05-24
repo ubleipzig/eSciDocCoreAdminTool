@@ -32,7 +32,7 @@ import java.util.Collection;
 
 import com.google.common.base.Preconditions;
 
-import de.escidoc.admintool.service.OrgUnitServiceLab;
+import de.escidoc.admintool.service.internal.OrgUnitServiceLab;
 import de.escidoc.admintool.view.resource.ResourceTreeView.AddChildrenCommand;
 import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.client.exceptions.EscidocException;

@@ -26,7 +26,7 @@
  * Gesellschaft zur Foerderung der Wissenschaft e.V.
  * All rights reserved.  Use is subject to license terms.
  */
-package de.escidoc.admintool.service;
+package de.escidoc.admintool.service.internal;
 
 import gov.loc.www.zing.srw.SearchRetrieveRequestType;
 
@@ -39,11 +39,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.apache.axis.types.NonNegativeInteger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Preconditions;
 
+import de.escidoc.admintool.app.AppConstants;
 import de.escidoc.admintool.exception.ResourceNotFoundException;
 import de.escidoc.core.client.OrganizationalUnitHandlerClient;
 import de.escidoc.core.client.TransportProtocol;
@@ -117,13 +119,19 @@ public class OrgUnitService {
 
     public Collection<OrganizationalUnit> findAll() throws EscidocException, InternalClientException,
         TransportException {
-        orgUnits = client.retrieveOrganizationalUnitsAsList(new SearchRetrieveRequestType());
+        orgUnits = client.retrieveOrganizationalUnitsAsList(withEmptyFilter());
 
         for (final OrganizationalUnit orgUnit : orgUnits) {
             orgUnitById.put(orgUnit.getObjid(), orgUnit);
         }
 
         return orgUnits;
+    }
+
+    private SearchRetrieveRequestType withEmptyFilter() {
+        final SearchRetrieveRequestType request = new SearchRetrieveRequestType();
+        request.setMaximumRecords(new NonNegativeInteger(AppConstants.MAX_RESULT_SIZE));
+        return request;
     }
 
     public OrganizationalUnit create(final OrganizationalUnit orgUnit) throws EscidocException,

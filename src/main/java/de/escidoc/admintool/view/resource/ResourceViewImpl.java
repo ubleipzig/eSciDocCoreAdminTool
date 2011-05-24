@@ -33,7 +33,7 @@ import com.vaadin.ui.Window;
 
 import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.domain.PdpRequest;
-import de.escidoc.admintool.service.ResourceService;
+import de.escidoc.admintool.service.internal.ResourceService;
 import de.escidoc.core.resources.Resource;
 
 public class ResourceViewImpl extends AbstractResourceView {

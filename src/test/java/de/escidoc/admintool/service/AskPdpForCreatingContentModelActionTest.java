@@ -38,6 +38,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import de.escidoc.admintool.app.AppConstants;
+import de.escidoc.admintool.service.internal.PdpServiceImpl;
 import de.escidoc.admintool.view.navigation.ActionIdConstants;
 import de.escidoc.core.client.Authentication;
 

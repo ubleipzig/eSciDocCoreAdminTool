@@ -61,10 +61,10 @@ import com.vaadin.ui.themes.Runo;
 
 import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.app.PropertyId;
-import de.escidoc.admintool.service.ContextService;
-import de.escidoc.admintool.service.RoleService;
 import de.escidoc.admintool.service.ServiceContainer;
-import de.escidoc.admintool.service.UserService;
+import de.escidoc.admintool.service.internal.ContextService;
+import de.escidoc.admintool.service.internal.RoleService;
+import de.escidoc.admintool.service.internal.UserService;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.admintool.view.admintask.ResourceType;
 import de.escidoc.admintool.view.util.dialog.ErrorDialog;

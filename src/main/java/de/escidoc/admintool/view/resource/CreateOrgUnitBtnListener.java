@@ -43,7 +43,7 @@ import com.vaadin.data.Property;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.Window;
 
-import de.escidoc.admintool.service.ResourceService;
+import de.escidoc.admintool.service.internal.ResourceService;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.resources.Resource;

@@ -41,7 +41,7 @@ import com.vaadin.ui.Window;
 
 import de.escidoc.admintool.app.PropertyId;
 import de.escidoc.admintool.domain.OrgUnitBuilder;
-import de.escidoc.admintool.service.ResourceService;
+import de.escidoc.admintool.service.internal.ResourceService;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.resources.oum.OrganizationalUnit;

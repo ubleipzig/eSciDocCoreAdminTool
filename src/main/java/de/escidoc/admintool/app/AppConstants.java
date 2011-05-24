@@ -89,4 +89,6 @@ public class AppConstants {
     public static final String GUEST_OBJECT_ID = SPACE;
 
     public static final String ESCIDOC_DEFAULT_METADATA_NAME = "escidoc";
+
+    public static final String MAX_RESULT_SIZE = "1000";
 }

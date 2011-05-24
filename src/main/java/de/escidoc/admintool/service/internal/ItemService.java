@@ -26,7 +26,7 @@
  * Gesellschaft zur Foerderung der Wissenschaft e.V.
  * All rights reserved.  Use is subject to license terms.
  */
-package de.escidoc.admintool.service;
+package de.escidoc.admintool.service.internal;
 
 import java.util.Collection;
 
@@ -34,37 +34,44 @@ import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
-import de.escidoc.core.client.interfaces.ContainerHandlerClientInterface;
+import de.escidoc.core.client.interfaces.ItemHandlerClientInterface;
 import de.escidoc.core.client.interfaces.base.HandlerService;
 import de.escidoc.core.resources.Resource;
+import de.escidoc.core.resources.om.item.Item;
 
-public class ContainerService extends AbstractEscidocService<ContainerHandlerClientInterface> {
+public class ItemService extends AbstractEscidocService<ItemHandlerClientInterface> {
 
-    public ContainerService(final HandlerService client) {
+    public ItemService(final HandlerService client) {
         super(client);
     }
 
     @Override
-    Collection<? extends Resource> findPublicOrReleasedResources() throws EscidocException, InternalClientException,
-        TransportException {
-        return getClient().retrieveContainersAsList(withEmptyFilter());
+    protected final ItemHandlerClientInterface getClient() {
+        return ((ItemHandlerClientInterface) client);
     }
 
     @Override
-    ContainerHandlerClientInterface getClient() {
-        return (ContainerHandlerClientInterface) client;
+    protected final Collection<? extends Resource> findPublicOrReleasedResources() throws EscidocException,
+        InternalClientException, TransportException {
+        return getClient().retrieveItemsAsList(withEmptyFilter());
     }
 
     @Override
     public Resource create(final Resource resource) throws EscidocException, InternalClientException,
         TransportException {
-        throw new UnsupportedOperationException("Not yet implemented");
+        if (resource instanceof Item) {
+            final Item item = (Item) resource;
+            return getClient().create(item);
+        }
+        else {
+            throw new RuntimeException("invalid casting");
+        }
     }
 
     @Override
     public Collection<? extends Resource> filterUsingInput(final String query) throws EscidocException,
         InternalClientException, TransportException {
-        return getClient().retrieveContainersAsList(userInputToFilter(query));
+        return getClient().retrieveItemsAsList(userInputToFilter(query));
     }
 
     @Override
@@ -74,8 +81,6 @@ public class ContainerService extends AbstractEscidocService<ContainerHandlerCli
 
     @Override
     public void update(final Resource resource) throws EscidocClientException {
-        // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Not yet implemented");
-
     }
 }

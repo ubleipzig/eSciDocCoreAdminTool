@@ -38,8 +38,8 @@ import com.vaadin.data.Item;
 
 import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.domain.PdpRequest;
-import de.escidoc.admintool.service.OrgUnitServiceLab;
-import de.escidoc.admintool.service.UserService;
+import de.escidoc.admintool.service.internal.OrgUnitServiceLab;
+import de.escidoc.admintool.service.internal.UserService;
 import de.escidoc.admintool.view.resource.ResourceTreeView;
 import de.escidoc.core.resources.aa.useraccount.UserAccount;
 

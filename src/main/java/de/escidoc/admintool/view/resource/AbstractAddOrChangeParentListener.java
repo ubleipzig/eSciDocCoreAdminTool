@@ -35,7 +35,7 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Window;
 
 import de.escidoc.admintool.app.PropertyId;
-import de.escidoc.admintool.service.OrgUnitServiceLab;
+import de.escidoc.admintool.service.internal.OrgUnitServiceLab;
 import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.resources.oum.OrganizationalUnit;
 import de.escidoc.core.resources.oum.Parent;

@@ -35,7 +35,7 @@ import com.vaadin.data.Item;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.Window;
 
-import de.escidoc.admintool.service.ResourceService;
+import de.escidoc.admintool.service.internal.ResourceService;
 import de.escidoc.core.resources.Resource;
 import de.escidoc.core.resources.oum.OrganizationalUnit;
 

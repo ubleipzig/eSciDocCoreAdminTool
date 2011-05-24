@@ -31,7 +31,7 @@ package de.escidoc.admintool.view.resource;
 import com.google.common.base.Preconditions;
 import com.vaadin.ui.Button.ClickEvent;
 
-import de.escidoc.admintool.service.OrgUnitServiceLab;
+import de.escidoc.admintool.service.internal.OrgUnitServiceLab;
 import de.escidoc.admintool.view.ModalDialog;
 import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.resources.oum.OrganizationalUnit;

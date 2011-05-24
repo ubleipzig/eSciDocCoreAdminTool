@@ -26,7 +26,7 @@
  * Gesellschaft zur Foerderung der Wissenschaft e.V.
  * All rights reserved.  Use is subject to license terms.
  */
-package de.escidoc.admintool.service;
+package de.escidoc.admintool.service.internal;
 
 import gov.loc.www.zing.srw.SearchRetrieveRequestType;
 
@@ -34,6 +34,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.axis.types.NonNegativeInteger;
+
+import de.escidoc.admintool.app.AppConstants;
 import de.escidoc.core.client.RoleHandlerClient;
 import de.escidoc.core.client.TransportProtocol;
 import de.escidoc.core.client.exceptions.EscidocClientException;
@@ -74,7 +77,8 @@ public class RoleService {
     }
 
     public Collection<Role> findAll() throws EscidocClientException {
-        final SearchRetrieveRequestType s = new SearchRetrieveRequestType();
+        final SearchRetrieveRequestType s = withEmptyFilter();
+
         s.setRecordPacking(RecordPacking.XML.getXmlValue());
         allRoles = client.retrieveRolesAsList(s);
         for (final Role r : allRoles) {
@@ -82,5 +86,11 @@ public class RoleService {
         }
         return allRoles;
 
+    }
+
+    private SearchRetrieveRequestType withEmptyFilter() {
+        final SearchRetrieveRequestType request = new SearchRetrieveRequestType();
+        request.setMaximumRecords(new NonNegativeInteger(AppConstants.MAX_RESULT_SIZE));
+        return request;
     }
 }

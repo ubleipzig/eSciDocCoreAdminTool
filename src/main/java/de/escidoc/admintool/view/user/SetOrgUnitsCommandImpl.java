@@ -38,7 +38,7 @@ import com.google.common.collect.Sets;
 import com.vaadin.ui.AbstractSelect;
 
 import de.escidoc.admintool.app.AppConstants;
-import de.escidoc.admintool.service.UserService;
+import de.escidoc.admintool.service.internal.UserService;
 import de.escidoc.admintool.view.resource.ResourceRefDisplay;
 import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.resources.aa.useraccount.Attribute;

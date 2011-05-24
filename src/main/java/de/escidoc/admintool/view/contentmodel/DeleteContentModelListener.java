@@ -38,7 +38,7 @@ import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.Notification;
 
 import de.escidoc.admintool.app.AdminToolApplication;
-import de.escidoc.admintool.service.ContentModelService;
+import de.escidoc.admintool.service.internal.ContentModelService;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.admintool.view.util.dialog.ErrorDialog;
 import de.escidoc.core.client.exceptions.EscidocClientException;

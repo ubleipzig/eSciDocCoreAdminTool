@@ -36,7 +36,7 @@ import com.vaadin.ui.Window;
 
 import de.escidoc.admintool.app.PropertyId;
 import de.escidoc.admintool.domain.PublicStatus;
-import de.escidoc.admintool.service.ResourceService;
+import de.escidoc.admintool.service.internal.ResourceService;
 import de.escidoc.core.client.exceptions.EscidocClientException;
 
 public class OpenResourceListener extends AbstractUpdateable implements ClickListener {
