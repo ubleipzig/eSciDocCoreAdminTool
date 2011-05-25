@@ -84,7 +84,7 @@ final class PurgeResourcesListener implements ClickListener {
 
     @SuppressWarnings("unchecked")
     private void purgeSelectedResources() {
-        final Object object = command.filteredList.getValue();
+        final Object object = command.filterResultTable.getValue();
         if (object instanceof Set) {
 
             selectedResources = (Set<Resource>) object;

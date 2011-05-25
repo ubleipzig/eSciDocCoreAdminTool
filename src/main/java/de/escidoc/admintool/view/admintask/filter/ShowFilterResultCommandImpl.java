@@ -48,19 +48,19 @@ final class ShowFilterResultCommandImpl implements ShowFilterResultCommand {
 
     private final FormLayout formLayout = new FormLayout();
 
-    final FilterResourceView filterResourceView;
-
-    Table filteredList;
-
-    POJOContainer<Resource> filteredResourcesContainer;
-
     private final PdpRequest pdpRequest;
-
-    private final Button showStatusButton = new Button(ViewConstants.SHOW_STATUS);
 
     private final Label statusLabel = new Label(ViewConstants.STATUS);
 
+    private final Button showStatusButton = new Button(ViewConstants.SHOW_STATUS);
+
     private final ShowPurgeStatusListener showPurgeStatusListener;
+
+    final FilterResourceView filterResourceView;
+
+    Table filterResultTable;
+
+    POJOContainer<Resource> filteredResourcesContainer;
 
     public ShowFilterResultCommandImpl(final FilterResourceView filterResourceView, final PdpRequest pdpRequest) {
         Preconditions.checkNotNull(filterResourceView, "filterResourceView is null: %s", filterResourceView);
@@ -104,18 +104,21 @@ final class ShowFilterResultCommandImpl implements ShowFilterResultCommand {
         filteredResourcesContainer =
             new POJOContainer<Resource>(filteredResources, PropertyId.OBJECT_ID, PropertyId.XLINK_TITLE);
 
-        filteredList = new Table(ViewConstants.FILTERED_RESOURCES, filteredResourcesContainer);
+        filterResultTable = new Table(ViewConstants.FILTERED_RESOURCES, filteredResourcesContainer);
+        // filterResultTable.setColumnExpandRatio(PropertyId.XLINK_TITLE, 1);
+        filterResultTable.setWidth("70%");
+        filterResultTable.setColumnWidth(PropertyId.OBJECT_ID, 70);
 
-        filteredList.setVisibleColumns(new Object[] { PropertyId.OBJECT_ID, PropertyId.XLINK_TITLE });
-        filteredList.setColumnHeader(PropertyId.OBJECT_ID, ViewConstants.OBJECT_ID_LABEL);
-        filteredList.setColumnHeader(PropertyId.XLINK_TITLE, ViewConstants.TITLE_LABEL);
+        filterResultTable.setVisibleColumns(new Object[] { PropertyId.OBJECT_ID, PropertyId.XLINK_TITLE });
+        filterResultTable.setColumnHeader(PropertyId.OBJECT_ID, ViewConstants.OBJECT_ID_LABEL);
+        filterResultTable.setColumnHeader(PropertyId.XLINK_TITLE, ViewConstants.TITLE_LABEL);
 
-        filteredList.setSelectable(true);
-        filteredList.setMultiSelect(true);
+        filterResultTable.setSelectable(true);
+        filterResultTable.setMultiSelect(true);
     }
 
     private void showFilterResultView() {
-        formLayout.addComponent(filteredList);
+        formLayout.addComponent(filterResultTable);
         if (isPurgePermitted()) {
             addHintForSelection();
             addPurgeButton();
