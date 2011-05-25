@@ -32,6 +32,7 @@ import java.util.Collection;
 
 import com.google.common.base.Preconditions;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.VerticalLayout;
 
 import de.escidoc.core.resources.adm.LoadExamplesResult.Entry;
 
@@ -39,14 +40,18 @@ final class ShowResultCommandImpl implements LoadExampleResourceViewImpl.ShowRes
 
     private final LoadExampleResourceViewImpl loadExampleResourceViewImpl;
 
+    private final VerticalLayout verticalLayout = new VerticalLayout();
+
     ShowResultCommandImpl(final LoadExampleResourceViewImpl loadExampleResourceViewImpl) {
         Preconditions.checkNotNull(loadExampleResourceViewImpl, "loadExampleResourceViewImpl is null: %s",
             loadExampleResourceViewImpl);
         this.loadExampleResourceViewImpl = loadExampleResourceViewImpl;
+        loadExampleResourceViewImpl.getViewLayout().addComponent(verticalLayout);
     }
 
     @Override
     public void execute(final Collection<?> entries) {
+        verticalLayout.removeAllComponents();
         for (final Object entry : entries) {
             if (entry instanceof Entry) {
                 showLoadedExamplesResult((Entry) entry);
@@ -55,6 +60,6 @@ final class ShowResultCommandImpl implements LoadExampleResourceViewImpl.ShowRes
     }
 
     private void showLoadedExamplesResult(final Entry entry) {
-        loadExampleResourceViewImpl.getViewLayout().addComponent(new Label(entry.getMessage()));
+        verticalLayout.addComponent(new Label(entry.getMessage()));
     }
 }
