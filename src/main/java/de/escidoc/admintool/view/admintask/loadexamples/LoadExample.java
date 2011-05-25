@@ -35,8 +35,6 @@ import com.vaadin.ui.Window;
 import de.escidoc.admintool.service.ServiceContainer;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.admintool.view.admintask.AbstractAdminTaskView;
-import de.escidoc.admintool.view.admintask.AddToContainer;
-import de.escidoc.admintool.view.admintask.Style;
 import de.escidoc.admintool.view.admintask.Style.H2;
 import de.escidoc.admintool.view.admintask.Style.Ruler;
 
@@ -44,14 +42,8 @@ public class LoadExample extends AbstractAdminTaskView {
 
     private static final long serialVersionUID = -7128844384392979070L;
 
-    private AddToContainer command;
-
     public LoadExample(final ServiceContainer services, final Window mainWindow) {
         super(services, mainWindow);
-    }
-
-    public void setCommand(final AddToContainer command) {
-        this.command = command;
     }
 
     @Override
@@ -69,8 +61,7 @@ public class LoadExample extends AbstractAdminTaskView {
         hLayout.setWidth(100, UNITS_PERCENTAGE);
         hLayout.setHeight(100, UNITS_PERCENTAGE);
 
-        final LoadExampleView filterView =
-            new LoadExampleResourceViewImpl(mainWindow, services.getAdminService(), command);
+        final LoadExampleView filterView = new LoadExampleResourceViewImpl(mainWindow, services.getAdminService());
         hLayout.addComponent(filterView);
         cssLayout.addComponent(hLayout);
     }

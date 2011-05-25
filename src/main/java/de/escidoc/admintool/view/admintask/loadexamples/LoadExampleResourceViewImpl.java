@@ -37,7 +37,6 @@ import com.vaadin.ui.Window;
 import de.escidoc.admintool.service.AdminService;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.admintool.view.admintask.AbstractCustomView;
-import de.escidoc.admintool.view.admintask.AddToContainer;
 
 public class LoadExampleResourceViewImpl extends AbstractCustomView implements LoadExampleView {
 
@@ -51,22 +50,17 @@ public class LoadExampleResourceViewImpl extends AbstractCustomView implements L
 
     private final Window mainWindow;
 
-    private final AddToContainer addExampleCommand;
+    public LoadExampleResourceViewImpl(final Window mainWindow, final AdminService adminService) {
 
-    public LoadExampleResourceViewImpl(final Window mainWindow, final AdminService adminService,
-        final AddToContainer addExampleCommand) {
-        checkPreconditions(mainWindow, adminService, addExampleCommand);
+        checkPreconditions(mainWindow, adminService);
         this.mainWindow = mainWindow;
         this.adminService = adminService;
-        this.addExampleCommand = addExampleCommand;
         init();
     }
 
-    private void checkPreconditions(
-        final Window mainWindow, final AdminService adminService, final AddToContainer addExampleCommand) {
+    private void checkPreconditions(final Window mainWindow, final AdminService adminService) {
         Preconditions.checkNotNull(mainWindow, "mainWindow can not be null: %s", mainWindow);
         Preconditions.checkNotNull(adminService, "adminService can not be null: %s", adminService);
-        Preconditions.checkNotNull(addExampleCommand, "addExampleCommand is null: %s", addExampleCommand);
     }
 
     private void init() {
@@ -89,7 +83,7 @@ public class LoadExampleResourceViewImpl extends AbstractCustomView implements L
     }
 
     private void createLoadExampleButtonListener() {
-        listener = new OnLoadExampleClick(new ShowResultCommandImpl(this, addExampleCommand));
+        listener = new OnLoadExampleClick(new ShowResultCommandImpl(this));
         listener.setAdminService(adminService);
         listener.setMainWindow(mainWindow);
     }

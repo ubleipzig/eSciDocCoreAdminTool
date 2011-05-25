@@ -30,17 +30,18 @@ package de.escidoc.admintool.view.admintask.loadexamples;
 
 import java.util.Collection;
 
+import com.google.common.base.Preconditions;
 import com.vaadin.ui.Label;
 
-import de.escidoc.admintool.view.admintask.AddToContainer;
 import de.escidoc.core.resources.adm.LoadExamplesResult.Entry;
 
 final class ShowResultCommandImpl implements LoadExampleResourceViewImpl.ShowResultCommand {
 
     private final LoadExampleResourceViewImpl loadExampleResourceViewImpl;
 
-    ShowResultCommandImpl(final LoadExampleResourceViewImpl loadExampleResourceViewImpl,
-        final AddToContainer addExampleCommand) {
+    ShowResultCommandImpl(final LoadExampleResourceViewImpl loadExampleResourceViewImpl) {
+        Preconditions.checkNotNull(loadExampleResourceViewImpl, "loadExampleResourceViewImpl is null: %s",
+            loadExampleResourceViewImpl);
         this.loadExampleResourceViewImpl = loadExampleResourceViewImpl;
     }
 

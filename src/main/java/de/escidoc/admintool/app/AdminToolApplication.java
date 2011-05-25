@@ -65,7 +65,6 @@ import de.escidoc.admintool.view.ModalDialog;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.admintool.view.ViewManager;
 import de.escidoc.admintool.view.ViewManagerImpl;
-import de.escidoc.admintool.view.admintask.AddToResourceContainer;
 import de.escidoc.admintool.view.admintask.ReindexView;
 import de.escidoc.admintool.view.admintask.RepositoryInfoFooView;
 import de.escidoc.admintool.view.admintask.filter.FilterView;
@@ -364,7 +363,6 @@ public class AdminToolApplication extends Application {
 
     private void createLoadExampleView() {
         loadExampleView = new LoadExample(services, mainWindow);
-        loadExampleView.setCommand(new AddToResourceContainer(mainWindow, services, getResourceContainer()));
         loadExampleView.addView();
     }
 
