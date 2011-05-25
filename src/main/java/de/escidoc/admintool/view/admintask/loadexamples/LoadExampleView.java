@@ -26,12 +26,9 @@
  * Gesellschaft zur Foerderung der Wissenschaft e.V.
  * All rights reserved.  Use is subject to license terms.
  */
-package de.escidoc.admintool.view.admintask;
+package de.escidoc.admintool.view.admintask.loadexamples;
 
-import de.escidoc.core.resources.adm.MessagesStatus;
+import com.vaadin.ui.Component;
 
-public interface ShowStatusCommand {
-
-    void execute(MessagesStatus status);
-
+public interface LoadExampleView extends Component {
 }
