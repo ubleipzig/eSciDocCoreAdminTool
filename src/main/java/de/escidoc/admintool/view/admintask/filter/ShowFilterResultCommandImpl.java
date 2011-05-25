@@ -36,6 +36,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Table;
+import com.vaadin.ui.VerticalLayout;
 
 import de.escidoc.admintool.app.PropertyId;
 import de.escidoc.admintool.domain.PdpRequest;
@@ -105,7 +106,6 @@ final class ShowFilterResultCommandImpl implements ShowFilterResultCommand {
             new POJOContainer<Resource>(filteredResources, PropertyId.OBJECT_ID, PropertyId.XLINK_TITLE);
 
         filterResultTable = new Table(ViewConstants.FILTERED_RESOURCES, filteredResourcesContainer);
-        // filterResultTable.setColumnExpandRatio(PropertyId.XLINK_TITLE, 1);
         filterResultTable.setWidth("70%");
         filterResultTable.setColumnWidth(PropertyId.OBJECT_ID, 70);
 
@@ -118,7 +118,9 @@ final class ShowFilterResultCommandImpl implements ShowFilterResultCommand {
     }
 
     private void showFilterResultView() {
-        formLayout.addComponent(filterResultTable);
+        final VerticalLayout verticalLayout = new VerticalLayout();
+        verticalLayout.addComponent(filterResultTable);
+        formLayout.addComponent(verticalLayout);
         if (isPurgePermitted()) {
             addHintForSelection();
             addPurgeButton();
