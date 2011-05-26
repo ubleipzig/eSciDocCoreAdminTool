@@ -12,8 +12,8 @@
 	</appender>
 
 	<appender name="R" class="org.apache.log4j.RollingFileAppender">
-		<param name="file" value="escidoc-admintool.log" />
-		<param name="Threshold" value="DEBUG" />
+		<param name="Threshold" value="WARN" />
+        <param name="file" value="${jboss.server.home.dir}/log/escidoc-admintool.log"/>¬
 		<param name="MaxFileSize" value="100KB" />
 		<param name="MaxBackupIndex" value="1" />
 		<layout class="org.apache.log4j.PatternLayout">
