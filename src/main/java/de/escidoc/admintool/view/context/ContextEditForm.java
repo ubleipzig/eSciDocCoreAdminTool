@@ -323,7 +323,6 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
         adminDescriptorAccordion = new Accordion();
         adminDescriptorAccordion.setWidth(ViewConstants.FIELD_WIDTH);
         adminDescriptorAccordion.setSizeFull();
-        final adminDescriptorAccordion.
 
         final Panel accordionPanel = new Panel();
         accordionPanel.setContent(adminDescriptorAccordion);
