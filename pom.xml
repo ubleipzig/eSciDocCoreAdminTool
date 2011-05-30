@@ -31,6 +31,12 @@
 			<artifactId>appfoundation</artifactId>
 			<version>1.3.5</version>
 		</dependency>
+		<dependency>
+			<groupId>org.vaadin.addons</groupId>
+			<artifactId>pagedtable</artifactId>
+			<version>0.5.1</version>
+		</dependency>
+
 
 		<dependency>
 			<groupId>javax.servlet</groupId>
@@ -199,39 +205,17 @@
 					</execution>
 				</executions>
 			</plugin>
-            <!-- uncomment this plugin section to compile client side widget
-              after upgrading vaadin version.-->
-            <!--
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>gwt-maven-plugin</artifactId>
-				<version>2.2.0</version>
-				<dependencies>
-					<dependency>
-						<groupId>com.google.gwt</groupId>
-						<artifactId>gwt-user</artifactId>
-						<version>${gwt.version}</version>
-					</dependency>
-					<dependency>
-						<groupId>com.google.gwt</groupId>
-						<artifactId>gwt-dev</artifactId>
-						<version>${gwt.version}</version>
-					</dependency>
-				</dependencies>
-				<configuration>
-					<webappDirectory>${vaadin-widgets-dir}</webappDirectory>
-					<extraJvmArgs>-Dgwt.style=PRETTY -Xmx512M -Xss1024k</extraJvmArgs>
-				</configuration>
-				<executions>
-					<execution>
-						<goals>
-							<goal>resources</goal>
-							<goal>compile</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-        -->
+			<!-- uncomment this plugin section to compile client side widget after 
+				upgrading vaadin version. -->
+			<!-- <plugin> <groupId>org.codehaus.mojo</groupId> <artifactId>gwt-maven-plugin</artifactId> 
+				<version>2.2.0</version> <dependencies> <dependency> <groupId>com.google.gwt</groupId> 
+				<artifactId>gwt-user</artifactId> <version>${gwt.version}</version> </dependency> 
+				<dependency> <groupId>com.google.gwt</groupId> <artifactId>gwt-dev</artifactId> 
+				<version>${gwt.version}</version> </dependency> </dependencies> <configuration> 
+				<webappDirectory>${vaadin-widgets-dir}</webappDirectory> <extraJvmArgs>-Dgwt.style=PRETTY 
+				-Xmx512M -Xss1024k</extraJvmArgs> </configuration> <executions> <execution> 
+				<goals> <goal>resources</goal> <goal>compile</goal> </goals> </execution> 
+				</executions> </plugin> -->
 			<plugin>
 				<groupId>com.vaadin</groupId>
 				<artifactId>vaadin-maven-plugin</artifactId>

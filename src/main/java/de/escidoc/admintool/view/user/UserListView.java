@@ -35,6 +35,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Preconditions;
+import com.jensjansson.pagedtable.PagedTable;
 import com.vaadin.data.util.POJOContainer;
 import com.vaadin.data.util.POJOItem;
 import com.vaadin.ui.Table;
@@ -48,7 +49,7 @@ import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.resources.aa.useraccount.UserAccount;
 
 @SuppressWarnings("serial")
-public class UserListView extends Table {
+public class UserListView extends PagedTable {
 
     private static final Logger LOG = LoggerFactory.getLogger(UserListView.class);
 
@@ -68,6 +69,7 @@ public class UserListView extends Table {
         buildView();
         findAllUsers();
         bindDataSource();
+        setPageLength(50);
     }
 
     private void buildView() {

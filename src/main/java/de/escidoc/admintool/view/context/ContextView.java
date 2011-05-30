@@ -81,6 +81,8 @@ public class ContextView extends SplitPanel implements ResourceView {
         contextList.setSizeFull();
 
         vLayout.addComponent(contextList);
+        vLayout.addComponent(contextList.createControls());
+
         vLayout.setExpandRatio(contextList, 1.0f);
         setFirstComponent(vLayout);
 
