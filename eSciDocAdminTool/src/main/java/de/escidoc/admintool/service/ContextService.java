@@ -36,23 +36,19 @@ import de.escidoc.core.resources.om.context.OrganizationalUnitRefs;
 
 public class ContextService implements Serializable {
 
-    private static final Logger LOG = LoggerFactory
-        .getLogger(ContextService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ContextService.class);
 
     private ContextHandlerClientInterface client;
 
-    private final Map<String, Context> contextById =
-        new ConcurrentHashMap<String, Context>();
+    private final Map<String, Context> contextById = new ConcurrentHashMap<String, Context>();
 
-    private final Multimap<String, Context> contextByTitle = HashMultimap
-        .create();
+    private final Multimap<String, Context> contextByTitle = HashMultimap.create();
 
     private final String eSciDocUri;
 
     private final String handle;
 
-    public ContextService(final String eSciDocUri, final String handle)
-        throws InternalClientException {
+    public ContextService(final String eSciDocUri, final String handle) throws InternalClientException {
         this.eSciDocUri = eSciDocUri;
         this.handle = handle;
         initClient();
@@ -67,27 +63,22 @@ public class ContextService implements Serializable {
     public Collection<Context> findAll() throws EscidocClientException {
         LOG.info("Retrieving Context from repository...");
 
-        final Collection<Context> contexts =
-            client.retrieveContextsAsList(new SearchRetrieveRequestType());
+        final Collection<Context> contexts = client.retrieveContextsAsList(new SearchRetrieveRequestType());
 
         if (contexts == null || contexts.isEmpty()) {
-            return Collections.emptySet(); // NOPMD by CHH on 9/17/10 10:23 AM
+            return Collections.emptySet();
         }
 
         for (final Context context : contexts) {
-            // FIXME: createContextView only one cache/Map for both
             contextById.put(context.getObjid(), context);
             contextByTitle.put(context.getProperties().getName(), context);
         }
 
-        LOG
-            .info("Retrieval is finished, got: " + contexts.size()
-                + " contexts");
+        LOG.info("Retrieval is finished, got: " + contexts.size() + " contexts");
         return contexts;
     }
 
-    public Collection<Context> findByTitle(final String ctxTitle)
-        throws EscidocClientException {
+    public Collection<Context> findByTitle(final String ctxTitle) throws EscidocClientException {
         if (contextByTitle.size() == 0) {
             findAll();
         }
@@ -96,8 +87,7 @@ public class ContextService implements Serializable {
 
     private TaskParam createdBySysAdmin() {
         final Set<Filter> filters = new HashSet<Filter>();
-        filters.add(getFilter(AppConstants.CREATED_BY_FILTER,
-            AppConstants.SYSADMIN_OBJECT_ID, null));
+        filters.add(getFilter(AppConstants.CREATED_BY_FILTER, AppConstants.SYSADMIN_OBJECT_ID, null));
 
         final TaskParam filterParam = new TaskParam();
         filterParam.setFilters(filters);
@@ -105,8 +95,7 @@ public class ContextService implements Serializable {
     }
 
     // FIXME duplicate method in ContextService
-    private Filter getFilter(
-        final String name, final String value, final Collection<String> ids) {
+    private Filter getFilter(final String name, final String value, final Collection<String> ids) {
 
         final Filter filter = new Filter();
         filter.setName(name);
@@ -123,10 +112,8 @@ public class ContextService implements Serializable {
     }
 
     public Context update(
-        final String objectId, final String newName,
-        final String newDescription, final String newType,
-        final OrganizationalUnitRefs orgUnitRefs,
-        final AdminDescriptors newAdminDescriptors)
+        final String objectId, final String newName, final String newDescription, final String newType,
+        final OrganizationalUnitRefs orgUnitRefs, final AdminDescriptors newAdminDescriptors)
         throws EscidocClientException {
 
         assert !(objectId == null || newName == null || newDescription == null || newType == null) : "Neither objectId nor newName nor newDescription parameters can be null.";
@@ -135,13 +122,11 @@ public class ContextService implements Serializable {
         assert !newType.isEmpty() : "newType can not be empty.";
         assert orgUnitRefs != null : "organizationalUnitRefs can not be null.";
 
-        final ContextBuilder builder =
-            new ContextBuilder(getSelected(objectId));
+        final ContextBuilder builder = new ContextBuilder(getSelected(objectId));
         final Context updatedContext =
             builder
-                .name(newName).description(newDescription).type(newType)
-                .orgUnits(orgUnitRefs).adminDescriptors(newAdminDescriptors)
-                .build();
+                .name(newName).description(newDescription).type(newType).orgUnits(orgUnitRefs)
+                .adminDescriptors(newAdminDescriptors).build();
 
         final Context fromRepository = client.update(updatedContext);
         assert fromRepository != null : "update fails and return Null Pointer";
@@ -162,26 +147,23 @@ public class ContextService implements Serializable {
         assert !(objectId == null || objectId.isEmpty()) : "objectId must not be null or empty";
     }
 
-    public Context open(final String objectId) throws EscidocException,
-        InternalClientException, TransportException {
+    public Context open(final String objectId) throws EscidocException, InternalClientException, TransportException {
 
         assertNotEmpty(objectId);
 
-        client.open(objectId, lastModificationDate(getSelected(objectId)
-            .getLastModificationDate()));
+        client.open(objectId, lastModificationDate(getSelected(objectId).getLastModificationDate()));
         final Context openedContext = client.retrieve(objectId);
         updateMap(objectId, openedContext);
 
         return openedContext;
     }
 
-    public Context open(final String objectId, final String comment)
-        throws EscidocException, InternalClientException, TransportException {
+    public Context open(final String objectId, final String comment) throws EscidocException, InternalClientException,
+        TransportException {
         assertNotEmpty(objectId);
 
         final TaskParam taskParam = new TaskParam();
-        taskParam.setLastModificationDate(getSelected(objectId)
-            .getLastModificationDate());
+        taskParam.setLastModificationDate(getSelected(objectId).getLastModificationDate());
 
         if (!comment.isEmpty()) {
             taskParam.setComment(comment);
@@ -204,12 +186,10 @@ public class ContextService implements Serializable {
         return taskParam;
     }
 
-    public Context close(final String objectId) throws EscidocException,
-        InternalClientException, TransportException {
+    public Context close(final String objectId) throws EscidocException, InternalClientException, TransportException {
         assertNotEmpty(objectId);
 
-        client.close(objectId, lastModificationDate(getSelected(objectId)
-            .getLastModificationDate()));
+        client.close(objectId, lastModificationDate(getSelected(objectId).getLastModificationDate()));
         final Context closedContext = client.retrieve(objectId);
 
         updateMap(objectId, closedContext);
@@ -227,13 +207,12 @@ public class ContextService implements Serializable {
         contextById.remove(objectId);
     }
 
-    public Context close(final String objectId, final String comment)
-        throws EscidocException, InternalClientException, TransportException {
+    public Context close(final String objectId, final String comment) throws EscidocException, InternalClientException,
+        TransportException {
         assertNotEmpty(objectId);
 
         final TaskParam taskParam = new TaskParam();
-        taskParam.setLastModificationDate(getSelected(objectId)
-            .getLastModificationDate());
+        taskParam.setLastModificationDate(getSelected(objectId).getLastModificationDate());
         taskParam.setComment(comment);
 
         client.close(objectId, taskParam);
@@ -244,8 +223,7 @@ public class ContextService implements Serializable {
 
     public Context create(
         final String name, final String description, final String contextType,
-        final OrganizationalUnitRefs orgUnitRefs,
-        final AdminDescriptors adminDescriptors)
+        final OrganizationalUnitRefs orgUnitRefs, final AdminDescriptors adminDescriptors)
         throws ParserConfigurationException, EscidocClientException {
 
         assert !(name == null || name.isEmpty()) : "name can not be null or empty";
@@ -255,8 +233,7 @@ public class ContextService implements Serializable {
         assert (orgUnitRefs.size() > 0) : "orgUnitRefs can not be empty";
 
         final Context backedContext =
-            createContextDTO(name, description, contextType, orgUnitRefs,
-                adminDescriptors).build();
+            createContextDTO(name, description, contextType, orgUnitRefs, adminDescriptors).build();
         final Context createdContext = client.create(backedContext);
 
         assert createdContext != null : "Got null reference from the server.";
@@ -270,10 +247,9 @@ public class ContextService implements Serializable {
 
     private ContextFactory createContextDTO(
         final String name, final String description, final String contextType,
-        final OrganizationalUnitRefs orgUnitRefs,
-        final AdminDescriptors adminDescriptors)
+        final OrganizationalUnitRefs orgUnitRefs, final AdminDescriptors adminDescriptors)
         throws ParserConfigurationException {
-        return new ContextFactory().create(name, description, contextType,
-            orgUnitRefs).adminDescriptors(adminDescriptors);
+        return new ContextFactory().create(name, description, contextType, orgUnitRefs).adminDescriptors(
+            adminDescriptors);
     }
 }
