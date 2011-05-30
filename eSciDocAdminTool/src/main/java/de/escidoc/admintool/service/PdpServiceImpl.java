@@ -29,7 +29,7 @@ public class PdpServiceImpl implements PdpService {
 
     private Set<Subject> subjects;
 
-   public PdpServiceImpl(final String serviceAddress) {
+    public PdpServiceImpl(final String serviceAddress) {
         client = new PolicyDecisionPointHandlerClient(serviceAddress);
         client.setTransport(TransportProtocol.REST);
     }
@@ -42,25 +42,23 @@ public class PdpServiceImpl implements PdpService {
 
     public PdpService isAction(final String actionId) throws URISyntaxException {
         actionAttrs = new HashSet<Attribute>();
-        actionAttrs.add(new Attribute(new URI(AppConstants.XACML_ACTION_ID),
-            null, null, new StringAttribute(actionId)));
+        actionAttrs
+            .add(new Attribute(new URI(AppConstants.XACML_ACTION_ID), null, null, new StringAttribute(actionId)));
         return this;
     }
 
     @Override
-    public PdpService forResource(final String resourceId)
-        throws URISyntaxException {
+    public PdpService forResource(final String resourceId) throws URISyntaxException {
         resourceAttrs = new HashSet<Attribute>();
-        resourceAttrs.add(new Attribute(new URI(AppConstants.RESOURCE_ID),
-            null, null, new StringAttribute(resourceId)));
+        resourceAttrs
+            .add(new Attribute(new URI(AppConstants.RESOURCE_ID), null, null, new StringAttribute(resourceId)));
         return this;
     }
 
     @Override
     public PdpService forUser(final String userId) throws URISyntaxException {
         final Set<Attribute> subjectAttributes = new HashSet<Attribute>();
-        subjectAttributes.add(new Attribute(new URI(AppConstants.SUBJECT_ID),
-            null, null, new StringAttribute(userId)));
+        subjectAttributes.add(new Attribute(new URI(AppConstants.SUBJECT_ID), null, null, new StringAttribute(userId)));
         subjects = new HashSet<Subject>();
         subjects.add(new Subject(Subject.DEFAULT_CATEGORY, subjectAttributes));
         return this;
@@ -69,17 +67,12 @@ public class PdpServiceImpl implements PdpService {
 
     @Override
     public boolean permitted() throws EscidocClientException {
-        Preconditions.checkArgument(subjects.size() <= 1,
-            "more than one subjects are not allowed");
-        Preconditions.checkArgument(resourceAttrs.size() <= 1,
-            "more than one subjects are not allowed");
-        Preconditions.checkArgument(actionAttrs.size() == 1,
-            "more than one subjects are not allowed");
+        Preconditions.checkArgument(subjects.size() <= 1, "more than one subjects are not allowed");
+        Preconditions.checkArgument(resourceAttrs.size() <= 1, "more than one subjects are not allowed");
+        Preconditions.checkArgument(actionAttrs.size() == 1, "more than one subjects are not allowed");
         final Requests requests = new Requests();
-        requests.add(new RequestCtx(subjects, resourceAttrs, actionAttrs,
-            Requests.DEFAULT_ENVIRONMENT));
-        return getDecisionFrom(client.evaluate(requests)).equals(
-            Decision.permit);
+        requests.add(new RequestCtx(subjects, resourceAttrs, actionAttrs, Requests.DEFAULT_ENVIRONMENT));
+        return getDecisionFrom(client.evaluate(requests)).equals(Decision.permit);
     }
 
     private Decision getDecisionFrom(final Results results) {

@@ -7,8 +7,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Table;
 
-public final class RemoveOrgUnitFromUserListener
-    implements Button.ClickListener {
+public final class RemoveOrgUnitFromUserListener implements Button.ClickListener {
     private static final long serialVersionUID = -93040754103228754L;
 
     private final AbstractSelect orgUnitTable;

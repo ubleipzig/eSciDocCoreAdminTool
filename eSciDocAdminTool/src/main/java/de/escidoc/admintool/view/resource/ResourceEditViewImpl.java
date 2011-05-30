@@ -23,8 +23,7 @@ import de.escidoc.admintool.service.OrgUnitServiceLab;
 import de.escidoc.admintool.service.ResourceService;
 import de.escidoc.admintool.view.ViewConstants;
 
-public class ResourceEditViewImpl extends CustomComponent
-    implements ResourceEditView {
+public class ResourceEditViewImpl extends CustomComponent implements ResourceEditView {
 
     private static final long serialVersionUID = -7860622778922198542L;
 
@@ -56,12 +55,10 @@ public class ResourceEditViewImpl extends CustomComponent
 
     private final PdpRequest pdpRequest;
 
-    public ResourceEditViewImpl(final AdminToolApplication app,
-        final Window mainWindow, final ResourceViewImpl resourceView,
-        final ResourceService orgUnitService,
+    public ResourceEditViewImpl(final AdminToolApplication app, final Window mainWindow,
+        final ResourceViewImpl resourceView, final ResourceService orgUnitService,
         final ResourceContainer resourceContainer, final PdpRequest pdpRequest) {
-        checkPreconditions(mainWindow, resourceView, orgUnitService,
-            resourceContainer, pdpRequest);
+        checkPreconditions(mainWindow, resourceView, orgUnitService, resourceContainer, pdpRequest);
         this.app = app;
         this.mainWindow = mainWindow;
         this.resourceView = resourceView;
@@ -70,38 +67,26 @@ public class ResourceEditViewImpl extends CustomComponent
         formLayout.setWidth(75, UNITS_PERCENTAGE);
 
         resourceToolbar =
-            new ResourceToolbar(app, resourceView, mainWindow, orgUnitService,
-                resourceContainer, pdpRequest);
-        propertyFields =
-            new PropertiesFieldsImpl(app, vLayout, formLayout, fieldByName);
-        resourceSpecific =
-            createOrgUnitSpecificView(mainWindow, orgUnitService,
-                resourceContainer);
+            new ResourceToolbar(app, resourceView, mainWindow, orgUnitService, resourceContainer, pdpRequest);
+        propertyFields = new PropertiesFieldsImpl(app, vLayout, formLayout, fieldByName);
+        resourceSpecific = createOrgUnitSpecificView(mainWindow, orgUnitService, resourceContainer);
 
         buildView();
     }
 
     private void checkPreconditions(
-        final Window mainWindow, final ResourceViewImpl resourceViewImpl,
-        final ResourceService orgUnitService,
+        final Window mainWindow, final ResourceViewImpl resourceViewImpl, final ResourceService orgUnitService,
         final ResourceContainer resourceContainer, final PdpRequest pdpRequest) {
-        Preconditions.checkNotNull(mainWindow, "mainWindow is null: %s",
-            mainWindow);
-        Preconditions.checkNotNull(resourceViewImpl,
-            "resourceViewImpl is null: %s", resourceViewImpl);
-        Preconditions.checkNotNull(orgUnitService,
-            "orgUnitService is null: %s", orgUnitService);
-        Preconditions.checkNotNull(resourceContainer,
-            "resourceContainer is null: %s", resourceContainer);
-        Preconditions.checkNotNull(pdpRequest, "pdpRequest is null: %s",
-            pdpRequest);
+        Preconditions.checkNotNull(mainWindow, "mainWindow is null: %s", mainWindow);
+        Preconditions.checkNotNull(resourceViewImpl, "resourceViewImpl is null: %s", resourceViewImpl);
+        Preconditions.checkNotNull(orgUnitService, "orgUnitService is null: %s", orgUnitService);
+        Preconditions.checkNotNull(resourceContainer, "resourceContainer is null: %s", resourceContainer);
+        Preconditions.checkNotNull(pdpRequest, "pdpRequest is null: %s", pdpRequest);
     }
 
     private OrgUnitSpecificView createOrgUnitSpecificView(
-        final Window mainWindow, final ResourceService orgUnitService,
-        final ResourceContainer resourceContainer) {
-        return new OrgUnitSpecificView(mainWindow,
-            (OrgUnitServiceLab) orgUnitService, resourceContainer, formLayout,
+        final Window mainWindow, final ResourceService orgUnitService, final ResourceContainer resourceContainer) {
+        return new OrgUnitSpecificView(mainWindow, (OrgUnitServiceLab) orgUnitService, resourceContainer, formLayout,
             fieldByName);
     }
 
@@ -123,15 +108,14 @@ public class ResourceEditViewImpl extends CustomComponent
         formLayout.addComponent(new Label("<br/>", Label.CONTENT_XHTML));
     }
 
-    public void setResourceSpecificView(
-        final OrgUnitSpecificView resourceSpecific) {
+    public void setResourceSpecificView(final OrgUnitSpecificView resourceSpecific) {
         this.resourceSpecific = resourceSpecific;
     }
 
     private void addSaveAndCancelButtons() {
         updateOrgUnitBtnListener =
-            new UpdateOrgUnitBtnListener(propertyFields.getAllFields(),
-                fieldByName, mainWindow, resourceView, orgUnitService);
+            new UpdateOrgUnitBtnListener(propertyFields.getAllFields(), fieldByName, mainWindow, resourceView,
+                orgUnitService);
         footers.setOkButtonListener(updateOrgUnitBtnListener);
 
         footers.getCancelBtn().addListener(new ClickListener() {

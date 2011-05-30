@@ -7,11 +7,9 @@ import com.vaadin.ui.Window;
 @SuppressWarnings("serial")
 public class AdminDescriptorAddView extends AdminDescriptorView {
 
-    private static final String ADD_A_NEW_ADMIN_DESCRIPTOR =
-        "Add a new Admin Descriptor";
+    private static final String ADD_A_NEW_ADMIN_DESCRIPTOR = "Add a new Admin Descriptor";
 
-    public AdminDescriptorAddView(final Window mainWindow,
-        final Accordion adminDescriptorAccordion) {
+    public AdminDescriptorAddView(final Window mainWindow, final Accordion adminDescriptorAccordion) {
         super(mainWindow, adminDescriptorAccordion);
     }
 
@@ -24,9 +22,8 @@ public class AdminDescriptorAddView extends AdminDescriptorView {
     protected void doSave() {
         final String content = (String) adminDescContent.getValue();
         if (validate(content)) {
-            adminDescriptorAccordion.addTab(new Label(content,
-                Label.CONTENT_PREFORMATTED), (String) adminDescName.getValue(),
-                null);
+            adminDescriptorAccordion.addTab(new Label(content, Label.CONTENT_PREFORMATTED),
+                (String) adminDescName.getValue(), null);
             closeWindow();
         }
     }

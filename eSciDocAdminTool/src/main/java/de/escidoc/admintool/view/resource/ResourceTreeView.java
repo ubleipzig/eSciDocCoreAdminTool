@@ -12,8 +12,7 @@ import de.escidoc.admintool.app.PropertyId;
 import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.resources.Resource;
 
-public class ResourceTreeView extends CustomComponent
-    implements ResourceFolderView {
+public class ResourceTreeView extends CustomComponent implements ResourceFolderView {
 
     private static final long serialVersionUID = 6912762184225745680L;
 
@@ -41,10 +40,8 @@ public class ResourceTreeView extends CustomComponent
     }
 
     private void preconditions(
-        final Window mainWindow, final FolderHeader header,
-        final ResourceContainer resourceContainer) {
-        Preconditions.checkNotNull(resourceContainer, " containeris null: %s",
-            resourceContainer);
+        final Window mainWindow, final FolderHeader header, final ResourceContainer resourceContainer) {
+        Preconditions.checkNotNull(resourceContainer, " containeris null: %s", resourceContainer);
     }
 
     private void init() {

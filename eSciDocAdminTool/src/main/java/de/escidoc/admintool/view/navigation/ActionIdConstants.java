@@ -2,17 +2,14 @@ package de.escidoc.admintool.view.navigation;
 
 public class ActionIdConstants {
 
-    public static final String REINDEX_ACTION_ID =
-        "info:escidoc/names:aa:1.0:action:reindex";
+    public static final String REINDEX_ACTION_ID = "info:escidoc/names:aa:1.0:action:reindex";
 
-    public static final String CREATE_USER_ACCOUNT =
-        "info:escidoc/names:aa:1.0:action:create-user-account";
+    public static final String CREATE_USER_ACCOUNT = "info:escidoc/names:aa:1.0:action:create-user-account";
 
     public static final String DELETE_ORGANIZATIONAL_UNIT_ACTION =
         "info:escidoc/names:aa:1.0:action:delete-organizational-unit";
 
-    public final static String GET_PURGE_STATUS_ACTION =
-        "info:escidoc/names:aa:1.0:action:get-purge-status";
+    public final static String GET_PURGE_STATUS_ACTION = "info:escidoc/names:aa:1.0:action:get-purge-status";
 
     // "info:escidoc/names:aa:1.0:action:activate-user-account"
     // "info:escidoc/names:aa:1.0:action:activate-user-group"
@@ -157,61 +154,42 @@ public class ActionIdConstants {
     // "info:escidoc/names:aa:1.0:action:query-semantic-store"
     // "info:escidoc/names:aa:1.0:action:retrieve-set-definition"
 
-    public static final String DELETE_USER_ACCOUNT =
-        "info:escidoc/names:aa:1.0:action:delete-user-account";
+    public static final String DELETE_USER_ACCOUNT = "info:escidoc/names:aa:1.0:action:delete-user-account";
 
-    public static final String UPDATE_USER_ACCOUNT =
-        "info:escidoc/names:aa:1.0:action:update-user-account";
+    public static final String UPDATE_USER_ACCOUNT = "info:escidoc/names:aa:1.0:action:update-user-account";
 
-    public static final String DEACTIVATE_USER_ACCOUNT =
-        "info:escidoc/names:aa:1.0:action:deactivate-user-account";
+    public static final String DEACTIVATE_USER_ACCOUNT = "info:escidoc/names:aa:1.0:action:deactivate-user-account";
 
-    public static final String UPDATE_ROLE =
-        "info:escidoc/names:aa:1.0:action:update-role";
+    public static final String UPDATE_ROLE = "info:escidoc/names:aa:1.0:action:update-role";
 
-    public static final String CREATE_GRANT =
-        "info:escidoc/names:aa:1.0:action:create-grant";
+    public static final String CREATE_GRANT = "info:escidoc/names:aa:1.0:action:create-grant";
 
-    public static final String REVOKE_GRANT =
-        "info:escidoc/names:aa:1.0:action:revoke-grant";
+    public static final String REVOKE_GRANT = "info:escidoc/names:aa:1.0:action:revoke-grant";
 
-    public static final String CREATE_CONTENT_MODEL =
-        "info:escidoc/names:aa:1.0:action:create-content-model";
+    public static final String CREATE_CONTENT_MODEL = "info:escidoc/names:aa:1.0:action:create-content-model";
 
-    public static final String CREATE_ITEM =
-        "info:escidoc/names:aa:1.0:action:create-item";
+    public static final String CREATE_ITEM = "info:escidoc/names:aa:1.0:action:create-item";
 
-    public static final String DELETE_CONTEXT =
-        "info:escidoc/names:aa:1.0:action:delete-context";
+    public static final String DELETE_CONTEXT = "info:escidoc/names:aa:1.0:action:delete-context";
 
-    public static final String CLOSE_CONTEXT =
-        "info:escidoc/names:aa:1.0:action:close-context";
+    public static final String CLOSE_CONTEXT = "info:escidoc/names:aa:1.0:action:close-context";
 
-    public static final String CREATE_CONTEXT =
-        "info:escidoc/names:aa:1.0:action:create-context";
+    public static final String CREATE_CONTEXT = "info:escidoc/names:aa:1.0:action:create-context";
 
-    public static final String OPEN_CONTEXT =
-        "info:escidoc/names:aa:1.0:action:open-context";
+    public static final String OPEN_CONTEXT = "info:escidoc/names:aa:1.0:action:open-context";
 
-    public static final String UPDATE_CONTEXT =
-        "info:escidoc/names:aa:1.0:action:update-context";
+    public static final String UPDATE_CONTEXT = "info:escidoc/names:aa:1.0:action:update-context";
 
-    public static final String CREATE_ORG_UNIT =
-        "info:escidoc/names:aa:1.0:action:create-organizational-unit";
+    public static final String CREATE_ORG_UNIT = "info:escidoc/names:aa:1.0:action:create-organizational-unit";
 
-    public static final String DELETE_ORG_UNIT =
-        "info:escidoc/names:aa:1.0:action:delete-organizational-unit";
+    public static final String DELETE_ORG_UNIT = "info:escidoc/names:aa:1.0:action:delete-organizational-unit";
 
-    public static final String CLOSE_ORG_UNIT =
-        "info:escidoc/names:aa:1.0:action:close-organizational-unit";
+    public static final String CLOSE_ORG_UNIT = "info:escidoc/names:aa:1.0:action:close-organizational-unit";
 
-    public static final String OPEN_ORG_UNIT =
-        "info:escidoc/names:aa:1.0:action:open-organizational-unit";
+    public static final String OPEN_ORG_UNIT = "info:escidoc/names:aa:1.0:action:open-organizational-unit";
 
-    public static final String RETRIEVE_USER_ACCOUNT =
-        "info:escidoc/names:aa:1.0:action:retrieve-user-account";
+    public static final String RETRIEVE_USER_ACCOUNT = "info:escidoc/names:aa:1.0:action:retrieve-user-account";
 
-    public static final String PURGE_RESOURCES =
-        "info:escidoc/names:aa:1.0:action:delete-objects";
+    public static final String PURGE_RESOURCES = "info:escidoc/names:aa:1.0:action:delete-objects";
 
 }

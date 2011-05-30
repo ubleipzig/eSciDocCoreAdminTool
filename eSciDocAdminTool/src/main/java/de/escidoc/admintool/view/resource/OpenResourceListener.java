@@ -9,18 +9,14 @@ import de.escidoc.admintool.app.PropertyId;
 import de.escidoc.admintool.service.ResourceService;
 import de.escidoc.core.client.exceptions.EscidocClientException;
 
-public class OpenResourceListener extends AbstractUpdateable
-    implements ClickListener {
+public class OpenResourceListener extends AbstractUpdateable implements ClickListener {
 
     private final ResourceToolbar resourceToolbar;
 
-    public OpenResourceListener(final Window mainWindow,
-        final ResourceService orgUnitService,
-        final ResourceContainer resourceContainer,
-        final ResourceToolbar resourceToolbar) {
+    public OpenResourceListener(final Window mainWindow, final ResourceService orgUnitService,
+        final ResourceContainer resourceContainer, final ResourceToolbar resourceToolbar) {
         super(mainWindow, orgUnitService, resourceContainer);
-        Preconditions.checkNotNull(resourceToolbar,
-            "resourceToolbar is null: %s", resourceToolbar);
+        Preconditions.checkNotNull(resourceToolbar, "resourceToolbar is null: %s", resourceToolbar);
         this.resourceToolbar = resourceToolbar;
     }
 

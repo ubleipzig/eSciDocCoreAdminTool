@@ -21,8 +21,7 @@ public class RepoInfoClickListener implements ClickListener {
 
     private static final long serialVersionUID = 3487193092482071418L;
 
-    private static final Logger LOG = LoggerFactory
-        .getLogger(RepoInfoClickListener.class);
+    private static final Logger LOG = LoggerFactory.getLogger(RepoInfoClickListener.class);
 
     private final AdminService adminService;
 
@@ -30,8 +29,7 @@ public class RepoInfoClickListener implements ClickListener {
 
     private ShowRepoInfoCommand command;
 
-    public RepoInfoClickListener(final Window mainWindow,
-        final AdminService adminService) {
+    public RepoInfoClickListener(final Window mainWindow, final AdminService adminService) {
         this.mainWindow = mainWindow;
         this.adminService = adminService;
     }

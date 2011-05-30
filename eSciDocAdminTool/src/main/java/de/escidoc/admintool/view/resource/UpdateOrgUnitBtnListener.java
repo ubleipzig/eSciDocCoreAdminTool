@@ -22,22 +22,18 @@ public class UpdateOrgUnitBtnListener extends AbstractResourceBtnListener {
 
     private static final long serialVersionUID = 4095932748716005999L;
 
-    public UpdateOrgUnitBtnListener(final Collection<Field> allFields,
-        final Map<String, Field> fieldByName, final Window mainWindow,
-        final ResourceView resourceView, final ResourceService resourceService) {
+    public UpdateOrgUnitBtnListener(final Collection<Field> allFields, final Map<String, Field> fieldByName,
+        final Window mainWindow, final ResourceView resourceView, final ResourceService resourceService) {
         super(allFields, fieldByName, mainWindow, resourceView, resourceService);
     }
 
     @Override
-    protected void updateModel() throws ParserConfigurationException,
-        SAXException, IOException, EscidocClientException {
+    protected void updateModel() throws ParserConfigurationException, SAXException, IOException, EscidocClientException {
 
         getData().toBeUpdated =
             createBuilder()
-                .with(getTitle(), getDescription()).country(getCountry())
-                .city(getCity()).alternative(getAlternative())
-                .identifier(getIdentifier()).coordinates(getCoordinates())
-                .type(getType()).build();
+                .with(getTitle(), getDescription()).country(getCountry()).city(getCity()).alternative(getAlternative())
+                .identifier(getIdentifier()).coordinates(getCoordinates()).type(getType()).build();
 
     }
 
@@ -46,9 +42,8 @@ public class UpdateOrgUnitBtnListener extends AbstractResourceBtnListener {
     }
 
     private OrganizationalUnit getOldOrgUnit() throws EscidocClientException {
-        return (OrganizationalUnit) getData().resourceService
-            .findById((String) getData().item.getItemProperty(
-                PropertyId.OBJECT_ID).getValue());
+        return (OrganizationalUnit) getData().resourceService.findById((String) getData().item.getItemProperty(
+            PropertyId.OBJECT_ID).getValue());
     }
 
     @Override

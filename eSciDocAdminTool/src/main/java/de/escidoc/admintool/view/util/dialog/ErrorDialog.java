@@ -31,8 +31,7 @@ public class ErrorDialog extends Window implements Button.ClickListener {
      * @param errorMessage
      *            the message, describing what went wrong.
      */
-    public ErrorDialog(final Window mainWindow, final String caption,
-        final String errorMessage) {
+    public ErrorDialog(final Window mainWindow, final String caption, final String errorMessage) {
         this(mainWindow, caption, errorMessage, 600, 300);
     }
 
@@ -50,15 +49,12 @@ public class ErrorDialog extends Window implements Button.ClickListener {
      * @param height
      *            the height of the window.
      */
-    public ErrorDialog(final Window mainWindow, final String caption,
-        final String errorMessage, final int width, final int height) {
+    public ErrorDialog(final Window mainWindow, final String caption, final String errorMessage, final int width,
+        final int height) {
 
-        Preconditions.checkNotNull(mainWindow,
-            "mainWindow can not be null: %s", mainWindow);
-        Preconditions.checkNotNull(caption, "caption can not be null: %s",
-            caption);
-        Preconditions.checkNotNull(mainWindow,
-            "errorMessage can not be null: %s", errorMessage);
+        Preconditions.checkNotNull(mainWindow, "mainWindow can not be null: %s", mainWindow);
+        Preconditions.checkNotNull(caption, "caption can not be null: %s", caption);
+        Preconditions.checkNotNull(mainWindow, "errorMessage can not be null: %s", errorMessage);
 
         this.mainWindow = mainWindow;
         super.setWidth(width + "px");

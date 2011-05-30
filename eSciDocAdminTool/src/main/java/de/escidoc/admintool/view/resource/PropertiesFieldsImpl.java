@@ -22,8 +22,7 @@ import com.vaadin.ui.themes.BaseTheme;
 import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.view.ViewConstants;
 
-public class PropertiesFieldsImpl extends CustomComponent
-    implements PropertiesFields {
+public class PropertiesFieldsImpl extends CustomComponent implements PropertiesFields {
 
     private static final long serialVersionUID = -1808186834466896787L;
 
@@ -57,11 +56,9 @@ public class PropertiesFieldsImpl extends CustomComponent
 
     Item item;
 
-    final TextField statusField = new TextField(
-        ViewConstants.PUBLIC_STATUS_LABEL);
+    final TextField statusField = new TextField(ViewConstants.PUBLIC_STATUS_LABEL);
 
-    final TextField statusComment = new TextField(
-        ViewConstants.PUBLIC_STATUS_COMMENT_LABEL);
+    final TextField statusComment = new TextField(ViewConstants.PUBLIC_STATUS_COMMENT_LABEL);
 
     Label publicStatusValue;
 
@@ -71,9 +68,8 @@ public class PropertiesFieldsImpl extends CustomComponent
 
     private final FieldsBinder binder;
 
-    public PropertiesFieldsImpl(final AdminToolApplication app,
-        final VerticalLayout vLayout, final FormLayout formLayout,
-        final Map<String, Field> fieldByName) {
+    public PropertiesFieldsImpl(final AdminToolApplication app, final VerticalLayout vLayout,
+        final FormLayout formLayout, final Map<String, Field> fieldByName) {
         this.app = app;
         this.formLayout = formLayout;
         this.fieldByName = fieldByName;
@@ -134,8 +130,7 @@ public class PropertiesFieldsImpl extends CustomComponent
     }
 
     private void configure(final TextField field) {
-        field.setPropertyDataSource(new ObjectProperty<String>(
-            ViewConstants.EMPTY_STRING));
+        field.setPropertyDataSource(new ObjectProperty<String>(ViewConstants.EMPTY_STRING));
         field.setImmediate(false);
         field.setInvalidCommitted(false);
         field.setNullRepresentation(ViewConstants.EMPTY_STRING);
@@ -194,8 +189,7 @@ public class PropertiesFieldsImpl extends CustomComponent
     }
 
     private void addModifiedOn() {
-        final Label modifiedOnLabel =
-            new Label(ViewConstants.MODIFIED_ON_LABEL);
+        final Label modifiedOnLabel = new Label(ViewConstants.MODIFIED_ON_LABEL);
         modifiedLayout.addComponent(modifiedOnLabel);
         modifiedLayout.setSpacing(true);
 
@@ -208,8 +202,7 @@ public class PropertiesFieldsImpl extends CustomComponent
         final Iterator<Component> iterator = formLayout.getComponentIterator();
         while (iterator.hasNext()) {
             final Component component = iterator.next();
-            if (component instanceof Field
-                && !component.getCaption().equals("Parents")) {
+            if (component instanceof Field && !component.getCaption().equals("Parents")) {
                 final Field field = (Field) component;
                 allFields.add(field);
             }

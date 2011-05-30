@@ -77,9 +77,8 @@ public class OrgUnit extends OrganizationalUnit {
         public OrganizationalUnit build() throws ParserConfigurationException {
             escidocMdRecord =
                 new EscidocMdRecord.BuilderImpl(name, disc)
-                    .alternative(alternative).identifier(identifier)
-                    .coordinates(coordinates).country(country).city(city)
-                    .orgType(type).build();
+                    .alternative(alternative).identifier(identifier).coordinates(coordinates).country(country)
+                    .city(city).orgType(type).build();
             mdRecords.add(escidocMdRecord);
             return new OrgUnit(this);
         }

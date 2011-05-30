@@ -10,22 +10,20 @@ import de.escidoc.core.client.interfaces.ContainerHandlerClientInterface;
 import de.escidoc.core.client.interfaces.HandlerServiceInterface;
 import de.escidoc.core.resources.Resource;
 
-public class ContainerService
-    extends AbstractEscidocService<ContainerHandlerClientInterface> {
+public class ContainerService extends AbstractEscidocService<ContainerHandlerClientInterface> {
 
     public ContainerService(final HandlerServiceInterface client) {
         super(client);
     }
 
     @Override
-    Collection<? extends Resource> findPublicOrReleseadResourcesUsingOldFilter()
-        throws EscidocClientException {
+    Collection<? extends Resource> findPublicOrReleseadResourcesUsingOldFilter() throws EscidocClientException {
         return getClient().retrieveContainers(withEmptyTaskParam());
     }
 
     @Override
-    Collection<? extends Resource> findPublicOrReleasedResources()
-        throws EscidocException, InternalClientException, TransportException {
+    Collection<? extends Resource> findPublicOrReleasedResources() throws EscidocException, InternalClientException,
+        TransportException {
         return getClient().retrieveContainersAsList(withEmptyFilter());
     }
 
@@ -35,14 +33,14 @@ public class ContainerService
     }
 
     @Override
-    public Resource create(final Resource resource) throws EscidocException,
-        InternalClientException, TransportException {
+    public Resource create(final Resource resource) throws EscidocException, InternalClientException,
+        TransportException {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
     @Override
-    public Collection<? extends Resource> filterUsingInput(final String query)
-        throws EscidocException, InternalClientException, TransportException {
+    public Collection<? extends Resource> filterUsingInput(final String query) throws EscidocException,
+        InternalClientException, TransportException {
         return getClient().retrieveContainersAsList(userInputToFilter(query));
     }
 

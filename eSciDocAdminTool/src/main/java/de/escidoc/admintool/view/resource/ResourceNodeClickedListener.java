@@ -12,8 +12,7 @@ public class ResourceNodeClickedListener implements ItemClickListener {
     private final ShowEditResourceView showEditResourceView;
 
     ResourceNodeClickedListener(final ShowEditResourceView showEditResourceView) {
-        Preconditions.checkNotNull(showEditResourceView,
-            "showEditResourceView is null: %s", showEditResourceView);
+        Preconditions.checkNotNull(showEditResourceView, "showEditResourceView is null: %s", showEditResourceView);
         this.showEditResourceView = showEditResourceView;
     }
 

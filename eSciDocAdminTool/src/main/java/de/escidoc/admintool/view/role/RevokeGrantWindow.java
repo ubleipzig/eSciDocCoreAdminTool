@@ -19,8 +19,7 @@ import de.escidoc.core.resources.aa.useraccount.Grant;
 
 public class RevokeGrantWindow extends CustomComponent {
 
-    private static final Logger LOG = LoggerFactory
-        .getLogger(RevokeGrantWindow.class);
+    private static final Logger LOG = LoggerFactory.getLogger(RevokeGrantWindow.class);
 
     private static final String COMMENT_FIELD_WIDTH = "350px";
 
@@ -48,8 +47,7 @@ public class RevokeGrantWindow extends CustomComponent {
 
     private final Grant grant;
 
-    public RevokeGrantWindow(final Command command, final Grant grant,
-        final POJOContainer<Grant> grants) {
+    public RevokeGrantWindow(final Command command, final Grant grant, final POJOContainer<Grant> grants) {
         this.command = command;
         this.grant = grant;
         this.grants = grants;

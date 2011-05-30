@@ -12,26 +12,21 @@ import de.escidoc.core.resources.adm.MessagesStatus;
 
 public interface AdminService extends EscidocService {
 
-    List<Entry> loadCommonExamples() throws EscidocException,
-        InternalClientException, TransportException;
+    List<Entry> loadCommonExamples() throws EscidocException, InternalClientException, TransportException;
 
     void loginWith(String handle) throws InternalClientException;
 
-    Map<String, String> getRepositoryInfo() throws EscidocException,
+    Map<String, String> getRepositoryInfo() throws EscidocException, InternalClientException, TransportException;
+
+    MessagesStatus purge(Set<String> list) throws EscidocException, InternalClientException, TransportException;
+
+    MessagesStatus retrievePurgeStatus() throws EscidocException, InternalClientException, TransportException;
+
+    MessagesStatus reindexAll(boolean shouldClearIndex) throws EscidocException, InternalClientException,
+        TransportException;
+
+    MessagesStatus retrieveReindexStatus() throws EscidocException, InternalClientException, TransportException;
+
+    MessagesStatus reindex(Boolean shouldClearIndex, String indexNamePrefix) throws EscidocException,
         InternalClientException, TransportException;
-
-    MessagesStatus purge(Set<String> list) throws EscidocException,
-        InternalClientException, TransportException;
-
-    MessagesStatus retrievePurgeStatus() throws EscidocException,
-        InternalClientException, TransportException;
-
-    MessagesStatus reindexAll(boolean shouldClearIndex)
-        throws EscidocException, InternalClientException, TransportException;
-
-    MessagesStatus retrieveReindexStatus() throws EscidocException,
-        InternalClientException, TransportException;
-
-    MessagesStatus reindex(Boolean shouldClearIndex, String indexNamePrefix)
-        throws EscidocException, InternalClientException, TransportException;
 }

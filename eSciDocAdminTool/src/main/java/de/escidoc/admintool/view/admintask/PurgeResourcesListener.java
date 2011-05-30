@@ -25,8 +25,7 @@ import de.escidoc.core.resources.adm.MessagesStatus;
 
 final class PurgeResourcesListener implements ClickListener {
 
-    private static final Logger LOG = LoggerFactory
-        .getLogger(PurgeResourcesListener.class);
+    private static final Logger LOG = LoggerFactory.getLogger(PurgeResourcesListener.class);
 
     private final ShowFilterResultCommandImpl command;
 
@@ -34,17 +33,13 @@ final class PurgeResourcesListener implements ClickListener {
 
     private final Window mainWindow;
 
-    PurgeResourcesListener(final ShowFilterResultCommandImpl command,
-        final FormLayout formLayout, final AdminService adminService,
-        final Window mainWindow) {
+    PurgeResourcesListener(final ShowFilterResultCommandImpl command, final FormLayout formLayout,
+        final AdminService adminService, final Window mainWindow) {
 
         Preconditions.checkNotNull(command, "command is null: %s", command);
-        Preconditions.checkNotNull(formLayout, "formLayout is null: %s",
-            formLayout);
-        Preconditions.checkNotNull(adminService, "adminService is null: %s",
-            adminService);
-        Preconditions.checkNotNull(mainWindow, "mainWindow is null: %s",
-            mainWindow);
+        Preconditions.checkNotNull(formLayout, "formLayout is null: %s", formLayout);
+        Preconditions.checkNotNull(adminService, "adminService is null: %s", adminService);
+        Preconditions.checkNotNull(mainWindow, "mainWindow is null: %s", mainWindow);
         this.command = command;
         this.formLayout = formLayout;
         this.mainWindow = mainWindow;
@@ -69,8 +64,7 @@ final class PurgeResourcesListener implements ClickListener {
                 return;
             }
 
-            final Set<String> objectIds =
-                new HashSet<String>(selectedResources.size());
+            final Set<String> objectIds = new HashSet<String>(selectedResources.size());
             for (final Resource resource : selectedResources) {
                 objectIds.add(resource.getObjid());
             }
@@ -97,8 +91,8 @@ final class PurgeResourcesListener implements ClickListener {
         }
     }
 
-    private void showPurgeStatus(final MessagesStatus status)
-        throws EscidocException, InternalClientException, TransportException {
+    private void showPurgeStatus(final MessagesStatus status) throws EscidocException, InternalClientException,
+        TransportException {
 
         if (status.getStatusCode() == AdminStatus.STATUS_INVALID_RESULT) {
             showErrorMessage(status);
@@ -108,8 +102,7 @@ final class PurgeResourcesListener implements ClickListener {
             showSuccessNotification(status);
         }
         else if (status.getStatusCode() == AdminStatus.STATUS_IN_PROGRESS) {
-            showPurgeStatus(command.filterResourceView.adminService
-                .retrievePurgeStatus());
+            showPurgeStatus(command.filterResourceView.adminService.retrievePurgeStatus());
         }
         else {
             showErrorMessage(status);
@@ -117,12 +110,11 @@ final class PurgeResourcesListener implements ClickListener {
     }
 
     private void showSuccessNotification(final MessagesStatus status) {
-        mainWindow.showNotification(ViewConstants.INFO,
-            status.getStatusMessage(), Notification.TYPE_TRAY_NOTIFICATION);
+        mainWindow.showNotification(ViewConstants.INFO, status.getStatusMessage(), Notification.TYPE_TRAY_NOTIFICATION);
     }
 
-    private MessagesStatus startPurging(final Set<String> objectIds)
-        throws EscidocException, InternalClientException, TransportException {
+    private MessagesStatus startPurging(final Set<String> objectIds) throws EscidocException, InternalClientException,
+        TransportException {
         return command.filterResourceView.adminService.purge(objectIds);
     }
 
@@ -133,7 +125,6 @@ final class PurgeResourcesListener implements ClickListener {
     }
 
     private void showErrorMessage(final AdminStatus status) {
-        mainWindow.showNotification(new Notification(status.getStatusMessage(),
-            Notification.TYPE_ERROR_MESSAGE));
+        mainWindow.showNotification(new Notification(status.getStatusMessage(), Notification.TYPE_ERROR_MESSAGE));
     }
 }

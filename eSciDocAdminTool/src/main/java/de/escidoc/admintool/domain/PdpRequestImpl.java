@@ -12,15 +12,13 @@ import de.escidoc.core.resources.aa.useraccount.UserAccount;
 
 public final class PdpRequestImpl implements PdpRequest {
 
-    private static final Logger LOG = LoggerFactory
-        .getLogger(PdpRequestImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(PdpRequestImpl.class);
 
     private final UserAccount currentUser;
 
     private final PdpService service;
 
-    public PdpRequestImpl(final PdpService service,
-        final UserAccount currentUser) {
+    public PdpRequestImpl(final PdpService service, final UserAccount currentUser) {
         this.service = service;
         this.currentUser = currentUser;
     }
@@ -40,12 +38,9 @@ public final class PdpRequestImpl implements PdpRequest {
         return evaluatePdpRequest(actionId, resourceId);
     }
 
-    private boolean evaluatePdpRequest(
-        final String actionId, final String resourceId) {
+    private boolean evaluatePdpRequest(final String actionId, final String resourceId) {
         try {
-            return service
-                .isAction(actionId).forUser(currentUser.getObjid())
-                .forResource(resourceId).permitted();
+            return service.isAction(actionId).forUser(currentUser.getObjid()).forResource(resourceId).permitted();
         }
         catch (final URISyntaxException e) {
             LOG.error(e.getMessage());

@@ -9,8 +9,7 @@ public class OpenedState implements AbstractState {
 
     private final Button closeContextBtn;
 
-    public OpenedState(Button deleteContextBtn, Button openContextBtn,
-        Button closeContextBtn) {
+    public OpenedState(Button deleteContextBtn, Button openContextBtn, Button closeContextBtn) {
         this.deleteContextBtn = deleteContextBtn;
         this.openContextBtn = openContextBtn;
         this.closeContextBtn = closeContextBtn;

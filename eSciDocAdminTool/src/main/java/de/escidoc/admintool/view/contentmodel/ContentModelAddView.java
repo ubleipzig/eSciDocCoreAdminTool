@@ -50,15 +50,12 @@ public class ContentModelAddView extends AbstractView<Panel> {
 
     private final AdminToolApplication app;
 
-    public ContentModelAddView(final AdminToolApplication app,
-        final Window mainWindow, final ResourceService contentModelService,
-        final ContentModelContainer contentModelContainer) {
+    public ContentModelAddView(final AdminToolApplication app, final Window mainWindow,
+        final ResourceService contentModelService, final ContentModelContainer contentModelContainer) {
         super(new Panel());
         Preconditions.checkNotNull(app, "app is null: %s", app);
-        Preconditions.checkNotNull(mainWindow, "mainWindow is null: %s",
-            mainWindow);
-        Preconditions.checkNotNull(contentModelService,
-            "contentModelService is null: %s", contentModelService);
+        Preconditions.checkNotNull(mainWindow, "mainWindow is null: %s", mainWindow);
+        Preconditions.checkNotNull(contentModelService, "contentModelService is null: %s", contentModelService);
         this.app = app;
         this.mainWindow = mainWindow;
         this.contentModelService = contentModelService;
@@ -72,8 +69,7 @@ public class ContentModelAddView extends AbstractView<Panel> {
         createPropertiesFields();
         addPropertiesFields();
         resourceBtnListener =
-            new CreateContentModelListener(propertyFields.getAllFields(),
-                contentModelService, fieldByName, mainWindow,
+            new CreateContentModelListener(propertyFields.getAllFields(), contentModelService, fieldByName, mainWindow,
                 contentModelContainer);
         addSaveAndCancelButtons();
     }
@@ -84,8 +80,7 @@ public class ContentModelAddView extends AbstractView<Panel> {
     }
 
     private void createPropertiesFields() {
-        propertyFields =
-            new PropertiesFieldsImpl(app, vLayout, formLayout, fieldByName);
+        propertyFields = new PropertiesFieldsImpl(app, vLayout, formLayout, fieldByName);
         propertyFields.removeOthers();
     }
 

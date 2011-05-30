@@ -21,8 +21,7 @@ import de.escidoc.core.resources.adm.MessagesStatus;
 
 final class ReindexButtonListener implements ClickListener {
 
-    private static final Logger LOG = LoggerFactory
-        .getLogger(ReindexButtonListener.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ReindexButtonListener.class);
 
     private static final long serialVersionUID = -2927507839456545485L;
 
@@ -32,9 +31,8 @@ final class ReindexButtonListener implements ClickListener {
 
     private final AbstractField indexNameSelect;
 
-    ReindexButtonListener(
-        final ReindexResourceViewImpl reindexResourceViewImpl,
-        final CheckBox clearIndexBox, final AbstractField indexNameSelect) {
+    ReindexButtonListener(final ReindexResourceViewImpl reindexResourceViewImpl, final CheckBox clearIndexBox,
+        final AbstractField indexNameSelect) {
 
         this.reindexResourceViewImpl = reindexResourceViewImpl;
         this.clearIndexBox = clearIndexBox;
@@ -52,16 +50,13 @@ final class ReindexButtonListener implements ClickListener {
         final String indexName = getIndexName();
         LOG.debug("Reindex clear?" + shouldClearIndex + " using " + indexName);
 
-        Preconditions.checkNotNull(indexName, "indexName is null: %s",
-            indexName);
-        Preconditions.checkArgument(!indexName.isEmpty(),
-            " indexName is empty", indexName);
+        Preconditions.checkNotNull(indexName, "indexName is null: %s", indexName);
+        Preconditions.checkArgument(!indexName.isEmpty(), " indexName is empty", indexName);
     }
 
     private void tryReindex() {
         try {
-            showReindexStatus(reindexResourceViewImpl.adminService.reindex(
-                shouldClearIndex(), getIndexName()));
+            showReindexStatus(reindexResourceViewImpl.adminService.reindex(shouldClearIndex(), getIndexName()));
         }
         catch (final EscidocException e) {
             ModalDialog.show(reindexResourceViewImpl.mainWindow, e);
@@ -74,8 +69,8 @@ final class ReindexButtonListener implements ClickListener {
         }
     }
 
-    private void showReindexStatus(final MessagesStatus status)
-        throws EscidocException, InternalClientException, TransportException {
+    private void showReindexStatus(final MessagesStatus status) throws EscidocException, InternalClientException,
+        TransportException {
 
         if (status.getStatusCode() == AdminStatus.STATUS_INVALID_RESULT) {
             showErrorMessage(status);
@@ -91,20 +86,17 @@ final class ReindexButtonListener implements ClickListener {
         }
     }
 
-    private MessagesStatus getReindexStatus() throws EscidocException,
-        InternalClientException, TransportException {
+    private MessagesStatus getReindexStatus() throws EscidocException, InternalClientException, TransportException {
         return reindexResourceViewImpl.adminService.retrieveReindexStatus();
     }
 
     private void showSuccessNotification(final MessagesStatus status) {
-        getMainWindow().showNotification(ViewConstants.INFO,
-            status.getStatusMessage(), Notification.TYPE_TRAY_NOTIFICATION);
+        getMainWindow().showNotification(ViewConstants.INFO, status.getStatusMessage(),
+            Notification.TYPE_TRAY_NOTIFICATION);
     }
 
     private void showErrorMessage(final MessagesStatus status) {
-        getMainWindow().showNotification(
-            new Notification(status.getStatusMessage(),
-                Notification.TYPE_ERROR_MESSAGE));
+        getMainWindow().showNotification(new Notification(status.getStatusMessage(), Notification.TYPE_ERROR_MESSAGE));
     }
 
     private Window getMainWindow() {

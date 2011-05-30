@@ -39,19 +39,15 @@ public class SetOrgUnitsCommandImpl implements SetOrgUnitsCommand {
     }
 
     @Override
-    public void execute(final AbstractSelect select)
-        throws EscidocClientException {
+    public void execute(final AbstractSelect select) throws EscidocClientException {
         Preconditions.checkNotNull(select, "orgUnitWidget is null: %s", select);
-        Preconditions.checkNotNull(orgUnitIds, "orgUnitIds is null: %s",
-            orgUnitIds);
-        Preconditions.checkNotNull(userService, "userService is null: %s",
-            userService);
+        Preconditions.checkNotNull(orgUnitIds, "orgUnitIds is null: %s", orgUnitIds);
+        Preconditions.checkNotNull(userService, "userService is null: %s", userService);
 
         if (shouldSetOrgUnits(select)) {
-            for (final ResourceRefDisplay resourceRefDisplay : orgUnitIds
-                .toArray(new ResourceRefDisplay[orgUnitIds.size()])) {
-                userService.assign(objectId, new Attribute(
-                    AppConstants.DEFAULT_ORG_UNIT_ATTRIBUTE_NAME,
+            for (final ResourceRefDisplay resourceRefDisplay : orgUnitIds.toArray(new ResourceRefDisplay[orgUnitIds
+                .size()])) {
+                userService.assign(objectId, new Attribute(AppConstants.DEFAULT_ORG_UNIT_ATTRIBUTE_NAME,
                     resourceRefDisplay.getObjectId()));
             }
         }
@@ -62,8 +58,7 @@ public class SetOrgUnitsCommandImpl implements SetOrgUnitsCommand {
     }
 
     @Override
-    public void update(final List<String> oldOrgUnits)
-        throws EscidocClientException {
+    public void update(final List<String> oldOrgUnits) throws EscidocClientException {
         if (updateNeeded(toCreate(oldOrgUnits), toRemove(oldOrgUnits))) {
             addOrgUnit(toCreate(oldOrgUnits));
             removeOrgUnit(toRemove(oldOrgUnits));
@@ -92,23 +87,18 @@ public class SetOrgUnitsCommandImpl implements SetOrgUnitsCommand {
         return newOrgUnits;
     }
 
-    private boolean updateNeeded(
-        final Set<String> toCreate, final Set<String> toRemove) {
+    private boolean updateNeeded(final Set<String> toCreate, final Set<String> toRemove) {
         return !toCreate.equals(toRemove);
     }
 
-    private void addOrgUnit(final Set<String> toCreate)
-        throws EscidocClientException {
+    private void addOrgUnit(final Set<String> toCreate) throws EscidocClientException {
         for (final String string : toCreate) {
-            userService.assign(objectId, new Attribute(
-                AppConstants.DEFAULT_ORG_UNIT_ATTRIBUTE_NAME, string));
+            userService.assign(objectId, new Attribute(AppConstants.DEFAULT_ORG_UNIT_ATTRIBUTE_NAME, string));
         }
     }
 
-    private void removeOrgUnit(final Set<String> toRemove)
-        throws EscidocClientException {
-        final Attributes allAttributes =
-            userService.retrieveAttributes(objectId);
+    private void removeOrgUnit(final Set<String> toRemove) throws EscidocClientException {
+        final Attributes allAttributes = userService.retrieveAttributes(objectId);
 
         for (final Attribute attribute : allAttributes) {
             if (isOrgUnit(attribute)) {

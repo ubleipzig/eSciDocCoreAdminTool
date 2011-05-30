@@ -23,8 +23,7 @@ public final class UpdatePasswordOkListener implements Button.ClickListener {
     private UpdatePasswordCommand command;
 
     // TODO make it builder
-    public UpdatePasswordOkListener(final AbstractTextField passwordField,
-        final AbstractTextField retypePasswordField) {
+    public UpdatePasswordOkListener(final AbstractTextField passwordField, final AbstractTextField retypePasswordField) {
         this.passwordField = passwordField;
         this.retypePasswordField = retypePasswordField;
     }
@@ -68,8 +67,7 @@ public final class UpdatePasswordOkListener implements Button.ClickListener {
         return passwordValue.length() < 6;
     }
 
-    private boolean isMatched(
-        final String retypePasswordValue, final String passwordValue) {
+    private boolean isMatched(final String retypePasswordValue, final String passwordValue) {
         return retypePasswordValue.equals(passwordValue);
     }
 
@@ -96,7 +94,6 @@ public final class UpdatePasswordOkListener implements Button.ClickListener {
     }
 
     private void showErrorMessage() {
-        retypePasswordField.setComponentError(new UserError(
-            ViewConstants.PASSWORDS_DID_NOT_MATCH_MESSAGE));
+        retypePasswordField.setComponentError(new UserError(ViewConstants.PASSWORDS_DID_NOT_MATCH_MESSAGE));
     }
 }

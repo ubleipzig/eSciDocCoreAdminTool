@@ -42,8 +42,7 @@ public class OrgUnitWidgetImpl extends CustomComponent implements OrgUnitWidget 
         orgUnitTable.setColumnHeaderMode(Table.COLUMN_HEADER_MODE_HIDDEN);
 
         final POJOContainer<ResourceRefDisplay> orgUnitContainer =
-            new POJOContainer<ResourceRefDisplay>(ResourceRefDisplay.class,
-                "objectId", "title");
+            new POJOContainer<ResourceRefDisplay>(ResourceRefDisplay.class, "objectId", "title");
         orgUnitTable.setContainerDataSource(orgUnitContainer);
 
         orgUnitTable.setVisibleColumns(new String[] { "title", "objectId" });
@@ -69,8 +68,7 @@ public class OrgUnitWidgetImpl extends CustomComponent implements OrgUnitWidget 
 
     public VerticalLayout build() {
 
-        final Button[] footers =
-            new Button[] { addOrgUnitButton, removeOrgUnitButton };
+        final Button[] footers = new Button[] { addOrgUnitButton, removeOrgUnitButton };
 
         for (final Button button : footers) {
             button.setStyleName(Reindeer.BUTTON_SMALL);
@@ -86,8 +84,7 @@ public class OrgUnitWidgetImpl extends CustomComponent implements OrgUnitWidget 
 
     @Override
     public Set<ResourceRefDisplay> getOrgUnitsFromTable() {
-        final Set<ResourceRefDisplay> selectedSet =
-            new HashSet<ResourceRefDisplay>();
+        final Set<ResourceRefDisplay> selectedSet = new HashSet<ResourceRefDisplay>();
 
         final Collection<?> itemIds = orgUnitTable.getItemIds();
 
@@ -106,8 +103,7 @@ public class OrgUnitWidgetImpl extends CustomComponent implements OrgUnitWidget 
 
     @Override
     public Set<ResourceRefDisplay> getSelectedOrgUnits() {
-        final Set<ResourceRefDisplay> selected =
-            new HashSet<ResourceRefDisplay>();
+        final Set<ResourceRefDisplay> selected = new HashSet<ResourceRefDisplay>();
         final Object value = orgUnitTable.getValue();
         if (value instanceof Set<?>) {
             final Set<?> valueAsSet = (Set<?>) value;
@@ -122,7 +118,6 @@ public class OrgUnitWidgetImpl extends CustomComponent implements OrgUnitWidget 
             selected.add((ResourceRefDisplay) value);
             return selected;
         }
-        throw new UnsupportedOperationException("Unknown type: "
-            + value.getClass());
+        throw new UnsupportedOperationException("Unknown type: " + value.getClass());
     }
 }

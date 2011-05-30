@@ -30,8 +30,7 @@ public final class Converter {
      */
     public static synchronized String dateTimeToString(final DateTime dateTime) {
         final Date date = dateTime.toDate();
-        final SimpleDateFormat sdf =
-            new SimpleDateFormat(Constants.DATE_FORMAT);
+        final SimpleDateFormat sdf = new SimpleDateFormat(Constants.DATE_FORMAT);
         return sdf.format(date);
     }
 

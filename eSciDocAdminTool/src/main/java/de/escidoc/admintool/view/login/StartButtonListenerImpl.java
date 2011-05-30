@@ -9,8 +9,7 @@ public class StartButtonListenerImpl extends LoginButtonListener {
 
     private static final long serialVersionUID = 2949659635673188343L;
 
-    public StartButtonListenerImpl(final AbstractField escidocComboBox,
-        final AdminToolApplication app) {
+    public StartButtonListenerImpl(final AbstractField escidocComboBox, final AdminToolApplication app) {
         super(escidocComboBox, app);
     }
 

@@ -49,20 +49,14 @@ public class ResourceToolbar extends CustomComponent {
 
     private final PdpRequest pdpRequest;
 
-    public ResourceToolbar(final AdminToolApplication app,
-        final ResourceViewImpl resourceViewImpl, final Window mainWindow,
-        final ResourceService resourceService,
-        final ResourceContainer resourceContainer, final PdpRequest pdpRequest) {
-        Preconditions.checkNotNull(resourceViewImpl,
-            "resourceViewImpl is null: %s", resourceViewImpl);
-        Preconditions.checkNotNull(mainWindow, "mainWindow is null: %s",
-            mainWindow);
-        Preconditions.checkNotNull(resourceService,
-            "resourceService is null: %s", resourceService);
-        Preconditions.checkNotNull(resourceContainer,
-            "resourceContainer is null: %s", resourceContainer);
-        Preconditions.checkNotNull(pdpRequest, "pdpRequest is null: %s",
-            pdpRequest);
+    public ResourceToolbar(final AdminToolApplication app, final ResourceViewImpl resourceViewImpl,
+        final Window mainWindow, final ResourceService resourceService, final ResourceContainer resourceContainer,
+        final PdpRequest pdpRequest) {
+        Preconditions.checkNotNull(resourceViewImpl, "resourceViewImpl is null: %s", resourceViewImpl);
+        Preconditions.checkNotNull(mainWindow, "mainWindow is null: %s", mainWindow);
+        Preconditions.checkNotNull(resourceService, "resourceService is null: %s", resourceService);
+        Preconditions.checkNotNull(resourceContainer, "resourceContainer is null: %s", resourceContainer);
+        Preconditions.checkNotNull(pdpRequest, "pdpRequest is null: %s", pdpRequest);
         this.app = app;
         this.resourceViewImpl = resourceViewImpl;
         this.mainWindow = mainWindow;
@@ -95,23 +89,15 @@ public class ResourceToolbar extends CustomComponent {
     }
 
     private void createButtonsAndListeners() {
-        newBtn =
-            new Button(ViewConstants.NEW, new ShowNewResourceListener(
-                resourceViewImpl));
+        newBtn = new Button(ViewConstants.NEW, new ShowNewResourceListener(resourceViewImpl));
 
-        openResourceListener =
-            new OpenResourceListener(mainWindow, resourceService,
-                resourceContainer, this);
+        openResourceListener = new OpenResourceListener(mainWindow, resourceService, resourceContainer, this);
         openBtn = new Button(ViewConstants.OPEN, openResourceListener);
 
-        closeResourceListener =
-            new CloseResourceListener(mainWindow, resourceService,
-                resourceContainer, this);
+        closeResourceListener = new CloseResourceListener(mainWindow, resourceService, resourceContainer, this);
         closeBtn = new Button(ViewConstants.CLOSE, closeResourceListener);
 
-        delResourceListener =
-            new DelResourceListener(app, mainWindow, resourceService,
-                resourceContainer);
+        delResourceListener = new DelResourceListener(app, mainWindow, resourceService, resourceContainer);
         delBtn = new Button(ViewConstants.DELETE, delResourceListener);
     }
 
@@ -130,33 +116,27 @@ public class ResourceToolbar extends CustomComponent {
     }
 
     private boolean isOpenPermitted() {
-        return pdpRequest.isPermitted(ActionIdConstants.OPEN_ORG_UNIT,
-            getSelectedItemId());
+        return pdpRequest.isPermitted(ActionIdConstants.OPEN_ORG_UNIT, getSelectedItemId());
     }
 
     private boolean isClosePermitted() {
-        return pdpRequest.isPermitted(ActionIdConstants.CLOSE_ORG_UNIT,
-            getSelectedItemId());
+        return pdpRequest.isPermitted(ActionIdConstants.CLOSE_ORG_UNIT, getSelectedItemId());
     }
 
     private boolean isDeletePermitted() {
-        return pdpRequest.isPermitted(ActionIdConstants.DELETE_ORG_UNIT,
-            getSelectedItemId());
+        return pdpRequest.isPermitted(ActionIdConstants.DELETE_ORG_UNIT, getSelectedItemId());
     }
 
     private boolean isCreatePermitted() {
-        return pdpRequest.isPermitted(ActionIdConstants.CREATE_ORG_UNIT,
-            getSelectedItemId());
+        return pdpRequest.isPermitted(ActionIdConstants.CREATE_ORG_UNIT, getSelectedItemId());
     }
 
     private boolean isUpdateDenied() {
-        return pdpRequest.isDenied(ActionIdConstants.CREATE_ORG_UNIT,
-            getSelectedItemId());
+        return pdpRequest.isDenied(ActionIdConstants.CREATE_ORG_UNIT, getSelectedItemId());
     }
 
     private boolean isUpdatePermitted() {
-        return pdpRequest.isPermitted(ActionIdConstants.CREATE_ORG_UNIT,
-            getSelectedItemId());
+        return pdpRequest.isPermitted(ActionIdConstants.CREATE_ORG_UNIT, getSelectedItemId());
     }
 
     private String getSelectedItemId() {
@@ -199,8 +179,7 @@ public class ResourceToolbar extends CustomComponent {
     }
 
     private PublicStatus getPublicStatus() {
-        final String status =
-            (String) item.getItemProperty(PropertyId.PUBLIC_STATUS).getValue();
+        final String status = (String) item.getItemProperty(PropertyId.PUBLIC_STATUS).getValue();
         return PublicStatus.valueOf(status.toUpperCase());
     }
 }

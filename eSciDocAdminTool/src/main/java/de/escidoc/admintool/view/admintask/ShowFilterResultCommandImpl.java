@@ -27,24 +27,19 @@ final class ShowFilterResultCommandImpl implements ShowFilterResultCommand {
 
     private final PdpRequest pdpRequest;
 
-    private final Button showStatusButton = new Button(
-        ViewConstants.SHOW_STATUS);
+    private final Button showStatusButton = new Button(ViewConstants.SHOW_STATUS);
 
     private final Label statusLabel = new Label(ViewConstants.STATUS);
 
     private final ShowPurgeStatusListener showPurgeStatusListener;
 
-    public ShowFilterResultCommandImpl(
-        final FilterResourceView filterResourceView, final PdpRequest pdpRequest) {
-        Preconditions.checkNotNull(filterResourceView,
-            "filterResourceView is null: %s", filterResourceView);
-        Preconditions.checkNotNull(pdpRequest, "pdpRequest is null: %s",
-            pdpRequest);
+    public ShowFilterResultCommandImpl(final FilterResourceView filterResourceView, final PdpRequest pdpRequest) {
+        Preconditions.checkNotNull(filterResourceView, "filterResourceView is null: %s", filterResourceView);
+        Preconditions.checkNotNull(pdpRequest, "pdpRequest is null: %s", pdpRequest);
         this.filterResourceView = filterResourceView;
         this.pdpRequest = pdpRequest;
         showPurgeStatusListener =
-            new ShowPurgeStatusListener(filterResourceView.adminService,
-                filterResourceView.mainWindow, statusLabel);
+            new ShowPurgeStatusListener(filterResourceView.adminService, filterResourceView.mainWindow, statusLabel);
     }
 
     @Override
@@ -78,19 +73,13 @@ final class ShowFilterResultCommandImpl implements ShowFilterResultCommand {
 
     private void createFilterResultView(final Set<Resource> filteredResources) {
         filteredResourcesContainer =
-            new POJOContainer<Resource>(filteredResources,
-                PropertyId.OBJECT_ID, PropertyId.XLINK_TITLE);
+            new POJOContainer<Resource>(filteredResources, PropertyId.OBJECT_ID, PropertyId.XLINK_TITLE);
 
-        filteredList =
-            new Table(ViewConstants.FILTERED_RESOURCES,
-                filteredResourcesContainer);
+        filteredList = new Table(ViewConstants.FILTERED_RESOURCES, filteredResourcesContainer);
 
-        filteredList.setVisibleColumns(new Object[] { PropertyId.OBJECT_ID,
-            PropertyId.XLINK_TITLE });
-        filteredList.setColumnHeader(PropertyId.OBJECT_ID,
-            ViewConstants.OBJECT_ID_LABEL);
-        filteredList.setColumnHeader(PropertyId.XLINK_TITLE,
-            ViewConstants.TITLE_LABEL);
+        filteredList.setVisibleColumns(new Object[] { PropertyId.OBJECT_ID, PropertyId.XLINK_TITLE });
+        filteredList.setColumnHeader(PropertyId.OBJECT_ID, ViewConstants.OBJECT_ID_LABEL);
+        filteredList.setColumnHeader(PropertyId.XLINK_TITLE, ViewConstants.TITLE_LABEL);
 
         filteredList.setSelectable(true);
         filteredList.setMultiSelect(true);
@@ -106,10 +95,9 @@ final class ShowFilterResultCommandImpl implements ShowFilterResultCommand {
 
     private void addHintForSelection() {
         final Label hintText =
-            new Label(
-                "<div><em>Hint: </em>"
-                    + "To select multiple resources, hold down the CONTROL key while you click on the resource.</br></div>"
-                    + "<strong>Warning:</strong> Purging resources can cause inconsitencies in the repository.</div>",
+            new Label("<div><em>Hint: </em>"
+                + "To select multiple resources, hold down the CONTROL key while you click on the resource.</br></div>"
+                + "<strong>Warning:</strong> Purging resources can cause inconsitencies in the repository.</div>",
                 Label.CONTENT_XHTML);
         formLayout.addComponent(hintText);
     }
@@ -132,7 +120,7 @@ final class ShowFilterResultCommandImpl implements ShowFilterResultCommand {
         final Button purgeBtn = new Button(ViewConstants.PURGE);
         purgeBtn.setWidth("150px");
         formLayout.addComponent(purgeBtn);
-        purgeBtn.addListener(new PurgeResourcesListener(this, formLayout,
-            filterResourceView.adminService, filterResourceView.mainWindow));
+        purgeBtn.addListener(new PurgeResourcesListener(this, formLayout, filterResourceView.adminService,
+            filterResourceView.mainWindow));
     }
 }

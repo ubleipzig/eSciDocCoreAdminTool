@@ -11,16 +11,15 @@ import de.escidoc.core.client.interfaces.HandlerServiceInterface;
 import de.escidoc.core.resources.Resource;
 import de.escidoc.core.resources.cmm.ContentModel;
 
-public class ContentModelService
-    extends AbstractEscidocService<ContentModelHandlerClient> {
+public class ContentModelService extends AbstractEscidocService<ContentModelHandlerClient> {
 
     public ContentModelService(final HandlerServiceInterface client) {
         super(client);
     }
 
     @Override
-    public Resource create(final Resource resource) throws EscidocException,
-        InternalClientException, TransportException {
+    public Resource create(final Resource resource) throws EscidocException, InternalClientException,
+        TransportException {
         return getClient().create((ContentModel) resource);
     }
 
@@ -42,23 +41,22 @@ public class ContentModelService
     }
 
     @Override
-    Collection<? extends Resource> findPublicOrReleseadResourcesUsingOldFilter()
-        throws EscidocException, InternalClientException, TransportException,
-        EscidocClientException {
+    Collection<? extends Resource> findPublicOrReleseadResourcesUsingOldFilter() throws EscidocException,
+        InternalClientException, TransportException, EscidocClientException {
         throw new UnsupportedOperationException("Not yet implemented");
 
     }
 
     @Override
-    Collection<? extends Resource> findPublicOrReleasedResources()
-        throws EscidocException, InternalClientException, TransportException {
+    Collection<? extends Resource> findPublicOrReleasedResources() throws EscidocException, InternalClientException,
+        TransportException {
         throw new UnsupportedOperationException("Not yet implemented");
 
     }
 
     @Override
-    public Collection<? extends Resource> filterUsingInput(final String query)
-        throws EscidocException, InternalClientException, TransportException {
+    public Collection<? extends Resource> filterUsingInput(final String query) throws EscidocException,
+        InternalClientException, TransportException {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 }

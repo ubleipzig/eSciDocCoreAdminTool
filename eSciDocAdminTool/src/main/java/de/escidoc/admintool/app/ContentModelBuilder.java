@@ -20,8 +20,7 @@ public class ContentModelBuilder {
 
     public ContentModel build() {
         final ContentModel contentModel = new ContentModel();
-        final ContentModelProperties contentModelProperties =
-            new ContentModelProperties();
+        final ContentModelProperties contentModelProperties = new ContentModelProperties();
         contentModelProperties.setName(title);
         contentModelProperties.setDescription(description);
         contentModel.setProperties(contentModelProperties);

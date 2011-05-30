@@ -23,8 +23,7 @@ public class WelcomePage extends CustomComponent {
 
     private final FormLayout fLayout = new FormLayout();
 
-    private final TextField escidocServiceUrl = new TextField(
-        ViewConstants.ESCIDOC_URL_TEXTFIELD);
+    private final TextField escidocServiceUrl = new TextField(ViewConstants.ESCIDOC_URL_TEXTFIELD);
 
     private final HorizontalLayout footer = new HorizontalLayout();
 
@@ -67,16 +66,14 @@ public class WelcomePage extends CustomComponent {
         escidocServiceUrl.setImmediate(true);
         escidocServiceUrl.focus();
         escidocServiceUrl.setRequired(true);
-        escidocServiceUrl
-            .setRequiredError("eSciDoc Location can not be empty.");
+        escidocServiceUrl.setRequiredError("eSciDoc Location can not be empty.");
         escidocServiceUrl.setInputPrompt("http://");
         fLayout.addComponent(escidocServiceUrl);
     }
 
     private void addStartButton() {
         startButton = new Button(ViewConstants.OK_LABEL);
-        final LoginButtonListener listener =
-            new StartButtonListenerImpl(escidocServiceUrl, app);
+        final LoginButtonListener listener = new StartButtonListenerImpl(escidocServiceUrl, app);
         startButton.addListener(listener);
 
         footer.addComponent(startButton);

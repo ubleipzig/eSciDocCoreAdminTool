@@ -30,8 +30,7 @@ public class OnLoadExampleClick implements ClickListener {
     @Override
     public void buttonClick(final ClickEvent event) {
         try {
-            final List<Entry> loadedExamples =
-                adminService.loadCommonExamples();
+            final List<Entry> loadedExamples = adminService.loadCommonExamples();
             command.execute(loadedExamples);
         }
         catch (final EscidocException e) {

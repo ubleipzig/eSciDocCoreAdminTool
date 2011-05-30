@@ -13,8 +13,7 @@ public class ParentOrgUnitBinder implements FieldsBinder {
 
     private final Property parentProperty;
 
-    public ParentOrgUnitBinder(final OrgUnitSpecificView orgUnitSpecificView,
-        final Property parentProperty) {
+    public ParentOrgUnitBinder(final OrgUnitSpecificView orgUnitSpecificView, final Property parentProperty) {
         this.orgUnitSpecificView = orgUnitSpecificView;
         this.parentProperty = parentProperty;
     }

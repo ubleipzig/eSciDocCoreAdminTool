@@ -14,8 +14,7 @@ import de.escidoc.admintool.view.ViewConstants;
 
 public class ParamaterDecoder {
 
-    private static final Logger LOG = LoggerFactory
-        .getLogger(ParamaterDecoder.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ParamaterDecoder.class);
 
     public ParamaterDecoder(final AdminToolApplication app) {
         Preconditions.checkNotNull(app, "app is null: %s", app);
@@ -26,8 +25,7 @@ public class ParamaterDecoder {
     private final AdminToolApplication app;
 
     public String parseAndDecodeToken(final Map<String, String[]> parameters) {
-        final String parameter =
-            parameters.get(AppConstants.ESCIDOC_USER_HANDLE)[0];
+        final String parameter = parameters.get(AppConstants.ESCIDOC_USER_HANDLE)[0];
         return tryToDecode(parameter);
     }
 
@@ -36,13 +34,11 @@ public class ParamaterDecoder {
             return Base64Coder.decodeString(parameter);
         }
         catch (final IllegalArgumentException e) {
-            Preconditions.checkNotNull(app.getMainWindow(),
-                "MainWindow is null: %s", app.getMainWindow());
+            Preconditions.checkNotNull(app.getMainWindow(), "MainWindow is null: %s", app.getMainWindow());
             LOG.error(ViewConstants.GENERAL_ERROR_MESSAGE, e);
             app.showLandingView();
             app.getMainWindow().showNotification(
-                new Notification(ViewConstants.WRONG_TOKEN_MESSAGE,
-                    "Wrong token", Notification.TYPE_ERROR_MESSAGE));
+                new Notification(ViewConstants.WRONG_TOKEN_MESSAGE, "Wrong token", Notification.TYPE_ERROR_MESSAGE));
         }
         return AppConstants.EMPTY_STRING;
     }

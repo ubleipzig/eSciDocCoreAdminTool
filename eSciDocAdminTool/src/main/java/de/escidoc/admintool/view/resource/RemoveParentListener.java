@@ -21,8 +21,7 @@ final class RemoveParentListener implements ClickListener {
 
     private static final long serialVersionUID = 1887055528394173137L;
 
-    private static final Logger LOG = LoggerFactory
-        .getLogger(RemoveParentListener.class);
+    private static final Logger LOG = LoggerFactory.getLogger(RemoveParentListener.class);
 
     private final OrgUnitSpecificView orgUnitSpecificView;
 
@@ -52,8 +51,7 @@ final class RemoveParentListener implements ClickListener {
         }
         catch (final EscidocClientException e) {
             if (e instanceof InvalidStatusException) {
-                ModalDialog.show(orgUnitSpecificView.mainWindow, "Parent of "
-                    + selectedOrgUnit.getXLinkTitle()
+                ModalDialog.show(orgUnitSpecificView.mainWindow, "Parent of " + selectedOrgUnit.getXLinkTitle()
                     + " is not in status opened.");
             }
             else {
@@ -71,8 +69,7 @@ final class RemoveParentListener implements ClickListener {
 
         final Item updateItem = orgUnitSpecificView.item;
 
-        final Property itemProperty =
-            updateItem.getItemProperty(PropertyId.PARENTS);
+        final Property itemProperty = updateItem.getItemProperty(PropertyId.PARENTS);
         itemProperty.setValue(new Parents());
     }
 
@@ -92,18 +89,15 @@ final class RemoveParentListener implements ClickListener {
         parentProperty.setValue(new ResourceRefDisplay());
     }
 
-    private OrganizationalUnit retrieveOrgUnit(final String objectId)
-        throws EscidocClientException {
-        return selectedOrgUnit =
-            orgUnitSpecificView.orgUnitService.findById(objectId);
+    private OrganizationalUnit retrieveOrgUnit(final String objectId) throws EscidocClientException {
+        return selectedOrgUnit = orgUnitSpecificView.orgUnitService.findById(objectId);
     }
 
     private String getSelectedOrgUnitId() {
         if (orgUnitSpecificView.item == null) {
             return ViewConstants.EMPTY_STRING;
         }
-        return (String) orgUnitSpecificView.item.getItemProperty(
-            PropertyId.OBJECT_ID).getValue();
+        return (String) orgUnitSpecificView.item.getItemProperty(PropertyId.OBJECT_ID).getValue();
     }
 
     public void setParentProperty(final Property parentProperty) {

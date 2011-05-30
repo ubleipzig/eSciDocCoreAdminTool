@@ -14,17 +14,12 @@ final class AddParentOkListener extends AbstractAddOrChangeParentListener {
 
     private final OrgUnitSpecificView orgUnitSpecificView;
 
-    public AddParentOkListener(
-        final AddOrEditParentModalWindow addOrEditParentModalWindow,
-        final OrgUnitServiceLab orgUnitService,
-        final OrgUnitSpecificView orgUnitSpecificView) {
+    public AddParentOkListener(final AddOrEditParentModalWindow addOrEditParentModalWindow,
+        final OrgUnitServiceLab orgUnitService, final OrgUnitSpecificView orgUnitSpecificView) {
 
-        Preconditions.checkNotNull(addOrEditParentModalWindow,
-            "modalWindow is null: %s", addOrEditParentModalWindow);
-        Preconditions.checkNotNull(orgUnitService,
-            "orgUnitService is null: %s", orgUnitService);
-        Preconditions.checkNotNull(orgUnitSpecificView,
-            "orgUnitSpecificView is null: %s", orgUnitSpecificView);
+        Preconditions.checkNotNull(addOrEditParentModalWindow, "modalWindow is null: %s", addOrEditParentModalWindow);
+        Preconditions.checkNotNull(orgUnitService, "orgUnitService is null: %s", orgUnitService);
+        Preconditions.checkNotNull(orgUnitSpecificView, "orgUnitSpecificView is null: %s", orgUnitSpecificView);
 
         super.addOrEditParentModalWindow = addOrEditParentModalWindow;
         super.orgUnitService = orgUnitService;
@@ -47,8 +42,7 @@ final class AddParentOkListener extends AbstractAddOrChangeParentListener {
         try {
             final OrganizationalUnit selected = getSelectedParent();
             final ResourceRefDisplay resourceRefDisplay =
-                new ResourceRefDisplay(selected.getObjid(),
-                    selected.getXLinkTitle());
+                new ResourceRefDisplay(selected.getObjid(), selected.getXLinkTitle());
             getParentProperty().setValue(resourceRefDisplay);
             orgUnitSpecificView.showRemoveButton();
         }

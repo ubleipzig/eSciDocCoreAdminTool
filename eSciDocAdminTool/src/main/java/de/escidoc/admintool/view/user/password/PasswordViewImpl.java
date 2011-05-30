@@ -25,11 +25,9 @@ public class PasswordViewImpl extends CustomComponent implements PasswordView {
 
     private final FormLayout layout = new FormLayout();
 
-    private final PasswordField passwordField = new PasswordField(
-        ViewConstants.PASSWORD_CAPTION);
+    private final PasswordField passwordField = new PasswordField(ViewConstants.PASSWORD_CAPTION);
 
-    private final PasswordField retypePasswordField = new PasswordField(
-        ViewConstants.RETYPE_PASSWORD_CAPTION);
+    private final PasswordField retypePasswordField = new PasswordField(ViewConstants.RETYPE_PASSWORD_CAPTION);
 
     private HorizontalLayout footers;
 
@@ -48,8 +46,7 @@ public class PasswordViewImpl extends CustomComponent implements PasswordView {
     }
 
     private void configure(final AbstractTextField passwordField) {
-        passwordField
-            .setWidth(ViewConstants.PASSWORD_FIELD_WIDTH, UNITS_PIXELS);
+        passwordField.setWidth(ViewConstants.PASSWORD_FIELD_WIDTH, UNITS_PIXELS);
         passwordField.setImmediate(true);
         passwordField.setMaxLength(MAX_PASSWORD_LENGTH);
     }
@@ -68,15 +65,14 @@ public class PasswordViewImpl extends CustomComponent implements PasswordView {
     @Override
     public void addMinCharValidator() {
         final Validator minCharValidator =
-            new StringLengthValidator(ViewConstants.TOO_SHORT_PASSWORD_MESSAGE,
-                MIN_PASSWORD_LENGTH, MAX_PASSWORD_LENGTH, IS_NULL_ALLOWED);
+            new StringLengthValidator(ViewConstants.TOO_SHORT_PASSWORD_MESSAGE, MIN_PASSWORD_LENGTH,
+                MAX_PASSWORD_LENGTH, IS_NULL_ALLOWED);
         passwordField.addValidator(minCharValidator);
     }
 
     @Override
     public void addOkButton(final ClickListener updatePasswordOkListener) {
-        final Button saveBtn =
-            new Button("Change Password", updatePasswordOkListener);
+        final Button saveBtn = new Button("Change Password", updatePasswordOkListener);
         saveBtn.setStyleName(Reindeer.BUTTON_SMALL);
         footers = new HorizontalLayout();
         footers.addComponent(saveBtn);
@@ -95,8 +91,7 @@ public class PasswordViewImpl extends CustomComponent implements PasswordView {
 
     @Override
     public void addCancelButton(final ClickListener cancelListener) {
-        final Button cancelBtn =
-            new Button(ViewConstants.CANCEL_LABEL, cancelListener);
+        final Button cancelBtn = new Button(ViewConstants.CANCEL_LABEL, cancelListener);
         cancelBtn.setStyleName(Reindeer.BUTTON_SMALL);
         footers.addComponent(cancelBtn);
     }

@@ -25,8 +25,7 @@ public abstract class LoginButtonListener implements ClickListener {
 
     private static final long serialVersionUID = -7482204166398806832L;
 
-    private final static Logger LOG = LoggerFactory
-        .getLogger(LoginButtonListener.class);
+    private final static Logger LOG = LoggerFactory.getLogger(LoginButtonListener.class);
 
     protected final AdminToolApplication app;
 
@@ -34,8 +33,7 @@ public abstract class LoginButtonListener implements ClickListener {
 
     private final Window mainWindow;
 
-    public LoginButtonListener(final AbstractField escidocComboBox,
-        final AdminToolApplication app) {
+    public LoginButtonListener(final AbstractField escidocComboBox, final AdminToolApplication app) {
         this.escidocComboBox = escidocComboBox;
         this.app = app;
         mainWindow = app.getMainWindow();
@@ -53,14 +51,12 @@ public abstract class LoginButtonListener implements ClickListener {
                 login();
             }
             else {
-                mainWindow.showNotification("Can not connect to: "
-                    + escidocUriField.getValue());
+                mainWindow.showNotification("Can not connect to: " + escidocUriField.getValue());
             }
 
         }
         catch (final EmptyValueException e) {
-            mainWindow.showNotification(new Notification(e.getMessage(),
-                Notification.TYPE_ERROR_MESSAGE));
+            mainWindow.showNotification(new Notification(e.getMessage(), Notification.TYPE_ERROR_MESSAGE));
         }
     }
 
@@ -88,26 +84,22 @@ public abstract class LoginButtonListener implements ClickListener {
             connection = new URL(strUrl).openConnection();
             connection.setConnectTimeout(FIVE_SECONDS);
             connection.connect();
-            final int responseCode =
-                ((HttpURLConnection) connection).getResponseCode();
+            final int responseCode = ((HttpURLConnection) connection).getResponseCode();
             return responseCode == 200;
         }
         catch (final IllegalArgumentException e) {
             LOG.warn("Malformed URL: " + e);
-            mainWindow.showNotification(new Notification(e.getMessage(),
-                Notification.TYPE_ERROR_MESSAGE));
+            mainWindow.showNotification(new Notification(e.getMessage(), Notification.TYPE_ERROR_MESSAGE));
             return false;
         }
         catch (final MalformedURLException e) {
             LOG.warn("Malformed URL: " + e);
-            mainWindow.showNotification(new Notification(e.getMessage(),
-                Notification.TYPE_ERROR_MESSAGE));
+            mainWindow.showNotification(new Notification(e.getMessage(), Notification.TYPE_ERROR_MESSAGE));
             return false;
         }
         catch (final IOException e) {
             LOG.warn("IOException: " + e);
-            mainWindow.showNotification(new Notification(e.getMessage(),
-                Notification.TYPE_ERROR_MESSAGE));
+            mainWindow.showNotification(new Notification(e.getMessage(), Notification.TYPE_ERROR_MESSAGE));
             return false;
         }
     }

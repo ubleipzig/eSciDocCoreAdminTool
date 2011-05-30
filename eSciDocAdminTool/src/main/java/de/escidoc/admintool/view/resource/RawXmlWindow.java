@@ -53,8 +53,7 @@ public class RawXmlWindow extends Window {
         addButtons();
     }
 
-    private final TextField textArea =
-        new TextField(ViewConstants.RAW_METADATA);
+    private final TextField textArea = new TextField(ViewConstants.RAW_METADATA);
 
     private void configureTextArea() {
         textArea.setRows(20);

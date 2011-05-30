@@ -27,8 +27,7 @@ public class UpdatePasswordCommandImpl implements UpdatePasswordCommand {
 
     @Override
     public void execute(final String newPassword) throws EscidocClientException {
-        userService.updatePassword(selectedUserId, newPassword,
-            lastModificationDate);
+        userService.updatePassword(selectedUserId, newPassword, lastModificationDate);
     }
 
 }

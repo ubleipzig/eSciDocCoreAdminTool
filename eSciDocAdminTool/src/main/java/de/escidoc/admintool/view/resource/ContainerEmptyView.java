@@ -7,8 +7,7 @@ import com.vaadin.ui.VerticalLayout;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.core.resources.Resource;
 
-public class ContainerEmptyView extends CustomComponent
-    implements ResourceFolderView {
+public class ContainerEmptyView extends CustomComponent implements ResourceFolderView {
 
     private static final Label EMPTY = new Label(ViewConstants.EMPTY);
 

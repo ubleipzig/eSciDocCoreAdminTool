@@ -21,12 +21,10 @@ final class CloseOrgUnitSelectionWidget implements ClickListener {
 
     @Override
     public void buttonClick(final ClickEvent event) {
-        Preconditions.checkNotNull(this.userAddView.app.getMainWindow(),
-            "app.getMainWindow() is null: %s",
+        Preconditions.checkNotNull(this.userAddView.app.getMainWindow(), "app.getMainWindow() is null: %s",
             this.userAddView.app.getMainWindow());
-        Preconditions.checkNotNull(this.userAddView.modalWindow,
-            "modalWindow is null: %s", this.userAddView.modalWindow);
-        this.userAddView.app.getMainWindow().removeWindow(
+        Preconditions.checkNotNull(this.userAddView.modalWindow, "modalWindow is null: %s",
             this.userAddView.modalWindow);
+        this.userAddView.app.getMainWindow().removeWindow(this.userAddView.modalWindow);
     }
 }

@@ -22,15 +22,11 @@ public abstract class AbstractUpdateable implements Updateable {
 
     private ResourceContainer resourceContainer;
 
-    public AbstractUpdateable(final Window mainWindow,
-        final ResourceService orgUnitService,
+    public AbstractUpdateable(final Window mainWindow, final ResourceService orgUnitService,
         final ResourceContainer resourceContainer) {
-        Preconditions.checkNotNull(mainWindow, "mainWindow is null: %s",
-            mainWindow);
-        Preconditions.checkNotNull(orgUnitService,
-            "orgUnitService is null: %s", orgUnitService);
-        Preconditions.checkNotNull(resourceContainer,
-            "resourceContainer is null: %s", resourceContainer);
+        Preconditions.checkNotNull(mainWindow, "mainWindow is null: %s", mainWindow);
+        Preconditions.checkNotNull(orgUnitService, "orgUnitService is null: %s", orgUnitService);
+        Preconditions.checkNotNull(resourceContainer, "resourceContainer is null: %s", resourceContainer);
         this.mainWindow = mainWindow;
         this.orgUnitService = orgUnitService;
         this.resourceContainer = resourceContainer;
@@ -46,8 +42,7 @@ public abstract class AbstractUpdateable implements Updateable {
         catch (final EscidocClientException e) {
             if (e instanceof InvalidStatusException) {
                 final String eMessage =
-                    "Parent of organizational unit with the ID " + getChildId()
-                        + " is not in status opened.";
+                    "Parent of organizational unit with the ID " + getChildId() + " is not in status opened.";
                 ModalDialog.show(mainWindow, eMessage);
             }
             else {
@@ -58,8 +53,7 @@ public abstract class AbstractUpdateable implements Updateable {
 
     public abstract void updatePersistence() throws EscidocClientException;
 
-    public abstract void updateResourceContainer()
-        throws EscidocClientException;
+    public abstract void updateResourceContainer() throws EscidocClientException;
 
     @Override
     public void updateItem() {
@@ -72,8 +66,7 @@ public abstract class AbstractUpdateable implements Updateable {
     }
 
     protected String getChildId() {
-        return (String) getItem()
-            .getItemProperty(PropertyId.OBJECT_ID).getValue();
+        return (String) getItem().getItemProperty(PropertyId.OBJECT_ID).getValue();
     }
 
     public void setOrgUnitService(final OrgUnitServiceLab orgUnitService) {

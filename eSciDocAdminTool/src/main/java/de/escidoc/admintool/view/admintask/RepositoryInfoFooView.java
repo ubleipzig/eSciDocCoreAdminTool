@@ -13,8 +13,7 @@ public class RepositoryInfoFooView extends AbstractAdminTaskView {
 
     private static final long serialVersionUID = 3758827172683416515L;
 
-    public RepositoryInfoFooView(final ServiceContainer services,
-        final Window mainWindow) {
+    public RepositoryInfoFooView(final ServiceContainer services, final Window mainWindow) {
         super(services, mainWindow);
     }
 
@@ -34,8 +33,7 @@ public class RepositoryInfoFooView extends AbstractAdminTaskView {
         hLayout.setWidth(100, UNITS_PERCENTAGE);
         hLayout.setHeight(100, UNITS_PERCENTAGE);
 
-        final RepoInfoClickListener listener =
-            new RepoInfoClickListener(mainWindow, services.getAdminService());
+        final RepoInfoClickListener listener = new RepoInfoClickListener(mainWindow, services.getAdminService());
         hLayout.addComponent(new RepositoryInfoView(listener));
         cssLayout.addComponent(hLayout);
     }

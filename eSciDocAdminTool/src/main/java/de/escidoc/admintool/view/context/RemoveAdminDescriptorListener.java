@@ -20,7 +20,6 @@ public class RemoveAdminDescriptorListener implements Button.ClickListener {
     }
 
     public void buttonClick(final ClickEvent event) {
-        adminDescriptorAccordion.removeComponent(adminDescriptorAccordion
-            .getSelectedTab());
+        adminDescriptorAccordion.removeComponent(adminDescriptorAccordion.getSelectedTab());
     }
 }

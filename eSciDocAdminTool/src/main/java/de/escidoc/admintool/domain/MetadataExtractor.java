@@ -18,8 +18,7 @@ public class MetadataExtractor {
         this.ou = ou;
     }
 
-    private String get(
-        final MetadataRecords metadataRecords, final String nodeName) {
+    private String get(final MetadataRecords metadataRecords, final String nodeName) {
         final MetadataRecord escidocMdRecord = metadataRecords.get("escidoc");
 
         if (escidocMdRecord == null) {

@@ -66,8 +66,7 @@ import de.escidoc.core.resources.common.reference.UserAccountRef;
 public class UserEditForm extends CustomComponent implements ClickListener {
     private static final long serialVersionUID = 3182336883168014436L;
 
-    private static final Logger LOG = LoggerFactory
-        .getLogger(UserEditForm.class);
+    private static final Logger LOG = LoggerFactory.getLogger(UserEditForm.class);
 
     private static final int ROLE_LIST_HEIGHT = 200;
 
@@ -81,20 +80,15 @@ public class UserEditForm extends CustomComponent implements ClickListener {
 
     private final HorizontalLayout footer = new HorizontalLayout();
 
-    private final Button newUserBtn = new Button(ViewConstants.NEW,
-        new NewUserListener());
+    private final Button newUserBtn = new Button(ViewConstants.NEW, new NewUserListener());
 
-    private final Button deleteUserBtn = new Button(ViewConstants.DELETE,
-        new DeleteUserListener());
+    private final Button deleteUserBtn = new Button(ViewConstants.DELETE, new DeleteUserListener());
 
-    private final Button addRoleButton = new Button(ViewConstants.ADD_LABEL,
-        new AddRoleButtonListener(this));
+    private final Button addRoleButton = new Button(ViewConstants.ADD_LABEL, new AddRoleButtonListener(this));
 
-    private final Button removeRoleButton = new Button(
-        ViewConstants.REMOVE_LABEL, new RemoveRoleButtonListener(this));
+    private final Button removeRoleButton = new Button(ViewConstants.REMOVE_LABEL, new RemoveRoleButtonListener(this));
 
-    private final Button saveButton =
-        new Button(ViewConstants.SAVE_LABEL, this);
+    private final Button saveButton = new Button(ViewConstants.SAVE_LABEL, this);
 
     private final Button cancelButton = new Button(ViewConstants.CANCEL, this);
 
@@ -146,20 +140,14 @@ public class UserEditForm extends CustomComponent implements ClickListener {
 
     private LinkClickListener createdByLinkListener;
 
-    public UserEditForm(final AdminToolApplication app,
-        final UserService userService, final OrgUnitServiceLab orgUnitService,
-        final ResourceTreeView resourceTreeView, final PdpRequest pdpRequest) {
+    public UserEditForm(final AdminToolApplication app, final UserService userService,
+        final OrgUnitServiceLab orgUnitService, final ResourceTreeView resourceTreeView, final PdpRequest pdpRequest) {
         Preconditions.checkNotNull(app, "app is null: %s", app);
-        Preconditions.checkNotNull(userService, "userService is null: %s",
-            userService);
-        Preconditions.checkNotNull(orgUnitService,
-            "orgUnitService is null: %s", orgUnitService);
-        Preconditions.checkNotNull(resourceTreeView,
-            "resourceTreeView is null: %s", resourceTreeView);
-        Preconditions.checkNotNull(pdpRequest, "pdpRequest is null: %s",
-            pdpRequest);
-        Preconditions.checkNotNull(pdpRequest, "pdpRequest is null: %s",
-            pdpRequest);
+        Preconditions.checkNotNull(userService, "userService is null: %s", userService);
+        Preconditions.checkNotNull(orgUnitService, "orgUnitService is null: %s", orgUnitService);
+        Preconditions.checkNotNull(resourceTreeView, "resourceTreeView is null: %s", resourceTreeView);
+        Preconditions.checkNotNull(pdpRequest, "pdpRequest is null: %s", pdpRequest);
+        Preconditions.checkNotNull(pdpRequest, "pdpRequest is null: %s", pdpRequest);
 
         this.app = app;
         this.userService = userService;
@@ -194,11 +182,9 @@ public class UserEditForm extends CustomComponent implements ClickListener {
 
     final Table orgUnitTable = new Table();
 
-    private final Button editOrgUnitButton =
-        new Button(ViewConstants.ADD_LABEL);
+    private final Button editOrgUnitButton = new Button(ViewConstants.ADD_LABEL);
 
-    private final Button removeOrgUnitButton = new Button(
-        ViewConstants.REMOVE_LABEL);
+    private final Button removeOrgUnitButton = new Button(ViewConstants.REMOVE_LABEL);
 
     private void addOrgUnitsWidget() {
         createOrgUnitTable();
@@ -209,13 +195,11 @@ public class UserEditForm extends CustomComponent implements ClickListener {
     }
 
     private void createButtonListener() {
-        final AddOrgUnitToTheList listener =
-            new AddOrgUnitToTheList(mainWindow, resourceTreeView);
+        final AddOrgUnitToTheList listener = new AddOrgUnitToTheList(mainWindow, resourceTreeView);
         listener.using(orgUnitTable);
         editOrgUnitButton.addListener(listener);
 
-        removeOrgUnitButton.addListener(new RemoveOrgUnitFromUserListener(
-            orgUnitTable));
+        removeOrgUnitButton.addListener(new RemoveOrgUnitFromUserListener(orgUnitTable));
     }
 
     private void createOrgUnitTable() {
@@ -234,9 +218,8 @@ public class UserEditForm extends CustomComponent implements ClickListener {
     }
 
     private VerticalLayout createOrgUnitWidgetWitButtons() {
-        return createLayout(ViewConstants.ORGANIZATION_UNITS_LABEL,
-            orgUnitTable, 120, (int) (0.5 * ROLE_LIST_HEIGHT), false,
-            new Button[] { editOrgUnitButton, removeOrgUnitButton });
+        return createLayout(ViewConstants.ORGANIZATION_UNITS_LABEL, orgUnitTable, 120, (int) (0.5 * ROLE_LIST_HEIGHT),
+            false, new Button[] { editOrgUnitButton, removeOrgUnitButton });
     }
 
     private void setButtonsStyle() {
@@ -253,26 +236,20 @@ public class UserEditForm extends CustomComponent implements ClickListener {
     private VerticalLayout footerLayout;
 
     private void bindUserOrgUnitsWithView() {
-        final List<String> orgUnitIdsForSelectedUser =
-            retrieveOrgUnitObjectIdsForSelectedUser();
+        final List<String> orgUnitIdsForSelectedUser = retrieveOrgUnitObjectIdsForSelectedUser();
 
         if (orgUnitIdsForSelectedUser.isEmpty() && orgUnitContainer != null) {
             orgUnitContainer.removeAllItems();
         }
         else {
-            orgUnitContainer =
-                new POJOContainer<ResourceRefDisplay>(ResourceRefDisplay.class,
-                    "objectId", "title");
+            orgUnitContainer = new POJOContainer<ResourceRefDisplay>(ResourceRefDisplay.class, "objectId", "title");
             orgUnitTable.setContainerDataSource(orgUnitContainer);
 
-            orgUnitTable
-                .setVisibleColumns(new String[] { "title", "objectId" });
-            orgUnitTable
-                .setColumnHeaders(new String[] { "Title", "Object ID" });
+            orgUnitTable.setVisibleColumns(new String[] { "title", "objectId" });
+            orgUnitTable.setColumnHeaders(new String[] { "Title", "Object ID" });
 
             for (final String userObjectId : orgUnitIdsForSelectedUser) {
-                orgUnitContainer.addPOJO(new ResourceRefDisplay(userObjectId,
-                    findTitleFor(userObjectId)));
+                orgUnitContainer.addPOJO(new ResourceRefDisplay(userObjectId, findTitleFor(userObjectId)));
             }
         }
     }
@@ -282,9 +259,7 @@ public class UserEditForm extends CustomComponent implements ClickListener {
             return orgUnitService.findById(orgUnitId).getXLinkTitle();
         }
         catch (final EscidocClientException e) {
-            ErrorMessage.show(mainWindow,
-                "The organizational unit with the ID: " + orgUnitId
-                    + " does exist");
+            ErrorMessage.show(mainWindow, "The organizational unit with the ID: " + orgUnitId + " does exist");
             return ViewConstants.EMPTY_STRING;
         }
     }
@@ -294,14 +269,13 @@ public class UserEditForm extends CustomComponent implements ClickListener {
     private void addActiveStatusCheckBox() {
         activeStatus = new CheckBox();
         activeStatus.setWriteThrough(false);
-        panel.addComponent(LayoutHelper.create(ViewConstants.ACTIVE_STATUS,
-            activeStatus, LABEL_WIDTH, false));
+        panel.addComponent(LayoutHelper.create(ViewConstants.ACTIVE_STATUS, activeStatus, LABEL_WIDTH, false));
     }
 
     private void addCreated() {
         createCreatedByLink();
-        form.addComponent(LayoutHelper.create("Created", "by", createdOn,
-            createdByLink, LABEL_WIDTH, LABEL_HEIGHT, false));
+        form.addComponent(LayoutHelper.create("Created", "by", createdOn, createdByLink, LABEL_WIDTH, LABEL_HEIGHT,
+            false));
     }
 
     private void createCreatedByLink() {
@@ -313,8 +287,8 @@ public class UserEditForm extends CustomComponent implements ClickListener {
 
     private void addModified() {
         createModifiedByLink();
-        form.addComponent(LayoutHelper.create("Modified", "by", modifiedOn,
-            modifiedByLink, LABEL_WIDTH, LABEL_HEIGHT, false));
+        form.addComponent(LayoutHelper.create("Modified", "by", modifiedOn, modifiedByLink, LABEL_WIDTH, LABEL_HEIGHT,
+            false));
     }
 
     private void createModifiedByLink() {
@@ -325,13 +299,11 @@ public class UserEditForm extends CustomComponent implements ClickListener {
     }
 
     private boolean isRetrieveUserPermitted(final String userId) {
-        return pdpRequest.isPermitted(ActionIdConstants.RETRIEVE_USER_ACCOUNT,
-            userId);
+        return pdpRequest.isPermitted(ActionIdConstants.RETRIEVE_USER_ACCOUNT, userId);
     }
 
     private void addObjectIdLabel() {
-        panel.addComponent(LayoutHelper.create(ViewConstants.OBJECT_ID_LABEL,
-            objIdField, LABEL_WIDTH, false));
+        panel.addComponent(LayoutHelper.create(ViewConstants.OBJECT_ID_LABEL, objIdField, LABEL_WIDTH, false));
     }
 
     private void addPasswordFields() {
@@ -344,8 +316,7 @@ public class UserEditForm extends CustomComponent implements ClickListener {
         loginNameField.setMaxLength(ViewConstants.MAX_TITLE_LENGTH);
         loginNameField.setWidth(ViewConstants.FIELD_WIDTH);
         loginNameField.setReadOnly(true);
-        panel.addComponent(LayoutHelper.create(ViewConstants.LOGIN_NAME_LABEL,
-            loginNameField, LABEL_WIDTH, false));
+        panel.addComponent(LayoutHelper.create(ViewConstants.LOGIN_NAME_LABEL, loginNameField, LABEL_WIDTH, false));
     }
 
     private void addNameField() {
@@ -353,8 +324,7 @@ public class UserEditForm extends CustomComponent implements ClickListener {
         nameField.setMaxLength(ViewConstants.MAX_TITLE_LENGTH);
         nameField.setWidth(ViewConstants.FIELD_WIDTH);
         nameField.setWriteThrough(false);
-        panel.addComponent(LayoutHelper.create(ViewConstants.NAME_LABEL,
-            nameField, LABEL_WIDTH, true));
+        panel.addComponent(LayoutHelper.create(ViewConstants.NAME_LABEL, nameField, LABEL_WIDTH, true));
     }
 
     private void createUpdatePasswordView() {
@@ -364,8 +334,7 @@ public class UserEditForm extends CustomComponent implements ClickListener {
         passwordView.addMinCharValidator();
 
         final UpdatePasswordOkListener updatePasswordOkListener =
-            new UpdatePasswordOkListener(passwordView.getPasswordField(),
-                passwordView.getRetypePasswordField());
+            new UpdatePasswordOkListener(passwordView.getPasswordField(), passwordView.getRetypePasswordField());
         updatePasswordOkListener.setMainWindow(mainWindow);
 
         command = new UpdatePasswordCommandImpl(userService);
@@ -416,23 +385,20 @@ public class UserEditForm extends CustomComponent implements ClickListener {
         addRoleButton.setStyleName(Reindeer.BUTTON_SMALL);
         removeRoleButton.setStyleName(Reindeer.BUTTON_SMALL);
         final VerticalLayout rolesComponent =
-            createLayout(ViewConstants.ROLES_LABEL, roleTable, 120,
-                ROLE_LIST_HEIGHT, false, new Button[] { addRoleButton,
-                    removeRoleButton });
+            createLayout(ViewConstants.ROLES_LABEL, roleTable, 120, ROLE_LIST_HEIGHT, false, new Button[] {
+                addRoleButton, removeRoleButton });
         panel.addComponent(rolesComponent);
     }
 
     private VerticalLayout createLayout(
-        final String rolesLabel, final Table table, final int labelWidth,
-        final int roleListHeight, final boolean b, final Button[] buttons) {
+        final String rolesLabel, final Table table, final int labelWidth, final int roleListHeight, final boolean b,
+        final Button[] buttons) {
 
         final HorizontalLayout hLayout = new HorizontalLayout();
         hLayout.setHeight(roleListHeight + Constants.PX);
         hLayout.addComponent(new Label(" "));
 
-        final Label textLabel =
-            new Label(Constants.P_ALIGN_RIGHT + rolesLabel + Constants.P,
-                Label.CONTENT_XHTML);
+        final Label textLabel = new Label(Constants.P_ALIGN_RIGHT + rolesLabel + Constants.P, Label.CONTENT_XHTML);
         textLabel.setSizeUndefined();
         textLabel.setWidth(labelWidth + Constants.PX);
         hLayout.addComponent(textLabel);
@@ -480,21 +446,15 @@ public class UserEditForm extends CustomComponent implements ClickListener {
         }
         catch (final InternalClientException e) {
             ModalDialog.show(app.getMainWindow(), e);
-            LOG.error(
-                ViewConstants.AN_UNEXPECTED_ERROR_OCCURED_SEE_LOG_FOR_DETAILS,
-                e);
+            LOG.error(ViewConstants.AN_UNEXPECTED_ERROR_OCCURED_SEE_LOG_FOR_DETAILS, e);
         }
         catch (final TransportException e) {
             ModalDialog.show(app.getMainWindow(), e);
-            LOG.error(
-                ViewConstants.AN_UNEXPECTED_ERROR_OCCURED_SEE_LOG_FOR_DETAILS,
-                e);
+            LOG.error(ViewConstants.AN_UNEXPECTED_ERROR_OCCURED_SEE_LOG_FOR_DETAILS, e);
         }
         catch (final EscidocClientException e) {
             ModalDialog.show(app.getMainWindow(), e);
-            LOG.error(
-                ViewConstants.AN_UNEXPECTED_ERROR_OCCURED_SEE_LOG_FOR_DETAILS,
-                e);
+            LOG.error(ViewConstants.AN_UNEXPECTED_ERROR_OCCURED_SEE_LOG_FOR_DETAILS, e);
         }
         return Collections.emptyList();
     }
@@ -528,8 +488,8 @@ public class UserEditForm extends CustomComponent implements ClickListener {
     }
 
     private void showMessage() {
-        mainWindow.showNotification(new Notification("Info",
-            "User Account is updated", Notification.TYPE_TRAY_NOTIFICATION));
+        mainWindow.showNotification(new Notification("Info", "User Account is updated",
+            Notification.TYPE_TRAY_NOTIFICATION));
     }
 
     private void discardFields() {
@@ -550,8 +510,7 @@ public class UserEditForm extends CustomComponent implements ClickListener {
 
     private void updateUserAccount() {
         try {
-            userService.update(getSelectedItemId(),
-                (String) nameField.getValue());
+            userService.update(getSelectedItemId(), (String) nameField.getValue());
             if (activeStatus.isModified()) {
                 changeState();
             }
@@ -561,27 +520,19 @@ public class UserEditForm extends CustomComponent implements ClickListener {
         }
         catch (final EscidocException e) {
             ModalDialog.show(app.getMainWindow(), e);
-            LOG.error(
-                ViewConstants.AN_UNEXPECTED_ERROR_OCCURED_SEE_LOG_FOR_DETAILS,
-                e);
+            LOG.error(ViewConstants.AN_UNEXPECTED_ERROR_OCCURED_SEE_LOG_FOR_DETAILS, e);
         }
         catch (final InternalClientException e) {
             ModalDialog.show(app.getMainWindow(), e);
-            LOG.error(
-                ViewConstants.AN_UNEXPECTED_ERROR_OCCURED_SEE_LOG_FOR_DETAILS,
-                e);
+            LOG.error(ViewConstants.AN_UNEXPECTED_ERROR_OCCURED_SEE_LOG_FOR_DETAILS, e);
         }
         catch (final TransportException e) {
             ModalDialog.show(app.getMainWindow(), e);
-            LOG.error(
-                ViewConstants.AN_UNEXPECTED_ERROR_OCCURED_SEE_LOG_FOR_DETAILS,
-                e);
+            LOG.error(ViewConstants.AN_UNEXPECTED_ERROR_OCCURED_SEE_LOG_FOR_DETAILS, e);
         }
         catch (final EscidocClientException e) {
             ModalDialog.show(app.getMainWindow(), e);
-            LOG.error(
-                ViewConstants.AN_UNEXPECTED_ERROR_OCCURED_SEE_LOG_FOR_DETAILS,
-                e);
+            LOG.error(ViewConstants.AN_UNEXPECTED_ERROR_OCCURED_SEE_LOG_FOR_DETAILS, e);
         }
     }
 
@@ -592,8 +543,7 @@ public class UserEditForm extends CustomComponent implements ClickListener {
     }
 
     public Set<ResourceRefDisplay> getOrgUnitsFromTable() {
-        final Set<ResourceRefDisplay> selectedSet =
-            new HashSet<ResourceRefDisplay>();
+        final Set<ResourceRefDisplay> selectedSet = new HashSet<ResourceRefDisplay>();
 
         final Collection<?> itemIds = orgUnitTable.getItemIds();
 
@@ -607,12 +557,8 @@ public class UserEditForm extends CustomComponent implements ClickListener {
 
     private boolean isValid() {
         boolean isValid = true;
-        isValid =
-            EmptyFieldValidator.isValid(nameField, "Please enter a "
-                + ViewConstants.NAME_ID);
-        isValid &=
-            EmptyFieldValidator.isValid(loginNameField, "Please enter a "
-                + ViewConstants.LOGIN_NAME_ID);
+        isValid = EmptyFieldValidator.isValid(nameField, "Please enter a " + ViewConstants.NAME_ID);
+        isValid &= EmptyFieldValidator.isValid(loginNameField, "Please enter a " + ViewConstants.LOGIN_NAME_ID);
         return isValid;
     }
 
@@ -625,16 +571,11 @@ public class UserEditForm extends CustomComponent implements ClickListener {
     }
 
     private void bindData() {
-        userObjectId =
-            (String) item.getItemProperty(PropertyId.OBJECT_ID).getValue();
-        nameField.setPropertyDataSource(item
-            .getItemProperty(ViewConstants.NAME_ID));
-        loginNameField.setPropertyDataSource(item
-            .getItemProperty(PropertyId.LOGIN_NAME));
-        objIdField.setPropertyDataSource(item
-            .getItemProperty(PropertyId.OBJECT_ID));
-        activeStatus.setPropertyDataSource(item
-            .getItemProperty(PropertyId.ACTIVE));
+        userObjectId = (String) item.getItemProperty(PropertyId.OBJECT_ID).getValue();
+        nameField.setPropertyDataSource(item.getItemProperty(ViewConstants.NAME_ID));
+        loginNameField.setPropertyDataSource(item.getItemProperty(PropertyId.LOGIN_NAME));
+        objIdField.setPropertyDataSource(item.getItemProperty(PropertyId.OBJECT_ID));
+        activeStatus.setPropertyDataSource(item.getItemProperty(PropertyId.ACTIVE));
 
         bindModifiedOn();
         bindModifiedBy();
@@ -649,9 +590,8 @@ public class UserEditForm extends CustomComponent implements ClickListener {
     }
 
     private void bindCreatedOn() {
-        createdOn.setCaption(Converter
-            .dateTimeToString((org.joda.time.DateTime) item.getItemProperty(
-                PropertyId.CREATED_ON).getValue()));
+        createdOn.setCaption(Converter.dateTimeToString((org.joda.time.DateTime) item.getItemProperty(
+            PropertyId.CREATED_ON).getValue()));
     }
 
     private void bindCreatedBy() {
@@ -666,9 +606,8 @@ public class UserEditForm extends CustomComponent implements ClickListener {
     }
 
     private void bindModifiedOn() {
-        modifiedOn.setCaption(Converter
-            .dateTimeToString((org.joda.time.DateTime) item.getItemProperty(
-                PropertyId.LAST_MODIFICATION_DATE).getValue()));
+        modifiedOn.setCaption(Converter.dateTimeToString((org.joda.time.DateTime) item.getItemProperty(
+            PropertyId.LAST_MODIFICATION_DATE).getValue()));
     }
 
     private String getCreatorId() {
@@ -680,8 +619,7 @@ public class UserEditForm extends CustomComponent implements ClickListener {
     }
 
     private UserAccountRef getCreator() {
-        return (UserAccountRef) item
-            .getItemProperty(PropertyId.CREATED_BY).getValue();
+        return (UserAccountRef) item.getItemProperty(PropertyId.CREATED_BY).getValue();
     }
 
     private void bindModifiedBy() {
@@ -704,8 +642,7 @@ public class UserEditForm extends CustomComponent implements ClickListener {
     }
 
     private UserAccountRef getModifier() {
-        return (UserAccountRef) item
-            .getItemProperty(PropertyId.MODIFIED_BY).getValue();
+        return (UserAccountRef) item.getItemProperty(PropertyId.MODIFIED_BY).getValue();
     }
 
     private void bindUserRightsWithView() {
@@ -729,28 +666,23 @@ public class UserEditForm extends CustomComponent implements ClickListener {
     }
 
     private boolean isRevokeGrantAllowed() {
-        return pdpRequest.isPermitted(ActionIdConstants.REVOKE_GRANT,
-            getSelectedItemId());
+        return pdpRequest.isPermitted(ActionIdConstants.REVOKE_GRANT, getSelectedItemId());
     }
 
     private boolean isCreateGrantAllowed() {
-        return pdpRequest.isPermitted(ActionIdConstants.CREATE_GRANT,
-            getSelectedItemId());
+        return pdpRequest.isPermitted(ActionIdConstants.CREATE_GRANT, getSelectedItemId());
     }
 
     private boolean isDeactivateUserNotAllowed() {
-        return !pdpRequest.isPermitted(
-            ActionIdConstants.DEACTIVATE_USER_ACCOUNT, getSelectedItemId());
+        return !pdpRequest.isPermitted(ActionIdConstants.DEACTIVATE_USER_ACCOUNT, getSelectedItemId());
     }
 
     private boolean isUpdateNotAllowed() {
-        return pdpRequest.isDenied(ActionIdConstants.UPDATE_USER_ACCOUNT,
-            getSelectedItemId());
+        return pdpRequest.isDenied(ActionIdConstants.UPDATE_USER_ACCOUNT, getSelectedItemId());
     }
 
     private boolean isDeleteUserAllowed() {
-        return pdpRequest.isPermitted(ActionIdConstants.DELETE_USER_ACCOUNT,
-            getSelectedItemId());
+        return pdpRequest.isPermitted(ActionIdConstants.DELETE_USER_ACCOUNT, getSelectedItemId());
     }
 
     private boolean isCreateNewUserAllowed() {
@@ -767,20 +699,16 @@ public class UserEditForm extends CustomComponent implements ClickListener {
         }
         else {
             grantContainer =
-                new POJOContainer<Grant>(Grant.class, PropertyId.XLINK_TITLE,
-                    PropertyId.OBJECT_ID, PropertyId.GRANT_ROLE_OBJECT_ID,
-                    PropertyId.ASSIGN_ON);
+                new POJOContainer<Grant>(Grant.class, PropertyId.XLINK_TITLE, PropertyId.OBJECT_ID,
+                    PropertyId.GRANT_ROLE_OBJECT_ID, PropertyId.ASSIGN_ON);
             roleTable.setContainerDataSource(grantContainer);
-            roleTable
-                .setVisibleColumns(new String[] { PropertyId.XLINK_TITLE });
+            roleTable.setVisibleColumns(new String[] { PropertyId.XLINK_TITLE });
             roleTable.setColumnHeaders(ViewConstants.ROLE_COLUMN_HEADERS);
 
             for (final Grant grant : userGrants) {
-                final Reference assignedOn =
-                    grant.getGrantProperties().getAssignedOn();
+                final Reference assignedOn = grant.getGrantProperties().getAssignedOn();
                 if (assignedOn == null) {
-                    grant.getGrantProperties().setAssignedOn(
-                        new RoleRef("", ""));
+                    grant.getGrantProperties().setAssignedOn(new RoleRef("", ""));
                 }
                 grantContainer.addPOJO(grant);
             }
@@ -815,16 +743,14 @@ public class UserEditForm extends CustomComponent implements ClickListener {
     }
 
     private DateTime getLastModificationDate() {
-        return (DateTime) item.getItemProperty(
-            PropertyId.LAST_MODIFICATION_DATE).getValue();
+        return (DateTime) item.getItemProperty(PropertyId.LAST_MODIFICATION_DATE).getValue();
     }
 
     public UserAccount deleteUser() throws EscidocClientException {
         return userService.delete(getSelectedItemId());
     }
 
-    public void changeState() throws InternalClientException,
-        TransportException, EscidocClientException {
+    public void changeState() throws InternalClientException, TransportException, EscidocClientException {
         if (!(Boolean) activeStatus.getPropertyDataSource().getValue()) {
             userService.activate(getSelectedItemId());
         }
@@ -855,29 +781,19 @@ public class UserEditForm extends CustomComponent implements ClickListener {
             }
             catch (final InternalClientException e) {
                 setComponentError(new SystemError(e.getMessage()));
-                LOG
-                    .error(
-                        ViewConstants.AN_UNEXPECTED_ERROR_OCCURED_SEE_LOG_FOR_DETAILS,
-                        e);
+                LOG.error(ViewConstants.AN_UNEXPECTED_ERROR_OCCURED_SEE_LOG_FOR_DETAILS, e);
             }
             catch (final TransportException e) {
                 setComponentError(new SystemError(e.getMessage()));
-                LOG
-                    .error(
-                        ViewConstants.AN_UNEXPECTED_ERROR_OCCURED_SEE_LOG_FOR_DETAILS,
-                        e);
+                LOG.error(ViewConstants.AN_UNEXPECTED_ERROR_OCCURED_SEE_LOG_FOR_DETAILS, e);
             }
             catch (final EscidocException e) {
-                LOG
-                    .error(
-                        ViewConstants.AN_UNEXPECTED_ERROR_OCCURED_SEE_LOG_FOR_DETAILS,
-                        e);
+                LOG.error(ViewConstants.AN_UNEXPECTED_ERROR_OCCURED_SEE_LOG_FOR_DETAILS, e);
                 setComponentError(new SystemError(e.getMessage()));
             }
             catch (final EscidocClientException e) {
                 setComponentError(new SystemError(e.getMessage()));
-                LOG.error("An unexpected error occured! See LOG for details.",
-                    e);
+                LOG.error("An unexpected error occured! See LOG for details.", e);
                 ModalDialog.show(mainWindow, e);
             }
         }

@@ -62,8 +62,7 @@ public class NavigationTreeClickListener implements ItemClickListener {
         else if (ViewConstants.FILTERING_RESOURCES_TITLE.equals(itemId)) {
             app.showFilterResourceView();
         }
-        else if (ViewConstants.RESOURCES.equals(itemId)
-            || ViewConstants.ADMIN_TASKS_LABEL.equals(itemId)) {
+        else if (ViewConstants.RESOURCES.equals(itemId) || ViewConstants.ADMIN_TASKS_LABEL.equals(itemId)) {
             command.execute(itemId);
         }
         else {

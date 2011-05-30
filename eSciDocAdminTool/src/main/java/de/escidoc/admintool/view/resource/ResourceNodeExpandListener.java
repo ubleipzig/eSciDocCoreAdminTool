@@ -21,22 +21,17 @@ public class ResourceNodeExpandListener implements ExpandListener {
 
     private final Window mainWindow;
 
-    ResourceNodeExpandListener(final Tree tree, final Window mainWindow,
-        final AddChildrenCommand addChildrenCommand) {
+    ResourceNodeExpandListener(final Tree tree, final Window mainWindow, final AddChildrenCommand addChildrenCommand) {
         preconditions(tree, mainWindow, addChildrenCommand);
         this.tree = tree;
         this.mainWindow = mainWindow;
         this.addChildrenCommand = addChildrenCommand;
     }
 
-    private void preconditions(
-        final Tree tree, final Window mainWindow,
-        final AddChildrenCommand addChildrenCommand) {
+    private void preconditions(final Tree tree, final Window mainWindow, final AddChildrenCommand addChildrenCommand) {
         Preconditions.checkNotNull(tree, "tree is null: %s", tree);
-        Preconditions.checkNotNull(mainWindow, "mainWindow is null: %s",
-            mainWindow);
-        Preconditions.checkNotNull(addChildrenCommand,
-            "addChildrenCommand is null: %s", addChildrenCommand);
+        Preconditions.checkNotNull(mainWindow, "mainWindow is null: %s", mainWindow);
+        Preconditions.checkNotNull(addChildrenCommand, "addChildrenCommand is null: %s", addChildrenCommand);
     }
 
     @Override
@@ -47,8 +42,7 @@ public class ResourceNodeExpandListener implements ExpandListener {
             return;
         }
 
-        if (isOrgUnit(selectedOrgUnit)
-            && isAddChildrenNeeded((OrganizationalUnit) selectedOrgUnit)) {
+        if (isOrgUnit(selectedOrgUnit) && isAddChildrenNeeded((OrganizationalUnit) selectedOrgUnit)) {
             addChildrenFor((OrganizationalUnit) selectedOrgUnit);
         }
     }

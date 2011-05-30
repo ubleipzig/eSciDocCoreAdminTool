@@ -20,33 +20,27 @@ import de.escidoc.core.resources.oum.Predecessors;
 
 public class ContainerFactory implements ResourcesToContainer {
 
-    public static Container toContainer(
-        final Collection<Resource> topLevelOrgUnits) {
-        Preconditions.checkNotNull(topLevelOrgUnits, "resources is null: %s",
-            topLevelOrgUnits);
+    public static Container toContainer(final Collection<Resource> topLevelOrgUnits) {
+        Preconditions.checkNotNull(topLevelOrgUnits, "resources is null: %s", topLevelOrgUnits);
 
         if (topLevelOrgUnits.isEmpty()) {
             return createEmptyContainer();
         }
         else {
-            return new POJOContainer<Resource>(topLevelOrgUnits,
-                PropertyId.GENERIC_PROPERTIES);
+            return new POJOContainer<Resource>(topLevelOrgUnits, PropertyId.GENERIC_PROPERTIES);
         }
     }
 
     private static Container createEmptyContainer() {
-        return new POJOContainer<Resource>(Resource.class,
-            PropertyId.GENERIC_PROPERTIES);
+        return new POJOContainer<Resource>(Resource.class, PropertyId.GENERIC_PROPERTIES);
     }
 
     private Collection<? extends Resource> topLevelResources;
 
     private final Container container = new HierarchicalContainer();
 
-    public Container toHierarchicalContainer(
-        final Collection<? extends Resource> topLevelResources) {
-        Preconditions.checkNotNull(topLevelResources,
-            "topLevelResources is null: %s", topLevelResources);
+    public Container toHierarchicalContainer(final Collection<? extends Resource> topLevelResources) {
+        Preconditions.checkNotNull(topLevelResources, "topLevelResources is null: %s", topLevelResources);
         this.topLevelResources = topLevelResources;
 
         if (topLevelResources.isEmpty()) {
@@ -74,34 +68,23 @@ public class ContainerFactory implements ResourcesToContainer {
 
     private void addGeneralProperties() {
         addObjectIdProperty(container);
-        container.addContainerProperty(PropertyId.NAME, String.class,
-            ViewConstants.EMPTY_STRING);
-        container.addContainerProperty(PropertyId.DESCRIPTION, String.class,
-            ViewConstants.EMPTY_STRING);
-        container.addContainerProperty(PropertyId.CREATED_ON, DateTime.class,
-            new DateTime());
-        container.addContainerProperty(PropertyId.CREATED_BY, String.class,
-            ViewConstants.EMPTY_STRING);
-        container.addContainerProperty(PropertyId.LAST_MODIFICATION_DATE,
-            DateTime.class, new DateTime());
-        container.addContainerProperty(PropertyId.MODIFIED_BY, String.class,
-            ViewConstants.EMPTY_STRING);
-        container.addContainerProperty(PropertyId.PUBLIC_STATUS, String.class,
-            ViewConstants.EMPTY_STRING);
-        container.addContainerProperty(PropertyId.PUBLIC_STATUS_COMMENT,
-            String.class, ViewConstants.EMPTY_STRING);
+        container.addContainerProperty(PropertyId.NAME, String.class, ViewConstants.EMPTY_STRING);
+        container.addContainerProperty(PropertyId.DESCRIPTION, String.class, ViewConstants.EMPTY_STRING);
+        container.addContainerProperty(PropertyId.CREATED_ON, DateTime.class, new DateTime());
+        container.addContainerProperty(PropertyId.CREATED_BY, String.class, ViewConstants.EMPTY_STRING);
+        container.addContainerProperty(PropertyId.LAST_MODIFICATION_DATE, DateTime.class, new DateTime());
+        container.addContainerProperty(PropertyId.MODIFIED_BY, String.class, ViewConstants.EMPTY_STRING);
+        container.addContainerProperty(PropertyId.PUBLIC_STATUS, String.class, ViewConstants.EMPTY_STRING);
+        container.addContainerProperty(PropertyId.PUBLIC_STATUS_COMMENT, String.class, ViewConstants.EMPTY_STRING);
     }
 
     private void addObjectIdProperty(final Container container) {
-        container.addContainerProperty(PropertyId.OBJECT_ID, String.class,
-            ViewConstants.EMPTY_STRING);
+        container.addContainerProperty(PropertyId.OBJECT_ID, String.class, ViewConstants.EMPTY_STRING);
     }
 
     private void addOrgUnitProperties() {
-        container.addContainerProperty(PropertyId.PARENTS, Parents.class,
-            Collections.EMPTY_SET);
-        container.addContainerProperty(PropertyId.PREDECESSORS,
-            Predecessors.class, Collections.EMPTY_SET);
+        container.addContainerProperty(PropertyId.PARENTS, Parents.class, Collections.EMPTY_SET);
+        container.addContainerProperty(PropertyId.PREDECESSORS, Predecessors.class, Collections.EMPTY_SET);
     }
 
     private boolean isOrgUnit() {
@@ -131,32 +114,22 @@ public class ContainerFactory implements ResourcesToContainer {
 
         final OrganizationalUnit orgUnit = (OrganizationalUnit) resource;
 
-        item.getItemProperty(PropertyId.OBJECT_ID)
-            .setValue(resource.getObjid());
-        item.getItemProperty(PropertyId.NAME).setValue(
-            orgUnit.getProperties().getName());
-        item.getItemProperty(PropertyId.DESCRIPTION).setValue(
-            orgUnit.getProperties().getDescription());
-        item.getItemProperty(PropertyId.CREATED_ON).setValue(
-            orgUnit.getProperties().getCreationDate());
-        item.getItemProperty(PropertyId.CREATED_BY).setValue(
-            orgUnit.getProperties().getCreatedBy().getXLinkTitle());
-        item.getItemProperty(PropertyId.LAST_MODIFICATION_DATE).setValue(
-            orgUnit.getLastModificationDate());
-        item.getItemProperty(PropertyId.MODIFIED_BY).setValue(
-            orgUnit.getProperties().getModifiedBy().getXLinkTitle());
-        item.getItemProperty(PropertyId.PUBLIC_STATUS).setValue(
-            orgUnit.getProperties().getPublicStatus());
+        item.getItemProperty(PropertyId.OBJECT_ID).setValue(resource.getObjid());
+        item.getItemProperty(PropertyId.NAME).setValue(orgUnit.getProperties().getName());
+        item.getItemProperty(PropertyId.DESCRIPTION).setValue(orgUnit.getProperties().getDescription());
+        item.getItemProperty(PropertyId.CREATED_ON).setValue(orgUnit.getProperties().getCreationDate());
+        item.getItemProperty(PropertyId.CREATED_BY).setValue(orgUnit.getProperties().getCreatedBy().getXLinkTitle());
+        item.getItemProperty(PropertyId.LAST_MODIFICATION_DATE).setValue(orgUnit.getLastModificationDate());
+        item.getItemProperty(PropertyId.MODIFIED_BY).setValue(orgUnit.getProperties().getModifiedBy().getXLinkTitle());
+        item.getItemProperty(PropertyId.PUBLIC_STATUS).setValue(orgUnit.getProperties().getPublicStatus());
         item.getItemProperty(PropertyId.PUBLIC_STATUS_COMMENT).setValue(
             orgUnit.getProperties().getPublicStatusComment());
         item.getItemProperty(PropertyId.PARENTS).setValue(orgUnit.getParents());
-        item.getItemProperty(PropertyId.PREDECESSORS).setValue(
-            orgUnit.getPredecessors());
+        item.getItemProperty(PropertyId.PREDECESSORS).setValue(orgUnit.getPredecessors());
     }
 
     private void markAsLeaf(final Resource topLevel) {
-        ((HierarchicalContainer) container).setChildrenAllowed(topLevel,
-            hasChildren(topLevel));
+        ((HierarchicalContainer) container).setChildrenAllowed(topLevel, hasChildren(topLevel));
     }
 
     private boolean hasChildren(final Resource topLevel) {

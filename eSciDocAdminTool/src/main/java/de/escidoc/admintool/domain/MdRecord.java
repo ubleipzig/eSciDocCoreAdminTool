@@ -17,8 +17,7 @@ public class MdRecord {
 
     private static Document doc;
 
-    public static MetadataRecords createEscidocMdRecords(
-        String name, String disc) throws ParserConfigurationException {
+    public static MetadataRecords createEscidocMdRecords(String name, String disc) throws ParserConfigurationException {
 
         final MetadataRecords mdRecords = new MetadataRecords();
         final MetadataRecord escidocMdRecord = new MetadataRecord();
@@ -28,10 +27,8 @@ public class MdRecord {
         buildNewDocument();
 
         pubman =
-            doc
-                .createElementNS(
-                    "http://purl.org/escidoc/metadata/profiles/0.1/organizationalunit",
-                    "organizational-unit");
+            doc.createElementNS("http://purl.org/escidoc/metadata/profiles/0.1/organizationalunit",
+                "organizational-unit");
         pubman.setPrefix("mdou");
 
         escidocMdRecord.setContent(pubman);
@@ -43,8 +40,7 @@ public class MdRecord {
     }
 
     private static void buildNewDocument() throws ParserConfigurationException {
-        final DocumentBuilderFactory factory =
-            DocumentBuilderFactory.newInstance();
+        final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setNamespaceAware(true);
         factory.setCoalescing(true);
         factory.setValidating(true);
@@ -54,8 +50,7 @@ public class MdRecord {
 
     // TODO refactor this: a lot of duplication
     private static Node title(final String title) {
-        final Element titleElmt =
-            doc.createElementNS("http://purl.org/dc/elements/1.1/", "title");
+        final Element titleElmt = doc.createElementNS("http://purl.org/dc/elements/1.1/", "title");
         titleElmt.setPrefix("dc");
         titleElmt.setTextContent(title);
         pubman.appendChild(titleElmt);
@@ -63,9 +58,7 @@ public class MdRecord {
     }
 
     private static Node description(final String description) {
-        final Element descriptionElmt =
-            doc.createElementNS("http://purl.org/dc/elements/1.1/",
-                "description");
+        final Element descriptionElmt = doc.createElementNS("http://purl.org/dc/elements/1.1/", "description");
         descriptionElmt.setPrefix("dc");
         descriptionElmt.setTextContent(description);
         pubman.appendChild(descriptionElmt);

@@ -15,8 +15,7 @@ public class RevokeGrantCommand implements Command {
 
     private String comment;
 
-    public RevokeGrantCommand(final UserService userService,
-        final String userId, final Grant grant) {
+    public RevokeGrantCommand(final UserService userService, final String userId, final Grant grant) {
         this.userService = userService;
         this.userId = userId;
         this.grant = grant;

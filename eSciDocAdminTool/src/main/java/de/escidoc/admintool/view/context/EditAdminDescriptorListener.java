@@ -23,12 +23,9 @@ public class EditAdminDescriptorListener implements Button.ClickListener {
 
     private final Window mainWindow;
 
-    public EditAdminDescriptorListener(final Window mainWindow,
-        final Accordion adminDescriptorAccordion) {
-        Preconditions.checkNotNull(mainWindow,
-            "mainWindow can not be null: %s", mainWindow);
-        Preconditions.checkNotNull(adminDescriptorAccordion,
-            "adminDescriptorAccordion can not be null: %s",
+    public EditAdminDescriptorListener(final Window mainWindow, final Accordion adminDescriptorAccordion) {
+        Preconditions.checkNotNull(mainWindow, "mainWindow can not be null: %s", mainWindow);
+        Preconditions.checkNotNull(adminDescriptorAccordion, "adminDescriptorAccordion can not be null: %s",
             adminDescriptorAccordion);
 
         this.mainWindow = mainWindow;
@@ -41,9 +38,8 @@ public class EditAdminDescriptorListener implements Button.ClickListener {
             return;
         }
 
-        mainWindow.addWindow(new AdminDescriptorEditView(mainWindow,
-            adminDescriptorAccordion, getName(adminDescriptorAccordion
-                .getTab(selectedTab)), getContent(selectedTab)));
+        mainWindow.addWindow(new AdminDescriptorEditView(mainWindow, adminDescriptorAccordion,
+            getName(adminDescriptorAccordion.getTab(selectedTab)), getContent(selectedTab)));
     }
 
     private String getName(final Tab tab) {

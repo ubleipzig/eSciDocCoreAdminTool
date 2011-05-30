@@ -17,8 +17,7 @@ import de.escidoc.core.resources.common.reference.UserAccountRef;
 
 public class PropertiesBinder implements FieldsBinder {
 
-    private static final Logger LOG = LoggerFactory
-        .getLogger(PropertiesBinder.class);
+    private static final Logger LOG = LoggerFactory.getLogger(PropertiesBinder.class);
 
     private final PropertiesFieldsImpl propertiesFields;
 
@@ -26,8 +25,7 @@ public class PropertiesBinder implements FieldsBinder {
 
     private final AdminToolApplication app;
 
-    PropertiesBinder(final AdminToolApplication app,
-        final PropertiesFieldsImpl propertiesFields) {
+    PropertiesBinder(final AdminToolApplication app, final PropertiesFieldsImpl propertiesFields) {
         this.app = app;
         this.propertiesFields = propertiesFields;
     }
@@ -46,13 +44,11 @@ public class PropertiesBinder implements FieldsBinder {
     }
 
     private void bindStatusComment() {
-        bind(propertiesFields.statusComment).with(
-            getProperty(PropertyId.PUBLIC_STATUS_COMMENT));
+        bind(propertiesFields.statusComment).with(getProperty(PropertyId.PUBLIC_STATUS_COMMENT));
     }
 
     private void bindStatus() {
-        bind(propertiesFields.statusField).with(
-            getProperty(PropertyId.PUBLIC_STATUS));
+        bind(propertiesFields.statusField).with(getProperty(PropertyId.PUBLIC_STATUS));
     }
 
     private void bindCreatedBy() {
@@ -81,8 +77,7 @@ public class PropertiesBinder implements FieldsBinder {
     }
 
     private void bindDescriptiond() {
-        bind(propertiesFields.descField).with(
-            getProperty(PropertyId.DESCRIPTION));
+        bind(propertiesFields.descField).with(getProperty(PropertyId.DESCRIPTION));
     }
 
     private void bindName() {
@@ -101,8 +96,7 @@ public class PropertiesBinder implements FieldsBinder {
 
             @Override
             public void buttonClick(final ClickEvent event) {
-                LOG.debug("modified by clicked: "
-                    + getModifiedByValue().getObjid());
+                LOG.debug("modified by clicked: " + getModifiedByValue().getObjid());
                 app.showUser(getModifiedByValue().getObjid());
             }
         });
@@ -119,16 +113,13 @@ public class PropertiesBinder implements FieldsBinder {
     private void bindCreatedOn() {
         final Object value = getProperty(PropertyId.CREATED_ON).getValue();
         final DateTime dateTime = (DateTime) value;
-        propertiesFields.createdOn.setCaption(Converter
-            .dateTimeToString(dateTime));
+        propertiesFields.createdOn.setCaption(Converter.dateTimeToString(dateTime));
     }
 
     private void bindModifienOn() {
-        final Object value =
-            getProperty(PropertyId.LAST_MODIFICATION_DATE).getValue();
+        final Object value = getProperty(PropertyId.LAST_MODIFICATION_DATE).getValue();
         final DateTime dateTime = (DateTime) value;
-        propertiesFields.modifiedOn.setCaption(Converter
-            .dateTimeToString(dateTime));
+        propertiesFields.modifiedOn.setCaption(Converter.dateTimeToString(dateTime));
     }
 
     private Property getProperty(final Object id) {
@@ -149,8 +140,7 @@ public class PropertiesBinder implements FieldsBinder {
             button.setCaption((String) itemProperty.getValue());
         }
         else {
-            ((com.vaadin.ui.Field) toBeBind)
-                .setPropertyDataSource(itemProperty);
+            ((com.vaadin.ui.Field) toBeBind).setPropertyDataSource(itemProperty);
         }
     }
 }

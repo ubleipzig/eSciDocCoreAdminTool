@@ -40,9 +40,8 @@ public class SaveButtonListener implements ClickListener {
 
     private final Map<String, Field> fieldByName;
 
-    public SaveButtonListener(final Collection<Field> allFields,
-        final Map<String, Field> fieldByName, final Window mainWindow,
-        final ResourceService resourceService) {
+    public SaveButtonListener(final Collection<Field> allFields, final Map<String, Field> fieldByName,
+        final Window mainWindow, final ResourceService resourceService) {
         this.allFields = allFields;
         this.fieldByName = fieldByName;
         this.mainWindow = mainWindow;
@@ -77,8 +76,7 @@ public class SaveButtonListener implements ClickListener {
                 field.validate();
             }
             catch (final Exception e) {
-                ((AbstractComponent) field).setComponentError(new UserError(
-                    field.getCaption() + " is required"));
+                ((AbstractComponent) field).setComponentError(new UserError(field.getCaption() + " is required"));
                 return false;
             }
         }
@@ -117,8 +115,7 @@ public class SaveButtonListener implements ClickListener {
 
     }
 
-    private void updateModel() throws ParserConfigurationException,
-        SAXException, IOException, EscidocClientException {
+    private void updateModel() throws ParserConfigurationException, SAXException, IOException, EscidocClientException {
         final OrgUnitBuilder builder = new OrgUnitBuilder(getOldOrgUnit());
         toBeUpdated =
             builder.with((String) fieldByName.get("title").getValue(),

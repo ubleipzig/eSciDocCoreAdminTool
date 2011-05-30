@@ -9,8 +9,7 @@ import de.escidoc.admintool.view.ViewConstants;
 public class RepositoryInfoView extends AbstractCustomView {
     private static final long serialVersionUID = -7206908685980457887L;
 
-    private final Button repoInfoButton = new Button(
-        ViewConstants.SHOW_REPOSITORY_INFO);
+    private final Button repoInfoButton = new Button(ViewConstants.SHOW_REPOSITORY_INFO);
 
     private final RepoInfoClickListener listener;
 

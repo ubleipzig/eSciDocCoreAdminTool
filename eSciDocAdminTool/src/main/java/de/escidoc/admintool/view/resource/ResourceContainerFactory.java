@@ -14,23 +14,19 @@ public class ResourceContainerFactory {
     private final OrgUnitServiceLab resourceService;
 
     public ResourceContainerFactory(final ResourceService resourceService) {
-        Preconditions.checkNotNull(resourceService,
-            "resourceService is null: %s", resourceService);
+        Preconditions.checkNotNull(resourceService, "resourceService is null: %s", resourceService);
         this.resourceService = (OrgUnitServiceLab) resourceService;
     }
 
-    public ResourceContainer getResourceContainer()
-        throws EscidocClientException {
+    public ResourceContainer getResourceContainer() throws EscidocClientException {
         return createResourceContainer();
     }
 
-    private ResourceContainer createResourceContainer()
-        throws EscidocClientException {
+    private ResourceContainer createResourceContainer() throws EscidocClientException {
         return new ResourceContainerImpl(getTopLevelOrgUnits());
     }
 
-    private Collection<OrganizationalUnit> getTopLevelOrgUnits()
-        throws EscidocClientException {
+    private Collection<OrganizationalUnit> getTopLevelOrgUnits() throws EscidocClientException {
         return resourceService.getTopLevelOrgUnits();
     }
 }

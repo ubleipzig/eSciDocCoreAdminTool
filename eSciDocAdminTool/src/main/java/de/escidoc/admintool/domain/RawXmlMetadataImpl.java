@@ -11,8 +11,7 @@ public class RawXmlMetadataImpl implements RawXmlMetadata {
     private final Element content;
 
     public RawXmlMetadataImpl(String metadataName, RawXml xml) {
-        Preconditions.checkArgument(metadataName != null,
-            "metadataName is null: %s", metadataName);
+        Preconditions.checkArgument(metadataName != null, "metadataName is null: %s", metadataName);
         Preconditions.checkArgument(xml != null, "xml is null: %s", xml);
 
         this.name = metadataName;

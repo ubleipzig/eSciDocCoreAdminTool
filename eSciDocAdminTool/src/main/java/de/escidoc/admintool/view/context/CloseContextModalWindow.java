@@ -17,16 +17,13 @@ import de.escidoc.core.client.exceptions.EscidocClientException;
 public class CloseContextModalWindow extends VerticalLayout {
     private static final long serialVersionUID = -2916506925078723208L;
 
-    private static final Logger LOG = LoggerFactory
-        .getLogger(CloseContextModalWindow.class);
+    private static final Logger LOG = LoggerFactory.getLogger(CloseContextModalWindow.class);
 
     private final Window subwindow = new Window("Close Context");
 
-    private final Button submitBtn = new Button(ViewConstants.CLOSE,
-        new SubmitCloseContextClickListener());
+    private final Button submitBtn = new Button(ViewConstants.CLOSE, new SubmitCloseContextClickListener());
 
-    private final Button cancelBtn = new Button(ViewConstants.CANCEL,
-        new CancelClickListener(subwindow));
+    private final Button cancelBtn = new Button(ViewConstants.CANCEL, new CancelClickListener(subwindow));
 
     private final ContextEditForm contextForm;
 
@@ -43,8 +40,7 @@ public class CloseContextModalWindow extends VerticalLayout {
         modalWindow().commentTextField().footer();
     }
 
-    private class SubmitCloseContextClickListener
-        implements Button.ClickListener {
+    private class SubmitCloseContextClickListener implements Button.ClickListener {
         private static final long serialVersionUID = 5642227677682855700L;
 
         public void buttonClick(final ClickEvent event) {
@@ -54,8 +50,7 @@ public class CloseContextModalWindow extends VerticalLayout {
             }
             catch (final EscidocClientException e) {
                 subwindow.getParent().removeWindow(subwindow);
-                ErrorMessage.show(contextForm.getApplication().getMainWindow(),
-                    e);
+                ErrorMessage.show(contextForm.getApplication().getMainWindow(), e);
             }
         }
     }

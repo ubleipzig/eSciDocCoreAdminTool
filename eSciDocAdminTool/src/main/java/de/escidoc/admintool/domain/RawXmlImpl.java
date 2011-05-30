@@ -18,8 +18,7 @@ public class RawXmlImpl implements RawXml {
 
     private final Element element;
 
-    public RawXmlImpl(String xml) throws SAXException, IOException,
-        ParserConfigurationException {
+    public RawXmlImpl(String xml) throws SAXException, IOException, ParserConfigurationException {
         this.xml = xml;
         element = toElement();
     }
@@ -28,10 +27,8 @@ public class RawXmlImpl implements RawXml {
         return element;
     }
 
-    private Element toElement() throws SAXException, IOException,
-        ParserConfigurationException {
-        final DocumentBuilderFactory factory =
-            DocumentBuilderFactory.newInstance();
+    private Element toElement() throws SAXException, IOException, ParserConfigurationException {
+        final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         final DocumentBuilder builder = factory.newDocumentBuilder();
         final InputSource is = new InputSource(new StringReader(xml));
         final Document d = builder.parse(is);

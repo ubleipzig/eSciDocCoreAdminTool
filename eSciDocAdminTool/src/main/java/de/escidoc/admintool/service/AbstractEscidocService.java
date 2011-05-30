@@ -35,10 +35,8 @@ public abstract class AbstractEscidocService<T extends HandlerServiceInterface>
         this.client = client;
     }
 
-    public AbstractEscidocService(
-        final EscidocServiceLocation escidocServiceLocation) {
-        final ContextHandlerClientInterface client =
-            new ContextHandlerClient(escidocServiceLocation.getUri());
+    public AbstractEscidocService(final EscidocServiceLocation escidocServiceLocation) {
+        final ContextHandlerClientInterface client = new ContextHandlerClient(escidocServiceLocation.getUri());
         client.setTransport(TransportProtocol.REST);
         this.client = client;
     }
@@ -85,20 +83,18 @@ public abstract class AbstractEscidocService<T extends HandlerServiceInterface>
         return new SearchRetrieveRequestType();
     }
 
-    abstract Collection<? extends Resource> findPublicOrReleseadResourcesUsingOldFilter()
-        throws EscidocException, InternalClientException, TransportException,
-        EscidocClientException;
+    abstract Collection<? extends Resource> findPublicOrReleseadResourcesUsingOldFilter() throws EscidocException,
+        InternalClientException, TransportException, EscidocClientException;
 
-    abstract Collection<? extends Resource> findPublicOrReleasedResources()
-        throws EscidocException, InternalClientException, TransportException;
+    abstract Collection<? extends Resource> findPublicOrReleasedResources() throws EscidocException,
+        InternalClientException, TransportException;
 
     @Override
-    public abstract Collection<? extends Resource> filterUsingInput(String query)
-        throws EscidocException, InternalClientException, TransportException;
+    public abstract Collection<? extends Resource> filterUsingInput(String query) throws EscidocException,
+        InternalClientException, TransportException;
 
     protected SearchRetrieveRequestType userInputToFilter(final String query) {
-        final SearchRetrieveRequestType filter =
-            new SearchRetrieveRequestType();
+        final SearchRetrieveRequestType filter = new SearchRetrieveRequestType();
         filter.setQuery(query);
         return filter;
     }

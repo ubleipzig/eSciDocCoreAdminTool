@@ -18,15 +18,12 @@ public class AddToResourceContainer implements AddToContainer {
 
     private final ResourceContainer resourceContainer;
 
-    public AddToResourceContainer(final Window mainWindow,
-        final ServiceContainer services,
+    public AddToResourceContainer(final Window mainWindow, final ServiceContainer services,
         final ResourceContainer resourceContainer) {
 
-        Preconditions.checkNotNull(mainWindow, "mainWindow is null: %s",
-            mainWindow);
+        Preconditions.checkNotNull(mainWindow, "mainWindow is null: %s", mainWindow);
         Preconditions.checkNotNull(services, "services is null: %s", services);
-        Preconditions.checkNotNull(resourceContainer,
-            "resourceContainer is null: %s", resourceContainer);
+        Preconditions.checkNotNull(resourceContainer, "resourceContainer is null: %s", resourceContainer);
 
         this.mainWindow = mainWindow;
         this.services = services;
@@ -51,8 +48,7 @@ public class AddToResourceContainer implements AddToContainer {
             return services.getOrgUnitService().findById(entry.getObjid());
         }
         catch (final EscidocClientException e) {
-            Preconditions.checkNotNull(mainWindow, "mainWindow is null: %s",
-                mainWindow);
+            Preconditions.checkNotNull(mainWindow, "mainWindow is null: %s", mainWindow);
             ErrorMessage.show(mainWindow, e);
         }
         return null;

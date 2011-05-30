@@ -6,13 +6,11 @@ import com.vaadin.ui.Label;
 
 import de.escidoc.core.resources.adm.LoadExamplesResult.Entry;
 
-final class ShowResultCommandImpl
-    implements LoadExampleResourceViewImpl.ShowResultCommand {
+final class ShowResultCommandImpl implements LoadExampleResourceViewImpl.ShowResultCommand {
 
     private final LoadExampleResourceViewImpl loadExampleResourceViewImpl;
 
-    ShowResultCommandImpl(
-        final LoadExampleResourceViewImpl loadExampleResourceViewImpl,
+    ShowResultCommandImpl(final LoadExampleResourceViewImpl loadExampleResourceViewImpl,
         final AddToContainer addExampleCommand) {
         this.loadExampleResourceViewImpl = loadExampleResourceViewImpl;
     }
@@ -27,7 +25,6 @@ final class ShowResultCommandImpl
     }
 
     private void showLoadedExamplesResult(final Entry entry) {
-        loadExampleResourceViewImpl.getViewLayout().addComponent(
-            new Label(entry.getMessage()));
+        loadExampleResourceViewImpl.getViewLayout().addComponent(new Label(entry.getMessage()));
     }
 }

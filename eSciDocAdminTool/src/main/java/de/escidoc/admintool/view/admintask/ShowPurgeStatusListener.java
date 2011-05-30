@@ -24,23 +24,17 @@ public class ShowPurgeStatusListener implements ClickListener {
 
     private final Label statusLabel;
 
-    public ShowPurgeStatusListener(final AdminService adminService,
-        final Window mainWindow, final Label statusLabel) {
+    public ShowPurgeStatusListener(final AdminService adminService, final Window mainWindow, final Label statusLabel) {
         preconditions(adminService, mainWindow, statusLabel);
         this.adminService = adminService;
         this.mainWindow = mainWindow;
         this.statusLabel = statusLabel;
     }
 
-    private void preconditions(
-        final AdminService adminService, final Window mainWindow,
-        final Label statusLabel) {
-        Preconditions.checkNotNull(adminService, "adminService is null: %s",
-            adminService);
-        Preconditions.checkNotNull(mainWindow, "mainWindow is null: %s",
-            mainWindow);
-        Preconditions.checkNotNull(statusLabel, "adminService is null: %s",
-            statusLabel);
+    private void preconditions(final AdminService adminService, final Window mainWindow, final Label statusLabel) {
+        Preconditions.checkNotNull(adminService, "adminService is null: %s", adminService);
+        Preconditions.checkNotNull(mainWindow, "mainWindow is null: %s", mainWindow);
+        Preconditions.checkNotNull(statusLabel, "adminService is null: %s", statusLabel);
     }
 
     @Override
@@ -65,8 +59,7 @@ public class ShowPurgeStatusListener implements ClickListener {
         catch (final TransportException e) {
             ModalDialog.show(mainWindow, e);
         }
-        return new MessagesStatus(new Result(),
-            MessagesStatus.STATUS_INVALID_RESULT);
+        return new MessagesStatus(new Result(), MessagesStatus.STATUS_INVALID_RESULT);
     }
 
     private String toString(final MessagesStatus messagesStatus) {

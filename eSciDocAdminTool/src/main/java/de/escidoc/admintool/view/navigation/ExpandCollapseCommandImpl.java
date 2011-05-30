@@ -6,17 +6,14 @@ public class ExpandCollapseCommandImpl implements ExpandCollapseCommand {
     private final NavigationTree navigationTree;
 
     public ExpandCollapseCommandImpl(final NavigationTree navigationTree) {
-        Preconditions.checkNotNull(navigationTree,
-            "navigationTree is null: %s", navigationTree);
+        Preconditions.checkNotNull(navigationTree, "navigationTree is null: %s", navigationTree);
         this.navigationTree = navigationTree;
     }
 
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * de.escidoc.admintool.view.navigation.ExpandCollapseCommand#execute(java
-     * .lang.Object)
+     * @see de.escidoc.admintool.view.navigation.ExpandCollapseCommand#execute(java .lang.Object)
      */
     @Override
     public void execute(final Object itemId) {

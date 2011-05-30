@@ -48,12 +48,10 @@ public class ContextReadView extends Form implements ClickListener {
 
     private ContextReadView adminDesriptors() {
         final List<String> adminDescriptorsName = new ArrayList<String>();
-        for (final AdminDescriptor adminDescriptor : context
-            .getAdminDescriptors()) {
+        for (final AdminDescriptor adminDescriptor : context.getAdminDescriptors()) {
             adminDescriptorsName.add(adminDescriptor.getName());
         }
-        verticalLayout.addComponent(new Label(
-            ViewConstants.ADMIN_DESRIPTORS_LABEL));
+        verticalLayout.addComponent(new Label(ViewConstants.ADMIN_DESRIPTORS_LABEL));
         for (final String adminDescName : adminDescriptorsName) {
             verticalLayout.addComponent(new Label(adminDescName));
         }
@@ -65,9 +63,7 @@ public class ContextReadView extends Form implements ClickListener {
         nameAndObjectId = new HorizontalLayout();
         nameAndObjectId.setSpacing(true);
         final FormLayout formLayout = new FormLayout();
-        final Field nameField =
-            new TextField(ViewConstants.NAME_LABEL, context
-                .getProperties().getName());
+        final Field nameField = new TextField(ViewConstants.NAME_LABEL, context.getProperties().getName());
         nameField.setWidth("400px");
         nameField.setReadOnly(true);
         formLayout.addComponent(nameField);
@@ -86,8 +82,7 @@ public class ContextReadView extends Form implements ClickListener {
         final HorizontalLayout description = new HorizontalLayout();
         final FormLayout formLayout = new FormLayout();
         final Field nameField =
-            new TextField(ViewConstants.DESCRIPTION_LABEL, context
-                .getProperties().getDescription());
+            new TextField(ViewConstants.DESCRIPTION_LABEL, context.getProperties().getDescription());
         nameField.setWidth("400px");
         nameField.setReadOnly(true);
         formLayout.addComponent(nameField);
@@ -97,13 +92,11 @@ public class ContextReadView extends Form implements ClickListener {
     }
 
     private ContextReadView orgUnits() {
-        final Label orgUnitLabel =
-            new Label(ViewConstants.ORGANIZATION_UNITS_LABEL);
+        final Label orgUnitLabel = new Label(ViewConstants.ORGANIZATION_UNITS_LABEL);
 
         verticalLayout.addComponent(orgUnitLabel);
 
-        final OrganizationalUnitRefs organizationalUnitRefs =
-            context.getProperties().getOrganizationalUnitRefs();
+        final OrganizationalUnitRefs organizationalUnitRefs = context.getProperties().getOrganizationalUnitRefs();
         for (final Reference resourceRef : organizationalUnitRefs) {
             verticalLayout.addComponent(new Label(resourceRef.getObjid()));
         }
@@ -177,24 +170,19 @@ public class ContextReadView extends Form implements ClickListener {
     public void buttonClick(final ClickEvent event) {
         final Button clickedButton = event.getButton();
         if (clickedButton == edit) {
-            app.getMainWindow().showNotification(
-                "Show edit view: " + context.getProperties().getName());
+            app.getMainWindow().showNotification("Show edit view: " + context.getProperties().getName());
         }
         else if (clickedButton == delete) {
-            app.getMainWindow().showNotification(
-                "Delete? " + context.getProperties().getName());
+            app.getMainWindow().showNotification("Delete? " + context.getProperties().getName());
         }
         else if (clickedButton == open) {
-            app.getMainWindow().showNotification(
-                "Opening... " + context.getProperties().getName());
+            app.getMainWindow().showNotification("Opening... " + context.getProperties().getName());
         }
         else if (clickedButton == close) {
-            app.getMainWindow().showNotification(
-                "Closing... " + context.getProperties().getName());
+            app.getMainWindow().showNotification("Closing... " + context.getProperties().getName());
         }
         else {
-            throw new IllegalArgumentException("Unknown Button "
-                + clickedButton);
+            throw new IllegalArgumentException("Unknown Button " + clickedButton);
         }
     }
 }

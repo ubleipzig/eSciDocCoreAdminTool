@@ -44,13 +44,10 @@ public class AddOrEditParentModalWindow extends Window {
 
     private final OrgUnitSpecificView orgUnitSpecificView;
 
-    public AddOrEditParentModalWindow(
-        final OrgUnitSpecificView orgUnitSpecificView,
-        final ResourceContainer resourceContainer,
-        final OrgUnitServiceLab orgUnitService, final Window mainWindow) {
+    public AddOrEditParentModalWindow(final OrgUnitSpecificView orgUnitSpecificView,
+        final ResourceContainer resourceContainer, final OrgUnitServiceLab orgUnitService, final Window mainWindow) {
 
-        preconditions(orgUnitSpecificView, resourceContainer, orgUnitService,
-            mainWindow);
+        preconditions(orgUnitSpecificView, resourceContainer, orgUnitService, mainWindow);
         this.orgUnitSpecificView = orgUnitSpecificView;
         this.resourceContainer = resourceContainer;
         this.orgUnitService = orgUnitService;
@@ -59,17 +56,12 @@ public class AddOrEditParentModalWindow extends Window {
     }
 
     private void preconditions(
-        final OrgUnitSpecificView orgUnitSpecificView,
-        final ResourceContainer resourceContainer,
+        final OrgUnitSpecificView orgUnitSpecificView, final ResourceContainer resourceContainer,
         final OrgUnitServiceLab orgUnitService, final Window mainWindow) {
-        Preconditions.checkNotNull(orgUnitService,
-            "orgUnitService is null: %s", orgUnitService);
-        Preconditions.checkNotNull(resourceContainer,
-            "resourceContainer is null: %s", resourceContainer);
-        Preconditions.checkNotNull(orgUnitService,
-            "orgUnitService is null: %s", orgUnitService);
-        Preconditions.checkNotNull(mainWindow, "mainWindow is null: %s",
-            mainWindow);
+        Preconditions.checkNotNull(orgUnitService, "orgUnitService is null: %s", orgUnitService);
+        Preconditions.checkNotNull(resourceContainer, "resourceContainer is null: %s", resourceContainer);
+        Preconditions.checkNotNull(orgUnitService, "orgUnitService is null: %s", orgUnitService);
+        Preconditions.checkNotNull(mainWindow, "mainWindow is null: %s", mainWindow);
     }
 
     private void init() {
@@ -101,22 +93,18 @@ public class AddOrEditParentModalWindow extends Window {
     private ResourceTreeView createResourceTreeView() {
         final ResourceTreeView resourceTreeView =
             new ResourceTreeView(getMainWindow(), new FolderHeaderImpl(
-                ViewConstants.SELECT_A_PARENT_ORGANIZATIONAL_UNIT),
-                resourceContainer);
-        resourceTreeView.setCommand(new AddChildrenCommandImpl(orgUnitService,
-            resourceContainer));
+                ViewConstants.SELECT_A_PARENT_ORGANIZATIONAL_UNIT), resourceContainer);
+        resourceTreeView.setCommand(new AddChildrenCommandImpl(orgUnitService, resourceContainer));
         resourceTreeView.addResourceNodeExpandListener();
 
-        final ResourceSelectedListener selectedListener =
-            new ResourceSelectedListener(this);
+        final ResourceSelectedListener selectedListener = new ResourceSelectedListener(this);
 
         resourceTreeView.addListener(selectedListener);
         return resourceTreeView;
     }
 
     public void addAddParentOkLisner() {
-        addParentOkListener =
-            new AddParentOkListener(this, orgUnitService, orgUnitSpecificView);
+        addParentOkListener = new AddParentOkListener(this, orgUnitService, orgUnitSpecificView);
         addParentOkListener.setMainWindow(mainWindow);
         okButton.removeListener(updateParentListener);
         okButton.addListener(addParentOkListener);

@@ -10,14 +10,11 @@ final class UpdateParentListener extends AbstractAddOrChangeParentListener {
 
     protected static final long serialVersionUID = 7022982222058387053L;
 
-    public UpdateParentListener(
-        final AddOrEditParentModalWindow addOrEditParentModalWindow,
+    public UpdateParentListener(final AddOrEditParentModalWindow addOrEditParentModalWindow,
         final OrgUnitServiceLab orgUnitService) {
 
-        Preconditions.checkNotNull(addOrEditParentModalWindow,
-            "modalWindow is null: %s", addOrEditParentModalWindow);
-        Preconditions.checkNotNull(orgUnitService,
-            "orgUnitService is null: %s", orgUnitService);
+        Preconditions.checkNotNull(addOrEditParentModalWindow, "modalWindow is null: %s", addOrEditParentModalWindow);
+        Preconditions.checkNotNull(orgUnitService, "orgUnitService is null: %s", orgUnitService);
 
         super.addOrEditParentModalWindow = addOrEditParentModalWindow;
         super.orgUnitService = orgUnitService;

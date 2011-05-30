@@ -25,9 +25,8 @@ final class AddOrgUnitsToTable implements ClickListener {
 
     private final Table orgUnitTable;
 
-    public AddOrgUnitsToTable(final Window mainWindow,
-        final Window modalWindow, final ResourceTreeView resourceTreeView,
-        final Table orgUnitTable) {
+    public AddOrgUnitsToTable(final Window mainWindow, final Window modalWindow,
+        final ResourceTreeView resourceTreeView, final Table orgUnitTable) {
         this.mainWindow = mainWindow;
         this.modalWindow = modalWindow;
         this.resourceTreeView = resourceTreeView;
@@ -57,8 +56,7 @@ final class AddOrgUnitsToTable implements ClickListener {
             }
         }
         else if (selected instanceof OrganizationalUnit) {
-            final OrganizationalUnit selectedOrgUnit =
-                (OrganizationalUnit) selected;
+            final OrganizationalUnit selectedOrgUnit = (OrganizationalUnit) selected;
             tryAddToList(selectedOrgUnit);
 
         }
@@ -84,8 +82,7 @@ final class AddOrgUnitsToTable implements ClickListener {
                 stringBuilder.append(xLinkTitle).append(", ");
             }
             stringBuilder.append(" is not in status opened.");
-            ModalDialog.showMessage(mainWindow,
-                "Can only add organizational unit in status open. ",
+            ModalDialog.showMessage(mainWindow, "Can only add organizational unit in status open. ",
                 stringBuilder.toString());
 
         }
@@ -96,13 +93,10 @@ final class AddOrgUnitsToTable implements ClickListener {
     }
 
     private boolean isOpen(final OrganizationalUnit selectedOrgUnit) {
-        return "opened".equalsIgnoreCase(selectedOrgUnit
-            .getProperties().getPublicStatus());
+        return "opened".equalsIgnoreCase(selectedOrgUnit.getProperties().getPublicStatus());
     }
 
-    private ResourceRefDisplay toResourceRefDesplay(
-        final OrganizationalUnit selectedOrgUnit) {
-        return new ResourceRefDisplay(selectedOrgUnit.getObjid(),
-            selectedOrgUnit.getProperties().getName());
+    private ResourceRefDisplay toResourceRefDesplay(final OrganizationalUnit selectedOrgUnit) {
+        return new ResourceRefDisplay(selectedOrgUnit.getObjid(), selectedOrgUnit.getProperties().getName());
     }
 }

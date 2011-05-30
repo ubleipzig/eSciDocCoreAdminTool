@@ -2,8 +2,7 @@ package de.escidoc.admintool.view.admintask;
 
 public enum ResourceType {
 
-    ITEM("Item"), CONTAINER("Container"), CONTEXT("Context"), ORGANIZATIONAL_UNIT(
-        "Organizational Unit");
+    ITEM("Item"), CONTAINER("Container"), CONTEXT("Context"), ORGANIZATIONAL_UNIT("Organizational Unit");
 
     private String label;
 

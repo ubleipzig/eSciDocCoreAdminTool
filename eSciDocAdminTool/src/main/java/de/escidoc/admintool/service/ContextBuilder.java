@@ -32,8 +32,7 @@ public class ContextBuilder {
         return this;
     }
 
-    public ContextBuilder adminDescriptors(
-        final AdminDescriptors newAdminDescriptors) {
+    public ContextBuilder adminDescriptors(final AdminDescriptors newAdminDescriptors) {
         if (isNotSet(newAdminDescriptors)) {
             return this;
         }

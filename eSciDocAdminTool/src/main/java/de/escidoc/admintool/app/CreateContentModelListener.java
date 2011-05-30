@@ -37,18 +37,12 @@ public class CreateContentModelListener implements ResourceBtnListener {
 
     private final ContentModelContainer contentModelContainer;
 
-    public CreateContentModelListener(final Collection<Field> allFields,
-        final ResourceService contentModelService,
-        final Map<String, Field> fieldByName, final Window mainWindow,
-        final ContentModelContainer contentModelContainer) {
-        Preconditions.checkNotNull(mainWindow, "mainWindow is null: %s",
-            mainWindow);
-        Preconditions.checkNotNull(fieldByName, "fieldByName is null: %s",
-            fieldByName);
-        Preconditions.checkNotNull(contentModelService,
-            "contentModelService is null: %s", contentModelService);
-        Preconditions.checkNotNull(allFields, "allFields is null: %s",
-            allFields);
+    public CreateContentModelListener(final Collection<Field> allFields, final ResourceService contentModelService,
+        final Map<String, Field> fieldByName, final Window mainWindow, final ContentModelContainer contentModelContainer) {
+        Preconditions.checkNotNull(mainWindow, "mainWindow is null: %s", mainWindow);
+        Preconditions.checkNotNull(fieldByName, "fieldByName is null: %s", fieldByName);
+        Preconditions.checkNotNull(contentModelService, "contentModelService is null: %s", contentModelService);
+        Preconditions.checkNotNull(allFields, "allFields is null: %s", allFields);
 
         this.mainWindow = mainWindow;
         this.contentModelService = contentModelService;
@@ -75,9 +69,8 @@ public class CreateContentModelListener implements ResourceBtnListener {
         try {
             final Resource created = contentModelService.create(build);
             if (created != null && created.getObjid() != null) {
-                ModalDialog.showMessage(mainWindow, ViewConstants.EMPTY_STRING,
-                    "A new Content Model with the ID " + created.getObjid()
-                        + " is created.");
+                ModalDialog.showMessage(mainWindow, ViewConstants.EMPTY_STRING, "A new Content Model with the ID "
+                    + created.getObjid() + " is created.");
             }
 
             return created != null && created.getObjid() != null;
@@ -90,9 +83,7 @@ public class CreateContentModelListener implements ResourceBtnListener {
     }
 
     private void createModel() {
-        build =
-            new ContentModelBuilder(getTitle())
-                .description(getDescription()).build();
+        build = new ContentModelBuilder(getTitle()).description(getDescription()).build();
     }
 
     private String getDescription() {
@@ -109,8 +100,7 @@ public class CreateContentModelListener implements ResourceBtnListener {
                 field.validate();
             }
             catch (final Exception e) {
-                ((AbstractComponent) field).setComponentError(new UserError(
-                    field.getCaption() + " is required"));
+                ((AbstractComponent) field).setComponentError(new UserError(field.getCaption() + " is required"));
                 return false;
             }
         }

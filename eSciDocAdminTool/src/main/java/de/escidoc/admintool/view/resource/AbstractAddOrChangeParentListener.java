@@ -13,8 +13,7 @@ import de.escidoc.core.resources.oum.OrganizationalUnit;
 import de.escidoc.core.resources.oum.Parent;
 import de.escidoc.core.resources.oum.Parents;
 
-public abstract class AbstractAddOrChangeParentListener
-    implements AddOrChangeParentListener {
+public abstract class AbstractAddOrChangeParentListener implements AddOrChangeParentListener {
 
     private static final long serialVersionUID = 7249780023759749046L;
 
@@ -72,30 +71,24 @@ public abstract class AbstractAddOrChangeParentListener
             getParentProperty().setValue(new ResourceRefDisplay());
         }
         else {
-            getParentProperty().setValue(
-                new ResourceRefDisplay(parent.getObjid(), parent
-                    .getXLinkTitle()));
+            getParentProperty().setValue(new ResourceRefDisplay(parent.getObjid(), parent.getXLinkTitle()));
         }
 
-        final Item updateItem =
-            resourceContainer.getContainer().getItem(selectedOrgUnit);
+        final Item updateItem = resourceContainer.getContainer().getItem(selectedOrgUnit);
 
-        final Property itemProperty =
-            updateItem.getItemProperty(PropertyId.PARENTS);
+        final Property itemProperty = updateItem.getItemProperty(PropertyId.PARENTS);
         itemProperty.setValue(newParents);
     }
 
     protected void updatePersistence() throws EscidocClientException {
-        newParents =
-            orgUnitService.updateParent(getChildId(), getSelectedParentId());
+        newParents = orgUnitService.updateParent(getChildId(), getSelectedParentId());
     }
 
     protected void updateResourceContainer() throws EscidocClientException {
         resourceContainer.updateParent(selectedOrgUnit, selectedParent);
     }
 
-    protected OrganizationalUnit getSelectedParent()
-        throws EscidocClientException {
+    protected OrganizationalUnit getSelectedParent() throws EscidocClientException {
         return orgUnitService.findById(getSelectedParentId());
     }
 
@@ -110,12 +103,10 @@ public abstract class AbstractAddOrChangeParentListener
 
     protected void checkPostConditions(final OrganizationalUnit child) {
         final Item updateItem = getItemFor(child);
-        Preconditions.checkNotNull(updateItem, "updateItem is null: %s",
-            updateItem);
+        Preconditions.checkNotNull(updateItem, "updateItem is null: %s", updateItem);
 
         final Property parentProperty = getParentProperty(updateItem);
-        Preconditions.checkNotNull(parentProperty, "itemProperty is null: %s",
-            parentProperty);
+        Preconditions.checkNotNull(parentProperty, "itemProperty is null: %s", parentProperty);
 
         final Object value = parentProperty.getValue();
         if (value instanceof Parents) {
@@ -123,15 +114,12 @@ public abstract class AbstractAddOrChangeParentListener
 
             Preconditions.checkNotNull(parents, "parents is null: %s", parents);
 
-            Preconditions.checkArgument(parents.size() <= 1,
-                "Org unit has more than one parent.", parents.size());
+            Preconditions.checkArgument(parents.size() <= 1, "Org unit has more than one parent.", parents.size());
 
-            Preconditions.checkArgument(parents.size() == 1,
-                "Parent in Item is not updated", parents.size());
+            Preconditions.checkArgument(parents.size() == 1, "Parent in Item is not updated", parents.size());
         }
         else {
-            throw new IllegalArgumentException(
-                "The value of ParentProperty is not instance of Parents");
+            throw new IllegalArgumentException("The value of ParentProperty is not instance of Parents");
         }
     }
 

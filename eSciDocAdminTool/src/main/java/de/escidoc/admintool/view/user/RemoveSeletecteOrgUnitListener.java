@@ -23,14 +23,12 @@ final class RemoveSeletecteOrgUnitListener implements ClickListener {
     @Override
     public void buttonClick(final ClickEvent event) {
 
-        for (final ResourceRefDisplay toBeRemoved : this.userAddView.orgUnitWidget
-            .getSelectedOrgUnits()) {
+        for (final ResourceRefDisplay toBeRemoved : this.userAddView.orgUnitWidget.getSelectedOrgUnits()) {
             removeFromTable(toBeRemoved);
         }
     }
 
     private boolean removeFromTable(final ResourceRefDisplay toBeRemoved) {
-        return this.userAddView.orgUnitWidget
-            .getTable().removeItem(toBeRemoved);
+        return this.userAddView.orgUnitWidget.getTable().removeItem(toBeRemoved);
     }
 }

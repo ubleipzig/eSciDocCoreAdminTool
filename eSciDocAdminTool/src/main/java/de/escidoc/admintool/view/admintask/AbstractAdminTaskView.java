@@ -22,12 +22,10 @@ public abstract class AbstractAdminTaskView extends CustomComponent {
 
     final CssLayout cssLayout = new CssLayout();
 
-    public AbstractAdminTaskView(final ServiceContainer services,
-        final Window mainWindow) {
+    public AbstractAdminTaskView(final ServiceContainer services, final Window mainWindow) {
 
         Preconditions.checkNotNull(services, "services is null: %s", services);
-        Preconditions.checkNotNull(mainWindow, "mainWindow is null: %s",
-            mainWindow);
+        Preconditions.checkNotNull(mainWindow, "mainWindow is null: %s", mainWindow);
 
         this.services = services;
         this.mainWindow = mainWindow;

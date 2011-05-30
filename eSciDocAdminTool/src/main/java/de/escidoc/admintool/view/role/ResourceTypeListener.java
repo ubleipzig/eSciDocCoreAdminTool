@@ -35,8 +35,8 @@ class ResourceTypeListener implements ValueChangeListener {
             onSelectedResourceType(event);
         }
         catch (final NotImplementedException e) {
-            roleView.mainWindow.addWindow(new ErrorDialog(roleView.mainWindow,
-                ViewConstants.ERROR_DIALOG_CAPTION, e.getMessage()));
+            roleView.mainWindow.addWindow(new ErrorDialog(roleView.mainWindow, ViewConstants.ERROR_DIALOG_CAPTION, e
+                .getMessage()));
         }
     }
 
@@ -58,15 +58,12 @@ class ResourceTypeListener implements ValueChangeListener {
                     break;
                 default: {
                     clearResourceContainer();
-                    throw new NotImplementedException("Scoping for " + type
-                        + " is not yet implemented");
+                    throw new NotImplementedException("Scoping for " + type + " is not yet implemented");
                 }
             }
-            final Iterator<Component> it =
-                roleView.resourceContainer.getComponentIterator();
+            final Iterator<Component> it = roleView.resourceContainer.getComponentIterator();
             if (it.hasNext()) {
-                roleView.resourceContainer.replaceComponent(it.next(),
-                    newComponent);
+                roleView.resourceContainer.replaceComponent(it.next(), newComponent);
             }
             else {
                 roleView.resourceContainer.addComponent(newComponent);
@@ -78,8 +75,7 @@ class ResourceTypeListener implements ValueChangeListener {
         final Set<Resource> organizationalUnits = getAllOrganizationalUnits();
         if (isNotEmpty(organizationalUnits)) {
             final POJOContainer<Resource> container =
-                new POJOContainer<Resource>(
-                    (Collection<Resource>) organizationalUnits, PropertyId.NAME);
+                new POJOContainer<Resource>((Collection<Resource>) organizationalUnits, PropertyId.NAME);
             roleView.resouceResult.setContainerDataSource(container);
             roleView.resouceResult.setItemCaptionPropertyId(PropertyId.NAME);
         }
@@ -93,14 +89,13 @@ class ResourceTypeListener implements ValueChangeListener {
     private Set<Resource> getAllOrganizationalUnits() {
 
         try {
-            final Set<Resource> all =
-                roleView.serviceContainer.getOrgUnitService().findAll();
+            final Set<Resource> all = roleView.serviceContainer.getOrgUnitService().findAll();
             return all;
 
         }
         catch (final EscidocClientException e) {
-            roleView.mainWindow.addWindow(new ErrorDialog(roleView.mainWindow,
-                ViewConstants.ERROR_DIALOG_CAPTION, e.getMessage()));
+            roleView.mainWindow.addWindow(new ErrorDialog(roleView.mainWindow, ViewConstants.ERROR_DIALOG_CAPTION, e
+                .getMessage()));
         }
         return Collections.emptySet();
     }
@@ -121,8 +116,8 @@ class ResourceTypeListener implements ValueChangeListener {
             return roleView.serviceContainer.getContextService().findAll();
         }
         catch (final EscidocClientException e) {
-            roleView.mainWindow.addWindow(new ErrorDialog(roleView.mainWindow,
-                ViewConstants.ERROR_DIALOG_CAPTION, e.getMessage()));
+            roleView.mainWindow.addWindow(new ErrorDialog(roleView.mainWindow, ViewConstants.ERROR_DIALOG_CAPTION, e
+                .getMessage()));
         }
         return Collections.emptySet();
 

@@ -13,8 +13,7 @@ public class ParamaterHandlerImpl implements ParameterHandler {
 
     private static final long serialVersionUID = 6392830954652643671L;
 
-    private static final Logger LOG = LoggerFactory
-        .getLogger(ParamaterHandlerImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ParamaterHandlerImpl.class);
 
     private final AdminToolApplication app;
 
@@ -49,9 +48,7 @@ public class ParamaterHandlerImpl implements ParameterHandler {
     }
 
     private void showMainView(final Map<String, String[]> parameters) {
-        app
-            .loadProtectedResources(paramDecoder
-                .parseAndDecodeToken(parameters));
+        app.loadProtectedResources(paramDecoder.parseAndDecodeToken(parameters));
     }
 
     protected void showLoginView() {
