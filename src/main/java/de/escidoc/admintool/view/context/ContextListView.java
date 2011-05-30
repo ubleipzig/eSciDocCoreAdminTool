@@ -34,7 +34,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Preconditions;
-import com.jensjansson.pagedtable.PagedTable;
 import com.vaadin.data.util.POJOContainer;
 import com.vaadin.data.util.POJOItem;
 import com.vaadin.ui.Table;
@@ -43,6 +42,7 @@ import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.app.AppConstants;
 import de.escidoc.admintool.app.PropertyId;
 import de.escidoc.admintool.service.internal.ContextService;
+import de.escidoc.admintool.view.EscidocPagedTable;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.admintool.view.context.listener.ContextSelectListener;
 import de.escidoc.admintool.view.util.dialog.ErrorDialog;
@@ -53,7 +53,7 @@ import de.escidoc.core.client.exceptions.TransportException;
 import de.escidoc.core.resources.om.context.Context;
 
 @SuppressWarnings("serial")
-public class ContextListView extends PagedTable {
+public class ContextListView extends EscidocPagedTable {
 
     private final Logger LOG = LoggerFactory.getLogger(ContextListView.class);
 

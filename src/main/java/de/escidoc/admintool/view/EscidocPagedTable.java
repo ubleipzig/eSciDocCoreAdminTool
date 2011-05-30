@@ -31,7 +31,6 @@ package de.escidoc.admintool.view;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.jensjansson.pagedtable.PagedTable;
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
@@ -42,10 +41,11 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.themes.Reindeer;
 
-public class EscidocPagedTable extends PagedTable {
+public class EscidocPagedTable extends Table {
 
     interface PageChangeListener {
         public void pageChanged(PagedTableChangeEvent event);
@@ -53,13 +53,13 @@ public class EscidocPagedTable extends PagedTable {
 
     public class PagedTableChangeEvent {
 
-        final PagedTable table;
+        final EscidocPagedTable table;
 
-        public PagedTableChangeEvent(final PagedTable table) {
-            this.table = table;
+        public PagedTableChangeEvent(final EscidocPagedTable escidocPagedTable) {
+            table = escidocPagedTable;
         }
 
-        public PagedTable getTable() {
+        public EscidocPagedTable getTable() {
             return table;
         }
 
@@ -90,11 +90,10 @@ public class EscidocPagedTable extends PagedTable {
 
     public EscidocPagedTable(final String caption) {
         super(caption);
-        setPageLength(25);
+        setPageLength(50);
         addStyleName("pagedtable");
     }
 
-    @Override
     public HorizontalLayout createControls() {
         final Label itemsPerPageLabel = new Label("Items per page:");
         final Label pageLabel = new Label("Page:&nbsp;", Label.CONTENT_XHTML);
@@ -302,17 +301,14 @@ public class EscidocPagedTable extends PagedTable {
         }
     }
 
-    @Override
     public void nextPage() {
         setPageFirstIndex(index + getPageLength());
     }
 
-    @Override
     public void previousPage() {
         setPageFirstIndex(index - getPageLength());
     }
 
-    @Override
     public int getCurrentPage() {
         final double pageLength = getPageLength();
         int page = (int) Math.floor(index / pageLength) + 1;
@@ -322,7 +318,6 @@ public class EscidocPagedTable extends PagedTable {
         return page;
     }
 
-    @Override
     public void setCurrentPage(final int page) {
         int newIndex = (page - 1) * getPageLength();
         if (newIndex < 0) {
@@ -333,7 +328,6 @@ public class EscidocPagedTable extends PagedTable {
         }
     }
 
-    @Override
     public int getTotalAmountOfPages() {
         final int size = realContainer.size();
         final double pageLength = getPageLength();
@@ -369,7 +363,6 @@ public class EscidocPagedTable extends PagedTable {
         setPageFirstIndex(index);
     }
 
-    @Override
     public void setAlwaysRecalculateColumnWidths(final boolean alwaysRecalculateColumnWidths) {
         this.alwaysRecalculateColumnWidths = alwaysRecalculateColumnWidths;
     }
