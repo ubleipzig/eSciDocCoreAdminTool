@@ -75,6 +75,7 @@ import de.escidoc.admintool.app.AppConstants;
 import de.escidoc.admintool.app.PropertyId;
 import de.escidoc.admintool.domain.PdpRequest;
 import de.escidoc.admintool.domain.PublicStatus;
+import de.escidoc.admintool.exception.ResourceNotFoundException;
 import de.escidoc.admintool.service.internal.ContextService;
 import de.escidoc.admintool.service.internal.OrgUnitService;
 import de.escidoc.admintool.view.ViewConstants;
@@ -571,10 +572,34 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
 
         for (final OrganizationalUnitRef resourceRef : refs) {
             final ResourceRefDisplay resourceRefDisplay =
-                new ResourceRefDisplay(resourceRef.getObjid(), resourceRef.getXLinkTitle());
+                new ResourceRefDisplay(resourceRef.getObjid(), findOrgUnitTitle(resourceRef));
             orgUnitList.addItem(resourceRefDisplay);
         }
         addOrgUnitToTheList.using(orgUnitList);
+    }
+
+    private String findOrgUnitTitle(final OrganizationalUnitRef resourceRef) {
+        try {
+            return orgUnitService.findOrgUnitTitleById(resourceRef.getObjid());
+        }
+        catch (final ResourceNotFoundException e) {
+            LOG.error("root cause: " + ExceptionUtils.getRootCauseMessage(e), e);
+            mainWindow.addWindow(new ErrorDialog(mainWindow, ViewConstants.ERROR,
+                "Organizational Unit does not exist anymore." + e.getMessage()));
+        }
+        catch (final EscidocException e) {
+            LOG.error("root cause: " + ExceptionUtils.getRootCauseMessage(e), e);
+            mainWindow.addWindow(new ErrorDialog(mainWindow, ViewConstants.ERROR, e.getMessage()));
+        }
+        catch (final InternalClientException e) {
+            LOG.error("root cause: " + ExceptionUtils.getRootCauseMessage(e), e);
+            mainWindow.addWindow(new ErrorDialog(mainWindow, ViewConstants.ERROR, e.getMessage()));
+        }
+        catch (final TransportException e) {
+            LOG.error("root cause: " + ExceptionUtils.getRootCauseMessage(e), e);
+            mainWindow.addWindow(new ErrorDialog(mainWindow, ViewConstants.ERROR, e.getMessage()));
+        }
+        return "Organization does exist, please remove.";
     }
 
     private void bindDescription() {
