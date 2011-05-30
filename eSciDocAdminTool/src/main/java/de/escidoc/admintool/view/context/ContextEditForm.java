@@ -366,11 +366,14 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
                 final AdminDescriptors adminDescriptors = enteredAdminDescriptors();
                 final OrganizationalUnitRefs selectedOrgUnitRefs = getEnteredOrgUnitRefs();
 
-                contextService.update((String) objIdField.getValue(), (String) nameField.getValue(),
-                    (String) descriptionField.getValue(), (String) typeField.getValue(), selectedOrgUnitRefs,
-                    adminDescriptors);
+                final Context updated =
+                    contextService.update((String) objIdField.getValue(), (String) nameField.getValue(),
+                        (String) descriptionField.getValue(), (String) typeField.getValue(), selectedOrgUnitRefs,
+                        adminDescriptors);
 
                 nameField.commit();
+                contextList.updateContext(getContextFromCache(), updated);
+
                 removeAllErrorMessages();
                 showMessage();
             }
