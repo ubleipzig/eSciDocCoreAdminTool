@@ -70,8 +70,7 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
 
     private static final long serialVersionUID = 249276128897788486L;
 
-    private static final Logger LOG = LoggerFactory
-        .getLogger(ContextEditForm.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ContextEditForm.class);
 
     private static final int LABEL_WIDTH = 111;
 
@@ -99,24 +98,19 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
 
     private ListSelect orgUnitList;
 
-    private final Button saveButton =
-        new Button(ViewConstants.SAVE_LABEL, this);
+    private final Button saveButton = new Button(ViewConstants.SAVE_LABEL, this);
 
-    private final Button cancelButton = new Button(ViewConstants.CANCEL_LABEL,
-        this);
+    private final Button cancelButton = new Button(ViewConstants.CANCEL_LABEL, this);
 
-    private final Button addAdminDescButton = new Button(
-        ViewConstants.ADD_LABEL);
+    private final Button addAdminDescButton = new Button(ViewConstants.ADD_LABEL);
 
-    private final Button editAdminDescButton = new Button(
-        ViewConstants.EDIT_LABEL);
+    private final Button editAdminDescButton = new Button(ViewConstants.EDIT_LABEL);
 
     private final Button delAdminDescButton = new Button(ViewConstants.DELETE);
 
     private final Button addOrgUnitButton = new Button(ViewConstants.ADD_LABEL);
 
-    private final Button removeOrgUnitButton = new Button(
-        ViewConstants.REMOVE_LABEL);
+    private final Button removeOrgUnitButton = new Button(ViewConstants.REMOVE_LABEL);
 
     private final AdminToolApplication app;
 
@@ -148,14 +142,11 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
 
     private LinkClickListener creatorLinkListener;
 
-    public ContextEditForm(final AdminToolApplication app,
-        final Window mainWindow, final ContextService contextService,
-        final OrgUnitService orgUnitService,
-        final AddOrgUnitToTheList addOrgUnitToTheList,
-        final PdpRequest pdpRequest) {
+    public ContextEditForm(final AdminToolApplication app, final Window mainWindow,
+        final ContextService contextService, final OrgUnitService orgUnitService,
+        final AddOrgUnitToTheList addOrgUnitToTheList, final PdpRequest pdpRequest) {
 
-        checkPreconditions(app, mainWindow, contextService, orgUnitService,
-            addOrgUnitToTheList, pdpRequest);
+        checkPreconditions(app, mainWindow, contextService, orgUnitService, addOrgUnitToTheList, pdpRequest);
         this.app = app;
         this.mainWindow = mainWindow;
         this.contextService = contextService;
@@ -165,21 +156,13 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
     }
 
     private void checkPreconditions(
-        final AdminToolApplication app, final Window mainWindow,
-        final ContextService contextService,
-        final OrgUnitService orgUnitService,
-        final AddOrgUnitToTheList addOrgUnitToTheList,
-        final PdpRequest pdpRequest) {
-        Preconditions.checkNotNull(mainWindow,
-            "mainWindow can not be null: %s", mainWindow);
-        Preconditions
-            .checkNotNull(app, "AdminToolApplication can not be null.");
-        Preconditions.checkNotNull(contextService,
-            "ContextService can not be null.");
-        Preconditions.checkNotNull(orgUnitService,
-            "OrgUnitService can not be null.");
-        Preconditions.checkNotNull(addOrgUnitToTheList,
-            "addOrgUnitToTheList can not be null.");
+        final AdminToolApplication app, final Window mainWindow, final ContextService contextService,
+        final OrgUnitService orgUnitService, final AddOrgUnitToTheList addOrgUnitToTheList, final PdpRequest pdpRequest) {
+        Preconditions.checkNotNull(mainWindow, "mainWindow can not be null: %s", mainWindow);
+        Preconditions.checkNotNull(app, "AdminToolApplication can not be null.");
+        Preconditions.checkNotNull(contextService, "ContextService can not be null.");
+        Preconditions.checkNotNull(orgUnitService, "OrgUnitService can not be null.");
+        Preconditions.checkNotNull(addOrgUnitToTheList, "addOrgUnitToTheList can not be null.");
         Preconditions.checkNotNull(pdpRequest, "pdpRequest can not be null.");
     }
 
@@ -238,19 +221,16 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
     private void addType() {
         typeField.setWidth(ViewConstants.FIELD_WIDTH);
         fields.add(typeField);
-        form.addComponent(LayoutHelper.create("Type", typeField, LABEL_WIDTH,
-            false));
+        form.addComponent(LayoutHelper.create("Type", typeField, LABEL_WIDTH, false));
     }
 
     private void addStatus() {
-        form.addComponent(LayoutHelper.create("Status", status, LABEL_WIDTH,
-            false));
+        form.addComponent(LayoutHelper.create("Status", status, LABEL_WIDTH, false));
     }
 
     private void addCreated() {
         createCreatedByLink();
-        form.addComponent(LayoutHelper.create("Created", "by", createdOn,
-            createdByLink, LABEL_WIDTH, HEIGHT, false));
+        form.addComponent(LayoutHelper.create("Created", "by", createdOn, createdByLink, LABEL_WIDTH, HEIGHT, false));
     }
 
     private void createCreatedByLink() {
@@ -262,8 +242,8 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
 
     private void addModified() {
         createModifiedByLink();
-        form.addComponent(LayoutHelper.create("Modified", "by", modifiedOn,
-            modifiedByLink, LABEL_WIDTH, HEIGHT, false));
+        form
+            .addComponent(LayoutHelper.create("Modified", "by", modifiedOn, modifiedByLink, LABEL_WIDTH, HEIGHT, false));
     }
 
     private void createModifiedByLink() {
@@ -274,13 +254,11 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
     }
 
     private boolean isRetrieveUserPermitted(final String userId) {
-        return pdpRequest.isPermitted(ActionIdConstants.RETRIEVE_USER_ACCOUNT,
-            userId);
+        return pdpRequest.isPermitted(ActionIdConstants.RETRIEVE_USER_ACCOUNT, userId);
     }
 
     private void addObjectId() {
-        form.addComponent(LayoutHelper.create(ViewConstants.OBJECT_ID_LABEL,
-            objIdField, LABEL_WIDTH, false));
+        form.addComponent(LayoutHelper.create(ViewConstants.OBJECT_ID_LABEL, objIdField, LABEL_WIDTH, false));
     }
 
     private void addOrgUnit() {
@@ -303,9 +281,8 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
         addOrgUnitButtonListeners();
 
         final VerticalLayout orgUnitEditor =
-            LayoutHelper.create(ViewConstants.ORGANIZATION_UNITS_LABEL,
-                orgUnitList, LABEL_WIDTH, 90, true, new Button[] {
-                    addOrgUnitButton, removeOrgUnitButton });
+            LayoutHelper.create(ViewConstants.ORGANIZATION_UNITS_LABEL, orgUnitList, LABEL_WIDTH, 90, true,
+                new Button[] { addOrgUnitButton, removeOrgUnitButton });
         form.addComponent(orgUnitEditor);
     }
 
@@ -323,16 +300,12 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
         editAdminDescButton.setStyleName(AppConstants.SMALL_BUTTON);
         delAdminDescButton.setStyleName(AppConstants.SMALL_BUTTON);
 
-        addAdminDescButton.addListener(new NewAdminDescriptorListener(
-            mainWindow, adminDescriptorAccordion));
-        editAdminDescButton.addListener(new EditAdminDescriptorListener(
-            mainWindow, adminDescriptorAccordion));
-        delAdminDescButton.addListener(new RemoveAdminDescriptorListener(
-            adminDescriptorAccordion));
+        addAdminDescButton.addListener(new NewAdminDescriptorListener(mainWindow, adminDescriptorAccordion));
+        editAdminDescButton.addListener(new EditAdminDescriptorListener(mainWindow, adminDescriptorAccordion));
+        delAdminDescButton.addListener(new RemoveAdminDescriptorListener(adminDescriptorAccordion));
 
-        form.addComponent(LayoutHelper.create("Admin Descriptors",
-            accordionPanel, LABEL_WIDTH, 300, false, new Button[] {
-                addAdminDescButton, editAdminDescButton, delAdminDescButton }));
+        form.addComponent(LayoutHelper.create("Admin Descriptors", accordionPanel, LABEL_WIDTH, 300, false,
+            new Button[] { addAdminDescButton, editAdminDescButton, delAdminDescButton }));
     }
 
     private void addDescField() {
@@ -340,16 +313,15 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
         descriptionField.setRows(3);
         descriptionField.setMaxLength(ViewConstants.MAX_DESC_LENGTH);
         fields.add(descriptionField);
-        form.addComponent(LayoutHelper.create(ViewConstants.DESCRIPTION_LABEL,
-            descriptionField, LABEL_WIDTH, 80, true));
+        form
+            .addComponent(LayoutHelper.create(ViewConstants.DESCRIPTION_LABEL, descriptionField, LABEL_WIDTH, 80, true));
     }
 
     private void addNameField() {
         nameField.setWidth(ViewConstants.FIELD_WIDTH);
         nameField.setWriteThrough(false);
         nameField.setMaxLength(ViewConstants.MAX_TITLE_LENGTH);
-        form.addComponent(LayoutHelper.create(ViewConstants.NAME_LABEL,
-            nameField, LABEL_WIDTH, true));
+        form.addComponent(LayoutHelper.create(ViewConstants.NAME_LABEL, nameField, LABEL_WIDTH, true));
     }
 
     private void setButtonsStyleToSmall() {
@@ -372,8 +344,7 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
             discard();
         }
         else {
-            throw new IllegalArgumentException("Unknown Button "
-                + clickedButton);
+            throw new IllegalArgumentException("Unknown Button " + clickedButton);
         }
     }
 
@@ -385,29 +356,18 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
 
     private void save() {
         boolean valid = true;
-        valid =
-            EmptyFieldValidator.isValid(nameField, "Name can not be empty.");
-        valid &=
-            EmptyFieldValidator.isValid(descriptionField,
-                "Description can not be empty.");
-        valid &=
-            EmptyFieldValidator.isValid(typeField, ViewConstants.TYPE_LABEL
-                + " can not be empty.");
-        valid &=
-            EmptyFieldValidator.isValid(orgUnitList,
-                ViewConstants.ORGANIZATION_UNITS_LABEL + " can not be empty");
+        valid = EmptyFieldValidator.isValid(nameField, "Name can not be empty.");
+        valid &= EmptyFieldValidator.isValid(descriptionField, "Description can not be empty.");
+        valid &= EmptyFieldValidator.isValid(typeField, ViewConstants.TYPE_LABEL + " can not be empty.");
+        valid &= EmptyFieldValidator.isValid(orgUnitList, ViewConstants.ORGANIZATION_UNITS_LABEL + " can not be empty");
 
         if (valid) {
             try {
-                final AdminDescriptors adminDescriptors =
-                    enteredAdminDescriptors();
-                final OrganizationalUnitRefs selectedOrgUnitRefs =
-                    getEnteredOrgUnitRefs();
+                final AdminDescriptors adminDescriptors = enteredAdminDescriptors();
+                final OrganizationalUnitRefs selectedOrgUnitRefs = getEnteredOrgUnitRefs();
 
-                contextService.update((String) objIdField.getValue(),
-                    (String) nameField.getValue(),
-                    (String) descriptionField.getValue(),
-                    (String) typeField.getValue(), selectedOrgUnitRefs,
+                contextService.update((String) objIdField.getValue(), (String) nameField.getValue(),
+                    (String) descriptionField.getValue(), (String) typeField.getValue(), selectedOrgUnitRefs,
                     adminDescriptors);
 
                 nameField.commit();
@@ -415,11 +375,9 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
                 showMessage();
             }
             catch (final EscidocClientException e) {
-                LOG.error(
-                    "root cause: " + ExceptionUtils.getRootCauseMessage(e), e);
-                mainWindow
-                    .addWindow(new ErrorDialog(mainWindow, ViewConstants.ERROR,
-                        ExceptionUtils.getRootCauseMessage(e)));
+                LOG.error("root cause: " + ExceptionUtils.getRootCauseMessage(e), e);
+                mainWindow.addWindow(new ErrorDialog(mainWindow, ViewConstants.ERROR, ExceptionUtils
+                    .getRootCauseMessage(e)));
             }
         }
     }
@@ -433,13 +391,12 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
     }
 
     private void showMessage() {
-        mainWindow.showNotification(new Notification("Info",
-            "Context is updated", Notification.TYPE_TRAY_NOTIFICATION));
+        mainWindow
+            .showNotification(new Notification("Info", "Context is updated", Notification.TYPE_TRAY_NOTIFICATION));
     }
 
     private OrganizationalUnitRefs getEnteredOrgUnitRefs() {
-        final OrganizationalUnitRefs organizationalUnitRefs =
-            new OrganizationalUnitRefs();
+        final OrganizationalUnitRefs organizationalUnitRefs = new OrganizationalUnitRefs();
 
         for (final String objectId : getEnteredOrgUnits()) {
             organizationalUnitRefs.add(new OrganizationalUnitRef(objectId));
@@ -450,18 +407,15 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
 
     private Set<String> getEnteredOrgUnits() {
 
-        if (orgUnitList.getContainerDataSource() == null
-            || orgUnitList.getContainerDataSource().getItemIds() == null
+        if (orgUnitList.getContainerDataSource() == null || orgUnitList.getContainerDataSource().getItemIds() == null
             || orgUnitList.getContainerDataSource().getItemIds().size() == 0
-            || !orgUnitList
-                .getContainerDataSource().getItemIds().iterator().hasNext()) {
+            || !orgUnitList.getContainerDataSource().getItemIds().iterator().hasNext()) {
             return Collections.emptySet();
         }
 
         final Set<String> orgUnits = new HashSet<String>();
 
-        final Collection<?> itemIds =
-            orgUnitList.getContainerDataSource().getItemIds();
+        final Collection<?> itemIds = orgUnitList.getContainerDataSource().getItemIds();
 
         for (final Object object : itemIds) {
             final ResourceRefDisplay ou = (ResourceRefDisplay) object;
@@ -473,8 +427,7 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
 
     private AdminDescriptors enteredAdminDescriptors() {
         final AdminDescriptors adminDescriptors = new AdminDescriptors();
-        final Iterator<Component> it =
-            adminDescriptorAccordion.getComponentIterator();
+        final Iterator<Component> it = adminDescriptorAccordion.getComponentIterator();
         while (it != null && it.hasNext()) {
             final Component contentComp = it.next();
             final Tab tab = adminDescriptorAccordion.getTab(contentComp);
@@ -491,24 +444,18 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
                 // TODO: move to appropriate class
             }
             catch (final ParserConfigurationException e) {
-                LOG.error("An unexpected error occured! See LOG for details.",
-                    e);
-                mainWindow.addWindow(new ErrorDialog(mainWindow,
-                    ViewConstants.ERROR, e.getMessage()));
+                LOG.error("An unexpected error occured! See LOG for details.", e);
+                mainWindow.addWindow(new ErrorDialog(mainWindow, ViewConstants.ERROR, e.getMessage()));
                 setComponentError(new SystemError(e.getMessage()));
             }
             catch (final SAXException e) {
-                LOG.error("An unexpected error occured! See LOG for details.",
-                    e);
-                mainWindow.addWindow(new ErrorDialog(mainWindow,
-                    ViewConstants.ERROR, e.getMessage()));
+                LOG.error("An unexpected error occured! See LOG for details.", e);
+                mainWindow.addWindow(new ErrorDialog(mainWindow, ViewConstants.ERROR, e.getMessage()));
                 setComponentError(new SystemError(e.getMessage()));
             }
             catch (final IOException e) {
-                LOG.error("An unexpected error occured! See LOG for details.",
-                    e);
-                mainWindow.addWindow(new ErrorDialog(mainWindow,
-                    ViewConstants.ERROR, e.getMessage()));
+                LOG.error("An unexpected error occured! See LOG for details.", e);
+                mainWindow.addWindow(new ErrorDialog(mainWindow, ViewConstants.ERROR, e.getMessage()));
                 setComponentError(new SystemError(e.getMessage()));
             }
         }
@@ -553,18 +500,15 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
     }
 
     private void bindName() {
-        nameField.setPropertyDataSource(item
-            .getItemProperty(ViewConstants.NAME_ID));
+        nameField.setPropertyDataSource(item.getItemProperty(ViewConstants.NAME_ID));
     }
 
     private void bindObjectId() {
-        objIdField.setPropertyDataSource(item
-            .getItemProperty(PropertyId.OBJECT_ID));
+        objIdField.setPropertyDataSource(item.getItemProperty(PropertyId.OBJECT_ID));
     }
 
     private void bindStatus() {
-        status.setPropertyDataSource(item
-            .getItemProperty(PropertyId.PUBLIC_STATUS));
+        status.setPropertyDataSource(item.getItemProperty(PropertyId.PUBLIC_STATUS));
     }
 
     @SuppressWarnings("unchecked")
@@ -572,19 +516,15 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
         adminDescriptorAccordion.removeAllComponents();
 
         final List<AdminDescriptor> adminDescriptors =
-            (List<AdminDescriptor>) item.getItemProperty(
-                PropertyId.ADMIN_DESCRIPTORS).getValue();
+            (List<AdminDescriptor>) item.getItemProperty(PropertyId.ADMIN_DESCRIPTORS).getValue();
 
         for (final AdminDescriptor adminDescriptor : adminDescriptors) {
             try {
-                adminDescriptorAccordion.addTab(
-                    new Label(adminDescriptor.getContentAsString(),
-                        Label.CONTENT_PREFORMATTED), adminDescriptor.getName(),
-                    null);
+                adminDescriptorAccordion.addTab(new Label(adminDescriptor.getContentAsString(),
+                    Label.CONTENT_PREFORMATTED), adminDescriptor.getName(), null);
             }
             catch (final TransformerException e) {
-                LOG.error("An unexpected error occured! See LOG for details.",
-                    e);
+                LOG.error("An unexpected error occured! See LOG for details.", e);
             }
         }
     }
@@ -592,22 +532,22 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
     @SuppressWarnings("unchecked")
     private void bindOrgUnit() {
         orgUnitList.removeAllItems();
+
         final List<OrganizationalUnitRef> refs =
-            (List<OrganizationalUnitRef>) item.getItemProperty(
-                PropertyId.ORG_UNIT_REFS).getValue();
+            (List<OrganizationalUnitRef>) item.getItemProperty(PropertyId.ORG_UNIT_REFS).getValue();
 
         for (final OrganizationalUnitRef resourceRef : refs) {
+
             final ResourceRefDisplay resourceRefDisplay =
-                new ResourceRefDisplay(resourceRef.getObjid(),
-                    resourceRef.getXLinkTitle());
+                new ResourceRefDisplay(resourceRef.getObjid(), findOrgUnitTitle(resourceRef));
             orgUnitList.addItem(resourceRefDisplay);
         }
+
         addOrgUnitToTheList.using(orgUnitList);
     }
 
     private void bindDescription() {
-        descriptionField.setPropertyDataSource(item
-            .getItemProperty(PropertyId.DESCRIPTION));
+        descriptionField.setPropertyDataSource(item.getItemProperty(PropertyId.DESCRIPTION));
     }
 
     private void bindType() {
@@ -615,9 +555,8 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
     }
 
     private void bindCreatedOn() {
-        createdOn.setCaption(Converter
-            .dateTimeToString((org.joda.time.DateTime) item.getItemProperty(
-                PropertyId.CREATED_ON).getValue()));
+        createdOn.setCaption(Converter.dateTimeToString((org.joda.time.DateTime) item.getItemProperty(
+            PropertyId.CREATED_ON).getValue()));
     }
 
     private void bindCreatedBy() {
@@ -632,9 +571,8 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
     }
 
     private void bindModifiedOn() {
-        modifiedOn.setCaption(Converter
-            .dateTimeToString((org.joda.time.DateTime) item.getItemProperty(
-                PropertyId.LAST_MODIFICATION_DATE).getValue()));
+        modifiedOn.setCaption(Converter.dateTimeToString((org.joda.time.DateTime) item.getItemProperty(
+            PropertyId.LAST_MODIFICATION_DATE).getValue()));
     }
 
     private String getCreatorId() {
@@ -646,8 +584,7 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
     }
 
     private UserAccountRef getCreator() {
-        return (UserAccountRef) item
-            .getItemProperty(PropertyId.CREATED_BY).getValue();
+        return (UserAccountRef) item.getItemProperty(PropertyId.CREATED_BY).getValue();
     }
 
     private void bindModifiedBy() {
@@ -670,14 +607,12 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
     }
 
     private UserAccountRef getModifier() {
-        return (UserAccountRef) item
-            .getItemProperty(PropertyId.MODIFIED_BY).getValue();
+        return (UserAccountRef) item.getItemProperty(PropertyId.MODIFIED_BY).getValue();
     }
 
     private void bindPublicStatusWithView() {
         final PublicStatus publicStatus =
-            PublicStatus.valueOf(((String) item.getItemProperty(
-                PropertyId.PUBLIC_STATUS).getValue()).toUpperCase());
+            PublicStatus.valueOf(((String) item.getItemProperty(PropertyId.PUBLIC_STATUS).getValue()).toUpperCase());
         switch (publicStatus) {
             case CREATED:
             case OPENED: {
@@ -701,8 +636,7 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
     }
 
     private boolean isUpdateNotAllowed() {
-        return pdpRequest.isDenied(ActionIdConstants.UPDATE_CONTEXT,
-            getSelectedItemId());
+        return pdpRequest.isDenied(ActionIdConstants.UPDATE_CONTEXT, getSelectedItemId());
     }
 
     private String findOrgUnitTitle(final OrganizationalUnitRef resourceRef) {
@@ -710,40 +644,26 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
             return orgUnitService.findOrgUnitTitleById(resourceRef.getObjid());
         }
         catch (final ResourceNotFoundException e) {
-            LOG
-                .error("root cause: " + ExceptionUtils.getRootCauseMessage(e),
-                    e);
-            mainWindow
-                .addWindow(new ErrorDialog(mainWindow, ViewConstants.ERROR,
-                    "Organizational Unit does not exist anymore."
-                        + e.getMessage()));
+            LOG.error("root cause: " + ExceptionUtils.getRootCauseMessage(e), e);
+            mainWindow.addWindow(new ErrorDialog(mainWindow, ViewConstants.ERROR,
+                "Organizational Unit does not exist anymore." + e.getMessage()));
         }
         catch (final EscidocException e) {
-            LOG
-                .error("root cause: " + ExceptionUtils.getRootCauseMessage(e),
-                    e);
-            mainWindow.addWindow(new ErrorDialog(mainWindow,
-                ViewConstants.ERROR, e.getMessage()));
+            LOG.error("root cause: " + ExceptionUtils.getRootCauseMessage(e), e);
+            mainWindow.addWindow(new ErrorDialog(mainWindow, ViewConstants.ERROR, e.getMessage()));
         }
         catch (final InternalClientException e) {
-            LOG
-                .error("root cause: " + ExceptionUtils.getRootCauseMessage(e),
-                    e);
-            mainWindow.addWindow(new ErrorDialog(mainWindow,
-                ViewConstants.ERROR, e.getMessage()));
+            LOG.error("root cause: " + ExceptionUtils.getRootCauseMessage(e), e);
+            mainWindow.addWindow(new ErrorDialog(mainWindow, ViewConstants.ERROR, e.getMessage()));
         }
         catch (final TransportException e) {
-            LOG
-                .error("root cause: " + ExceptionUtils.getRootCauseMessage(e),
-                    e);
-            mainWindow.addWindow(new ErrorDialog(mainWindow,
-                ViewConstants.ERROR, e.getMessage()));
+            LOG.error("root cause: " + ExceptionUtils.getRootCauseMessage(e), e);
+            mainWindow.addWindow(new ErrorDialog(mainWindow, ViewConstants.ERROR, e.getMessage()));
         }
         return "Organization does exist, please remove.";
     }
 
-    public Context open(final String comment) throws EscidocException,
-        InternalClientException, TransportException {
+    public Context open(final String comment) throws EscidocException, InternalClientException, TransportException {
         final Context cachedContext = getContextFromCache();
         final Context openedContext = openContext(comment);
         updateContextList(cachedContext, openedContext);
@@ -755,13 +675,12 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
         return contextService.getSelected(getSelectedItemId());
     }
 
-    private Context openContext(final String comment) throws EscidocException,
-        InternalClientException, TransportException {
+    private Context openContext(final String comment) throws EscidocException, InternalClientException,
+        TransportException {
         return contextService.open(getSelectedItemId(), comment);
     }
 
-    private void updateContextList(
-        final Context before, final Context openedContext) {
+    private void updateContextList(final Context before, final Context openedContext) {
         contextList.updateContext(before, openedContext);
     }
 
@@ -781,8 +700,7 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
         return closedContext;
     }
 
-    private Context closeContext(final String comment)
-        throws EscidocClientException {
+    private Context closeContext(final String comment) throws EscidocClientException {
         return contextService.close(getSelectedItemId(), comment);
     }
 
@@ -801,8 +719,7 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
     }
 
     private String getSelectedItemId() {
-        return (String) item
-            .getItemProperty(ViewConstants.OBJECT_ID).getValue();
+        return (String) item.getItemProperty(ViewConstants.OBJECT_ID).getValue();
     }
 
     public void setContextList(final ContextListView contextList) {
@@ -811,16 +728,14 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
 
     public void deleteContext() {
         try {
-            final Context selected =
-                contextService.getSelected(getSelectedItemId());
+            final Context selected = contextService.getSelected(getSelectedItemId());
             contextService.delete(getSelectedItemId());
             contextList.removeContext(selected);
             app.showContextView();
         }
         catch (final EscidocClientException e) {
             LOG.error("An unexpected error occured! See LOG for details.", e);
-            mainWindow.addWindow(new ErrorDialog(mainWindow,
-                ViewConstants.ERROR, e.getMessage()));
+            mainWindow.addWindow(new ErrorDialog(mainWindow, ViewConstants.ERROR, e.getMessage()));
         }
     }
 }
