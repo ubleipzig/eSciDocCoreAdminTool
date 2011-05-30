@@ -32,19 +32,14 @@ public class ContextView extends SplitPanel implements ResourceView {
 
     private final PdpRequest pdpRequest;
 
-    public ContextView(final AdminToolApplication app,
-        final ContextListView contextList,
-        final ContextEditForm contextEditForm,
-        final ContextAddView contextAddView, final PdpRequest pdpRequest) {
+    public ContextView(final AdminToolApplication app, final ContextListView contextList,
+        final ContextEditForm contextEditForm, final ContextAddView contextAddView, final PdpRequest pdpRequest) {
 
         Preconditions.checkNotNull(app, "App can not be null");
         Preconditions.checkNotNull(contextList, "contextList can not be null");
-        Preconditions.checkNotNull(contextEditForm,
-            "contextEditForm can not be null");
-        Preconditions.checkNotNull(contextAddView,
-            "contextAddView can not be null");
-        Preconditions.checkNotNull(pdpRequest, "pdpRequest is null: %s",
-            pdpRequest);
+        Preconditions.checkNotNull(contextEditForm, "contextEditForm can not be null");
+        Preconditions.checkNotNull(contextAddView, "contextAddView can not be null");
+        Preconditions.checkNotNull(pdpRequest, "pdpRequest is null: %s", pdpRequest);
 
         this.app = app;
         this.contextList = contextList;
@@ -53,12 +48,12 @@ public class ContextView extends SplitPanel implements ResourceView {
 
         final VerticalLayout vLayout = new VerticalLayout();
         vLayout.setHeight(100, UNITS_PERCENTAGE);
-        final Label text =
-            new Label("<b>" + "Contexts" + "</b>", Label.CONTENT_XHTML);
+        final Label text = new Label("<b>" + "Contexts" + "</b>", Label.CONTENT_XHTML);
         vLayout.addComponent(text);
         contextList.setSizeFull();
 
         vLayout.addComponent(contextList);
+        vLayout.addComponent(contextList.createControls());
         vLayout.setExpandRatio(contextList, 1.0f);
         setFirstComponent(vLayout);
 
@@ -81,9 +76,7 @@ public class ContextView extends SplitPanel implements ResourceView {
             contextEditForm.setSelected(item);
         }
         catch (final ResourceNotFoundException e) {
-            LOG
-                .error("root cause: " + ExceptionUtils.getRootCauseMessage(e),
-                    e);
+            LOG.error("root cause: " + ExceptionUtils.getRootCauseMessage(e), e);
             ModalDialog.show(app.getMainWindow(), e);
         }
     }
@@ -98,8 +91,7 @@ public class ContextView extends SplitPanel implements ResourceView {
     }
 
     public void showFirstItemInEditView() {
-        Preconditions.checkNotNull(contextList, "contextList is null: %s",
-            contextList);
+        Preconditions.checkNotNull(contextList, "contextList is null: %s", contextList);
 
         final Object firstItemId = contextList.firstItemId();
         if (firstItemId == null && isPermitToCreate()) {
@@ -110,8 +102,7 @@ public class ContextView extends SplitPanel implements ResourceView {
         }
         else {
             contextList.select(firstItemId);
-            showEditView(contextList.getContainerDataSource().getItem(
-                firstItemId));
+            showEditView(contextList.getContainerDataSource().getItem(firstItemId));
         }
     }
 

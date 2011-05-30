@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Preconditions;
+import com.jensjansson.pagedtable.PagedTable;
 import com.vaadin.data.util.POJOContainer;
 import com.vaadin.data.util.POJOItem;
 import com.vaadin.ui.Table;
@@ -21,7 +22,7 @@ import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
 import de.escidoc.core.resources.om.context.Context;
 
-public class ContextListView extends Table {
+public class ContextListView extends PagedTable {
 
     private static final long serialVersionUID = -4845557717329696071L;
 
@@ -35,9 +36,8 @@ public class ContextListView extends Table {
 
     private Collection<Context> allContexts;
 
-    public ContextListView(final AdminToolApplication app,
-        final ContextService contextService) throws EscidocException,
-        InternalClientException, TransportException {
+    public ContextListView(final AdminToolApplication app, final ContextService contextService)
+        throws EscidocException, InternalClientException, TransportException {
         checkForNull(app, contextService);
 
         this.app = app;
@@ -45,13 +45,12 @@ public class ContextListView extends Table {
         buildView();
         findAllContexts();
         bindDataSource();
+        setPageLength(50);
     }
 
-    private void checkForNull(
-        final AdminToolApplication app, final ContextService contextService) {
+    private void checkForNull(final AdminToolApplication app, final ContextService contextService) {
         Preconditions.checkNotNull(app, " app can not be null: %s", app);
-        Preconditions.checkNotNull(contextService,
-            " contextService can not be null: %s", contextService);
+        Preconditions.checkNotNull(contextService, " contextService can not be null: %s", contextService);
     }
 
     private void buildView() {
@@ -60,7 +59,6 @@ public class ContextListView extends Table {
         setImmediate(true);
         addListener(new ContextSelectListener(app));
         setNullSelectionAllowed(false);
-
     }
 
     private void bindDataSource() {
@@ -76,27 +74,20 @@ public class ContextListView extends Table {
     private void initContextContainer() {
         if (allContexts.isEmpty()) {
             contextContainer =
-                new POJOContainer<Context>(Context.class, PropertyId.OBJECT_ID,
-                    PropertyId.NAME, PropertyId.DESCRIPTION,
-                    PropertyId.PUBLIC_STATUS, PropertyId.PUBLIC_STATUS_COMMENT,
-                    PropertyId.TYPE, PropertyId.CREATED_ON,
-                    PropertyId.CREATED_BY, PropertyId.LAST_MODIFICATION_DATE,
-                    PropertyId.MODIFIED_BY, PropertyId.ORG_UNIT_REFS,
-                    PropertyId.ADMIN_DESCRIPTORS);
+                new POJOContainer<Context>(Context.class, PropertyId.OBJECT_ID, PropertyId.NAME,
+                    PropertyId.DESCRIPTION, PropertyId.PUBLIC_STATUS, PropertyId.PUBLIC_STATUS_COMMENT,
+                    PropertyId.TYPE, PropertyId.CREATED_ON, PropertyId.CREATED_BY, PropertyId.LAST_MODIFICATION_DATE,
+                    PropertyId.MODIFIED_BY, PropertyId.ORG_UNIT_REFS, PropertyId.ADMIN_DESCRIPTORS);
         }
         else {
             contextContainer =
-                new POJOContainer<Context>(allContexts, PropertyId.OBJECT_ID,
-                    PropertyId.NAME, PropertyId.DESCRIPTION,
-                    PropertyId.PUBLIC_STATUS, PropertyId.PUBLIC_STATUS_COMMENT,
-                    PropertyId.TYPE, PropertyId.CREATED_ON,
-                    PropertyId.CREATED_BY, PropertyId.LAST_MODIFICATION_DATE,
-                    PropertyId.MODIFIED_BY, PropertyId.ORG_UNIT_REFS,
-                    PropertyId.ADMIN_DESCRIPTORS);
+                new POJOContainer<Context>(allContexts, PropertyId.OBJECT_ID, PropertyId.NAME, PropertyId.DESCRIPTION,
+                    PropertyId.PUBLIC_STATUS, PropertyId.PUBLIC_STATUS_COMMENT, PropertyId.TYPE, PropertyId.CREATED_ON,
+                    PropertyId.CREATED_BY, PropertyId.LAST_MODIFICATION_DATE, PropertyId.MODIFIED_BY,
+                    PropertyId.ORG_UNIT_REFS, PropertyId.ADMIN_DESCRIPTORS);
         }
         setContainerDataSource(contextContainer);
-        sort(new Object[] { PropertyId.LAST_MODIFICATION_DATE },
-            new boolean[] { false });
+        sort(new Object[] { PropertyId.LAST_MODIFICATION_DATE }, new boolean[] { false });
         setVisibleColumns(new Object[] { PropertyId.NAME });
         setColumnHeaderMode(Table.COLUMN_HEADER_MODE_HIDDEN);
     }
@@ -107,8 +98,7 @@ public class ContextListView extends Table {
         }
         catch (final EscidocClientException e) {
             app.getMainWindow().addWindow(
-                new ErrorDialog(app.getMainWindow(), "Error",
-                    "An unexpected error occured! See LOG for details."));
+                new ErrorDialog(app.getMainWindow(), "Error", "An unexpected error occured! See LOG for details."));
             LOG.error("An unexpected error occured! See LOG for details.", e);
         }
     }
@@ -127,8 +117,7 @@ public class ContextListView extends Table {
 
     @Override
     public void sort() {
-        sort(new Object[] { ViewConstants.MODIFIED_ON_ID },
-            new boolean[] { false });
+        sort(new Object[] { ViewConstants.MODIFIED_ON_ID }, new boolean[] { false });
     }
 
     public void removeContext(final Context selected) {
@@ -144,8 +133,7 @@ public class ContextListView extends Table {
     public void updateContext(final Context oldContext, final Context newContext) {
         removeContext(oldContext);
         addContext(newContext);
-        sort(new Object[] { ViewConstants.MODIFIED_ON_ID },
-            new boolean[] { false });
+        sort(new Object[] { ViewConstants.MODIFIED_ON_ID }, new boolean[] { false });
         setValue(newContext);
     }
 
