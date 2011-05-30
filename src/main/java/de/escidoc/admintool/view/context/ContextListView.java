@@ -39,6 +39,7 @@ import com.vaadin.data.util.POJOItem;
 import com.vaadin.ui.Table;
 
 import de.escidoc.admintool.app.AdminToolApplication;
+import de.escidoc.admintool.app.AppConstants;
 import de.escidoc.admintool.app.PropertyId;
 import de.escidoc.admintool.service.internal.ContextService;
 import de.escidoc.admintool.view.ViewConstants;
@@ -50,9 +51,8 @@ import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
 import de.escidoc.core.resources.om.context.Context;
 
+@SuppressWarnings("serial")
 public class ContextListView extends Table {
-
-    private static final long serialVersionUID = -4845557717329696071L;
 
     private final Logger LOG = LoggerFactory.getLogger(ContextListView.class);
 
@@ -99,24 +99,24 @@ public class ContextListView extends Table {
     }
 
     private void initContextContainer() {
-        if (allContexts.isEmpty()) {
-            contextContainer =
-                new POJOContainer<Context>(Context.class, PropertyId.OBJECT_ID, PropertyId.NAME,
-                    PropertyId.DESCRIPTION, PropertyId.PUBLIC_STATUS, PropertyId.PUBLIC_STATUS_COMMENT,
-                    PropertyId.TYPE, PropertyId.CREATED_ON, PropertyId.CREATED_BY, PropertyId.LAST_MODIFICATION_DATE,
-                    PropertyId.MODIFIED_BY, PropertyId.ORG_UNIT_REFS, PropertyId.ADMIN_DESCRIPTORS);
-        }
-        else {
-            contextContainer =
-                new POJOContainer<Context>(allContexts, PropertyId.OBJECT_ID, PropertyId.NAME, PropertyId.DESCRIPTION,
-                    PropertyId.PUBLIC_STATUS, PropertyId.PUBLIC_STATUS_COMMENT, PropertyId.TYPE, PropertyId.CREATED_ON,
-                    PropertyId.CREATED_BY, PropertyId.LAST_MODIFICATION_DATE, PropertyId.MODIFIED_BY,
-                    PropertyId.ORG_UNIT_REFS, PropertyId.ADMIN_DESCRIPTORS);
-        }
+        initContainer();
         setContainerDataSource(contextContainer);
-        sort(new Object[] { PropertyId.LAST_MODIFICATION_DATE }, new boolean[] { false });
+        sortByModificationDate();
         setVisibleColumns(new Object[] { PropertyId.NAME });
         setColumnHeaderMode(Table.COLUMN_HEADER_MODE_HIDDEN);
+    }
+
+    private void sortByModificationDate() {
+        sort(new Object[] { PropertyId.LAST_MODIFICATION_DATE }, new boolean[] { false });
+    }
+
+    private void initContainer() {
+        if (allContexts.isEmpty()) {
+            contextContainer = new POJOContainer<Context>(Context.class, AppConstants.CONTEXT_PROPERTY_NAMES);
+        }
+        else {
+            contextContainer = new POJOContainer<Context>(allContexts, AppConstants.CONTEXT_PROPERTY_NAMES);
+        }
     }
 
     private void findAllContexts() {
@@ -137,7 +137,6 @@ public class ContextListView extends Table {
             initContextContainer();
         }
         final POJOItem<Context> addedItem = contextContainer.addItem(context);
-        // assert addedItem != null : "Adding context to the list failed.";
         sort();
         return addedItem;
     }
@@ -148,7 +147,7 @@ public class ContextListView extends Table {
     }
 
     public void removeContext(final Context selected) {
-        assert selected != null : "context must not be null.";
+        Preconditions.checkNotNull(selected, "selected is null: %s", selected);
         assert contextContainer.containsId(selected) : "Context not in the list view";
 
         @SuppressWarnings("boxing")
@@ -163,5 +162,4 @@ public class ContextListView extends Table {
         sort(new Object[] { ViewConstants.MODIFIED_ON_ID }, new boolean[] { false });
         setValue(newContext);
     }
-
 }

@@ -91,4 +91,9 @@ public class AppConstants {
     public static final String ESCIDOC_DEFAULT_METADATA_NAME = "escidoc";
 
     public static final String MAX_RESULT_SIZE = "1000";
+
+    public static final String[] CONTEXT_PROPERTY_NAMES = new String[] { PropertyId.OBJECT_ID, PropertyId.NAME,
+        PropertyId.DESCRIPTION, PropertyId.PUBLIC_STATUS, PropertyId.PUBLIC_STATUS_COMMENT, PropertyId.TYPE,
+        PropertyId.CREATED_ON, PropertyId.CREATED_BY, PropertyId.LAST_MODIFICATION_DATE, PropertyId.MODIFIED_BY,
+        PropertyId.ORG_UNIT_REFS, PropertyId.ADMIN_DESCRIPTORS };
 }
