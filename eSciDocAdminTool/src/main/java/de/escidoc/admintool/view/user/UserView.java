@@ -21,15 +21,12 @@ public class UserView extends SplitPanel implements ResourceView {
 
     private final UserEditView userEditView;
 
-    public UserView(final AdminToolApplication app,
-        final UserListView userListView, final UserEditView userEditView) {
+    public UserView(final AdminToolApplication app, final UserListView userListView, final UserEditView userEditView) {
         Preconditions.checkNotNull(app, "app is null: %s", app);
-        Preconditions.checkNotNull(userListView, "userListView is null: %s",
-            userListView);
-        Preconditions.checkNotNull(userEditView, "userLabEditView is null: %s",
-            userEditView);
+        Preconditions.checkNotNull(userListView, "userListView is null: %s", userListView);
+        Preconditions.checkNotNull(userEditView, "userLabEditView is null: %s", userEditView);
         this.app = app;
-        this.userList = userListView;
+        userList = userListView;
         this.userEditView = userEditView;
     }
 
@@ -39,15 +36,13 @@ public class UserView extends SplitPanel implements ResourceView {
 
         final VerticalLayout vLayout = new VerticalLayout();
         vLayout.setHeight(100, UNITS_PERCENTAGE);
-        final Label foo =
-            new Label("<b>User Accounts</b>", Label.CONTENT_XHTML);
+        final Label foo = new Label("<b>User Accounts</b>", Label.CONTENT_XHTML);
         vLayout.addComponent(foo);
         userList.setSizeFull();
 
         vLayout.addComponent(userList);
+        vLayout.addComponent(userList.createControls());
         vLayout.setExpandRatio(userList, 1.0f);
-        setFirstComponent(vLayout);
-
         setFirstComponent(vLayout);
     }
 

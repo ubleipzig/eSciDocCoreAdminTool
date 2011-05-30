@@ -58,7 +58,7 @@
       <attribute value="jar:file:/home/chh/.m2/repository/log4j/log4j/1.2.16/log4j-1.2.16-javadoc.jar!/" name="javadoc_location"/>
     </attributes>
   </classpathentry>
-  <classpathentry kind="var" path="M2_REPO/org/vaadin/addons/pagedtable/0.5.0/pagedtable-0.5.0.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/vaadin/addons/pagedtable/0.5.1/pagedtable-0.5.1.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/vaadin/addons/pojo-container/0.1.0/pojo-container-0.1.0.jar"/>
   <classpathentry kind="var" path="M2_REPO/xalan/serializer/2.7.1/serializer-2.7.1.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/slf4j/slf4j-api/1.6.1/slf4j-api-1.6.1.jar" sourcepath="M2_REPO/org/slf4j/slf4j-api/1.6.1/slf4j-api-1.6.1-sources.jar">

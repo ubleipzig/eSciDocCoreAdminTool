@@ -9,8 +9,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.apache.axis.types.NonNegativeInteger;
-import org.apache.axis.types.PositiveInteger;
 import org.joda.time.DateTime;
 
 import com.google.common.base.Preconditions;
@@ -63,20 +61,10 @@ public class UserService {
         client.setHandle(handle);
     }
 
-    // public Collection<UserAccount> findAll() throws EscidocClientException {
-    // final SearchRetrieveRequestType filter = new SearchRetrieveRequestType();
-    // filter.setMaximumRecords(new NonNegativeInteger("20"));
-    // filter.setStartRecord(new PositiveInteger("1"));
-    // userAccounts = client.retrieveUserAccountsAsList(filter);
-    // for (final UserAccount user : userAccounts) {
-    // userAccountById.put(user.getObjid(), user);
-    // }
-    // return userAccounts;
-    // }
     public Collection<UserAccount> findAll() throws EscidocClientException {
         final SearchRetrieveRequestType filter = new SearchRetrieveRequestType();
-        filter.setMaximumRecords(new NonNegativeInteger("20"));
-        filter.setStartRecord(new PositiveInteger("1"));
+        // filter.setMaximumRecords(new NonNegativeInteger("20"));
+        // filter.setStartRecord(new PositiveInteger("1"));
         userAccounts = client.retrieveUserAccountsAsList(filter);
         for (final UserAccount user : userAccounts) {
             userAccountById.put(user.getObjid(), user);

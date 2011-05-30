@@ -6,6 +6,8 @@ import java.util.Collection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.base.Preconditions;
+import com.jensjansson.pagedtable.PagedTable;
 import com.vaadin.data.util.POJOContainer;
 import com.vaadin.data.util.POJOItem;
 import com.vaadin.ui.Table;
@@ -19,29 +21,27 @@ import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.resources.aa.useraccount.UserAccount;
 
 @SuppressWarnings("serial")
-public class UserListView extends Table {
+public class UserListView extends PagedTable {
 
-    private static final Logger LOG = LoggerFactory
-        .getLogger(UserListView.class);
+    private static final Logger LOG = LoggerFactory.getLogger(UserListView.class);
 
     private final AdminToolApplication app;
 
     private final UserService userService;
 
-    private final Collection<UserAccount> allUserAccounts =
-        new ArrayList<UserAccount>();
+    private final Collection<UserAccount> allUserAccounts = new ArrayList<UserAccount>();
 
     private POJOContainer<UserAccount> userContainer;
 
-    public UserListView(final AdminToolApplication app,
-        final UserService userService) {
-        assert app != null : "app must not be null.";
-        assert userService != null : "userService must not be null.";
+    public UserListView(final AdminToolApplication app, final UserService userService) {
+        Preconditions.checkNotNull(app, "app is null: %s", app);
+        Preconditions.checkNotNull(userService, "userService is null: %s", userService);
         this.app = app;
         this.userService = userService;
         buildView();
         findAllUsers();
         bindDataSource();
+        setPageLength(50);
     }
 
     private void buildView() {
@@ -59,10 +59,8 @@ public class UserListView extends Table {
         }
         catch (final EscidocClientException e) {
             app.getMainWindow().addWindow(
-                new ErrorDialog(app.getMainWindow(), "Error",
-                    "An unexpected error occured! See LOG for details."));
+                new ErrorDialog(app.getMainWindow(), "Error", "An unexpected error occured! See LOG for details."));
             LOG.error("An unexpected error occured! See LOG for details.", e);
-
         }
     }
 
@@ -78,16 +76,13 @@ public class UserListView extends Table {
 
     private void initUserContainer() {
         userContainer =
-            new POJOContainer<UserAccount>(allUserAccounts,
-                PropertyId.OBJECT_ID, PropertyId.NAME, PropertyId.CREATED_ON,
-                PropertyId.CREATED_BY, PropertyId.LAST_MODIFICATION_DATE,
-                PropertyId.MODIFIED_BY, PropertyId.LOGIN_NAME,
-                PropertyId.ACTIVE);
+            new POJOContainer<UserAccount>(allUserAccounts, PropertyId.OBJECT_ID, PropertyId.NAME,
+                PropertyId.CREATED_ON, PropertyId.CREATED_BY, PropertyId.LAST_MODIFICATION_DATE,
+                PropertyId.MODIFIED_BY, PropertyId.LOGIN_NAME, PropertyId.ACTIVE);
         setContainerDataSource(userContainer);
         setVisibleColumns(new Object[] { PropertyId.NAME });
         setColumnHeader(PropertyId.NAME, ViewConstants.TITLE_LABEL);
-        sort(new Object[] { PropertyId.LAST_MODIFICATION_DATE },
-            new boolean[] { false });
+        sort(new Object[] { PropertyId.LAST_MODIFICATION_DATE }, new boolean[] { false });
     }
 
     public void remove(final UserAccount deletedUser) {
@@ -96,10 +91,8 @@ public class UserListView extends Table {
     }
 
     public POJOItem<UserAccount> addUser(final UserAccount createdUserAccount) {
-        final POJOItem<UserAccount> item =
-            userContainer.addItem(createdUserAccount);
-        sort(new Object[] { PropertyId.LAST_MODIFICATION_DATE },
-            new boolean[] { true });
+        final POJOItem<UserAccount> item = userContainer.addItem(createdUserAccount);
+        sort(new Object[] { PropertyId.LAST_MODIFICATION_DATE }, new boolean[] { true });
         return item;
     }
 }
