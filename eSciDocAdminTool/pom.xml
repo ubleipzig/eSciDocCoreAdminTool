@@ -36,7 +36,12 @@
 			<artifactId>browsercookies</artifactId>
 			<version>1.0.3</version>
 		</dependency>
-
+		<dependency>
+			<groupId>org.vaadin.addons</groupId>
+			<artifactId>pagedtable</artifactId>
+			<version>0.5.0</version>
+		</dependency>
+		
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>servlet-api</artifactId>
