@@ -48,4 +48,6 @@ public interface ContentModelListView extends Component {
     Item firstItem();
 
     Item getItem(Resource contentModel);
+
+    Component createControls();
 }

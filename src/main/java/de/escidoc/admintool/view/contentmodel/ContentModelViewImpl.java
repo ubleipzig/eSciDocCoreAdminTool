@@ -99,6 +99,7 @@ public class ContentModelViewImpl extends CustomComponent implements ContentMode
 
     private void addListView() {
         vLayout.addComponent(listView);
+        vLayout.addComponent(listView.createControls());
         vLayout.setExpandRatio(listView, 1.0f);
     }
 

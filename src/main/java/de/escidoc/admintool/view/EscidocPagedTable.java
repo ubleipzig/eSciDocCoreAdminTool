@@ -95,7 +95,7 @@ public class EscidocPagedTable extends Table {
     }
 
     public HorizontalLayout createControls() {
-        final Label itemsPerPageLabel = new Label("Items per page:");
+        // final Label itemsPerPageLabel = new Label("Items per page:");
         final Label pageLabel = new Label("Page:&nbsp;", Label.CONTENT_XHTML);
         final TextField currentPageTextField = new TextField();
         currentPageTextField.setValue(String.valueOf(getCurrentPage()));
@@ -155,7 +155,6 @@ public class EscidocPagedTable extends Table {
         next.setStyleName(Reindeer.BUTTON_LINK);
         last.setStyleName(Reindeer.BUTTON_LINK);
 
-        itemsPerPageLabel.addStyleName("pagedtable-itemsperpagecaption");
         pageLabel.addStyleName("pagedtable-pagecaption");
         currentPageTextField.addStyleName("pagedtable-pagefield");
         separatorLabel.addStyleName("pagedtable-separator");
@@ -165,7 +164,6 @@ public class EscidocPagedTable extends Table {
         next.addStyleName("pagedtable-next");
         last.addStyleName("pagedtable-last");
 
-        itemsPerPageLabel.addStyleName("pagedtable-label");
         pageLabel.addStyleName("pagedtable-label");
         currentPageTextField.addStyleName("pagedtable-label");
         separatorLabel.addStyleName("pagedtable-label");
@@ -175,8 +173,6 @@ public class EscidocPagedTable extends Table {
         next.addStyleName("pagedtable-button");
         last.addStyleName("pagedtable-button");
 
-        pageSize.addComponent(itemsPerPageLabel);
-        pageSize.setComponentAlignment(itemsPerPageLabel, Alignment.MIDDLE_LEFT);
         pageSize.setSpacing(true);
         pageManagement.addComponent(first);
         pageManagement.addComponent(previous);

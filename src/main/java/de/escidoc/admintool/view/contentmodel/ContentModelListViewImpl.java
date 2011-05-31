@@ -30,17 +30,19 @@ package de.escidoc.admintool.view.contentmodel;
 
 import com.google.common.base.Preconditions;
 import com.vaadin.data.Item;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Table;
 
 import de.escidoc.admintool.app.PropertyId;
+import de.escidoc.admintool.view.EscidocPagedTable;
 import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.resources.Resource;
 
 @SuppressWarnings("serial")
 public class ContentModelListViewImpl extends CustomComponent implements ContentModelListView {
 
-    private final Table table = new Table();
+    private final EscidocPagedTable pagedTable = new EscidocPagedTable();
 
     private final ContentModelSelectListener listener;
 
@@ -56,16 +58,16 @@ public class ContentModelListViewImpl extends CustomComponent implements Content
     }
 
     public void init() throws EscidocClientException {
-        setCompositionRoot(table);
-        table.setSizeFull();
-        table.setSelectable(true);
-        table.setImmediate(true);
-        table.setNullSelectionAllowed(false);
+        setCompositionRoot(pagedTable);
+        pagedTable.setSizeFull();
+        pagedTable.setSelectable(true);
+        pagedTable.setImmediate(true);
+        pagedTable.setNullSelectionAllowed(false);
         contentModelContainerImpl.reload();
-        table.setContainerDataSource(contentModelContainerImpl.getDataSource());
-        table.setVisibleColumns(new Object[] { PropertyId.X_LINK_TITLE });
-        table.setColumnHeaderMode(Table.COLUMN_HEADER_MODE_HIDDEN);
-        table.addListener(listener);
+        pagedTable.setContainerDataSource(contentModelContainerImpl.getDataSource());
+        pagedTable.setVisibleColumns(new Object[] { PropertyId.X_LINK_TITLE });
+        pagedTable.setColumnHeaderMode(Table.COLUMN_HEADER_MODE_HIDDEN);
+        pagedTable.addListener(listener);
     }
 
     @Override
@@ -77,29 +79,34 @@ public class ContentModelListViewImpl extends CustomComponent implements Content
     @Override
     public void setContentModel(final Resource contentModel) {
         Preconditions.checkNotNull(contentModel, "contentModel is null: %s", contentModel);
-        table.select(contentModel);
+        pagedTable.select(contentModel);
     }
 
     @Override
     public void selectFirstItem() {
-        final Object firstItemId = table.firstItemId();
-        table.select(firstItemId);
+        final Object firstItemId = pagedTable.firstItemId();
+        pagedTable.select(firstItemId);
     }
 
     @Override
     public Resource firstItemId() {
-        return (Resource) table.firstItemId();
+        return (Resource) pagedTable.firstItemId();
     }
 
     @Override
     public Item firstItem() {
-        return table.getItem(table.firstItemId());
+        return pagedTable.getItem(pagedTable.firstItemId());
     }
 
     @Override
     public Item getItem(final Resource contentModel) {
         Preconditions.checkNotNull(contentModel, "contentModel is null: %s", contentModel);
-        Preconditions.checkNotNull(table, "table is null: %s", table);
-        return table.getItem(contentModel);
+        Preconditions.checkNotNull(pagedTable, "table is null: %s", pagedTable);
+        return pagedTable.getItem(contentModel);
+    }
+
+    @Override
+    public Component createControls() {
+        return pagedTable.createControls();
     }
 }
