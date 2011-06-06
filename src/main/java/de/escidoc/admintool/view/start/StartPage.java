@@ -26,33 +26,21 @@
  * Gesellschaft zur Foerderung der Wissenschaft e.V.
  * All rights reserved.  Use is subject to license terms.
  */
-package de.escidoc.admintool.service.internal;
+package de.escidoc.admintool.view.start;
 
-import java.util.Collection;
-import java.util.Set;
+import com.vaadin.ui.CustomComponent;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.VerticalLayout;
 
-import de.escidoc.admintool.service.EscidocService;
-import de.escidoc.core.client.exceptions.EscidocClientException;
-import de.escidoc.core.client.exceptions.EscidocException;
-import de.escidoc.core.client.exceptions.InternalClientException;
-import de.escidoc.core.client.exceptions.TransportException;
-import de.escidoc.core.resources.Resource;
+@SuppressWarnings("serial")
+public class StartPage extends CustomComponent {
 
-public interface ResourceService extends EscidocService {
+    private final VerticalLayout layout = new VerticalLayout();
 
-    void loginWith(String handle) throws InternalClientException;
+    private final Label label = new Label("Welcome to eSciDoc Admin Tool");
 
-    Set<Resource> findAll() throws EscidocClientException;
-
-    Resource create(Resource resource) throws EscidocException, InternalClientException, TransportException;
-
-    Collection<? extends Resource> filterUsingInput(final String query) throws EscidocException,
-        InternalClientException, TransportException;
-
-    Resource findById(String objid) throws EscidocClientException;
-
-    void update(Resource resource) throws EscidocClientException;
-
-    void login() throws InternalClientException;
-
+    public StartPage() {
+        setCompositionRoot(layout);
+        layout.addComponent(label);
+    }
 }
