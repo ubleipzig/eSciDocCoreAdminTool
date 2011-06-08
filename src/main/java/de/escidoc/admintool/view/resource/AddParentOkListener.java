@@ -51,7 +51,7 @@ final class AddParentOkListener extends AbstractAddOrChangeParentListener {
 
         super.addOrEditParentModalWindow = addOrEditParentModalWindow;
         super.orgUnitService = orgUnitService;
-        super.resourceContainer = addOrEditParentModalWindow.resourceContainer;
+        super.resourceContainer = addOrEditParentModalWindow.getResourceContainer();
         this.orgUnitSpecificView = orgUnitSpecificView;
     }
 

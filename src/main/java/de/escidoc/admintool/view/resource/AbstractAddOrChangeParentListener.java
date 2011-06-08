@@ -126,7 +126,7 @@ public abstract class AbstractAddOrChangeParentListener implements AddOrChangePa
     }
 
     private String getSelectedParentId() {
-        return addOrEditParentModalWindow.selectedParent;
+        return addOrEditParentModalWindow.getSelectedParent();
     }
 
     protected void checkPostConditions(final OrganizationalUnit child) {

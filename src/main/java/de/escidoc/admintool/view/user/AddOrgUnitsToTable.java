@@ -38,7 +38,7 @@ import com.vaadin.ui.Window;
 
 import de.escidoc.admintool.view.ModalDialog;
 import de.escidoc.admintool.view.resource.ResourceRefDisplay;
-import de.escidoc.admintool.view.resource.ResourceTreeView;
+import de.escidoc.admintool.view.resource.OrgUnitTreeView;
 import de.escidoc.core.resources.common.properties.PublicStatus;
 import de.escidoc.core.resources.oum.OrganizationalUnit;
 
@@ -50,15 +50,15 @@ final class AddOrgUnitsToTable implements ClickListener {
 
     private final Window modalWindow;
 
-    private final ResourceTreeView resourceTreeView;
+    private final OrgUnitTreeView orgUnitTreeView;
 
     private final Table orgUnitTable;
 
     public AddOrgUnitsToTable(final Window mainWindow, final Window modalWindow,
-        final ResourceTreeView resourceTreeView, final Table orgUnitTable) {
+        final OrgUnitTreeView orgUnitTreeView, final Table orgUnitTable) {
         this.mainWindow = mainWindow;
         this.modalWindow = modalWindow;
-        this.resourceTreeView = resourceTreeView;
+        this.orgUnitTreeView = orgUnitTreeView;
         this.orgUnitTable = orgUnitTable;
     }
 
@@ -77,7 +77,7 @@ final class AddOrgUnitsToTable implements ClickListener {
     @SuppressWarnings("unchecked")
     private void getSelectedOrgUnitFromTree() {
         notOpened = new HashSet<OrganizationalUnit>();
-        final Object selected = resourceTreeView.getSelected();
+        final Object selected = orgUnitTreeView.getSelected();
 
         if (moreThanOne(selected)) {
             for (final OrganizationalUnit selectedOrgUnit : (Set<OrganizationalUnit>) selected) {

@@ -40,7 +40,7 @@ import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.domain.PdpRequest;
 import de.escidoc.admintool.service.internal.OrgUnitServiceLab;
 import de.escidoc.admintool.service.internal.UserService;
-import de.escidoc.admintool.view.resource.ResourceTreeView;
+import de.escidoc.admintool.view.resource.OrgUnitTreeView;
 import de.escidoc.core.resources.aa.useraccount.UserAccount;
 
 public class UserViewComponent {
@@ -63,12 +63,12 @@ public class UserViewComponent {
 
     private final OrgUnitServiceLab orgUnitService;
 
-    private final ResourceTreeView resourceTreeView;
+    private final OrgUnitTreeView orgUnitTreeView;
 
     private final PdpRequest pdpRequest;
 
     public UserViewComponent(final AdminToolApplication app, final UserService userService,
-        final OrgUnitServiceLab orgUnitService, final ResourceTreeView resourceTreeView, final PdpRequest pdpRequest) {
+        final OrgUnitServiceLab orgUnitService, final OrgUnitTreeView orgUnitTreeView, final PdpRequest pdpRequest) {
         Preconditions.checkNotNull(app, "AdminToolApplication is null.");
         Preconditions.checkNotNull(userService, "UserService is null.");
         Preconditions.checkNotNull(orgUnitService, "orgUnitService is null: %s", orgUnitService);
@@ -76,7 +76,7 @@ public class UserViewComponent {
         this.app = app;
         this.userService = userService;
         this.orgUnitService = orgUnitService;
-        this.resourceTreeView = resourceTreeView;
+        this.orgUnitTreeView = orgUnitTreeView;
         this.pdpRequest = pdpRequest;
     }
 
@@ -93,7 +93,7 @@ public class UserViewComponent {
     }
 
     private void createEditForm() {
-        editForm = new UserEditForm(app, userService, orgUnitService, resourceTreeView, pdpRequest);
+        editForm = new UserEditForm(app, userService, orgUnitService, orgUnitTreeView, pdpRequest);
         editForm.init();
         setUserEditForm(editForm);
         setUserEditView(new UserEditView(getUserEditForm()));

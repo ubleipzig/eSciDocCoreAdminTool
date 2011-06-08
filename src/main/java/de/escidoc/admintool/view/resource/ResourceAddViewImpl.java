@@ -47,17 +47,14 @@ import de.escidoc.admintool.service.internal.OrgUnitServiceLab;
 import de.escidoc.admintool.service.internal.ResourceService;
 import de.escidoc.admintool.view.ViewConstants;
 
+@SuppressWarnings("serial")
 public class ResourceAddViewImpl extends CustomComponent implements ResourceAddView {
-
-    private static final long serialVersionUID = 8760011504724749455L;
 
     private final Panel panel = new Panel(ViewConstants.ADD_ORG_UNIT);
 
     private final VerticalLayout vLayout = new VerticalLayout();
 
     private final FormLayout formLayout = FormLayoutFactory.create();
-
-    final Map<String, Field> fieldByName = new HashMap<String, Field>();
 
     private final SaveAndCancelButtons footers = new SaveAndCancelButtons();
 
@@ -72,6 +69,8 @@ public class ResourceAddViewImpl extends CustomComponent implements ResourceAddV
     private final ResourceView resourceView;
 
     private ResourceBtnListener createOrgUnitBtnListener;
+
+    final Map<String, Field> fieldByName = new HashMap<String, Field>();
 
     public ResourceAddViewImpl(final AdminToolApplication app, final Window mainWindow,
         final ResourceView resourceView, final ResourceService resourceService,

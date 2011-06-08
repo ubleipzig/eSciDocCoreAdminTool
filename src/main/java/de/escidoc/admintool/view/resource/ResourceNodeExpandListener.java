@@ -35,7 +35,6 @@ import com.vaadin.ui.Tree.ExpandListener;
 import com.vaadin.ui.Window;
 
 import de.escidoc.admintool.view.ModalDialog;
-import de.escidoc.admintool.view.resource.ResourceTreeView.AddChildrenCommand;
 import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.resources.oum.OrganizationalUnit;
 

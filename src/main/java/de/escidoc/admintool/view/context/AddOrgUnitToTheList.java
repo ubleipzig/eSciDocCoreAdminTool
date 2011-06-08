@@ -43,7 +43,7 @@ import de.escidoc.admintool.view.ModalDialog;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.admintool.view.context.listener.CancelButtonListener;
 import de.escidoc.admintool.view.resource.ResourceRefDisplay;
-import de.escidoc.admintool.view.resource.ResourceTreeView;
+import de.escidoc.admintool.view.resource.OrgUnitTreeView;
 import de.escidoc.core.resources.common.properties.PublicStatus;
 import de.escidoc.core.resources.oum.OrganizationalUnit;
 
@@ -67,7 +67,7 @@ public final class AddOrgUnitToTheList implements Button.ClickListener {
         @SuppressWarnings("unchecked")
         private void getSelectedOrgUnitFromTree() {
             notOpened = new HashSet<OrganizationalUnit>();
-            final Object selected = resourceTreeView.getSelected();
+            final Object selected = orgUnitTreeView.getSelected();
 
             if (moreThanOne(selected)) {
                 for (final OrganizationalUnit selectedOrgUnit : (Set<OrganizationalUnit>) selected) {
@@ -132,15 +132,15 @@ public final class AddOrgUnitToTheList implements Button.ClickListener {
 
     private Window modalWindow;
 
-    private final ResourceTreeView resourceTreeView;
+    private final OrgUnitTreeView orgUnitTreeView;
 
     private AbstractSelect orgUnitList;
 
     private Table orgUnitTable;
 
-    public AddOrgUnitToTheList(final Window mainWindow, final ResourceTreeView resourceTreeView) {
+    public AddOrgUnitToTheList(final Window mainWindow, final OrgUnitTreeView orgUnitTreeView) {
         this.mainWindow = mainWindow;
-        this.resourceTreeView = resourceTreeView;
+        this.orgUnitTreeView = orgUnitTreeView;
     }
 
     @Override
@@ -156,8 +156,8 @@ public final class AddOrgUnitToTheList implements Button.ClickListener {
     }
 
     private void addOrgUnitTreeView() {
-        resourceTreeView.multiSelect();
-        modalWindow.addComponent(resourceTreeView);
+        orgUnitTreeView.multiSelect();
+        modalWindow.addComponent(orgUnitTreeView);
     }
 
     private void configure() {

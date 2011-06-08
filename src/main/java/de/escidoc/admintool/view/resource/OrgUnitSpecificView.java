@@ -30,9 +30,6 @@ package de.escidoc.admintool.view.resource;
 
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.google.common.base.Preconditions;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.ObjectProperty;
@@ -59,10 +56,6 @@ import de.escidoc.core.resources.oum.Parents;
 
 public class OrgUnitSpecificView {
 
-    private static final long serialVersionUID = -3927641436455665147L;
-
-    private static final Logger LOG = LoggerFactory.getLogger(OrgUnitSpecificView.class);
-
     private final FormLayout formLayout;
 
     private FieldsBinder binder;
@@ -78,12 +71,6 @@ public class OrgUnitSpecificView {
     final ResourceContainer resourceContainer;
 
     private EditParentListener editParentListener;
-
-    Item item;
-
-    Label parentsValue;
-
-    TextField parentsField;
 
     private final Button removeParentBtn = new Button(ViewConstants.REMOVE);
 
@@ -108,6 +95,12 @@ public class OrgUnitSpecificView {
     private AddOrEditParentModalWindow addOrEditParentModalWindow;
 
     private ObjectProperty<ResourceRefDisplay> parentProperty;
+
+    Item item;
+
+    Label parentsValue;
+
+    TextField parentsField;
 
     public OrgUnitSpecificView(final Window mainWindow, final OrgUnitServiceLab orgUnitService,
         final ResourceContainer resourceContainer, final FormLayout formLayout, final Map<String, Field> fieldByName) {

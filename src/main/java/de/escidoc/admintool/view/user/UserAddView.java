@@ -56,7 +56,7 @@ import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.service.internal.UserService;
 import de.escidoc.admintool.view.ErrorMessage;
 import de.escidoc.admintool.view.ViewConstants;
-import de.escidoc.admintool.view.resource.ResourceTreeView;
+import de.escidoc.admintool.view.resource.OrgUnitTreeView;
 import de.escidoc.admintool.view.user.password.PasswordView;
 import de.escidoc.admintool.view.user.password.PasswordViewImpl;
 import de.escidoc.admintool.view.user.password.UpdatePasswordCommand;
@@ -94,7 +94,7 @@ public class UserAddView extends CustomComponent implements ClickListener {
 
     final AdminToolApplication app;
 
-    private final ResourceTreeView resourceTreeView;
+    private final OrgUnitTreeView orgUnitTreeView;
 
     private TextField nameField;
 
@@ -107,16 +107,16 @@ public class UserAddView extends CustomComponent implements ClickListener {
     private final SetOrgUnitsCommand setOrgUnitsCommand;
 
     public UserAddView(final AdminToolApplication app, final UserListView userListView, final UserService userService,
-        final ResourceTreeView resourceTreeView, final SetOrgUnitsCommand setOrgUnitsCommand) {
+        final OrgUnitTreeView orgUnitTreeView, final SetOrgUnitsCommand setOrgUnitsCommand) {
         Preconditions.checkNotNull(app, "app is null: %s", app);
         Preconditions.checkNotNull(userListView, "userListView is null: %s", userListView);
         Preconditions.checkNotNull(userService, "userService is null: %s", userService);
-        Preconditions.checkNotNull(resourceTreeView, "resourceTreeView is null: %s", resourceTreeView);
+        Preconditions.checkNotNull(orgUnitTreeView, "resourceTreeView is null: %s", orgUnitTreeView);
         Preconditions.checkNotNull(setOrgUnitsCommand, "setOrgUnitsCommand is null: %s", setOrgUnitsCommand);
         this.app = app;
         this.userListView = userListView;
         this.userService = userService;
-        this.resourceTreeView = resourceTreeView;
+        this.orgUnitTreeView = orgUnitTreeView;
         this.setOrgUnitsCommand = setOrgUnitsCommand;
     }
 
@@ -236,7 +236,7 @@ public class UserAddView extends CustomComponent implements ClickListener {
 
     private void addOkButton() {
         final Button okButton = new Button(ViewConstants.OK_LABEL);
-        okButton.addListener(new AddOrgUnitsToTable(app.getMainWindow(), modalWindow, resourceTreeView, orgUnitWidget
+        okButton.addListener(new AddOrgUnitsToTable(app.getMainWindow(), modalWindow, orgUnitTreeView, orgUnitWidget
             .getTable()));
         buttons.addComponent(okButton);
     }
@@ -246,8 +246,8 @@ public class UserAddView extends CustomComponent implements ClickListener {
     }
 
     private void addOrgUnitTreeView() {
-        resourceTreeView.multiSelect();
-        modalWindow.addComponent(resourceTreeView);
+        orgUnitTreeView.multiSelect();
+        modalWindow.addComponent(orgUnitTreeView);
     }
 
     private void configure() {

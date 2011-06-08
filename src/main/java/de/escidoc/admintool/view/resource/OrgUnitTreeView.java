@@ -37,29 +37,27 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 import de.escidoc.admintool.app.PropertyId;
-import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.resources.Resource;
 
-public class ResourceTreeView extends CustomComponent implements ResourceFolderView {
+public class OrgUnitTreeView extends CustomComponent implements ResourceFolderView {
 
     private static final long serialVersionUID = 6912762184225745680L;
 
     private final VerticalLayout treeLayout = new VerticalLayout();
 
-    final Tree tree = new Tree();
+    private final Tree tree = new Tree();
 
     private final ResourceContainer resourceContainer;
 
     private final FolderHeader header;
 
+    private final Window mainWindow;
+
     private ShowEditResourceView showEditResourceView;
 
     private AddChildrenCommand addChildrenCommand;
 
-    private final Window mainWindow;
-
-    public ResourceTreeView(final Window mainWindow, final FolderHeader header,
-        final ResourceContainer resourceContainer) {
+    public OrgUnitTreeView(final Window mainWindow, final FolderHeader header, final ResourceContainer resourceContainer) {
         preconditions(mainWindow, header, resourceContainer);
         this.mainWindow = mainWindow;
         this.header = header;
@@ -86,21 +84,12 @@ public class ResourceTreeView extends CustomComponent implements ResourceFolderV
         tree.select(resource);
     }
 
-    interface AddChildrenCommand {
-        void addChildrenFor(Resource resource) throws EscidocClientException;
-    }
-
     public void addResourceNodeExpandListener() {
-        final ResourceNodeExpandListener resourceNodeExpandListener =
-            new ResourceNodeExpandListener(tree, mainWindow, addChildrenCommand);
-        tree.addListener(resourceNodeExpandListener);
+        tree.addListener(new ResourceNodeExpandListener(tree, mainWindow, addChildrenCommand));
     }
 
     public void addResourceNodeClickedListener() {
-        final ResourceNodeClickedListener resourceNodeClickedListener =
-            new ResourceNodeClickedListener(showEditResourceView);
-
-        tree.addListener(resourceNodeClickedListener);
+        tree.addListener(new ResourceNodeClickedListener(showEditResourceView));
     }
 
     public void addListener(final ItemClickListener itemClickListener) {
@@ -127,5 +116,9 @@ public class ResourceTreeView extends CustomComponent implements ResourceFolderV
 
     public void multiSelect() {
         tree.setMultiSelect(true);
+    }
+
+    public void select(final Object firstResource) {
+        tree.select(firstResource);
     }
 }

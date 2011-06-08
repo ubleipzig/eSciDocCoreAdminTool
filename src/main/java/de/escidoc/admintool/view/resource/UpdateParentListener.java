@@ -46,7 +46,7 @@ final class UpdateParentListener extends AbstractAddOrChangeParentListener {
 
         super.addOrEditParentModalWindow = addOrEditParentModalWindow;
         super.orgUnitService = orgUnitService;
-        super.resourceContainer = addOrEditParentModalWindow.resourceContainer;
+        super.resourceContainer = addOrEditParentModalWindow.getResourceContainer();
     }
 
     @Override

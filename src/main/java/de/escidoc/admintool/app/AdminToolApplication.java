@@ -85,7 +85,7 @@ import de.escidoc.admintool.view.resource.AddChildrenCommandImpl;
 import de.escidoc.admintool.view.resource.FolderHeaderImpl;
 import de.escidoc.admintool.view.resource.ResourceContainer;
 import de.escidoc.admintool.view.resource.ResourceContainerFactory;
-import de.escidoc.admintool.view.resource.ResourceTreeView;
+import de.escidoc.admintool.view.resource.OrgUnitTreeView;
 import de.escidoc.admintool.view.resource.ResourceViewComponent;
 import de.escidoc.admintool.view.resource.ResourceViewComponentImpl;
 import de.escidoc.admintool.view.role.RoleView;
@@ -412,26 +412,26 @@ public class AdminToolApplication extends Application {
         viewManager.setSecondComponent(component);
     }
 
-    private ResourceTreeView createResourceTreeView() {
+    private OrgUnitTreeView createResourceTreeView() {
         final FolderHeaderImpl header = new FolderHeaderImpl("");
 
-        ResourceTreeView resourceTreeView = null;
+        OrgUnitTreeView orgUnitTreeView = null;
         try {
             final ResourceContainer resourceContainer = getResourceContainer();
 
             final ResourceViewComponent resourceViewComponent =
                 new ResourceViewComponentImpl(this, mainWindow, orgUnitServiceLab, resourceContainer, pdpRequest);
             resourceViewComponent.init();
-            resourceTreeView = new ResourceTreeView(mainWindow, header, resourceContainer);
+            orgUnitTreeView = new OrgUnitTreeView(mainWindow, header, resourceContainer);
 
-            resourceTreeView.setCommand(new AddChildrenCommandImpl(orgUnitServiceLab, resourceContainer));
-            resourceTreeView.addResourceNodeExpandListener();
+            orgUnitTreeView.setCommand(new AddChildrenCommandImpl(orgUnitServiceLab, resourceContainer));
+            orgUnitTreeView.addResourceNodeExpandListener();
         }
         catch (final EscidocClientException e) {
             ModalDialog.show(mainWindow, e);
             LOG.error(ViewConstants.SERVER_INTERNAL_ERROR, e);
         }
-        return resourceTreeView;
+        return orgUnitTreeView;
     }
 
     private RoleView getRoleView() {

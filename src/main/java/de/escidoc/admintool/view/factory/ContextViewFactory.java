@@ -45,7 +45,7 @@ import de.escidoc.admintool.view.context.ContextAddView;
 import de.escidoc.admintool.view.context.ContextEditForm;
 import de.escidoc.admintool.view.context.ContextListView;
 import de.escidoc.admintool.view.context.ContextView;
-import de.escidoc.admintool.view.resource.ResourceTreeView;
+import de.escidoc.admintool.view.resource.OrgUnitTreeView;
 import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
@@ -85,12 +85,12 @@ public class ContextViewFactory {
 
     private ContextAddView contextAddView;
 
-    public ContextView createContextView(final ResourceTreeView resourceTreeView) {
+    public ContextView createContextView(final OrgUnitTreeView orgUnitTreeView) {
         try {
             createContextListView();
-            createContextEditForm(resourceTreeView);
+            createContextEditForm(orgUnitTreeView);
             contextForm.setContextList(contextList);
-            createContextAddView(resourceTreeView);
+            createContextAddView(orgUnitTreeView);
             return new ContextView(app, contextList, contextForm, contextAddView, pdpRequest);
         }
         catch (final EscidocException e) {
@@ -108,18 +108,18 @@ public class ContextViewFactory {
         return contextView;
     }
 
-    public ContextAddView createContextAddView(final ResourceTreeView resourceTreeView) {
+    public ContextAddView createContextAddView(final OrgUnitTreeView orgUnitTreeView) {
         contextAddView =
             new ContextAddView(app, mainWindow, contextList, contextService, new AddOrgUnitToTheList(mainWindow,
-                resourceTreeView));
+                orgUnitTreeView));
         contextAddView.init();
         return contextAddView;
     }
 
-    private void createContextEditForm(final ResourceTreeView resourceTreeView) {
+    private void createContextEditForm(final OrgUnitTreeView orgUnitTreeView) {
         final ContextEditForm contextEditForm =
             new ContextEditForm(app, mainWindow, contextService, orgUnitService, new AddOrgUnitToTheList(mainWindow,
-                resourceTreeView), pdpRequest);
+                orgUnitTreeView), pdpRequest);
         contextEditForm.init();
         contextForm = contextEditForm;
     }

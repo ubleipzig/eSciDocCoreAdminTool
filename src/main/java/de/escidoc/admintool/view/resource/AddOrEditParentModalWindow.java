@@ -40,6 +40,7 @@ import com.vaadin.ui.Window;
 import de.escidoc.admintool.service.internal.OrgUnitServiceLab;
 import de.escidoc.admintool.view.ViewConstants;
 
+@SuppressWarnings("serial")
 public class AddOrEditParentModalWindow extends Window {
 
     private final class CancelButtonListener implements ClickListener {
@@ -50,27 +51,25 @@ public class AddOrEditParentModalWindow extends Window {
         }
     }
 
-    private static final long serialVersionUID = -4691275024835350852L;
-
     private final HorizontalLayout buttons = new HorizontalLayout();
 
     private final Button okButton = new Button(ViewConstants.OK_LABEL);
 
     private final Button cancelBtn = new Button(ViewConstants.CANCEL_LABEL);
 
-    String selectedParent;
-
     private final OrgUnitServiceLab orgUnitService;
 
     private final Window mainWindow;
 
-    final ResourceContainer resourceContainer;
+    private final ResourceContainer resourceContainer;
+
+    private final OrgUnitSpecificView orgUnitSpecificView;
 
     private UpdateParentListener updateParentListener;
 
     private AddParentOkListener addParentOkListener;
 
-    private final OrgUnitSpecificView orgUnitSpecificView;
+    private String selectedParent;
 
     public AddOrEditParentModalWindow(final OrgUnitSpecificView orgUnitSpecificView,
         final ResourceContainer resourceContainer, final OrgUnitServiceLab orgUnitService, final Window mainWindow) {
@@ -100,8 +99,7 @@ public class AddOrEditParentModalWindow extends Window {
     }
 
     private void addResourceTreeView() {
-        final ResourceTreeView resourceTreeView = createResourceTreeView();
-        addComponent(resourceTreeView);
+        addComponent(createResourceTreeView());
     }
 
     private void addButtons() {
@@ -118,17 +116,18 @@ public class AddOrEditParentModalWindow extends Window {
         buttons.addComponent(cancelBtn);
     }
 
-    private ResourceTreeView createResourceTreeView() {
-        final ResourceTreeView resourceTreeView =
-            new ResourceTreeView(getMainWindow(), new FolderHeaderImpl(
+    private OrgUnitTreeView createResourceTreeView() {
+        final OrgUnitTreeView orgUnitTreeView =
+            new OrgUnitTreeView(getMainWindow(), new FolderHeaderImpl(
                 ViewConstants.SELECT_A_PARENT_ORGANIZATIONAL_UNIT), resourceContainer);
-        resourceTreeView.setCommand(new AddChildrenCommandImpl(orgUnitService, resourceContainer));
-        resourceTreeView.addResourceNodeExpandListener();
+
+        orgUnitTreeView.setCommand(new AddChildrenCommandImpl(orgUnitService, resourceContainer));
+        orgUnitTreeView.addResourceNodeExpandListener();
 
         final ResourceSelectedListener selectedListener = new ResourceSelectedListener(this);
 
-        resourceTreeView.addListener(selectedListener);
-        return resourceTreeView;
+        orgUnitTreeView.addListener(selectedListener);
+        return orgUnitTreeView;
     }
 
     public void addAddParentOkLisner() {
@@ -178,5 +177,13 @@ public class AddOrEditParentModalWindow extends Window {
 
     public Window getMainWindow() {
         return mainWindow;
+    }
+
+    public String getSelectedParent() {
+        return selectedParent;
+    }
+
+    public ResourceContainer getResourceContainer() {
+        return resourceContainer;
     }
 }

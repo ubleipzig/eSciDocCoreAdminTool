@@ -72,7 +72,7 @@ import de.escidoc.admintool.view.context.AddOrgUnitToTheList;
 import de.escidoc.admintool.view.context.LinkClickListener;
 import de.escidoc.admintool.view.navigation.ActionIdConstants;
 import de.escidoc.admintool.view.resource.ResourceRefDisplay;
-import de.escidoc.admintool.view.resource.ResourceTreeView;
+import de.escidoc.admintool.view.resource.OrgUnitTreeView;
 import de.escidoc.admintool.view.user.password.PasswordView;
 import de.escidoc.admintool.view.user.password.PasswordViewImpl;
 import de.escidoc.admintool.view.user.password.UpdatePasswordCommandImpl;
@@ -156,7 +156,7 @@ public class UserEditForm extends CustomComponent implements ClickListener {
 
     private final PdpRequest pdpRequest;
 
-    private final ResourceTreeView resourceTreeView;
+    private final OrgUnitTreeView orgUnitTreeView;
 
     private final SetOrgUnitsCommandImpl setOrgUnitsCommand;
 
@@ -169,18 +169,18 @@ public class UserEditForm extends CustomComponent implements ClickListener {
     private LinkClickListener createdByLinkListener;
 
     public UserEditForm(final AdminToolApplication app, final UserService userService,
-        final OrgUnitServiceLab orgUnitService, final ResourceTreeView resourceTreeView, final PdpRequest pdpRequest) {
+        final OrgUnitServiceLab orgUnitService, final OrgUnitTreeView orgUnitTreeView, final PdpRequest pdpRequest) {
         Preconditions.checkNotNull(app, "app is null: %s", app);
         Preconditions.checkNotNull(userService, "userService is null: %s", userService);
         Preconditions.checkNotNull(orgUnitService, "orgUnitService is null: %s", orgUnitService);
-        Preconditions.checkNotNull(resourceTreeView, "resourceTreeView is null: %s", resourceTreeView);
+        Preconditions.checkNotNull(orgUnitTreeView, "resourceTreeView is null: %s", orgUnitTreeView);
         Preconditions.checkNotNull(pdpRequest, "pdpRequest is null: %s", pdpRequest);
         Preconditions.checkNotNull(pdpRequest, "pdpRequest is null: %s", pdpRequest);
 
         this.app = app;
         this.userService = userService;
         this.orgUnitService = orgUnitService;
-        this.resourceTreeView = resourceTreeView;
+        this.orgUnitTreeView = orgUnitTreeView;
         this.pdpRequest = pdpRequest;
         mainWindow = app.getMainWindow();
 
@@ -223,7 +223,7 @@ public class UserEditForm extends CustomComponent implements ClickListener {
     }
 
     private void createButtonListener() {
-        final AddOrgUnitToTheList listener = new AddOrgUnitToTheList(mainWindow, resourceTreeView);
+        final AddOrgUnitToTheList listener = new AddOrgUnitToTheList(mainWindow, orgUnitTreeView);
         listener.using(orgUnitTable);
         editOrgUnitButton.addListener(listener);
 

@@ -37,30 +37,29 @@ import de.escidoc.admintool.domain.PdpRequest;
 import de.escidoc.admintool.service.internal.OrgUnitServiceLab;
 import de.escidoc.admintool.service.internal.ResourceService;
 import de.escidoc.admintool.view.navigation.ActionIdConstants;
-import de.escidoc.admintool.view.resource.ResourceTreeView.AddChildrenCommand;
 import de.escidoc.core.client.exceptions.EscidocClientException;
 
 public class ResourceViewComponentImpl implements ResourceViewComponent {
 
     private final FolderHeader header = new FolderHeaderImpl("Organizational Units");
 
-    private ResourceViewImpl resourceView;
-
     private final ResourceContainer resourceContainer;
-
-    private AddChildrenCommand addChildrenCommand;
-
-    private final ResourceService resourceService;
-
-    private ShowEditResourceView showEditResourceView;
-
-    private final Window mainWindow;
-
-    private ResourceTreeView resourceTreeView;
 
     private final AdminToolApplication app;
 
     private final PdpRequest pdpRequest;
+
+    private final ResourceService resourceService;
+
+    private final Window mainWindow;
+
+    private AddChildrenCommand addChildrenCommand;
+
+    private ResourceViewImpl resourceView;
+
+    private ShowEditResourceView showEditResourceView;
+
+    private OrgUnitTreeView orgUnitTreeView;
 
     public ResourceViewComponentImpl(final AdminToolApplication app, final Window mainWindow,
         final ResourceService resourceService, final ResourceContainer resourceContainer, final PdpRequest pdpRequest) {
@@ -88,12 +87,12 @@ public class ResourceViewComponentImpl implements ResourceViewComponent {
                 resourceView.showEditView(item);
             }
         };
-        resourceTreeView = new ResourceTreeView(mainWindow, header, resourceContainer);
-        resourceTreeView.setEditView(showEditResourceView);
-        resourceTreeView.setCommand(addChildrenCommand);
-        resourceTreeView.addResourceNodeExpandListener();
-        resourceTreeView.addResourceNodeClickedListener();
-        return resourceTreeView;
+        orgUnitTreeView = new OrgUnitTreeView(mainWindow, header, resourceContainer);
+        orgUnitTreeView.setEditView(showEditResourceView);
+        orgUnitTreeView.setCommand(addChildrenCommand);
+        orgUnitTreeView.addResourceNodeExpandListener();
+        orgUnitTreeView.addResourceNodeClickedListener();
+        return orgUnitTreeView;
     }
 
     public ResourceView getResourceView() {
@@ -113,9 +112,8 @@ public class ResourceViewComponentImpl implements ResourceViewComponent {
             return;
         }
         else {
-            resourceTreeView.tree.select(resourceContainer.firstResource());
-            final Item item = resourceContainer.firstResourceAsItem();
-            resourceView.showEditView(item);
+            orgUnitTreeView.select(resourceContainer.firstResource());
+            resourceView.showEditView(resourceContainer.firstResourceAsItem());
         }
     }
 
