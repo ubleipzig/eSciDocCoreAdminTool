@@ -34,8 +34,11 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.axis.types.NonNegativeInteger;
+
 import com.google.common.base.Preconditions;
 
+import de.escidoc.admintool.app.AppConstants;
 import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
@@ -95,6 +98,7 @@ public class OrgUnitServiceLab extends AbstractEscidocService<OrganizationalUnit
     public Collection<OrganizationalUnit> getTopLevelOrgUnits() throws EscidocException, InternalClientException,
         TransportException {
         final SearchRetrieveRequestType searchRequest = new SearchRetrieveRequestType();
+        searchRequest.setMaximumRecords(new NonNegativeInteger(AppConstants.MAX_RESULT_SIZE));
         searchRequest.setQuery("\"top-level-organizational-units\"=true");
         return getClient().retrieveOrganizationalUnitsAsList(searchRequest);
     }
