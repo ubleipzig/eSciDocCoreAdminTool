@@ -158,8 +158,13 @@ public class OrgUnitSpecificView {
     private void createEditParentListener() {
         addOrEditParentModalWindow =
             new AddOrEditParentModalWindow(this, resourceContainer, orgUnitService, mainWindow);
-        addOrEditParentModalWindow.addUpdateParentOkListener();
+        wihtEditParent();
         editParentListener = new EditParentListener(mainWindow, addOrEditParentModalWindow);
+    }
+
+    private void wihtEditParent() {
+        addOrEditParentModalWindow.addUpdateParentOkListener();
+        addOrEditParentModalWindow.setCaption(ViewConstants.EDIT_PARENT);
     }
 
     private void addRemoveParentListener() {
@@ -365,8 +370,9 @@ public class OrgUnitSpecificView {
         addOrEditParentModalWindow.setParentPropertyForAdd(parentPropertyForAddView);
     }
 
-    public void addAddParentOkBtnListener() {
+    public void withAddParent() {
         addOrEditParentModalWindow.addAddParentOkLisner();
+        addOrEditParentModalWindow.setCaption(ViewConstants.ADD_PARENT);
     }
 
     public void showRemoveButton() {

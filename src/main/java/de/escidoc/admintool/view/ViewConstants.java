@@ -291,6 +291,8 @@ public class ViewConstants {
 
     public static final String ADD_PARENT = "Add Parent";
 
+    public static final String EDIT_PARENT = "Edit Parent";
+
     public static final String SELECT_A_PARENT_ORGANIZATIONAL_UNIT = "Select a parent organizational unit";
 
     public static final int FILTER_AREA_WIDTH = 800;

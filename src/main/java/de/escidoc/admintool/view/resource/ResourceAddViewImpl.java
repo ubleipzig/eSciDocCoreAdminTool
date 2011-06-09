@@ -132,7 +132,7 @@ public class ResourceAddViewImpl extends CustomComponent implements ResourceAddV
             new OrgUnitSpecificView(mainWindow, (OrgUnitServiceLab) orgUnitService, resourceContainer, formLayout,
                 fieldByName);
         orgUnitSpecificView.init();
-        orgUnitSpecificView.addAddParentOkBtnListener();
+        orgUnitSpecificView.withAddParent();
         orgUnitSpecificView.setNoParents();
 
         return orgUnitSpecificView;
