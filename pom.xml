@@ -15,6 +15,7 @@
 			<version>LATEST</version>
 			<scope>compile</scope>
 		</dependency>
+		
 		<!-- commented temporary until maven repo found 
 		<dependency>
 			<groupId>com.google.gwt</groupId>
