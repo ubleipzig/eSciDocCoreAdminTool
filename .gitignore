@@ -17,3 +17,4 @@ script/*
 .classpath
 src/test/java/de/admintool/services/*
 .mymetadata
+.release.properties
