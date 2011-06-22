@@ -308,7 +308,7 @@
 				<version>2.1</version>
 				<configuration>
 					<tagBase>
-						file:///home/chh/tmp/tags
+                    http://escidev5:8888/prototype/tags/eSciDocAdminTool/
 					</tagBase>
 				</configuration>
 			</plugin>
