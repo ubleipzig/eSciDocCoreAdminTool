@@ -28,24 +28,8 @@
  */
 package de.escidoc.admintool.view.context;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
-
-import org.apache.commons.lang.exception.ExceptionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.xml.sax.SAXException;
-
 import com.google.common.base.Preconditions;
+
 import com.vaadin.data.Item;
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.terminal.SystemError;
@@ -69,6 +53,23 @@ import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.Notification;
 import com.vaadin.ui.themes.BaseTheme;
 import com.vaadin.ui.themes.Reindeer;
+
+import org.apache.commons.lang.exception.ExceptionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.xml.sax.SAXException;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 
 import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.app.AppConstants;
@@ -370,10 +371,10 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
     @Override
     public void buttonClick(final ClickEvent event) {
         final Button clickedButton = event.getButton();
-        if (clickedButton == saveButton) {
+        if (clickedButton.equals(saveButton)) {
             save();
         }
-        else if (clickedButton == cancelButton) {
+        else if (clickedButton.equals(cancelButton)) {
             discard();
         }
         else {

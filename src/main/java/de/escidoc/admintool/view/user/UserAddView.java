@@ -28,10 +28,8 @@
  */
 package de.escidoc.admintool.view.user;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.google.common.base.Preconditions;
+
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.data.util.POJOItem;
 import com.vaadin.terminal.UserError;
@@ -51,6 +49,9 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.Notification;
 import com.vaadin.ui.themes.Reindeer;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.service.internal.UserService;
@@ -304,10 +305,10 @@ public class UserAddView extends CustomComponent implements ClickListener {
     @Override
     public void buttonClick(final ClickEvent event) {
         final Button source = event.getButton();
-        if (source == cancelButton) {
+        if (source.equals(cancelButton)) {
             resetFields();
         }
-        else if (source == saveButton) {
+        else if (source.equals(saveButton)) {
             validateAndSave();
         }
     }
