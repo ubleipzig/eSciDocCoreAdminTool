@@ -1,3 +1,15 @@
+<<<<<<< HEAD
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/d/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>de.escidoc.admintool</groupId>
+	<artifactId>AdminTool</artifactId>
+	<version>1.1.1</version>
+	<packaging>war</packaging>
+	<dependencies>
+
+		<!-- Vaadin -->
+=======
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/d/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
@@ -13,6 +25,17 @@
 			<groupId>com.vaadin</groupId>
 			<artifactId>vaadin</artifactId>
 			<version>6.6.2</version>
+			<scope>compile</scope>
+		</dependency>
+
+		<!-- commented temporary until maven repo found <dependency> <groupId>com.google.gwt</groupId> 
+			<artifactId>gwt-user</artifactId> <version>${gwt.version}</version> <scope>provided</scope> 
+			</dependency> -->
+>>>>>>> update Vaadin to the latest Version
+		<dependency>
+			<groupId>com.vaadin</groupId>
+			<artifactId>vaadin</artifactId>
+			<version>6.6.1</version>
 			<scope>compile</scope>
 		</dependency>
 
@@ -375,9 +398,9 @@
 		</mailingList>
 	</mailingLists>
 	<scm>
-		<connection>scm:svn:http://escidev5:8888/prototyp/trunk/eSciDocAdminTool
+		<connection>scm:svn:http://escidev5:8888/prototype/tags/eSciDocAdminTool/AdminTool-1.1.1
 		</connection>
-		<developerConnection>scm:svn:http://escidev5:8888/prototyp/trunk/eSciDocAdminTool
+		<developerConnection>scm:svn:http://escidev5:8888/prototype/tags/eSciDocAdminTool/AdminTool-1.1.1
 		</developerConnection>
 	</scm>
 	<repositories>
