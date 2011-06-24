@@ -41,7 +41,7 @@ import de.escidoc.core.resources.adm.MessagesStatus;
 
 public interface AdminService extends EscidocService {
 
-    List<Entry> loadCommonExamples() throws EscidocException, InternalClientException, TransportException;
+    List<Entry> loadCommonExamples() throws EscidocClientException;
 
     void loginWith(String handle) throws InternalClientException;
 

@@ -28,12 +28,13 @@
  */
 package de.escidoc.admintool.service.internal;
 
+import com.google.common.base.Preconditions;
+
 import java.util.Map;
 import java.util.Set;
 
-import com.google.common.base.Preconditions;
-
 import de.escidoc.admintool.service.AdminService;
+import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
@@ -54,8 +55,7 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public MessagesResult<Entry> loadCommonExamples() throws EscidocException, InternalClientException,
-        TransportException {
+    public MessagesResult<Entry> loadCommonExamples() throws EscidocClientException {
         return getClient().loadExamples();
     }
 
