@@ -28,11 +28,12 @@
  */
 package de.escidoc.admintool.view.admintask.loadexamples;
 
-import java.util.Collection;
-
 import com.google.common.base.Preconditions;
+
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Window;
+
+import java.util.Collection;
 
 import de.escidoc.admintool.service.AdminService;
 import de.escidoc.admintool.view.ViewConstants;
@@ -42,7 +43,7 @@ public class LoadExampleResourceViewImpl extends AbstractCustomView implements L
 
     private static final long serialVersionUID = -2478541354753165293L;
 
-    private final Button button = new Button(ViewConstants.LOAD_EXAMPLES);
+    private final Button loadExampleButton = new Button(ViewConstants.LOAD_EXAMPLES);
 
     private OnLoadExampleClick listener;
 
@@ -70,12 +71,12 @@ public class LoadExampleResourceViewImpl extends AbstractCustomView implements L
     }
 
     private void addLoadExampleButton() {
-        button.setWidth(150, UNITS_PIXELS);
-        getViewLayout().addComponent(button);
+        loadExampleButton.setWidth(150, UNITS_PIXELS);
+        getViewLayout().addComponent(loadExampleButton);
     }
 
     private void addListener() {
-        button.addListener(listener);
+        loadExampleButton.addListener(listener);
     }
 
     interface ShowResultCommand {
@@ -83,7 +84,7 @@ public class LoadExampleResourceViewImpl extends AbstractCustomView implements L
     }
 
     private void createLoadExampleButtonListener() {
-        listener = new OnLoadExampleClick(new ShowResultCommandImpl(this));
+        listener = new OnLoadExampleClick(loadExampleButton, new ShowResultCommandImpl(this));
         listener.setAdminService(adminService);
         listener.setMainWindow(mainWindow);
     }

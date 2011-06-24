@@ -15,6 +15,40 @@ background-color:#bcd0de;
 min-height: 100%;
 }
 
+/* Server transaction indicator */
+.v-loading-indicator, .v-loading-indicator-delay, .v-loading-indicator-wait {
+    position: absolute;
+    top: 0;
+    left: 0;
+     width: 100%;
+    height: 100%;
+
+    margin: 0;
+    padding: 0;
+
+    opacity: 0.5;
+    filter: alpha(opacity=50);
+    z-index: 30000;
+
+    background-color: #999999;
+    background-repeat: no-repeat;
+    background-position: 50%;
+
+    cursor: wait;
+}
+
+.v-loading-indicator {
+      background-image: url(icons/animations/loading-indicator.gif);
+}
+
+.v-loading-indicator-delay {
+    background-image: url(icons/animations/loading-indicator-delay.gif);
+}
+
+.v-loading-indicator-wait {
+    background-image: url(icons/animations/loading-indicator-wait.gif);
+}
+
 .v-sa .v-app,
 .v-sa .v-window,
 .v-sa .v-popupview-popup,

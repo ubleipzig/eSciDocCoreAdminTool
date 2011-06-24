@@ -28,6 +28,7 @@ package de.escidoc.admintool.view.admintask.loadexamples;
 
 import com.google.common.base.Preconditions;
 
+import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Window;
@@ -40,21 +41,25 @@ import de.escidoc.core.client.exceptions.EscidocClientException;
 @SuppressWarnings("serial")
 public class OnLoadExampleClick implements ClickListener {
 
-    private final ShowResultCommand command;
+    private final Button loadExampleButton;
+
+    private final ShowResultCommand showResultCommand;
 
     private AdminService adminService;
 
     private Window mainWindow;
 
-    public OnLoadExampleClick(final ShowResultCommand command) {
+    public OnLoadExampleClick(Button loadExampleButton, final ShowResultCommand command) {
+        Preconditions.checkNotNull(loadExampleButton, "loadExampleButton is null: %s", loadExampleButton);
         Preconditions.checkNotNull(command, "command is null: %s", command);
-        this.command = command;
+        this.loadExampleButton = loadExampleButton;
+        this.showResultCommand = command;
     }
 
     @Override
     public void buttonClick(final ClickEvent event) {
         try {
-            command.execute(adminService.loadCommonExamples());
+            showResultCommand.execute(adminService.loadCommonExamples());
         }
         catch (final EscidocClientException e) {
             ModalDialog.show(mainWindow, e);
