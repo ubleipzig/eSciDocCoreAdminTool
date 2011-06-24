@@ -54,8 +54,8 @@ final class AddOrgUnitsToTable implements ClickListener {
 
     private final Table orgUnitTable;
 
-    public AddOrgUnitsToTable(final Window mainWindow, final Window modalWindow,
-        final OrgUnitTreeView orgUnitTreeView, final Table orgUnitTable) {
+    public AddOrgUnitsToTable(final Window mainWindow, final Window modalWindow, final OrgUnitTreeView orgUnitTreeView,
+        final Table orgUnitTable) {
         this.mainWindow = mainWindow;
         this.modalWindow = modalWindow;
         this.orgUnitTreeView = orgUnitTreeView;

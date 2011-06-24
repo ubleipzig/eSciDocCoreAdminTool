@@ -108,7 +108,8 @@ class ResourceTypeListener implements ValueChangeListener {
     }
 
     private void loadItemData() {
-        final POJOContainer<Resource> itemContainer = new POJOContainer<Resource>(Resource.class, ViewConstants.X_LINK_TITLE);
+        final POJOContainer<Resource> itemContainer =
+            new POJOContainer<Resource>(Resource.class, ViewConstants.X_LINK_TITLE);
         for (final Resource item : findAllItems()) {
             itemContainer.addItem(item);
         }

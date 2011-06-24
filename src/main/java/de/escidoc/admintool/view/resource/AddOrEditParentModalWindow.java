@@ -118,8 +118,8 @@ public class AddOrEditParentModalWindow extends Window {
 
     private OrgUnitTreeView createResourceTreeView() {
         final OrgUnitTreeView orgUnitTreeView =
-            new OrgUnitTreeView(getMainWindow(), new FolderHeaderImpl(
-                ViewConstants.SELECT_A_PARENT_ORGANIZATIONAL_UNIT), resourceContainer);
+            new OrgUnitTreeView(getMainWindow(),
+                new FolderHeaderImpl(ViewConstants.SELECT_A_PARENT_ORGANIZATIONAL_UNIT), resourceContainer);
 
         orgUnitTreeView.setCommand(new AddChildrenCommandImpl(orgUnitService, resourceContainer));
         orgUnitTreeView.addResourceNodeExpandListener();
