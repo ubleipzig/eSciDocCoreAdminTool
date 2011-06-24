@@ -84,7 +84,7 @@ public class LoadExampleResourceViewImpl extends AbstractCustomView implements L
     }
 
     private void createLoadExampleButtonListener() {
-        listener = new OnLoadExampleClick(loadExampleButton, new ShowResultCommandImpl(this));
+        listener = new OnLoadExampleClick(new ShowResultCommandImpl(this));
         listener.setAdminService(adminService);
         listener.setMainWindow(mainWindow);
     }

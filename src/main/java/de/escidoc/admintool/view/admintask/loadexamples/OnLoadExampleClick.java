@@ -28,7 +28,6 @@ package de.escidoc.admintool.view.admintask.loadexamples;
 
 import com.google.common.base.Preconditions;
 
-import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Window;
@@ -41,18 +40,14 @@ import de.escidoc.core.client.exceptions.EscidocClientException;
 @SuppressWarnings("serial")
 public class OnLoadExampleClick implements ClickListener {
 
-    private final Button loadExampleButton;
-
     private final ShowResultCommand showResultCommand;
 
     private AdminService adminService;
 
     private Window mainWindow;
 
-    public OnLoadExampleClick(Button loadExampleButton, final ShowResultCommand command) {
-        Preconditions.checkNotNull(loadExampleButton, "loadExampleButton is null: %s", loadExampleButton);
+    public OnLoadExampleClick(final ShowResultCommand command) {
         Preconditions.checkNotNull(command, "command is null: %s", command);
-        this.loadExampleButton = loadExampleButton;
         this.showResultCommand = command;
     }
 
