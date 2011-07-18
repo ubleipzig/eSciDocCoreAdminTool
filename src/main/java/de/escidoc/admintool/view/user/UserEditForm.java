@@ -71,8 +71,8 @@ import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.admintool.view.context.AddOrgUnitToTheList;
 import de.escidoc.admintool.view.context.LinkClickListener;
 import de.escidoc.admintool.view.navigation.ActionIdConstants;
-import de.escidoc.admintool.view.resource.ResourceRefDisplay;
 import de.escidoc.admintool.view.resource.OrgUnitTreeView;
+import de.escidoc.admintool.view.resource.ResourceRefDisplay;
 import de.escidoc.admintool.view.user.password.PasswordView;
 import de.escidoc.admintool.view.user.password.PasswordViewImpl;
 import de.escidoc.admintool.view.user.password.UpdatePasswordCommandImpl;
@@ -538,13 +538,12 @@ public class UserEditForm extends CustomComponent implements ClickListener {
 
     private void updateUserAccount() {
         try {
-            userService.update(getSelectedItemId(), (String) nameField.getValue());
+            final UserAccount updatedUserAccount =
+                userService.update(getSelectedItemId(), (String) nameField.getValue());
             if (activeStatus.isModified()) {
-                changeState();
+                changeState(updatedUserAccount);
             }
-
             updateOrgUnit();
-
         }
         catch (final EscidocException e) {
             ModalDialog.show(app.getMainWindow(), e);
@@ -675,20 +674,12 @@ public class UserEditForm extends CustomComponent implements ClickListener {
 
     private void bindUserRightsWithView() {
         deleteUserBtn.setVisible(isDeleteUserAllowed());
-
-        // name
         nameField.setReadOnly(isUpdateNotAllowed());
-        // password
-
-        // passwordView
         if (isUpdateNotAllowed()) {
             panel.removeComponent(passwordView);
             panel.removeComponent(footerLayout);
         }
-        // active status
         activeStatus.setReadOnly(isDeactivateUserNotAllowed());
-
-        // roles
         addRoleButton.setVisible(isCreateGrantAllowed());
         removeRoleButton.setVisible(isRevokeGrantAllowed());
     }
@@ -778,12 +769,19 @@ public class UserEditForm extends CustomComponent implements ClickListener {
         return userService.delete(getSelectedItemId());
     }
 
-    public void changeState() throws InternalClientException, TransportException, EscidocClientException {
-        if (!(Boolean) activeStatus.getPropertyDataSource().getValue()) {
-            userService.activate(getSelectedItemId());
+    @SuppressWarnings("boxing")
+    public void changeState(final UserAccount updatedUserAccount) throws InternalClientException, TransportException,
+        EscidocClientException {
+        final Object value = activeStatus.getPropertyDataSource().getValue();
+        if (!(value instanceof Boolean)) {
+            return;
+        }
+
+        if ((!(Boolean) activeStatus.getPropertyDataSource().getValue())) {
+            userService.activate(updatedUserAccount);
         }
         else {
-            userService.deactivate(getSelectedItemId());
+            userService.deactivate(updatedUserAccount);
         }
     }
 

@@ -113,62 +113,26 @@ public class UserService {
         return client.retrieve(userObjectId);
     }
 
-    public void update(final String objid, final String newName) throws EscidocClientException {
+    public UserAccount update(final String objid, final String newName) throws EscidocClientException {
         assert !(newName == null || newName.isEmpty()) : "name must not be null or empty";
 
         // TODO name the class with its responsibility
         final UserAccount updatedUserAccount =
             new UserAccountFactory().update(getSelectedUser(objid)).name(newName).build();
 
-        client.update(updatedUserAccount);
+        return client.update(updatedUserAccount);
     }
 
-    // TODO ask Matthias, if we need one click button to activate OR deactivate
-    // user account.
-    public void update(final String objectId, final String newName, final Boolean isActive)
-        throws EscidocClientException {
-
-        this.update(objectId, newName);
-
-        if (isActive) {
-            activate(objectId);
-        }
-        else {
-            deactivate(objectId);
-        }
-    }
-
-    // TODO refactor to use polymorphism. Duplicate code in method body:
-    // activate and deactivate
-    public void activate(final String selectedItemId) throws InternalClientException, TransportException,
-        EscidocClientException {
-
-        assert !(selectedItemId == null || selectedItemId.isEmpty()) : "selectedItemId must not be null or empty";
-
-        final UserAccount userAccount = getSelectedUser(selectedItemId);
-        assert !userAccount.getProperties().isActive() : "User account is already active.";
-
-        client.activate(userAccount.getObjid(), lastModificationDate(userAccount));
-    }
-
-    public void deactivate(final String selectedItemId) throws InternalClientException, TransportException,
-        EscidocClientException {
-        assert !(selectedItemId == null || selectedItemId.isEmpty()) : "selectedItemId must not be null or empty";
-
-        final UserAccount userAccount = getSelectedUser(selectedItemId);
-        assert userAccount.getProperties().isActive() : "User account is not active.";
-
-        client.deactivate(userAccount.getObjid(), lastModificationDate(userAccount));
-    }
-
-    private TaskParam lastModificationDate(final UserAccount userAccount) {
+    public void deactivate(final UserAccount userAccount) throws EscidocClientException {
         final TaskParam taskParam = new TaskParam();
-
-        final DateTime lastModificationDate = userAccount.getLastModificationDate();
-        assert lastModificationDate != null : "last modification date has not been set";
-
         taskParam.setLastModificationDate(userAccount.getLastModificationDate());
-        return taskParam;
+        client.deactivate(userAccount.getObjid(), taskParam);
+    }
+
+    public void activate(final UserAccount updatedUserAccount) throws EscidocClientException {
+        final TaskParam taskParam = new TaskParam();
+        taskParam.setLastModificationDate(updatedUserAccount.getLastModificationDate());
+        client.activate(updatedUserAccount.getObjid(), taskParam);
     }
 
     private UserAccount getSelectedUser(final String selectedItemId) {

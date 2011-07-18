@@ -48,7 +48,6 @@ import com.google.common.collect.Multimap;
 import de.escidoc.admintool.app.AppConstants;
 import de.escidoc.admintool.domain.ContextFactory;
 import de.escidoc.core.client.ContextHandlerClient;
-import de.escidoc.core.client.TransportProtocol;
 import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
@@ -81,7 +80,6 @@ public class ContextService {
 
     private void initClient() throws InternalClientException {
         client = new ContextHandlerClient(eSciDocUri);
-        client.setTransport(TransportProtocol.REST);
         client.setHandle(handle);
     }
 

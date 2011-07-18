@@ -79,6 +79,5 @@ public class ContextServiceLab extends AbstractEscidocService<ContextHandlerClie
     @Override
     public void update(final Resource resource) throws EscidocClientException {
         throw new UnsupportedOperationException("Not yet implemented");
-
     }
 }

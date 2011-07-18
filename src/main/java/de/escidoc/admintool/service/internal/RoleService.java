@@ -38,7 +38,6 @@ import org.apache.axis.types.NonNegativeInteger;
 
 import de.escidoc.admintool.app.AppConstants;
 import de.escidoc.core.client.RoleHandlerClient;
-import de.escidoc.core.client.TransportProtocol;
 import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
@@ -67,7 +66,6 @@ public class RoleService {
 
     private void initClient() throws InternalClientException {
         client = new RoleHandlerClient(eSciDocUri);
-        client.setTransport(TransportProtocol.REST);
         client.setHandle(handle);
     }
 
