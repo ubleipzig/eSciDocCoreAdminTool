@@ -67,9 +67,7 @@ public class FilterResourceListener implements ClickListener {
     private ResourceService resourceService;
 
     public FilterResourceListener(final Window mainWindow, final ServiceContainer serviceContainer) {
-
         preconditions(mainWindow, serviceContainer);
-
         this.mainWindow = mainWindow;
         this.serviceContainer = serviceContainer;
     }

@@ -29,6 +29,8 @@
 package de.escidoc.admintool.view.admintask.filter;
 
 import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 import com.google.common.base.Preconditions;
 import com.vaadin.data.util.BeanItemContainer;
@@ -103,8 +105,14 @@ public class FilterResourceView extends AbstractCustomView {
     }
 
     private void addResourceTypeOption() {
-        resourceOption.setContainerDataSource(new BeanItemContainer<ResourceType>(ResourceType.class, Arrays
-            .asList(ResourceType.values())));
+        final List<ResourceType> allResourceTypeList =
+            new LinkedList<ResourceType>(Arrays.asList(ResourceType.values()));
+        allResourceTypeList.remove(ResourceType.COMPONENT);
+        allResourceTypeList.remove(ResourceType.USERACCOUNT);
+        allResourceTypeList.remove(ResourceType.USERGROUP);
+        allResourceTypeList.remove(ResourceType.CONTENT_RELATION);
+        resourceOption.setContainerDataSource(new BeanItemContainer<ResourceType>(ResourceType.class,
+            allResourceTypeList));
         resourceOption.setItemCaptionPropertyId(PropertyId.LABEL);
         resourceOption.select(ResourceType.ITEM);
         getViewLayout().addComponent(resourceOption);
