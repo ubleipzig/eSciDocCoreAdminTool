@@ -41,7 +41,6 @@ import com.vaadin.ui.TextField;
 
 import de.escidoc.admintool.view.admintask.ResourceType;
 import de.escidoc.core.resources.aa.role.Role;
-import de.escidoc.core.resources.aa.role.Scope;
 import de.escidoc.core.resources.aa.role.ScopeDef;
 
 @SuppressWarnings("serial")
@@ -69,23 +68,22 @@ class RoleSelectListener implements ValueChangeListener {
 
     private void onSelectedRole(final ValueChangeEvent event) {
         if (event.getProperty().getValue() instanceof Role) {
-
-            final Role selectedRole = (Role) event.getProperty().getValue();
-            final Scope scope = selectedRole.getScope();
-            final List<ScopeDef> scopeDefinitions = scope.getScopeDefinitions();
             final List<ResourceType> resourceTypeList = new ArrayList<ResourceType>();
-
-            for (final ScopeDef scopeDef : scopeDefinitions) {
-                final de.escidoc.core.resources.ResourceType relationAttributeObjectType =
-                    scopeDef.getRelationAttributeObjectType();
-                final ResourceType resourceType = ResourceType.convert(relationAttributeObjectType);
-                resourceTypeList.add(resourceType);
+            for (final ScopeDef scopeDef : getScopeDefinitions((Role) event.getProperty().getValue())) {
+                resourceTypeList.add(ResourceType.convert(scopeDef.getRelationAttributeObjectType()));
             }
-
-            resourceTypeComboBox.setContainerDataSource(new BeanItemContainer<ResourceType>(ResourceType.class,
-                resourceTypeList));
-            enableScoping(isScopingEnable(selectedRole));
+            bindView(resourceTypeList, (Role) event.getProperty().getValue());
         }
+    }
+
+    private void bindView(final List<ResourceType> resourceTypeList, final Role role) {
+        resourceTypeComboBox.setContainerDataSource(new BeanItemContainer<ResourceType>(ResourceType.class,
+            resourceTypeList));
+        enableScoping(isScopingEnable(role));
+    }
+
+    private List<ScopeDef> getScopeDefinitions(final Role role) {
+        return role.getScope().getScopeDefinitions();
     }
 
     private boolean isScopingEnable(final Role role) {
