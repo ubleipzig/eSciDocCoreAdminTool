@@ -28,10 +28,8 @@
  */
 package de.escidoc.admintool.view.role;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -63,7 +61,6 @@ import de.escidoc.admintool.service.internal.ContextService;
 import de.escidoc.admintool.service.internal.RoleService;
 import de.escidoc.admintool.service.internal.UserService;
 import de.escidoc.admintool.view.ViewConstants;
-import de.escidoc.admintool.view.admintask.ResourceType;
 import de.escidoc.admintool.view.util.dialog.ErrorDialog;
 import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.client.exceptions.application.notfound.RoleNotFoundException;
@@ -251,13 +248,7 @@ public class RoleView extends CustomComponent {
     }
 
     private void bindResourceTypeData() {
-        // resourceTypeComboBox.setContainerDataSource(new BeanItemContainer<ResourceType>(ResourceType.class,
-        // allResourceTypes()));
         resourceTypeComboBox.addListener(new ResourceTypeListener(this));
-    }
-
-    private List<ResourceType> allResourceTypes() {
-        return new LinkedList<ResourceType>(Arrays.asList(ResourceType.values()));
     }
 
     Collection<Context> getAllContexts() {

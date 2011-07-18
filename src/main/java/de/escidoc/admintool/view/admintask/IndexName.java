@@ -31,7 +31,7 @@ package de.escidoc.admintool.view.admintask;
 import java.util.Arrays;
 import java.util.List;
 
-public class INDEX_NAME {
+public class IndexName {
 
     public static final String REINDEX_ALL = "all";
 

@@ -41,7 +41,6 @@ import com.vaadin.ui.VerticalLayout;
 import de.escidoc.admintool.app.PropertyId;
 import de.escidoc.admintool.domain.PdpRequest;
 import de.escidoc.admintool.view.ViewConstants;
-import de.escidoc.admintool.view.admintask.ShowPurgeStatusListener;
 import de.escidoc.admintool.view.navigation.ActionIdConstants;
 import de.escidoc.core.resources.Resource;
 
@@ -50,12 +49,6 @@ final class ShowFilterResultCommandImpl implements ShowFilterResultCommand {
     private final FormLayout formLayout = new FormLayout();
 
     private final PdpRequest pdpRequest;
-
-    private final Label statusLabel = new Label(ViewConstants.STATUS);
-
-    private final Button showStatusButton = new Button(ViewConstants.SHOW_STATUS);
-
-    private final ShowPurgeStatusListener showPurgeStatusListener;
 
     final FilterResourceView filterResourceView;
 
@@ -68,8 +61,6 @@ final class ShowFilterResultCommandImpl implements ShowFilterResultCommand {
         Preconditions.checkNotNull(pdpRequest, "pdpRequest is null: %s", pdpRequest);
         this.filterResourceView = filterResourceView;
         this.pdpRequest = pdpRequest;
-        showPurgeStatusListener =
-            new ShowPurgeStatusListener(filterResourceView.adminService, filterResourceView.mainWindow, statusLabel);
     }
 
     @Override
