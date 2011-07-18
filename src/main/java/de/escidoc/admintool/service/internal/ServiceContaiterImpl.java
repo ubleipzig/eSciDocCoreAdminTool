@@ -76,6 +76,11 @@ public class ServiceContaiterImpl implements ServiceContainer {
     }
 
     @Override
+    public ResourceService getContentRelationService() {
+        return (ResourceService) services.get(ContentRelationService.class);
+    }
+
+    @Override
     public String toString() {
         final StringBuilder builder = new StringBuilder();
         builder.append("ServiceContaiterImpl [");

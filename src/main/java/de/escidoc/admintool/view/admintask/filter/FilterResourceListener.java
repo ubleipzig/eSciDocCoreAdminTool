@@ -125,6 +125,9 @@ public class FilterResourceListener implements ClickListener {
             case CONTENT_MODEL:
                 resourceService = serviceContainer.getContentModelService();
                 break;
+            case CONTENT_RELATION:
+                resourceService = serviceContainer.getContentRelationService();
+                break;
             default:
                 break;
         }

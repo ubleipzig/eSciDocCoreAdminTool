@@ -30,77 +30,50 @@ package de.escidoc.admintool.service.internal;
 
 import java.util.Collection;
 
-import com.google.common.base.Preconditions;
-
-import de.escidoc.core.client.ContentModelHandlerClient;
 import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
+import de.escidoc.core.client.interfaces.ContentRelationHandlerClientInterface;
 import de.escidoc.core.client.interfaces.base.HandlerService;
 import de.escidoc.core.resources.Resource;
-import de.escidoc.core.resources.cmm.ContentModel;
 
-public class ContentModelService extends AbstractEscidocService<ContentModelHandlerClient> {
+public class ContentRelationService extends AbstractEscidocService<ContentRelationHandlerClientInterface> {
 
-    public ContentModelService(final HandlerService client) {
+    public ContentRelationService(final HandlerService client) {
         super(client);
     }
 
     @Override
     public Resource create(final Resource resource) throws EscidocException, InternalClientException,
         TransportException {
-        Preconditions.checkNotNull(resource, "resource is null: %s", resource);
-        if (!(resource instanceof ContentModel)) {
-            throw new RuntimeException("Not instance of content model." + resource);
-        }
-        return getClient().create((ContentModel) resource);
+        throw new UnsupportedOperationException("Not yet implemented");
     }
 
     @Override
     public Resource findById(final String objid) throws EscidocClientException {
-        Preconditions.checkNotNull(objid, "objid is null: %s", objid);
-        return getClient().retrieve(objid);
+        throw new UnsupportedOperationException("Not yet implemented");
     }
 
     @Override
     public void update(final Resource resource) throws EscidocClientException {
-        Preconditions.checkNotNull(resource, "resource is null: %s", resource);
-        if (!(resource instanceof ContentModel)) {
-            throw new RuntimeException("Not instance of content model." + resource);
-        }
-        getClient().update((ContentModel) resource);
+        throw new UnsupportedOperationException("Not yet implemented");
     }
 
     @Override
-    ContentModelHandlerClient getClient() {
-        return (ContentModelHandlerClient) client;
+    ContentRelationHandlerClientInterface getClient() {
+        return (ContentRelationHandlerClientInterface) client;
     }
 
     @Override
     Collection<? extends Resource> findPublicOrReleasedResources() throws EscidocException, InternalClientException,
         TransportException {
-        return getClient().retrieveContentModelsAsList(withEmptyFilter());
+        return getClient().retrieveContentRelationsAsList(withEmptyFilter());
     }
 
     @Override
     public Collection<? extends Resource> filterUsingInput(final String query) throws EscidocException,
         InternalClientException, TransportException {
-        return getClient().retrieveContentModelsAsList(userInputToFilter(query));
-    }
-
-    @Override
-    public String toString() {
-        final StringBuilder builder = new StringBuilder();
-        builder.append("ContentModelService [");
-        if (getClient() != null) {
-            builder.append("getClient()=").append(getClient());
-        }
-        builder.append("]");
-        return builder.toString();
-    }
-
-    public void delete(final String selectedId) throws EscidocClientException {
-        getClient().delete(selectedId);
+        return getClient().retrieveContentRelationsAsList(userInputToFilter(query));
     }
 }

@@ -427,4 +427,6 @@ public class ViewConstants {
 
     public static final String RESOURCE_TYPE = "Resource Type:";
 
+    public static final String TIP = "Tip";
+
 }

@@ -52,6 +52,9 @@ import de.escidoc.admintool.view.admintask.ResourceType;
 
 @SuppressWarnings("serial")
 public class FilterResourceView extends AbstractCustomView {
+    final AdminService adminService;
+
+    final Window mainWindow;
 
     private final OptionGroup resourceOption = new OptionGroup(ViewConstants.PLEASE_SELECT_A_RESOURCE_TYPE);
 
@@ -60,10 +63,6 @@ public class FilterResourceView extends AbstractCustomView {
     private final Button filterResourceBtn = new Button(ViewConstants.FILTER_LABEL);
 
     private final ShowFilterResultCommandImpl command;
-
-    final AdminService adminService;
-
-    final Window mainWindow;
 
     private final FilterResourceListener listener;
 
@@ -99,7 +98,7 @@ public class FilterResourceView extends AbstractCustomView {
         filterLayout.setSpacing(true);
         final Label popUpContent = new Label(ViewConstants.FILTER_EXAMPLE_TOOLTIP_TEXT, Label.CONTENT_XHTML);
         popUpContent.setWidth(400, UNITS_PIXELS);
-        final PopupView popup = new PopupView("Tip", popUpContent);
+        final PopupView popup = new PopupView(ViewConstants.TIP, popUpContent);
         filterLayout.addComponent(popup);
         filterLayout.addComponent(rawFilterTextArea);
     }
@@ -110,7 +109,6 @@ public class FilterResourceView extends AbstractCustomView {
         allResourceTypeList.remove(ResourceType.COMPONENT);
         allResourceTypeList.remove(ResourceType.USERACCOUNT);
         allResourceTypeList.remove(ResourceType.USERGROUP);
-        allResourceTypeList.remove(ResourceType.CONTENT_RELATION);
         resourceOption.setContainerDataSource(new BeanItemContainer<ResourceType>(ResourceType.class,
             allResourceTypeList));
         resourceOption.setItemCaptionPropertyId(PropertyId.LABEL);

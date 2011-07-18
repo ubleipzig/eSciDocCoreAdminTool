@@ -49,6 +49,7 @@ import de.escidoc.admintool.service.EscidocService;
 import de.escidoc.admintool.service.PdpService;
 import de.escidoc.admintool.service.ServiceContainer;
 import de.escidoc.admintool.service.internal.ContentModelService;
+import de.escidoc.admintool.service.internal.ContentRelationService;
 import de.escidoc.admintool.service.internal.ContextService;
 import de.escidoc.admintool.service.internal.ContextServiceLab;
 import de.escidoc.admintool.service.internal.ItemService;
@@ -83,9 +84,9 @@ import de.escidoc.admintool.view.context.ContextView;
 import de.escidoc.admintool.view.factory.ContextViewFactory;
 import de.escidoc.admintool.view.resource.AddChildrenCommandImpl;
 import de.escidoc.admintool.view.resource.FolderHeaderImpl;
+import de.escidoc.admintool.view.resource.OrgUnitTreeView;
 import de.escidoc.admintool.view.resource.ResourceContainer;
 import de.escidoc.admintool.view.resource.ResourceContainerFactory;
-import de.escidoc.admintool.view.resource.OrgUnitTreeView;
 import de.escidoc.admintool.view.resource.ResourceViewComponent;
 import de.escidoc.admintool.view.resource.ResourceViewComponentImpl;
 import de.escidoc.admintool.view.role.RoleView;
@@ -177,6 +178,8 @@ public class AdminToolApplication extends Application {
     private EscidocServiceLocation escidocServiceLocation;
 
     private MainView mainView;
+
+    private ContentRelationService contentRelationService;
 
     @Override
     public void init() {
@@ -340,6 +343,8 @@ public class AdminToolApplication extends Application {
         contentModelService = serviceFactory.createContentModelService();
         services.add(contentModelService);
         pdpService = serviceFactory.createPdpService();
+        contentRelationService = serviceFactory.createContentRelationService();
+        services.add(contentRelationService);
     }
 
     private void buildMainLayout() {

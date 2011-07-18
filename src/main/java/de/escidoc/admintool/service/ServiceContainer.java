@@ -46,4 +46,6 @@ public interface ServiceContainer {
 
     ResourceService getContentModelService();
 
+    ResourceService getContentRelationService();
+
 }
