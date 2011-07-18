@@ -39,9 +39,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Preconditions;
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
-import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.POJOContainer;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -75,13 +72,10 @@ import de.escidoc.core.resources.aa.useraccount.UserAccount;
 import de.escidoc.core.resources.common.reference.ContextRef;
 import de.escidoc.core.resources.om.context.Context;
 
+@SuppressWarnings("serial")
 public class RoleView extends CustomComponent {
 
-    private static final long serialVersionUID = -1590899235898433438L;
-
     private static final Logger LOG = LoggerFactory.getLogger(RoleView.class);
-
-    private static final String SEARCH_LABEL = "Search";
 
     private static final int RESOURCE_SELECTION_HEIGHT_IN_INTEGER = 400;
 
@@ -91,8 +85,6 @@ public class RoleView extends CustomComponent {
 
     private static final String COMPONENT_WIDTH = COMPONENT_WIDTH_IN_INTEGER + "px";
 
-    private static final String CAPTION = "Role Management";
-
     private final Panel panel = new Panel();
 
     private final VerticalLayout verticalLayout = new VerticalLayout();
@@ -101,7 +93,7 @@ public class RoleView extends CustomComponent {
 
     private final ComboBox roleComboBox = new ComboBox("Role:");
 
-    private final ComboBox resourceTypeComboBox = new ComboBox("Resouce Type:");
+    private final ComboBox resourceTypeComboBox = new ComboBox(ViewConstants.RESOURCE_TYPE);
 
     final ListSelect resouceResult = new ListSelect();
 
@@ -117,7 +109,7 @@ public class RoleView extends CustomComponent {
 
     final TextField searchBox = new TextField("Resource Title: ");
 
-    private final Button searchButton = new Button(SEARCH_LABEL);
+    private final Button searchButton = new Button(ViewConstants.SEARCH_LABEL);
 
     private final ContextService contextService;
 
@@ -169,7 +161,7 @@ public class RoleView extends CustomComponent {
         mainLayout.setWidth(400, UNITS_PIXELS);
 
         panel.setContent(verticalLayout);
-        panel.setCaption(CAPTION);
+        panel.setCaption(ViewConstants.CAPTION);
 
         // TODO how to make panel take the whole vertical screen, if it does not
         // contain any child component;
@@ -191,7 +183,7 @@ public class RoleView extends CustomComponent {
         roleComboBox.setNullSelectionAllowed(false);
         roleComboBox.setImmediate(true);
         roleComboBox.setRequired(true);
-        roleComboBox.addListener(new RoleSelectListener());
+        roleComboBox.addListener(new RoleSelectListener(resourceTypeComboBox, searchBox, searchButton));
         mainLayout.addComponent(roleComboBox);
 
     }
@@ -259,15 +251,13 @@ public class RoleView extends CustomComponent {
     }
 
     private void bindResourceTypeData() {
-        resourceTypeComboBox.setContainerDataSource(new BeanItemContainer<ResourceType>(ResourceType.class,
-            newResourceTypeMinusItemList()));
+        // resourceTypeComboBox.setContainerDataSource(new BeanItemContainer<ResourceType>(ResourceType.class,
+        // allResourceTypes()));
         resourceTypeComboBox.addListener(new ResourceTypeListener(this));
     }
 
-    private List<ResourceType> newResourceTypeMinusItemList() {
-        final List<ResourceType> resourceTypeList = new LinkedList<ResourceType>(Arrays.asList(ResourceType.values()));
-        // resourceTypeList.removeAll(Arrays.asList(new ResourceType[] { ResourceType.ITEM }));
-        return resourceTypeList;
+    private List<ResourceType> allResourceTypes() {
+        return new LinkedList<ResourceType>(Arrays.asList(ResourceType.values()));
     }
 
     Collection<Context> getAllContexts() {
@@ -362,6 +352,7 @@ public class RoleView extends CustomComponent {
         }
     }
 
+    @SuppressWarnings("unused")
     private static class CancelBtnListener implements Button.ClickListener {
 
         private static final long serialVersionUID = -5938771331937438272L;
@@ -376,44 +367,7 @@ public class RoleView extends CustomComponent {
         }
     }
 
-    private class RoleSelectListener implements ValueChangeListener {
-
-        private static final long serialVersionUID = -4595870805889611817L;
-
-        @Override
-        public void valueChange(final ValueChangeEvent event) {
-            onSelectedRole(event);
-        }
-
-        private void onSelectedRole(final ValueChangeEvent event) {
-            final Object value = event.getProperty().getValue();
-            if (value instanceof Role) {
-                final Role r = (Role) value;
-
-                enableScoping(isScopingEnable(r));
-            }
-        }
-
-        private boolean isScopingEnable(final Role role) {
-            if (role.getObjid().equals(RoleType.SYSTEM_ADMINISTRATOR.getObjectId())
-                || role.getObjid().equals(RoleType.SYSTEM_INSPECTOR.getObjectId())) {
-                return false;
-            }
-            else {
-                return true;
-            }
-        }
-
-        private void enableScoping(final boolean isScopingEnabled) {
-            resourceTypeComboBox.setEnabled(isScopingEnabled);
-            searchBox.setEnabled(isScopingEnabled);
-            searchButton.setEnabled(isScopingEnabled);
-        }
-    }
-
     private class SearchBtnListener implements Button.ClickListener {
-
-        private static final long serialVersionUID = -2520068834542312077L;
 
         private Collection<Context> foundContexts;
 

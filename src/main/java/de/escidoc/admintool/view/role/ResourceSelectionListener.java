@@ -31,8 +31,10 @@ package de.escidoc.admintool.view.role;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 
+import de.escidoc.admintool.app.AppConstants;
 import de.escidoc.core.resources.Resource;
 
+@SuppressWarnings("serial")
 final class ResourceSelectionListener implements ValueChangeListener {
 
     private final RoleView roleView;
@@ -41,19 +43,18 @@ final class ResourceSelectionListener implements ValueChangeListener {
         this.roleView = roleView;
     }
 
-    private static final String EMPTY_STRING = "";
-
-    private static final long serialVersionUID = -3079481037459553076L;
-
     @Override
     public void valueChange(final ValueChangeEvent event) {
-        if (event.getProperty() != null && event.getProperty().getValue() != null
-            && event.getProperty().getValue() instanceof Resource) {
-            final Resource selected = (Resource) event.getProperty().getValue();
-            roleView.searchBox.setValue(selected.getXLinkTitle());
+        if (isSelected(event)) {
+            roleView.searchBox.setValue(((Resource) event.getProperty().getValue()).getXLinkTitle());
         }
         else {
-            roleView.searchBox.setValue(EMPTY_STRING);
+            roleView.searchBox.setValue(AppConstants.EMPTY_STRING);
         }
+    }
+
+    private boolean isSelected(final ValueChangeEvent event) {
+        return event.getProperty() != null && event.getProperty().getValue() != null
+            && event.getProperty().getValue() instanceof Resource;
     }
 }

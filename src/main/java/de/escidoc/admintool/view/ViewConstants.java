@@ -421,4 +421,10 @@ public class ViewConstants {
 
     public static final String ADD_A_NEW_ADMIN_DESCRIPTOR = "Add a new Admin Descriptor";
 
+    public static final String SEARCH_LABEL = "Search";
+
+    public static final String CAPTION = "Role Management";
+
+    public static final String RESOURCE_TYPE = "Resource Type:";
+
 }

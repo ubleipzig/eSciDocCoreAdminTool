@@ -64,8 +64,6 @@ public class AppConstants {
 
     public static final String DEFAULT_ORG_UNIT_ATTRIBUTE_NAME = "o";
 
-    public static final String EMPTY_STRING = "";
-
     public static final String ORGANIZATIONAL_UNIT_DEFAULT_ATTRIBUTE_NAME = "o";
 
     public static final String XACML_ACTION_ID = "urn:oasis:names:tc:xacml:1.0:action:action-id";
@@ -96,4 +94,6 @@ public class AppConstants {
         PropertyId.DESCRIPTION, PropertyId.PUBLIC_STATUS, PropertyId.PUBLIC_STATUS_COMMENT, PropertyId.TYPE,
         PropertyId.CREATED_ON, PropertyId.CREATED_BY, PropertyId.LAST_MODIFICATION_DATE, PropertyId.MODIFIED_BY,
         PropertyId.ORG_UNIT_REFS, PropertyId.ADMIN_DESCRIPTORS };
+
+    public static final String EMPTY_STRING = "";
 }

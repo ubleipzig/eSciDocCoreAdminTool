@@ -28,10 +28,30 @@
  */
 package de.escidoc.admintool.view.admintask;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public enum ResourceType {
 
     ITEM("Item"), CONTAINER("Container"), CONTEXT("Context"), ORGANIZATIONAL_UNIT("Organizational Unit"), CONTENT_MODEL(
-        "Content Model");
+        "Content Model"), COMPONENT("Component"), CONTENT_RELATION("Content Relation"), USERACCOUNT("User Account"), USERGROUP(
+        "User Group");
+
+    @SuppressWarnings("serial")
+    private static final Map<de.escidoc.core.resources.ResourceType, ResourceType> map =
+        new HashMap<de.escidoc.core.resources.ResourceType, ResourceType>() {
+            {
+                put(de.escidoc.core.resources.ResourceType.ITEM, ITEM);
+                put(de.escidoc.core.resources.ResourceType.CONTAINER, CONTAINER);
+                put(de.escidoc.core.resources.ResourceType.CONTEXT, CONTEXT);
+                put(de.escidoc.core.resources.ResourceType.ORGANIZATIONAL_UNIT, ORGANIZATIONAL_UNIT);
+                put(de.escidoc.core.resources.ResourceType.CONTENT_MODEL, CONTENT_MODEL);
+                put(de.escidoc.core.resources.ResourceType.COMPONENT, COMPONENT);
+                put(de.escidoc.core.resources.ResourceType.CONTENT_RELATION, CONTENT_RELATION);
+                put(de.escidoc.core.resources.ResourceType.USERACCOUNT, USERACCOUNT);
+                put(de.escidoc.core.resources.ResourceType.USERGROUP, USERGROUP);
+            }
+        };
 
     private String label;
 
@@ -46,5 +66,9 @@ public enum ResourceType {
     @Override
     public String toString() {
         return label;
+    }
+
+    public static ResourceType convert(final de.escidoc.core.resources.ResourceType relationAttributeObjectType) {
+        return map.get(relationAttributeObjectType);
     }
 }
