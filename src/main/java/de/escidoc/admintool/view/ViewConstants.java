@@ -419,4 +419,6 @@ public class ViewConstants {
 
     public static final String VERSION = "Version";
 
+    public static final String ADD_A_NEW_ADMIN_DESCRIPTOR = "Add a new Admin Descriptor";
+
 }

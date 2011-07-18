@@ -29,6 +29,8 @@
 package de.escidoc.admintool.view.context;
 
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -57,7 +59,7 @@ public abstract class AdminDescriptorView extends Window {
 
     protected static final String EDIT_ADMIN_DESCRIPTOR = "Edit Admin Descriptor";
 
-    protected final TextField adminDescName = new TextField("Name: ");
+    protected final TextField adminDescNameField = new TextField("Name: ");
 
     protected final TextField adminDescContent = new TextField("Content: ");
 
@@ -107,21 +109,21 @@ public abstract class AdminDescriptorView extends Window {
     private void buildMainLayout() {
         setWindowCaption();
         setModal(true);
-        setWidth("600px");
-        setHeight("400px");
+        setWidth("500px");
+        setHeight("250px");
 
-        adminDescName.setWidth("400px");
+        adminDescNameField.setWidth("400px");
         adminDescContent.setRows(5);
         adminDescContent.setWidth("400px");
 
         if (name != null) {
-            adminDescName.setValue(name);
+            adminDescNameField.setValue(name);
         }
 
         if (content != null) {
             adminDescContent.setValue(content);
         }
-        formLayout.addComponent(adminDescName);
+        formLayout.addComponent(adminDescNameField);
         formLayout.addComponent(adminDescContent);
 
         addFooter();
@@ -151,13 +153,23 @@ public abstract class AdminDescriptorView extends Window {
 
     protected abstract void doSave();
 
+    boolean isValid(final String adminDescriptorName) {
+        return !containsSpace(adminDescriptorName);
+    }
+
+    private boolean containsSpace(final String adminDescriptorName) {
+        final Pattern pattern = Pattern.compile("\\s");
+        final Matcher matcher = pattern.matcher(adminDescriptorName);
+        return matcher.find();
+    }
+
     protected class SaveButtonListener implements Button.ClickListener {
 
         public void buttonClick(final ClickEvent event) {
             final String content = (String) adminDescContent.getValue();
             if (validate(content)) {
                 adminDescriptorAccordion.addTab(new Label(content, Label.CONTENT_PREFORMATTED),
-                    (String) adminDescName.getValue(), null);
+                    (String) adminDescNameField.getValue(), null);
                 closeWindow();
             }
         }
@@ -176,8 +188,8 @@ public abstract class AdminDescriptorView extends Window {
     }
 
     private boolean enteredAdminDescriptors(final String value) {
-        final AdminDescriptor adminDescriptor = new AdminDescriptor((String) adminDescName.getValue());
-        adminDescriptor.setName((String) adminDescName.getValue());
+        final AdminDescriptor adminDescriptor = new AdminDescriptor((String) adminDescNameField.getValue());
+        adminDescriptor.setName((String) adminDescNameField.getValue());
         try {
             adminDescriptor.setContent(value);
             return true;

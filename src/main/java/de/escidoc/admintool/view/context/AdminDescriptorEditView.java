@@ -28,6 +28,7 @@
  */
 package de.escidoc.admintool.view.context;
 
+import com.vaadin.terminal.UserError;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TabSheet.Tab;
@@ -48,13 +49,21 @@ public class AdminDescriptorEditView extends AdminDescriptorView {
 
     @Override
     protected void doSave() {
-        final String content = (String) adminDescContent.getValue();
-        if (validate(content)) {
-            getTabTitle().setCaption((String) adminDescName.getValue());
-            adminDescriptorAccordion.replaceComponent(adminDescriptorAccordion.getSelectedTab(), new Label(content,
-                Label.CONTENT_PREFORMATTED));
-            closeWindow();
+        final String adminDescriptorName = (String) adminDescNameField.getValue();
+        if (isValid(adminDescriptorName)) {
+            adminDescNameField.setComponentError(null);
+            final String adminDescriptorContent = (String) adminDescContent.getValue();
+            if (validate(adminDescriptorContent)) {
+                getTabTitle().setCaption((String) adminDescNameField.getValue());
+                adminDescriptorAccordion.replaceComponent(adminDescriptorAccordion.getSelectedTab(), new Label(content,
+                    Label.CONTENT_PREFORMATTED));
+                closeWindow();
+            }
         }
+        else {
+            adminDescNameField.setComponentError(new UserError("Must not contain space"));
+        }
+
     }
 
     private Tab getTabTitle() {
