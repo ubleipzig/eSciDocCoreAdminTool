@@ -48,7 +48,8 @@ public class ReindexResourceViewImpl extends AbstractCustomView implements Reind
 
     private final ComboBox indexNameSelect = new ComboBox(ViewConstants.INDEX_NAME, IndexName.ALL_NAME);
 
-    private final ReindexButtonListener listener = new ReindexButtonListener(this, clearIndexBox, indexNameSelect);
+    private final ReindexButtonListener listener = new ReindexButtonListener(this, clearIndexBox, indexNameSelect,
+        reindexResourceBtn);
 
     final AdminService adminService;
 

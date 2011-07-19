@@ -52,33 +52,46 @@ final class ReindexButtonListener implements ClickListener {
 
     private final Button showStatusButton = new Button(ViewConstants.SHOW_STATUS);
 
+    private final VerticalLayout statusLayout = new VerticalLayout();
+
     private final ReindexResourceViewImpl reindexResourceViewImpl;
 
     private final CheckBox clearIndexBox;
 
     private final AbstractField indexNameSelect;
 
+    private final Button reindexResourceBtn;
+
     public ReindexButtonListener(final ReindexResourceViewImpl reindexResourceViewImpl, final CheckBox clearIndexBox,
-        final AbstractField indexNameSelect) {
+        final AbstractField indexNameSelect, final Button reindexResourceBtn) {
         Preconditions.checkNotNull(reindexResourceViewImpl, "reindexResourceViewImpl is null: %s",
             reindexResourceViewImpl);
         Preconditions.checkNotNull(clearIndexBox, "clearIndexBox is null: %s", clearIndexBox);
         Preconditions.checkNotNull(indexNameSelect, "indexNameSelect is null: %s", indexNameSelect);
-
+        Preconditions.checkNotNull(reindexResourceBtn, "reindexResourceBtn is null: %s", reindexResourceBtn);
         this.reindexResourceViewImpl = reindexResourceViewImpl;
         this.clearIndexBox = clearIndexBox;
         this.indexNameSelect = indexNameSelect;
+        this.reindexResourceBtn = reindexResourceBtn;
     }
 
     @Override
     public void buttonClick(final ClickEvent event) {
         checkPreconditions();
         createShowStatusButton();
+        makeReindexButtonInvisible();
         tryReindex();
     }
 
+    private void makeReindexButtonInvisible() {
+        reindexResourceBtn.setVisible(false);
+    }
+
     private void createShowStatusButton() {
-        reindexResourceViewImpl.getViewLayout().addComponent(showStatusButton);
+        final int componentIndex = reindexResourceViewImpl.getViewLayout().getComponentIndex(showStatusButton);
+        if (componentIndex < 0) {
+            reindexResourceViewImpl.getViewLayout().addComponent(showStatusButton);
+        }
         showStatusButton.setVisible(false);
         showStatusButton.addListener(new Button.ClickListener() {
 
@@ -122,6 +135,8 @@ final class ReindexButtonListener implements ClickListener {
         }
         if (status.getStatusCode() == AdminStatus.STATUS_FINISHED) {
             showFinishStatus(status);
+            showStatusButton.setVisible(false);
+            reindexResourceBtn.setVisible(true);
         }
         else if (status.getStatusCode() == AdminStatus.STATUS_IN_PROGRESS) {
             showInProgresStatus(status.getMessages());
@@ -139,8 +154,6 @@ final class ReindexButtonListener implements ClickListener {
     private void showStatus() throws EscidocClientException {
         showReindexStatus(getReindexStatus());
     }
-
-    final VerticalLayout statusLayout = new VerticalLayout();
 
     private void showInProgresStatus(final List<String> messageList) {
         Preconditions.checkNotNull(messageList, "messageList is null: %s", messageList);
