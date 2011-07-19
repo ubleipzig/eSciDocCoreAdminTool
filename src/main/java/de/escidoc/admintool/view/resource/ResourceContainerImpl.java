@@ -171,7 +171,6 @@ public class ResourceContainerImpl implements ResourceContainer {
 
     private void addOrgUnitProperties() {
         container.addContainerProperty(PropertyId.PARENTS, Parents.class, new Parents());
-
         container.addContainerProperty(PropertyId.PREDECESSORS, Predecessors.class, Collections.EMPTY_SET);
     }
 

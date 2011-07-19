@@ -118,6 +118,7 @@ public class CreateOrgUnitBtnListener extends AbstractResourceBtnListener {
                 rContainer.addChild(parent, created);
             }
             catch (final EscidocClientException e) {
+                throw new RuntimeException(e);
             }
         }
     }

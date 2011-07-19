@@ -28,10 +28,27 @@
  */
 package de.escidoc.admintool.view.context;
 
-import com.google.common.base.Preconditions;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+
+import org.apache.commons.lang.exception.ExceptionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.xml.sax.SAXException;
+
+import com.google.common.base.Preconditions;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.ObjectProperty;
+import com.vaadin.data.util.POJOItem;
 import com.vaadin.terminal.SystemError;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Alignment;
@@ -53,23 +70,6 @@ import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.Notification;
 import com.vaadin.ui.themes.BaseTheme;
 import com.vaadin.ui.themes.Reindeer;
-
-import org.apache.commons.lang.exception.ExceptionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.xml.sax.SAXException;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
 
 import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.app.AppConstants;
@@ -389,25 +389,17 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
     }
 
     private void save() {
-        boolean valid = true;
-        valid = EmptyFieldValidator.isValid(nameField, "Name can not be empty.");
-        valid &= EmptyFieldValidator.isValid(descriptionField, "Description can not be empty.");
-        valid &= EmptyFieldValidator.isValid(typeField, ViewConstants.TYPE_LABEL + " can not be empty.");
-        valid &= EmptyFieldValidator.isValid(orgUnitList, ViewConstants.ORGANIZATION_UNITS_LABEL + " can not be empty");
-
-        if (valid) {
+        if (isValid()) {
             try {
                 final AdminDescriptors adminDescriptors = enteredAdminDescriptors();
                 final OrganizationalUnitRefs selectedOrgUnitRefs = getEnteredOrgUnitRefs();
-
-                final Context update =
+                final Context updatedContext =
                     contextService.update((String) objIdField.getValue(), (String) nameField.getValue(),
                         (String) descriptionField.getValue(), (String) typeField.getValue(), selectedOrgUnitRefs,
                         adminDescriptors);
-
                 nameField.commit();
-
-                contextList.updateContext(getContextFromCache(), update);
+                contextList.updateContext(getContextFromCache(), updatedContext);
+                updateView(updatedContext);
                 removeAllErrorMessages();
                 showMessage();
             }
@@ -417,6 +409,23 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
                     .getRootCauseMessage(e)));
             }
         }
+    }
+
+    private void updateView(final Context updatedContext) {
+        setSelected(contextToItem(updatedContext));
+    }
+
+    private Item contextToItem(final Context updatedContext) {
+        return new POJOItem<Context>(updatedContext, AppConstants.CONTEXT_PROPERTY_NAMES);
+    }
+
+    private boolean isValid() {
+        boolean valid = true;
+        valid = EmptyFieldValidator.isValid(nameField, "Name can not be empty.");
+        valid &= EmptyFieldValidator.isValid(descriptionField, "Description can not be empty.");
+        valid &= EmptyFieldValidator.isValid(typeField, ViewConstants.TYPE_LABEL + " can not be empty.");
+        valid &= EmptyFieldValidator.isValid(orgUnitList, ViewConstants.ORGANIZATION_UNITS_LABEL + " can not be empty");
+        return valid;
     }
 
     private void removeAllErrorMessages() {

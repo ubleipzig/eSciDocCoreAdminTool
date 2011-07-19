@@ -57,12 +57,10 @@ public class UpdateOrgUnitBtnListener extends AbstractResourceBtnListener {
 
     @Override
     protected void updateModel() throws ParserConfigurationException, SAXException, IOException, EscidocClientException {
-
         getData().toBeUpdated =
             createBuilder()
                 .with(getTitle(), getDescription()).country(getCountry()).city(getCity()).alternative(getAlternative())
                 .identifier(getIdentifier()).coordinates(getCoordinates()).type(getType()).build();
-
     }
 
     private OrgUnitBuilder createBuilder() throws EscidocClientException {
@@ -92,6 +90,9 @@ public class UpdateOrgUnitBtnListener extends AbstractResourceBtnListener {
     @Override
     protected void showInEditView() {
         // do nothing
+        final OrganizationalUnit updated = getData().toBeUpdated;
+        getData().resourceView.selectInFolderView(updated);
+
     }
 
     @Override
