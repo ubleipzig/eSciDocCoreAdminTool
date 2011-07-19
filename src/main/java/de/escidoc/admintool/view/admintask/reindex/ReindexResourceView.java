@@ -26,31 +26,12 @@
  * Gesellschaft zur Foerderung der Wissenschaft e.V.
  * All rights reserved.  Use is subject to license terms.
  */
-package de.escidoc.admintool.view.admintask;
+package de.escidoc.admintool.view.admintask.reindex;
 
-import java.util.Arrays;
-import java.util.List;
+import com.vaadin.ui.Component;
 
-public class IndexName {
+public interface ReindexResourceView extends Component {
 
-    public static final String REINDEX_ALL = "all";
+    void init();
 
-    public static final String CONTEXT_ADMIN = "context_admin";
-
-    public static final String CONTENT_RELATION_ADMIN = "content_relation_admin";
-
-    public static final String REINDEX_ESCIDOC_OU = "escidocou_all";
-
-    public static final String OU_ADMIN = "ou_admin";
-
-    public static final String ESCIDOCOAIPMH_ALL = "escidocoaipmh_all";
-
-    public static final String ITEM_CONTAINER_ADMIN = "item_container_admin";
-
-    public static final String REINDEX_ESCIDOC = "escidoc_all";
-
-    public static final String CONTENT_MODEL_ADMIN = "content_model_admin";
-
-    public static final List<String> ALL_NAME = Arrays.asList(new String[] { REINDEX_ALL, REINDEX_ESCIDOC,
-        CONTEXT_ADMIN, CONTENT_RELATION_ADMIN, CONTENT_MODEL_ADMIN, OU_ADMIN, REINDEX_ESCIDOC_OU, ESCIDOCOAIPMH_ALL });
 }

@@ -26,7 +26,7 @@
  * Gesellschaft zur Foerderung der Wissenschaft e.V.
  * All rights reserved.  Use is subject to license terms.
  */
-package de.escidoc.admintool.view.admintask;
+package de.escidoc.admintool.view.admintask.reindex;
 
 import com.google.common.base.Preconditions;
 import com.vaadin.ui.Button;
@@ -36,6 +36,7 @@ import com.vaadin.ui.Window;
 
 import de.escidoc.admintool.service.AdminService;
 import de.escidoc.admintool.view.ViewConstants;
+import de.escidoc.admintool.view.admintask.AbstractCustomView;
 
 public class ReindexResourceViewImpl extends AbstractCustomView implements ReindexResourceView {
 

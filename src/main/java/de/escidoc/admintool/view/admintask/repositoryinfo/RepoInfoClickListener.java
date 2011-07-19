@@ -26,7 +26,7 @@
  * Gesellschaft zur Foerderung der Wissenschaft e.V.
  * All rights reserved.  Use is subject to license terms.
  */
-package de.escidoc.admintool.view.admintask;
+package de.escidoc.admintool.view.admintask.repositoryinfo;
 
 import java.util.Collections;
 import java.util.Map;
@@ -37,7 +37,7 @@ import com.vaadin.ui.Window;
 
 import de.escidoc.admintool.service.AdminService;
 import de.escidoc.admintool.view.ModalDialog;
-import de.escidoc.admintool.view.admintask.RepositoryInfoView.ShowRepoInfoCommand;
+import de.escidoc.admintool.view.admintask.repositoryinfo.RepositoryInfoView.ShowRepoInfoCommand;
 import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;

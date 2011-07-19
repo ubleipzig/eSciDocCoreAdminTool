@@ -26,7 +26,7 @@
  * Gesellschaft zur Foerderung der Wissenschaft e.V.
  * All rights reserved.  Use is subject to license terms.
  */
-package de.escidoc.admintool.view.admintask;
+package de.escidoc.admintool.view.admintask.repositoryinfo;
 
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
@@ -34,14 +34,14 @@ import com.vaadin.ui.Window;
 
 import de.escidoc.admintool.service.ServiceContainer;
 import de.escidoc.admintool.view.ViewConstants;
+import de.escidoc.admintool.view.admintask.AbstractAdminTaskView;
 import de.escidoc.admintool.view.admintask.Style.H2;
 import de.escidoc.admintool.view.admintask.Style.Ruler;
 
-public class RepositoryInfoFooView extends AbstractAdminTaskView {
+@SuppressWarnings("serial")
+public class RepositoryInfoMainView extends AbstractAdminTaskView {
 
-    private static final long serialVersionUID = 3758827172683416515L;
-
-    public RepositoryInfoFooView(final ServiceContainer services, final Window mainWindow) {
+    public RepositoryInfoMainView(final ServiceContainer services, final Window mainWindow) {
         super(services, mainWindow);
     }
 

@@ -66,10 +66,10 @@ import de.escidoc.admintool.view.ModalDialog;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.admintool.view.ViewManager;
 import de.escidoc.admintool.view.ViewManagerImpl;
-import de.escidoc.admintool.view.admintask.ReindexView;
-import de.escidoc.admintool.view.admintask.RepositoryInfoFooView;
 import de.escidoc.admintool.view.admintask.filter.FilterView;
 import de.escidoc.admintool.view.admintask.loadexamples.LoadExample;
+import de.escidoc.admintool.view.admintask.reindex.ReindexView;
+import de.escidoc.admintool.view.admintask.repositoryinfo.RepositoryInfoMainView;
 import de.escidoc.admintool.view.contentmodel.ContentModelAddView;
 import de.escidoc.admintool.view.contentmodel.ContentModelContainerImpl;
 import de.escidoc.admintool.view.contentmodel.ContentModelEditView;
@@ -161,7 +161,7 @@ public class AdminToolApplication extends Application {
 
     private ReindexView reindexView;
 
-    private RepositoryInfoFooView repoInfoView;
+    private RepositoryInfoMainView repoInfoView;
 
     private AdminService adminService;
 
@@ -356,7 +356,7 @@ public class AdminToolApplication extends Application {
     }
 
     private void createRepoInfoView() {
-        repoInfoView = new RepositoryInfoFooView(services, mainWindow);
+        repoInfoView = new RepositoryInfoMainView(services, mainWindow);
         repoInfoView.addView();
     }
 

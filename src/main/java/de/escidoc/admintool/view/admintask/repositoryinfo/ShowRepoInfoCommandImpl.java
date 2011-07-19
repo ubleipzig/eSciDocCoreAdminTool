@@ -26,13 +26,14 @@
  * Gesellschaft zur Foerderung der Wissenschaft e.V.
  * All rights reserved.  Use is subject to license terms.
  */
-package de.escidoc.admintool.view.admintask;
+package de.escidoc.admintool.view.admintask.repositoryinfo;
 
 import java.util.Map;
 import java.util.Map.Entry;
 
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.TextField;
+
 
 final class ShowRepoInfoCommandImpl implements RepositoryInfoView.ShowRepoInfoCommand {
     private final FormLayout formLayout = new FormLayout();

@@ -26,16 +26,17 @@
  * Gesellschaft zur Foerderung der Wissenschaft e.V.
  * All rights reserved.  Use is subject to license terms.
  */
-package de.escidoc.admintool.view.admintask;
+package de.escidoc.admintool.view.admintask.repositoryinfo;
 
 import java.util.Map;
 
 import com.vaadin.ui.Button;
 
 import de.escidoc.admintool.view.ViewConstants;
+import de.escidoc.admintool.view.admintask.AbstractCustomView;
 
+@SuppressWarnings("serial")
 public class RepositoryInfoView extends AbstractCustomView {
-    private static final long serialVersionUID = -7206908685980457887L;
 
     private final Button repoInfoButton = new Button(ViewConstants.SHOW_REPOSITORY_INFO);
 
