@@ -41,6 +41,7 @@ import org.slf4j.LoggerFactory;
 import com.google.common.base.Preconditions;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.POJOContainer;
+import com.vaadin.data.util.POJOItem;
 import com.vaadin.terminal.SystemError;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -91,8 +92,8 @@ import de.escidoc.core.resources.common.reference.Reference;
 import de.escidoc.core.resources.common.reference.RoleRef;
 import de.escidoc.core.resources.common.reference.UserAccountRef;
 
+@SuppressWarnings("serial")
 public class UserEditForm extends CustomComponent implements ClickListener {
-    private static final long serialVersionUID = 3182336883168014436L;
 
     private static final Logger LOG = LoggerFactory.getLogger(UserEditForm.class);
 
@@ -515,6 +516,14 @@ public class UserEditForm extends CustomComponent implements ClickListener {
         }
     }
 
+    private void updateView(final UserAccount userAccount) {
+        final POJOItem<UserAccount> pojoItem =
+            new POJOItem<UserAccount>(userAccount, new String[] { PropertyId.OBJECT_ID, PropertyId.NAME,
+                PropertyId.CREATED_ON, PropertyId.CREATED_BY, PropertyId.LAST_MODIFICATION_DATE,
+                PropertyId.MODIFIED_BY, PropertyId.LOGIN_NAME, PropertyId.ACTIVE });
+        setSelected(pojoItem);
+    }
+
     private void showMessage() {
         mainWindow.showNotification(new Notification("Info", "User Account is updated",
             Notification.TYPE_TRAY_NOTIFICATION));
@@ -544,6 +553,7 @@ public class UserEditForm extends CustomComponent implements ClickListener {
                 changeState(updatedUserAccount);
             }
             updateOrgUnit();
+            updateView(userService.retrieve(getSelectedItemId()));
         }
         catch (final EscidocException e) {
             ModalDialog.show(app.getMainWindow(), e);
@@ -598,22 +608,39 @@ public class UserEditForm extends CustomComponent implements ClickListener {
     }
 
     private void bindData() {
-        userObjectId = (String) item.getItemProperty(PropertyId.OBJECT_ID).getValue();
-        nameField.setPropertyDataSource(item.getItemProperty(ViewConstants.NAME_ID));
-        loginNameField.setPropertyDataSource(item.getItemProperty(PropertyId.LOGIN_NAME));
-        objIdField.setPropertyDataSource(item.getItemProperty(PropertyId.OBJECT_ID));
-        activeStatus.setPropertyDataSource(item.getItemProperty(PropertyId.ACTIVE));
-
+        setObjectId();
+        bindNameField();
+        bindLoginName();
+        bindObjectId();
+        bindActiveStatus();
         bindModifiedOn();
         bindModifiedBy();
         bindCreatedOn();
         bindCreatedBy();
-
         bindUpdatePassword();
         bindRolesWithView();
         bindUserOrgUnitsWithView();
-
         bindUserRightsWithView();
+    }
+
+    private void setObjectId() {
+        userObjectId = (String) item.getItemProperty(PropertyId.OBJECT_ID).getValue();
+    }
+
+    private void bindNameField() {
+        nameField.setPropertyDataSource(item.getItemProperty(ViewConstants.NAME_ID));
+    }
+
+    private void bindLoginName() {
+        loginNameField.setPropertyDataSource(item.getItemProperty(PropertyId.LOGIN_NAME));
+    }
+
+    private void bindObjectId() {
+        objIdField.setPropertyDataSource(item.getItemProperty(PropertyId.OBJECT_ID));
+    }
+
+    private void bindActiveStatus() {
+        activeStatus.setPropertyDataSource(item.getItemProperty(PropertyId.ACTIVE));
     }
 
     private void bindCreatedOn() {
@@ -770,8 +797,8 @@ public class UserEditForm extends CustomComponent implements ClickListener {
     }
 
     @SuppressWarnings("boxing")
-    public void changeState(final UserAccount updatedUserAccount) throws InternalClientException, TransportException,
-        EscidocClientException {
+    public void changeState(final UserAccount updatedUserAccount) throws EscidocClientException {
+
         final Object value = activeStatus.getPropertyDataSource().getValue();
         if (!(value instanceof Boolean)) {
             return;

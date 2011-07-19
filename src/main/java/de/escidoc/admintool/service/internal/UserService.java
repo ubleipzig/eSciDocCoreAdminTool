@@ -108,17 +108,19 @@ public class UserService {
         }
     }
 
-    public UserAccount retrieve(final String userObjectId) throws EscidocException, InternalClientException,
-        TransportException {
+    public UserAccount retrieve(final String userObjectId) throws EscidocClientException {
+        Preconditions.checkNotNull(userObjectId, "userObjectId is null: %s", userObjectId);
         return client.retrieve(userObjectId);
     }
 
     public UserAccount update(final String objid, final String newName) throws EscidocClientException {
         assert !(newName == null || newName.isEmpty()) : "name must not be null or empty";
 
+        final UserAccount userAccount = retrieve(objid);
         // TODO name the class with its responsibility
-        final UserAccount updatedUserAccount =
-            new UserAccountFactory().update(getSelectedUser(objid)).name(newName).build();
+        // final UserAccount updatedUserAccount =
+        // new UserAccountFactory().update(getSelectedUser(objid)).name(newName).build();
+        final UserAccount updatedUserAccount = new UserAccountFactory().update(userAccount).name(newName).build();
 
         return client.update(updatedUserAccount);
     }
@@ -133,13 +135,6 @@ public class UserService {
         final TaskParam taskParam = new TaskParam();
         taskParam.setLastModificationDate(updatedUserAccount.getLastModificationDate());
         client.activate(updatedUserAccount.getObjid(), taskParam);
-    }
-
-    private UserAccount getSelectedUser(final String selectedItemId) {
-        assert !(selectedItemId == null || selectedItemId.isEmpty()) : "selectedItemId must not be null or empty";
-        final UserAccount selectedUser = userAccountById.get(selectedItemId);
-        assert selectedUser != null : "User is not exist";
-        return selectedUser;
     }
 
     public UserAccount create(final String name, final String loginName) throws EscidocException,

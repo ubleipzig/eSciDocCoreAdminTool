@@ -76,7 +76,7 @@ public class UserListView extends EscidocPagedTable {
         setSizeFull();
         setSelectable(true);
         setImmediate(true);
-        addListener(new UserSelectListener(app));
+        addListener(new UserSelectListener(app, userService));
         setNullSelectionAllowed(false);
         setColumnHeaderMode(Table.COLUMN_HEADER_MODE_HIDDEN);
     }

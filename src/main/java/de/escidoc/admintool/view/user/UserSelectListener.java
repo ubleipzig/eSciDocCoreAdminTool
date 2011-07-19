@@ -28,9 +28,17 @@
  */
 package de.escidoc.admintool.view.user;
 
+import com.google.common.base.Preconditions;
+import com.vaadin.data.util.POJOItem;
+import com.vaadin.event.ItemClickEvent;
+
 import de.escidoc.admintool.app.AdminToolApplication;
+import de.escidoc.admintool.app.PropertyId;
+import de.escidoc.admintool.service.internal.UserService;
 import de.escidoc.admintool.view.resource.AbstractResourceSelectListener;
 import de.escidoc.admintool.view.resource.ResourceView;
+import de.escidoc.core.client.exceptions.EscidocClientException;
+import de.escidoc.core.resources.aa.useraccount.UserAccount;
 
 public class UserSelectListener extends AbstractResourceSelectListener {
 
@@ -38,8 +46,40 @@ public class UserSelectListener extends AbstractResourceSelectListener {
 
     private final AdminToolApplication app;
 
-    public UserSelectListener(final AdminToolApplication app) {
+    private final UserService userService;
+
+    public UserSelectListener(final AdminToolApplication app, final UserService userService) {
+        Preconditions.checkNotNull(app, "app is null: %s", app);
+        Preconditions.checkNotNull(userService, "userService is null: %s", userService);
         this.app = app;
+        this.userService = userService;
+    }
+
+    @Override
+    public void itemClick(final ItemClickEvent event) {
+        try {
+            final POJOItem<UserAccount> retrievedItem = userAccountToItem(userService.retrieve(getSelectedObjectId(event)));
+            final ResourceView view = getView();
+            if (retrievedItem == null) {
+                view.showAddView();
+            }
+            else {
+                view.showEditView(retrievedItem);
+            }
+        }
+        catch (final EscidocClientException e) {
+            app.getMainWindow().showNotification(e.getMessage());
+        }
+    }
+
+    private String getSelectedObjectId(final ItemClickEvent event) {
+        return (String) event.getItem().getItemProperty(PropertyId.OBJECT_ID).getValue();
+    }
+
+    private POJOItem<UserAccount> userAccountToItem(final UserAccount userAccount) {
+        return new POJOItem<UserAccount>(userAccount, new String[] { PropertyId.OBJECT_ID, PropertyId.NAME,
+            PropertyId.CREATED_ON, PropertyId.CREATED_BY, PropertyId.LAST_MODIFICATION_DATE, PropertyId.MODIFIED_BY,
+            PropertyId.LOGIN_NAME, PropertyId.ACTIVE });
     }
 
     @Override

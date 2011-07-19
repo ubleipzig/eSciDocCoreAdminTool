@@ -615,4 +615,8 @@ public class AdminToolApplication extends Application {
     public PdpRequest getPdpRequest() {
         return pdpRequest;
     }
+
+    public void getUserService() {
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
 }
