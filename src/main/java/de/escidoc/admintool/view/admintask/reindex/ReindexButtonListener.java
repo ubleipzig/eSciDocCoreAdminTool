@@ -31,18 +31,19 @@ package de.escidoc.admintool.view.admintask.reindex;
 import java.util.List;
 
 import com.google.common.base.Preconditions;
+import com.vaadin.Application;
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.ProgressIndicator;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.Notification;
 
 import de.escidoc.admintool.view.ModalDialog;
-import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.resources.adm.AdminStatus;
 import de.escidoc.core.resources.adm.MessagesStatus;
@@ -50,11 +51,11 @@ import de.escidoc.core.resources.adm.MessagesStatus;
 @SuppressWarnings("serial")
 final class ReindexButtonListener implements ClickListener {
 
-    private final Button showStatusButton = new Button(ViewConstants.SHOW_STATUS);
-
     private final VerticalLayout statusLayout = new VerticalLayout();
 
     private final ReindexResourceViewImpl reindexResourceViewImpl;
+
+    private final Application application;
 
     private final CheckBox clearIndexBox;
 
@@ -62,53 +63,37 @@ final class ReindexButtonListener implements ClickListener {
 
     private final Button reindexResourceBtn;
 
-    public ReindexButtonListener(final ReindexResourceViewImpl reindexResourceViewImpl, final CheckBox clearIndexBox,
-        final AbstractField indexNameSelect, final Button reindexResourceBtn) {
+    private final ProgressIndicator progressIndicator;
+
+    public ReindexButtonListener(final Application app, final ReindexResourceViewImpl reindexResourceViewImpl,
+        final CheckBox clearIndexBox, final AbstractField indexNameSelect, final Button reindexResourceBtn,
+        final ProgressIndicator progressIndicator) {
+        Preconditions.checkNotNull(app, "app is null: %s", app);
         Preconditions.checkNotNull(reindexResourceViewImpl, "reindexResourceViewImpl is null: %s",
             reindexResourceViewImpl);
         Preconditions.checkNotNull(clearIndexBox, "clearIndexBox is null: %s", clearIndexBox);
         Preconditions.checkNotNull(indexNameSelect, "indexNameSelect is null: %s", indexNameSelect);
         Preconditions.checkNotNull(reindexResourceBtn, "reindexResourceBtn is null: %s", reindexResourceBtn);
+        Preconditions.checkNotNull(progressIndicator, "progressIndicator is null: %s", progressIndicator);
+
+        application = app;
         this.reindexResourceViewImpl = reindexResourceViewImpl;
         this.clearIndexBox = clearIndexBox;
         this.indexNameSelect = indexNameSelect;
         this.reindexResourceBtn = reindexResourceBtn;
+        this.progressIndicator = progressIndicator;
     }
 
     @Override
     public void buttonClick(final ClickEvent event) {
         checkPreconditions();
-        createShowStatusButton();
         makeReindexButtonInvisible();
         tryReindex();
     }
 
     private void makeReindexButtonInvisible() {
         reindexResourceBtn.setVisible(false);
-    }
 
-    private void createShowStatusButton() {
-        final int componentIndex = reindexResourceViewImpl.getViewLayout().getComponentIndex(showStatusButton);
-        if (componentIndex < 0) {
-            reindexResourceViewImpl.getViewLayout().addComponent(showStatusButton);
-        }
-        showStatusButton.setVisible(false);
-        showStatusButton.addListener(new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(final ClickEvent event) {
-                tryShowStatus();
-            }
-
-            private void tryShowStatus() {
-                try {
-                    showStatus();
-                }
-                catch (final EscidocClientException e) {
-                    ModalDialog.show(reindexResourceViewImpl.mainWindow, e);
-                }
-            }
-        });
     }
 
     private void checkPreconditions() {
@@ -119,9 +104,52 @@ final class ReindexButtonListener implements ClickListener {
     private void tryReindex() {
         try {
             showReindexStatus(reindex());
+            new AskStatusThread().start();
+            progressIndicator.setEnabled(true);
+            progressIndicator.setStyleName("big");
+            progressIndicator.setValue(new Float(0f));
         }
         catch (final EscidocClientException e) {
             ModalDialog.show(reindexResourceViewImpl.mainWindow, e);
+        }
+    }
+
+    public class AskStatusThread extends Thread {
+
+        private MessagesStatus reindexStatus;
+
+        @Override
+        public void run() {
+            for (;;) {
+                try {
+                    reindexStatus = getReindexStatus();
+                    showReindexStatus(reindexStatus);
+                    Thread.sleep(1000);
+                }
+                catch (final InterruptedException e) {
+                    e.printStackTrace();
+                }
+                catch (final EscidocClientException e) {
+                    e.printStackTrace();
+                }
+                // All modifications to Vaadin components should be synchronized
+                // over application instance. For normal requests this is done
+                // by the servlet. Here we are changing the application state
+                // via a separate thread.
+                // Application application = reindexResourceViewImpl.getApplication();
+                synchronized (application) {
+                    updateProgressIndicator();
+                }
+            }
+        }
+
+        private void updateProgressIndicator() {
+            if (reindexStatus.getStatusCode() == AdminStatus.STATUS_FINISHED) {
+                progressIndicator.setEnabled(false);
+                reindexResourceBtn.setVisible(true);
+                progressIndicator.setValue(new Float(1f));
+            }
+
         }
     }
 
@@ -135,10 +163,11 @@ final class ReindexButtonListener implements ClickListener {
         }
         if (status.getStatusCode() == AdminStatus.STATUS_FINISHED) {
             showFinishStatus(status);
-            showStatusButton.setVisible(false);
+            progressIndicator.setVisible(false);
             reindexResourceBtn.setVisible(true);
         }
         else if (status.getStatusCode() == AdminStatus.STATUS_IN_PROGRESS) {
+            progressIndicator.setVisible(true);
             showInProgresStatus(status.getMessages());
         }
         else {
@@ -151,13 +180,8 @@ final class ReindexButtonListener implements ClickListener {
         statusLayout.addComponent(new Label(status.getStatusMessage()));
     }
 
-    private void showStatus() throws EscidocClientException {
-        showReindexStatus(getReindexStatus());
-    }
-
     private void showInProgresStatus(final List<String> messageList) {
         Preconditions.checkNotNull(messageList, "messageList is null: %s", messageList);
-        showStatusButton.setVisible(true);
 
         if (reindexResourceViewImpl.getViewLayout().getComponentIndex(statusLayout) < 0) {
             reindexResourceViewImpl.getViewLayout().addComponent(statusLayout);

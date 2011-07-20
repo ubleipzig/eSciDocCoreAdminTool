@@ -28,6 +28,7 @@
  */
 package de.escidoc.admintool.view.admintask.reindex;
 
+import com.vaadin.Application;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Window;
@@ -35,7 +36,6 @@ import com.vaadin.ui.Window;
 import de.escidoc.admintool.service.ServiceContainer;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.admintool.view.admintask.AbstractAdminTaskView;
-import de.escidoc.admintool.view.admintask.Style;
 import de.escidoc.admintool.view.admintask.Style.H2;
 import de.escidoc.admintool.view.admintask.Style.Ruler;
 
@@ -43,8 +43,11 @@ public class ReindexView extends AbstractAdminTaskView {
 
     private static final long serialVersionUID = -6037070039048596585L;
 
+    private final Application application;
+
     public ReindexView(final ServiceContainer services, final Window mainWindow) {
         super(services, mainWindow);
+        application = mainWindow.getApplication();
     }
 
     @Override
@@ -63,7 +66,7 @@ public class ReindexView extends AbstractAdminTaskView {
         hLayout.setHeight("250px");
 
         final ReindexResourceView reindexResourceView =
-            new ReindexResourceViewImpl(services.getAdminService(), mainWindow);
+            new ReindexResourceViewImpl(services.getAdminService(), mainWindow, application);
         reindexResourceView.init();
         hLayout.addComponent(reindexResourceView);
 

@@ -29,9 +29,11 @@
 package de.escidoc.admintool.view.admintask.reindex;
 
 import com.google.common.base.Preconditions;
+import com.vaadin.Application;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;
+import com.vaadin.ui.ProgressIndicator;
 import com.vaadin.ui.Window;
 
 import de.escidoc.admintool.service.AdminService;
@@ -48,17 +50,21 @@ public class ReindexResourceViewImpl extends AbstractCustomView implements Reind
 
     private final ComboBox indexNameSelect = new ComboBox(ViewConstants.INDEX_NAME, IndexName.ALL_NAME);
 
-    private final ReindexButtonListener listener = new ReindexButtonListener(this, clearIndexBox, indexNameSelect,
-        reindexResourceBtn);
+    private final ProgressIndicator progressIndicator = new ProgressIndicator(new Float(0f));
+
+    private final Application app;
 
     final AdminService adminService;
 
     final Window mainWindow;
 
-    public ReindexResourceViewImpl(final AdminService adminService, final Window mainWindow) {
+    private ReindexButtonListener listener;
+
+    public ReindexResourceViewImpl(final AdminService adminService, final Window mainWindow, final Application app) {
         preconditions(adminService, mainWindow);
         this.adminService = adminService;
         this.mainWindow = mainWindow;
+        this.app = app;
     }
 
     private void preconditions(final AdminService adminService, final Window mainWindow) {
@@ -70,7 +76,8 @@ public class ReindexResourceViewImpl extends AbstractCustomView implements Reind
         addClearIndexBox();
         addIndexNameSelection();
         addReindexButton();
-        addListener();
+        buildProgressIndicator();
+        addReindexButtonListener();
     }
 
     private void addClearIndexBox() {
@@ -94,7 +101,17 @@ public class ReindexResourceViewImpl extends AbstractCustomView implements Reind
         getViewLayout().addComponent(reindexResourceBtn);
     }
 
-    private void addListener() {
+    private void addReindexButtonListener() {
+        listener =
+            new ReindexButtonListener(app, this, clearIndexBox, indexNameSelect, reindexResourceBtn, progressIndicator);
         reindexResourceBtn.addListener(listener);
     }
+
+    private void buildProgressIndicator() {
+        progressIndicator.setImmediate(true);
+        progressIndicator.setEnabled(false);
+        progressIndicator.setVisible(false);
+        getViewLayout().addComponent(progressIndicator);
+    }
+
 }
