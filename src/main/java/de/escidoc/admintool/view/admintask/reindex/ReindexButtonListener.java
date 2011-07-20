@@ -87,13 +87,11 @@ final class ReindexButtonListener implements ClickListener {
     @Override
     public void buttonClick(final ClickEvent event) {
         checkPreconditions();
-        makeReindexButtonInvisible();
         tryReindex();
     }
 
     private void makeReindexButtonInvisible() {
         reindexResourceBtn.setVisible(false);
-
     }
 
     private void checkPreconditions() {
@@ -106,8 +104,10 @@ final class ReindexButtonListener implements ClickListener {
             showReindexStatus(reindex());
             new AskStatusThread().start();
             progressIndicator.setEnabled(true);
+            progressIndicator.setVisible(true);
             progressIndicator.setStyleName("big");
             progressIndicator.setValue(new Float(0f));
+            makeReindexButtonInvisible();
         }
         catch (final EscidocClientException e) {
             ModalDialog.show(reindexResourceViewImpl.mainWindow, e);
@@ -120,9 +120,18 @@ final class ReindexButtonListener implements ClickListener {
 
         @Override
         public void run() {
+
             for (;;) {
                 try {
                     reindexStatus = getReindexStatus();
+                    if (reindexStatus.getStatusCode() == AdminStatus.STATUS_FINISHED) {
+                        showFinishStatus(reindexStatus);
+                        progressIndicator.setVisible(false);
+                        progressIndicator.setEnabled(false);
+                        reindexResourceBtn.setVisible(true);
+                        progressIndicator.setValue(new Float(1f));
+                        return;
+                    }
                     showReindexStatus(reindexStatus);
                     Thread.sleep(1000);
                 }
@@ -164,10 +173,12 @@ final class ReindexButtonListener implements ClickListener {
         if (status.getStatusCode() == AdminStatus.STATUS_FINISHED) {
             showFinishStatus(status);
             progressIndicator.setVisible(false);
+            progressIndicator.setEnabled(false);
             reindexResourceBtn.setVisible(true);
+            progressIndicator.setValue(new Float(1f));
+            return;
         }
         else if (status.getStatusCode() == AdminStatus.STATUS_IN_PROGRESS) {
-            progressIndicator.setVisible(true);
             showInProgresStatus(status.getMessages());
         }
         else {
