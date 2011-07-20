@@ -28,29 +28,36 @@
  */
 package de.escidoc.admintool.view.admintask.reindex;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
-public class IndexName {
+import com.google.common.base.Preconditions;
 
-    public static final String REINDEX_ALL = "all";
+public enum IndexName {
 
-    public static final String CONTEXT_ADMIN = "context_admin";
+    REINDEX_ALL("All"), CONTEXT_ADMIN("Context Admin"), CONTENT_RELATION_ADMIN("Content Relation Admin"), REINDEX_ESCIDOC_OU(
+        "eSciDoc OU All"), OU_ADMIN("OU Admin"), ESCIDOCOAIPMH_ALL("eSciDoc OAIPMH All"), ITEM_CONTAINER_ADMIN(
+        "Item Container Admin"), REINDEX_ESCIDOC("eSciDoc All"), CONTENT_MODEL_ADMIN("Content Model Admin");
 
-    public static final String CONTENT_RELATION_ADMIN = "content_relation_admin";
+    private String label;
 
-    public static final String REINDEX_ESCIDOC_OU = "escidocou_all";
+    IndexName(final String label) {
+        Preconditions.checkNotNull(label, "label is null: %s", label);
+        this.label = label;
+    }
 
-    public static final String OU_ADMIN = "ou_admin";
+    public String asLabel() {
+        return label;
+    }
 
-    public static final String ESCIDOCOAIPMH_ALL = "escidocoaipmh_all";
+    private final static Set<String> set = new HashSet<String>(values().length);
 
-    public static final String ITEM_CONTAINER_ADMIN = "item_container_admin";
+    public static Collection<?> all() {
+        for (final IndexName indexName : values()) {
+            set.add(indexName.asLabel());
+        }
+        return set;
+    }
 
-    public static final String REINDEX_ESCIDOC = "escidoc_all";
-
-    public static final String CONTENT_MODEL_ADMIN = "content_model_admin";
-
-    public static final List<String> ALL_NAME = Arrays.asList(new String[] { REINDEX_ALL, REINDEX_ESCIDOC,
-        CONTEXT_ADMIN, CONTENT_RELATION_ADMIN, CONTENT_MODEL_ADMIN, OU_ADMIN, REINDEX_ESCIDOC_OU, ESCIDOCOAIPMH_ALL });
 }

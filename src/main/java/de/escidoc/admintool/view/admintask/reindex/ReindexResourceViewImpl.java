@@ -40,15 +40,15 @@ import de.escidoc.admintool.service.AdminService;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.admintool.view.admintask.AbstractCustomView;
 
+@SuppressWarnings("serial")
 public class ReindexResourceViewImpl extends AbstractCustomView implements ReindexResourceView {
-
-    private static final long serialVersionUID = 2997054515640202370L;
 
     private final Button reindexResourceBtn = new Button(ViewConstants.REINDEX);
 
     private final CheckBox clearIndexBox = new CheckBox(ViewConstants.CLEAR_INDEX);
 
-    private final ComboBox indexNameSelect = new ComboBox(ViewConstants.INDEX_NAME, IndexName.ALL_NAME);
+    // TODO refactor index name to ENUM
+    private final ComboBox indexNameSelect = new ComboBox(ViewConstants.INDEX_NAME, IndexName.all());
 
     private final ProgressIndicator progressIndicator = new ProgressIndicator(new Float(0f));
 
@@ -61,15 +61,12 @@ public class ReindexResourceViewImpl extends AbstractCustomView implements Reind
     private ReindexButtonListener listener;
 
     public ReindexResourceViewImpl(final AdminService adminService, final Window mainWindow, final Application app) {
-        preconditions(adminService, mainWindow);
+        Preconditions.checkNotNull(adminService, "adminService is null: %s", adminService);
+        Preconditions.checkNotNull(mainWindow, "mainWindow is null: %s", mainWindow);
+        Preconditions.checkNotNull(app, "app is null: %s", app);
         this.adminService = adminService;
         this.mainWindow = mainWindow;
         this.app = app;
-    }
-
-    private void preconditions(final AdminService adminService, final Window mainWindow) {
-        Preconditions.checkNotNull(adminService, "adminService can not be null: %s", adminService);
-        Preconditions.checkNotNull(adminService, "mainWindow can not be null: %s", mainWindow);
     }
 
     public void init() {
@@ -85,10 +82,9 @@ public class ReindexResourceViewImpl extends AbstractCustomView implements Reind
         getViewLayout().addComponent(clearIndexBox);
     }
 
-    // TODO refactor index name to ENUM
     private void addIndexNameSelection() {
         indexNameSelect.setNullSelectionAllowed(false);
-        indexNameSelect.select(IndexName.REINDEX_ALL);
+        indexNameSelect.select(IndexName.REINDEX_ALL.asLabel());
         getViewLayout().addComponent(indexNameSelect);
     }
 
@@ -113,5 +109,4 @@ public class ReindexResourceViewImpl extends AbstractCustomView implements Reind
         progressIndicator.setVisible(false);
         getViewLayout().addComponent(progressIndicator);
     }
-
 }
