@@ -47,7 +47,6 @@ public class ReindexResourceViewImpl extends AbstractCustomView implements Reind
 
     private final CheckBox clearIndexBox = new CheckBox(ViewConstants.CLEAR_INDEX);
 
-    // TODO refactor index name to ENUM
     private final ComboBox indexNameSelect = new ComboBox(ViewConstants.INDEX_NAME, IndexName.all());
 
     private final ProgressIndicator progressIndicator = new ProgressIndicator(new Float(0f));
@@ -57,8 +56,6 @@ public class ReindexResourceViewImpl extends AbstractCustomView implements Reind
     final AdminService adminService;
 
     final Window mainWindow;
-
-    private ReindexButtonListener listener;
 
     public ReindexResourceViewImpl(final AdminService adminService, final Window mainWindow, final Application app) {
         Preconditions.checkNotNull(adminService, "adminService is null: %s", adminService);
@@ -98,9 +95,8 @@ public class ReindexResourceViewImpl extends AbstractCustomView implements Reind
     }
 
     private void addReindexButtonListener() {
-        listener =
-            new ReindexButtonListener(app, this, clearIndexBox, indexNameSelect, reindexResourceBtn, progressIndicator);
-        reindexResourceBtn.addListener(listener);
+        reindexResourceBtn.addListener(new ReindexButtonListener(app, this, clearIndexBox, indexNameSelect,
+            reindexResourceBtn, progressIndicator));
     }
 
     private void buildProgressIndicator() {

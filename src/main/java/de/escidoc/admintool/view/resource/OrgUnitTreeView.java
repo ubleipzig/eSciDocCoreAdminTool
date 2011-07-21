@@ -32,8 +32,8 @@ import com.google.common.base.Preconditions;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.ui.AbstractSelect;
 import com.vaadin.ui.CustomComponent;
+import com.vaadin.ui.Panel;
 import com.vaadin.ui.Tree;
-import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 import de.escidoc.admintool.app.PropertyId;
@@ -43,19 +43,19 @@ public class OrgUnitTreeView extends CustomComponent implements ResourceFolderVi
 
     private static final long serialVersionUID = 6912762184225745680L;
 
-    private final VerticalLayout treeLayout = new VerticalLayout();
+    final Panel treeLayout = new Panel("<b>" + "Organizational Unit" + "</b>");// , Label.CONTENT_XHTML);
 
     private final Tree tree = new Tree();
 
     private final ResourceContainer resourceContainer;
-
-    private final FolderHeader header;
 
     private final Window mainWindow;
 
     private ShowEditResourceView showEditResourceView;
 
     private AddChildrenCommand addChildrenCommand;
+
+    private final FolderHeader header;
 
     public OrgUnitTreeView(final Window mainWindow, final FolderHeader header, final ResourceContainer resourceContainer) {
         preconditions(mainWindow, header, resourceContainer);
@@ -72,11 +72,10 @@ public class OrgUnitTreeView extends CustomComponent implements ResourceFolderVi
 
     private void init() {
         setCompositionRoot(treeLayout);
-
-        treeLayout.addComponent(header);
+        treeLayout.setSizeFull();
+        setSizeFull();
         treeLayout.addComponent(tree);
         setDataSource();
-
     }
 
     @Override

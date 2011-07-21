@@ -65,10 +65,10 @@ final class ReindexButtonListener implements ClickListener {
 
     private final ProgressIndicator progressIndicator;
 
-    public ReindexButtonListener(final Application app, final ReindexResourceViewImpl reindexResourceViewImpl,
+    public ReindexButtonListener(final Application application, final ReindexResourceViewImpl reindexResourceViewImpl,
         final CheckBox clearIndexBox, final AbstractField indexNameSelect, final Button reindexResourceBtn,
         final ProgressIndicator progressIndicator) {
-        Preconditions.checkNotNull(app, "app is null: %s", app);
+        Preconditions.checkNotNull(application, "app is null: %s", application);
         Preconditions.checkNotNull(reindexResourceViewImpl, "reindexResourceViewImpl is null: %s",
             reindexResourceViewImpl);
         Preconditions.checkNotNull(clearIndexBox, "clearIndexBox is null: %s", clearIndexBox);
@@ -76,7 +76,7 @@ final class ReindexButtonListener implements ClickListener {
         Preconditions.checkNotNull(reindexResourceBtn, "reindexResourceBtn is null: %s", reindexResourceBtn);
         Preconditions.checkNotNull(progressIndicator, "progressIndicator is null: %s", progressIndicator);
 
-        application = app;
+        this.application = application;
         this.reindexResourceViewImpl = reindexResourceViewImpl;
         this.clearIndexBox = clearIndexBox;
         this.indexNameSelect = indexNameSelect;
