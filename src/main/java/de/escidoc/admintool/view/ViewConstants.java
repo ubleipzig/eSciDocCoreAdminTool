@@ -429,4 +429,10 @@ public class ViewConstants {
 
     public static final String TIP = "Tip";
 
+    public static final String LANDING_VIEW_STYLE_NAME = "landing-view";
+
+    public static final String E_SCI_DOC_LOCATION_CAN_NOT_BE_EMPTY = "eSciDoc Location can not be empty.";
+
+    public static final String HTTP = "http://";
+
 }

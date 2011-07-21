@@ -28,6 +28,7 @@
  */
 package de.escidoc.admintool.view.start;
 
+import com.google.common.base.Preconditions;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CustomComponent;
@@ -40,16 +41,14 @@ import com.vaadin.ui.VerticalLayout;
 import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.view.ViewConstants;
 
-public class WelcomePage extends CustomComponent {
-    private static final String LANDING_VIEW_STYLE_NAME = "landing-view";
-
-    private static final long serialVersionUID = 5514330045540866939L;
+@SuppressWarnings("serial")
+public class LandingView extends CustomComponent {
 
     private final VerticalLayout viewLayout = new VerticalLayout();
 
     private final Panel panel = new Panel();
 
-    private final FormLayout fLayout = new FormLayout();
+    private final FormLayout formLayout = new FormLayout();
 
     private final TextField escidocServiceUrl = new TextField(ViewConstants.ESCIDOC_URL_TEXTFIELD);
 
@@ -59,16 +58,17 @@ public class WelcomePage extends CustomComponent {
 
     private Button startButton;
 
-    public WelcomePage(final AdminToolApplication app) {
+    public LandingView(final AdminToolApplication app) {
+        Preconditions.checkNotNull(app, "app is null: %s", app);
         this.app = app;
     }
 
     public void init() {
-        setStyleName(LANDING_VIEW_STYLE_NAME);
+        setStyleName(ViewConstants.LANDING_VIEW_STYLE_NAME);
         setCompositionRoot(viewLayout);
         setSizeFull();
         viewLayout.setSizeFull();
-        viewLayout.setStyleName(LANDING_VIEW_STYLE_NAME);
+        viewLayout.setStyleName(ViewConstants.LANDING_VIEW_STYLE_NAME);
 
         viewLayout.addComponent(panel);
         viewLayout.setComponentAlignment(panel, Alignment.MIDDLE_CENTER);
@@ -79,13 +79,13 @@ public class WelcomePage extends CustomComponent {
         addEscidocUrlField();
         addFooters();
 
-        panel.addComponent(fLayout);
+        panel.addComponent(formLayout);
     }
 
     private void addFooters() {
         footer.setWidth(100, UNITS_PERCENTAGE);
         footer.setMargin(true);
-        fLayout.addComponent(footer);
+        formLayout.addComponent(footer);
         addStartButton();
     }
 
@@ -94,9 +94,13 @@ public class WelcomePage extends CustomComponent {
         escidocServiceUrl.setImmediate(true);
         escidocServiceUrl.focus();
         escidocServiceUrl.setRequired(true);
-        escidocServiceUrl.setRequiredError("eSciDoc Location can not be empty.");
-        escidocServiceUrl.setInputPrompt("http://");
-        fLayout.addComponent(escidocServiceUrl);
+        escidocServiceUrl.setRequiredError(ViewConstants.E_SCI_DOC_LOCATION_CAN_NOT_BE_EMPTY);
+        setInputPrompt();
+        formLayout.addComponent(escidocServiceUrl);
+    }
+
+    private void setInputPrompt() {
+        escidocServiceUrl.setInputPrompt(ViewConstants.HTTP);
     }
 
     private void addStartButton() {

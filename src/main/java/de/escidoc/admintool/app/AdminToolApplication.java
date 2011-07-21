@@ -90,7 +90,7 @@ import de.escidoc.admintool.view.resource.ResourceContainerFactory;
 import de.escidoc.admintool.view.resource.ResourceViewComponent;
 import de.escidoc.admintool.view.resource.ResourceViewComponentImpl;
 import de.escidoc.admintool.view.role.RoleView;
-import de.escidoc.admintool.view.start.WelcomePage;
+import de.escidoc.admintool.view.start.LandingView;
 import de.escidoc.admintool.view.user.SetOrgUnitsCommandImpl;
 import de.escidoc.admintool.view.user.UserAddView;
 import de.escidoc.admintool.view.user.UserView;
@@ -133,7 +133,7 @@ public class AdminToolApplication extends Application {
 
     public String escidocLogoutUrl;
 
-    private WelcomePage welcomePage;
+    private LandingView landingView;
 
     private EscidocService containerService;
 
@@ -211,9 +211,9 @@ public class AdminToolApplication extends Application {
     }
 
     protected void showLandingView() {
-        welcomePage = new WelcomePage(this);
-        welcomePage.init();
-        viewManager.setLandingView(welcomePage);
+        landingView = new LandingView(this);
+        landingView.init();
+        viewManager.setLandingView(landingView);
         viewManager.showLandingView();
     }
 
