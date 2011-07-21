@@ -43,7 +43,7 @@ public class OrgUnitTreeView extends CustomComponent implements ResourceFolderVi
 
     private static final long serialVersionUID = 6912762184225745680L;
 
-    final Panel treeLayout = new Panel("<b>" + "Organizational Unit" + "</b>");// , Label.CONTENT_XHTML);
+    private final Panel treePanel = new Panel("<b>" + "Organizational Unit" + "</b>");
 
     private final Tree tree = new Tree();
 
@@ -71,10 +71,11 @@ public class OrgUnitTreeView extends CustomComponent implements ResourceFolderVi
     }
 
     private void init() {
-        setCompositionRoot(treeLayout);
-        treeLayout.setSizeFull();
+        setCompositionRoot(treePanel);
+        treePanel.getLayout().setMargin(false);
+        treePanel.setSizeFull();
         setSizeFull();
-        treeLayout.addComponent(tree);
+        treePanel.addComponent(tree);
         setDataSource();
     }
 
