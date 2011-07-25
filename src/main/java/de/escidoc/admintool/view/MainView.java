@@ -41,6 +41,7 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.Reindeer;
 
 import de.escidoc.admintool.app.AdminToolApplication;
+import de.escidoc.admintool.app.AppConstants;
 import de.escidoc.admintool.domain.PdpRequest;
 import de.escidoc.admintool.view.factory.ToolbarFactory;
 import de.escidoc.admintool.view.navigation.ExpandCollapseCommand;
@@ -49,9 +50,8 @@ import de.escidoc.admintool.view.navigation.NavigationTree;
 import de.escidoc.admintool.view.navigation.NavigationTreeClickListener;
 import de.escidoc.core.resources.aa.useraccount.UserAccount;
 
+@SuppressWarnings("serial")
 public class MainView extends CustomComponent {
-
-    private static final long serialVersionUID = -5906063682647356346L;
 
     private final VerticalLayout appLayout = new VerticalLayout();
 
@@ -148,9 +148,18 @@ public class MainView extends CustomComponent {
 
     private void createLogOutButton() {
         logoutButton.setStyleName(Reindeer.BUTTON_SMALL);
-        app.setLogoutURL(location.getLogoutUri() + app.getURL());
+        app.setLogoutURL(buildLogOutUrl());
         final LogoutButtonListener logoutButtonListener = new LogoutButtonListener(app);
         logoutButton.addListener(logoutButtonListener);
+    }
+
+    private String buildLogOutUrl() {
+        final StringBuilder builder = new StringBuilder();
+        builder.append(location.getLogoutUri());
+        builder.append(app.getURL());
+        builder.append(AppConstants.ESCIDOC_URL_PARAMETER);
+        builder.append(location.getUri());
+        return builder.toString();
     }
 
     private void createAndAddNavigationTree() {

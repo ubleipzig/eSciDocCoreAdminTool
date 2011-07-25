@@ -96,4 +96,6 @@ public class AppConstants {
         PropertyId.ORG_UNIT_REFS, PropertyId.ADMIN_DESCRIPTORS };
 
     public static final String EMPTY_STRING = "";
+
+    public static final String ESCIDOC_URL_PARAMETER = "?escidocurl=";
 }
