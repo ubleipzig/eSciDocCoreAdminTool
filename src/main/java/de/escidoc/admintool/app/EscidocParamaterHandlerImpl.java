@@ -37,19 +37,19 @@ import com.google.common.base.Preconditions;
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.terminal.ParameterHandler;
 
-public class ParamaterHandlerImpl implements ParameterHandler {
+public class EscidocParamaterHandlerImpl implements ParameterHandler {
 
     private static final String EMPTY_TOKEN = AppConstants.EMPTY_STRING;
 
     private static final long serialVersionUID = 6392830954652643671L;
 
-    private static final Logger LOG = LoggerFactory.getLogger(ParamaterHandlerImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(EscidocParamaterHandlerImpl.class);
 
     private final AdminToolApplication app;
 
     private final ParamaterDecoder paramDecoder;
 
-    public ParamaterHandlerImpl(final AdminToolApplication app) {
+    public EscidocParamaterHandlerImpl(final AdminToolApplication app) {
         Preconditions.checkNotNull(app, "app is null: %s", app);
         this.app = app;
         paramDecoder = new ParamaterDecoder(app);

@@ -230,7 +230,7 @@ public class AdminToolApplication extends Application {
     }
 
     private void addParameterHandler() {
-        mainWindow.addParameterHandler(new ParamaterHandlerImpl(this));
+        mainWindow.addParameterHandler(new EscidocParamaterHandlerImpl(this));
     }
 
     public void loadProtectedResources(final String token) {
