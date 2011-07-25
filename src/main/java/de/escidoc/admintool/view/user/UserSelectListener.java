@@ -58,14 +58,7 @@ public class UserSelectListener extends AbstractResourceSelectListener {
     @Override
     public void itemClick(final ItemClickEvent event) {
         try {
-            final POJOItem<UserAccount> retrievedItem = userAccountToItem(userService.retrieve(getSelectedObjectId(event)));
-            final ResourceView view = getView();
-            if (retrievedItem == null) {
-                view.showAddView();
-            }
-            else {
-                view.showEditView(retrievedItem);
-            }
+            getView().showEditView(userAccountToItem(userService.retrieve(getSelectedObjectId(event))));
         }
         catch (final EscidocClientException e) {
             app.getMainWindow().showNotification(e.getMessage());
