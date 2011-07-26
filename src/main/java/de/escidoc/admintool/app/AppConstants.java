@@ -29,6 +29,9 @@
 package de.escidoc.admintool.app;
 
 public class AppConstants {
+    private AppConstants() {
+        // Utility class
+    }
 
     public static final String ESCIDOC_USER_HANDLE = "eSciDocUserHandle";
 

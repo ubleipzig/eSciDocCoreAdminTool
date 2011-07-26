@@ -35,6 +35,9 @@ import de.escidoc.admintool.view.navigation.NavigationTree;
 import de.escidoc.admintool.view.navigation.NavigationTreeImpl;
 
 public class NavigationTreeFactory {
+    private NavigationTreeFactory() {
+        // Utility class
+    }
 
     public static NavigationTree createViewFor(final ItemClickListener listener, final PdpRequest pdpRequest) {
         return new NavigationTreeImpl(listener, pdpRequest).init();

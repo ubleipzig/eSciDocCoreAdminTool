@@ -36,6 +36,11 @@ package de.escidoc.admintool.view.util;
  * 
  */
 public class Constants {
+
+    private Constants() {
+        // Utility class
+    }
+
     public static final String CREATED_BY = "createdBy";
 
     public static final String CREATED_ON = "createdOn";

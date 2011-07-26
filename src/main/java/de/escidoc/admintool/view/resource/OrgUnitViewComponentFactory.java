@@ -38,6 +38,10 @@ import de.escidoc.admintool.view.ViewConstants;
 
 public class OrgUnitViewComponentFactory {
 
+    private OrgUnitViewComponentFactory() {
+        // Utility class
+    }
+
     public static ComboBox createMetadataComboBox(final ValueChangeListener listener) {
         final ComboBox metadataComboBox =
             new ComboBox(ViewConstants.METADATA_LABEL, Arrays.asList(new String[] { ViewConstants.PUB_MAN_METADATA,

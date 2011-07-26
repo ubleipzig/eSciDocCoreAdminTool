@@ -30,6 +30,10 @@ package de.escidoc.admintool.app;
 
 public class PropertyId {
 
+    private PropertyId() {
+        // Utility class
+    }
+
     public static final String OBJECT_ID = "objid";
 
     public static final String PREDECESSORS = "predecessors";
