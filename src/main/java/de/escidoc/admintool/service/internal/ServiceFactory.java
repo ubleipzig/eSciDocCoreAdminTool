@@ -106,8 +106,7 @@ public class ServiceFactory {
     }
 
     private HandlerService createAdminClient() throws InternalClientException {
-        final HandlerService client = new AdminHandlerClient(serviceUri);
-        return client;
+        return new AdminHandlerClient(serviceUri);
     }
 
     public ItemService createItemService() throws InternalClientException {
@@ -118,15 +117,13 @@ public class ServiceFactory {
     }
 
     public ContextServiceLab createContextServiceLab() throws InternalClientException {
-        final ContextHandlerClientInterface client = new ContextHandlerClient(serviceUri);
-        final ContextServiceLab contextService = new ContextServiceLab(client);
+        final ContextServiceLab contextService = new ContextServiceLab(new ContextHandlerClient(serviceUri));
         contextService.loginWith(token);
         return contextService;
     }
 
     public OrgUnitServiceLab createOrgUnitService() throws InternalClientException {
-        final OrganizationalUnitHandlerClientInterface client = new OrganizationalUnitHandlerClient(serviceUri);
-        final OrgUnitServiceLab orgUnitService = new OrgUnitServiceLab(client);
+        final OrgUnitServiceLab orgUnitService = new OrgUnitServiceLab(new OrganizationalUnitHandlerClient(serviceUri));
         orgUnitService.loginWith(token);
         return orgUnitService;
     }
@@ -144,8 +141,7 @@ public class ServiceFactory {
     }
 
     public ContentRelationService createContentRelationService() throws InternalClientException {
-        final ContentRelationHandlerClientInterface client = new ContentRelationHandlerClient(serviceUri);
-        final ContentRelationService relationService = new ContentRelationService(client);
+        final ContentRelationService relationService = new ContentRelationService(new ContentRelationHandlerClient(serviceUri));
         relationService.loginWith(token);
         return relationService;
     }
