@@ -98,6 +98,8 @@ public class RoleView extends CustomComponent {
 
     private final Button saveBtn = new Button(ViewConstants.SAVE_LABEL, new SaveBtnListener());
 
+    private final VerticalLayout footerLayout = new VerticalLayout();
+
     final Window mainWindow;
 
     private final ComponentContainer mainLayout = new FormLayout();
@@ -215,11 +217,9 @@ public class RoleView extends CustomComponent {
 
     private void addFooter() {
         footer.addComponent(saveBtn);
-
-        final VerticalLayout verticalLayout = new VerticalLayout();
-        verticalLayout.addComponent(footer);
-        verticalLayout.setComponentAlignment(footer, Alignment.MIDDLE_RIGHT);
-        mainLayout.addComponent(verticalLayout);
+        footerLayout.addComponent(footer);
+        footerLayout.setComponentAlignment(footer, Alignment.MIDDLE_RIGHT);
+        mainLayout.addComponent(footerLayout);
     }
 
     private void bindData() {

@@ -277,8 +277,8 @@ public class UserEditForm extends CustomComponent implements ClickListener {
             orgUnitTable.setVisibleColumns(new String[] { "title", "objectId" });
             orgUnitTable.setColumnHeaders(new String[] { "Title", "Object ID" });
 
-            for (final String userObjectId : orgUnitIdsForSelectedUser) {
-                orgUnitContainer.addPOJO(new ResourceRefDisplay(userObjectId, findTitleFor(userObjectId)));
+            for (final String orgUnitId : orgUnitIdsForSelectedUser) {
+                orgUnitContainer.addPOJO(new ResourceRefDisplay(orgUnitId, findTitleFor(orgUnitId)));
             }
         }
     }
