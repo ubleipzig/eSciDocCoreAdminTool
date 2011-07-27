@@ -30,6 +30,9 @@ package de.escidoc.admintool.view.admintask.reindex;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.common.base.Preconditions;
 import com.vaadin.Application;
 import com.vaadin.ui.AbstractField;
@@ -114,13 +117,14 @@ final class ReindexButtonListener implements ClickListener {
         }
     }
 
-    public class AskStatusThread extends Thread {
+    private class AskStatusThread extends Thread {
+
+        final Logger LOG = LoggerFactory.getLogger(ReindexButtonListener.AskStatusThread.class);
 
         private MessagesStatus reindexStatus;
 
         @Override
         public void run() {
-
             for (;;) {
                 try {
                     reindexStatus = getReindexStatus();
@@ -136,10 +140,11 @@ final class ReindexButtonListener implements ClickListener {
                     Thread.sleep(1000);
                 }
                 catch (final InterruptedException e) {
-                    e.printStackTrace();
+                    LOG.warn(e.getMessage());
                 }
                 catch (final EscidocClientException e) {
-                    e.printStackTrace();
+                    LOG.error(e.getMessage());
+                    application.getMainWindow().showNotification(e.getMessage(), Notification.TYPE_ERROR_MESSAGE);
                 }
                 // All modifications to Vaadin components should be synchronized
                 // over application instance. For normal requests this is done
