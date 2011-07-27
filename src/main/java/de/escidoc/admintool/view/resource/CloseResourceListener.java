@@ -38,8 +38,8 @@ import de.escidoc.admintool.domain.PublicStatus;
 import de.escidoc.admintool.service.internal.ResourceService;
 import de.escidoc.core.client.exceptions.EscidocClientException;
 
+@SuppressWarnings("serial")
 public class CloseResourceListener extends AbstractUpdateable implements ClickListener {
-    private static final long serialVersionUID = -8186132990430106497L;
 
     private final ResourceToolbar resourceToolbar;
 

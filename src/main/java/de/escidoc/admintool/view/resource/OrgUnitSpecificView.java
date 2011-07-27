@@ -38,7 +38,6 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.Reindeer;
@@ -97,8 +96,6 @@ public class OrgUnitSpecificView {
     private ObjectProperty<ResourceRefDisplay> parentProperty;
 
     Item item;
-
-    Label parentsValue;
 
     TextField parentsField;
 

@@ -41,7 +41,6 @@ import com.google.common.base.Preconditions;
 
 import de.escidoc.admintool.app.AppConstants;
 import de.escidoc.admintool.service.LoginService;
-import de.escidoc.core.client.Authentication;
 import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
@@ -54,16 +53,9 @@ public abstract class AbstractEscidocService<T extends HandlerService> implement
 
     protected HandlerService client;
 
-    private Authentication authentification;
-
     public AbstractEscidocService(final HandlerService client) {
         Preconditions.checkNotNull(client, "Client is null: %s", client);
         this.client = client;
-    }
-
-    @Override
-    public void login() throws InternalClientException {
-        client.setHandle(authentification.getHandle());
     }
 
     abstract T getClient();

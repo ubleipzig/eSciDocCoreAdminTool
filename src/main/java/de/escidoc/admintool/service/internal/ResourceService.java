@@ -53,6 +53,4 @@ public interface ResourceService extends EscidocService {
 
     void update(Resource resource) throws EscidocClientException;
 
-    void login() throws InternalClientException;
-
 }

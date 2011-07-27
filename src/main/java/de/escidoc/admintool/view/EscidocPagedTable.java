@@ -51,7 +51,7 @@ public class EscidocPagedTable extends Table {
         public void pageChanged(PagedTableChangeEvent event);
     }
 
-    public class PagedTableChangeEvent {
+    public static class PagedTableChangeEvent {
 
         final EscidocPagedTable table;
 
