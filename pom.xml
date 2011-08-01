@@ -15,13 +15,14 @@
 			<version>6.6.2</version>
 			<scope>compile</scope>
 		</dependency>
-
+        <!--
 		<dependency>
 			<groupId>com.google.gwt</groupId>
 			<artifactId>gwt-user</artifactId>
 			<version>${gwt.version}</version>
 			<scope>provided</scope>
 		</dependency>
+    -->
 		<dependency>
 			<groupId>org.vaadin.addons</groupId>
 			<artifactId>pojo-container</artifactId>
@@ -208,6 +209,7 @@
 			</plugin>
 			<!-- uncomment this plugin section to compile client side widget after 
 				upgrading vaadin version. -->
+            <!--
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>gwt-maven-plugin</artifactId>
@@ -237,6 +239,7 @@
 					</execution>
 				</executions>
 			</plugin>
+        -->
 			<plugin>
 				<groupId>com.vaadin</groupId>
 				<artifactId>vaadin-maven-plugin</artifactId>

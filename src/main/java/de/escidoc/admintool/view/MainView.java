@@ -120,22 +120,17 @@ public class MainView extends CustomComponent {
     }
 
     private void show(final Button button) {
-        final VerticalLayout verticalLayout = new VerticalLayout();
-        verticalLayout.setSizeUndefined();
-        final Label box = new Label("<b>Version 1.1.1-RC2-SNAPSHOT</b>", Label.CONTENT_XHTML);
-
-        verticalLayout.addComponent(box);
-        verticalLayout.setSpacing(true);
         final HorizontalLayout layout = new HorizontalLayout();
         layout.setSpacing(true);
         layout.setMargin(true);
+        layout.addComponent(new Label("Version 1.1.1", Label.CONTENT_XHTML));
+        layout.addComponent(new Label("|", Label.CONTENT_XHTML));
+
         layout.addComponent(new Label("<b>User: " + currentUser.getProperties().getLoginName() + "</b>",
             Label.CONTENT_XHTML));
         layout.addComponent(new Label("|", Label.CONTENT_XHTML));
         layout.addComponent(button);
-
-        verticalLayout.addComponent(layout);
-        toolbar = factory.createToolbar(verticalLayout);
+        toolbar = factory.createToolbar(layout);
     }
 
     private void makeFullSize() {
