@@ -28,34 +28,41 @@
  */
 package de.escidoc.admintool.view.admintask.reindex;
 
+import com.google.common.base.Preconditions;
+
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.google.common.base.Preconditions;
-
 public enum IndexName {
 
-    REINDEX_ALL("All"), CONTEXT_ADMIN("Context Admin"), CONTENT_RELATION_ADMIN("Content Relation Admin"), REINDEX_ESCIDOC_OU(
-        "eSciDoc OU All"), OU_ADMIN("OU Admin"), ESCIDOCOAIPMH_ALL("eSciDoc OAIPMH All"), ITEM_CONTAINER_ADMIN(
-        "Item Container Admin"), REINDEX_ESCIDOC("eSciDoc All"), CONTENT_MODEL_ADMIN("Content Model Admin");
+    // REINDEX_ALL("all", "All"), CONTEXT_ADMIN("context_admin", "Context Admin"), CONTENT_RELATION_ADMIN(
+    // "content_relation_admin", "Content Relation Admin"), REINDEX_ESCIDOC_OU("escidocou_all", "eSciDoc OU All"),
+    // OU_ADMIN(
+    // "ou_admin", "OU Admin"), ESCIDOCOAIPMH_ALL("escidocoaipmh_all", "eSciDoc OAIPMH All"), ITEM_CONTAINER_ADMIN(
+    // "item_container_admin", "Item Container Admin"), REINDEX_ESCIDOC("escidoc_all", "eSciDoc All"),
+    // CONTENT_MODEL_ADMIN(
+    // "content_model_admin", "Content Model Admin");
+    REINDEX_ALL("all"), CONTEXT_ADMIN("context_admin"), CONTENT_RELATION_ADMIN("content_relation_admin"), REINDEX_ESCIDOC_OU(
+        "escidocou_all"), OU_ADMIN("ou_admin"), ESCIDOCOAIPMH_ALL("escidocoaipmh_all"), ITEM_CONTAINER_ADMIN(
+        "item_container_admin"), REINDEX_ESCIDOC("escidoc_all"), CONTENT_MODEL_ADMIN("content_model_admin");
 
-    private String label;
+    private String internalName;
 
-    IndexName(final String label) {
-        Preconditions.checkNotNull(label, "label is null: %s", label);
-        this.label = label;
+    IndexName(String internalName) {
+        Preconditions.checkNotNull(internalName, "internalName is null: %s", internalName);
+        this.internalName = internalName;
     }
 
-    public String asLabel() {
-        return label;
+    public String asInternalName() {
+        return internalName;
     }
 
     private final static Set<String> set = new HashSet<String>(values().length);
 
     public static Collection<?> all() {
         for (final IndexName indexName : values()) {
-            set.add(indexName.asLabel());
+            set.add(indexName.asInternalName());
         }
         return set;
     }

@@ -29,6 +29,7 @@
 package de.escidoc.admintool.view.admintask.reindex;
 
 import com.google.common.base.Preconditions;
+
 import com.vaadin.Application;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
@@ -81,7 +82,7 @@ public class ReindexResourceViewImpl extends AbstractCustomView implements Reind
 
     private void addIndexNameSelection() {
         indexNameSelect.setNullSelectionAllowed(false);
-        indexNameSelect.select(IndexName.REINDEX_ALL.asLabel());
+        indexNameSelect.select(IndexName.REINDEX_ALL.asInternalName());
         getViewLayout().addComponent(indexNameSelect);
     }
 
