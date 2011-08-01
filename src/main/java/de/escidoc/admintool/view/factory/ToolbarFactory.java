@@ -36,6 +36,7 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Layout;
 
 import de.escidoc.admintool.app.AppConstants;
 import de.escidoc.admintool.view.ViewConstants;
@@ -62,7 +63,7 @@ public class ToolbarFactory {
         // do not init
     }
 
-    public GridLayout createToolbar(final HorizontalLayout layout) {
+    public GridLayout createToolbar(final Layout layout) {
         if (gLayout == null) {
             gLayout = new GridLayout(COLUMNS, ROWS);
             gLayout.setMargin(false);
@@ -77,7 +78,7 @@ public class ToolbarFactory {
         return gLayout;
     }
 
-    private void add(final HorizontalLayout layout) {
+    private void add(final Layout layout) {
         gLayout.addComponent(layout, 2, 0);
         gLayout.setComponentAlignment(layout, Alignment.MIDDLE_RIGHT);
     }

@@ -16,9 +16,12 @@
 			<scope>compile</scope>
 		</dependency>
 
-		<!-- commented temporary until maven repo found <dependency> <groupId>com.google.gwt</groupId> 
-			<artifactId>gwt-user</artifactId> <version>${gwt.version}</version> <scope>provided</scope> 
-			</dependency> -->
+		<dependency>
+			<groupId>com.google.gwt</groupId>
+			<artifactId>gwt-user</artifactId>
+			<version>${gwt.version}</version>
+			<scope>provided</scope>
+		</dependency>
 		<dependency>
 			<groupId>org.vaadin.addons</groupId>
 			<artifactId>pojo-container</artifactId>
@@ -33,6 +36,11 @@
 			<groupId>org.vaadin.addons</groupId>
 			<artifactId>pagedtable</artifactId>
 			<version>0.5.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.vaadin.addons</groupId>
+			<artifactId>aboutbox</artifactId>
+			<version>1.0.0</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>
@@ -200,15 +208,35 @@
 			</plugin>
 			<!-- uncomment this plugin section to compile client side widget after 
 				upgrading vaadin version. -->
-			<!-- <plugin> <groupId>org.codehaus.mojo</groupId> <artifactId>gwt-maven-plugin</artifactId> 
-				<version>2.2.0</version> <dependencies> <dependency> <groupId>com.google.gwt</groupId> 
-				<artifactId>gwt-user</artifactId> <version>${gwt.version}</version> </dependency> 
-				<dependency> <groupId>com.google.gwt</groupId> <artifactId>gwt-dev</artifactId> 
-				<version>${gwt.version}</version> </dependency> </dependencies> <configuration> 
-				<webappDirectory>${vaadin-widgets-dir}</webappDirectory> <extraJvmArgs>-Dgwt.style=PRETTY 
-				-Xmx512M -Xss1024k</extraJvmArgs> </configuration> <executions> <execution> 
-				<goals> <goal>resources</goal> <goal>compile</goal> </goals> </execution> 
-				</executions> </plugin> -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>gwt-maven-plugin</artifactId>
+				<version>2.2.0</version>
+				<dependencies>
+					<dependency>
+						<groupId>com.google.gwt</groupId>
+						<artifactId>gwt-user</artifactId>
+						<version>${gwt.version}</version>
+					</dependency>
+					<dependency>
+						<groupId>com.google.gwt</groupId>
+						<artifactId>gwt-dev</artifactId>
+						<version>${gwt.version}</version>
+					</dependency>
+				</dependencies>
+				<configuration>
+					<webappDirectory>${vaadin-widgets-dir}</webappDirectory>
+					<extraJvmArgs>-Dgwt.style=PRETTY -Xmx512M -Xss1024k</extraJvmArgs>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>resources</goal>
+							<goal>compile</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 			<plugin>
 				<groupId>com.vaadin</groupId>
 				<artifactId>vaadin-maven-plugin</artifactId>
@@ -307,7 +335,8 @@
 				<artifactId>maven-release-plugin</artifactId>
 				<version>2.2</version>
 				<configuration>
-                    <tagBase>http://escidev5:8888/prototype/tags/eSciDocAdminTool/</tagBase>
+					<tagBase>http://escidev5:8888/prototype/tags/eSciDocAdminTool/
+					</tagBase>
 				</configuration>
 			</plugin>
 		</plugins>
@@ -356,11 +385,11 @@
 	</developers>
 	<issueManagement>
 		<system>jira</system>
-		<url>https://www.escidoc.org/jira/browse/BWESCIT/component/10132</url>
+		<url>https://www.escidoc.org/jira/browse/ADMTOOL</url>
 	</issueManagement>
 	<ciManagement>
-		<system>Hudson</system>
-		<url>http://escidev2:8484/job/eSciDocAdminTool</url>
+		<system>Jenkins</system>
+		<url>http://escidev2:8484/job/admintool-trunk</url>
 	</ciManagement>
 	<mailingLists>
 		<mailingList>
