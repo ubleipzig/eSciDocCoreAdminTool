@@ -28,8 +28,6 @@
  */
 package de.escidoc.admintool.view;
 
-import org.vaadin.aboutbox.AboutBox;
-
 import com.google.common.base.Preconditions;
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.ui.Button;
@@ -124,11 +122,7 @@ public class MainView extends CustomComponent {
     private void show(final Button button) {
         final VerticalLayout verticalLayout = new VerticalLayout();
         verticalLayout.setSizeUndefined();
-        final AboutBox box = new AboutBox();
-        box.setCaption("About the AboutBox...");
-        box.setTitle("AboutBox<br />1.0.0");
-        box.setDescription("Credits:<br />Sami Ekblad<br />Marc Englund");
-        // final Label box = new Label("<b>Version 1.1.1-RC2-SNAPSHOT</b>", Label.CONTENT_XHTML);
+        final Label box = new Label("<b>Version 1.1.1-RC2-SNAPSHOT</b>", Label.CONTENT_XHTML);
 
         verticalLayout.addComponent(box);
         verticalLayout.setSpacing(true);
