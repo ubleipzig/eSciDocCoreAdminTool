@@ -435,4 +435,8 @@ public class ViewConstants {
 
     public static final String HTTP = "http://";
 
+    public static final String USER_NAME = "User Name:";
+
+    public static final String SELECT_ROLE_LABEL = "Role:";
+
 }

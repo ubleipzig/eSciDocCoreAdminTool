@@ -36,7 +36,7 @@ import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.ComboBox;
+import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.TextField;
 
 import de.escidoc.admintool.view.admintask.ResourceType;
@@ -46,13 +46,13 @@ import de.escidoc.core.resources.aa.role.ScopeDef;
 @SuppressWarnings("serial")
 class RoleSelectListener implements ValueChangeListener {
 
-    private final ComboBox resourceTypeComboBox;
+    private final NativeSelect resourceTypeComboBox;
 
     private final TextField searchBox;
 
     private final Button searchButton;
 
-    RoleSelectListener(final ComboBox resourceTypeComboBox, final TextField searchBox, final Button searchButton) {
+    RoleSelectListener(final NativeSelect resourceTypeComboBox, final TextField searchBox, final Button searchButton) {
         Preconditions.checkNotNull(resourceTypeComboBox, "resourceTypeComboBox is null: %s", resourceTypeComboBox);
         Preconditions.checkNotNull(searchButton, "searchBox is null: %s", searchButton);
         Preconditions.checkNotNull(searchBox, "searchButton is null: %s", searchBox);

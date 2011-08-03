@@ -41,12 +41,12 @@ import com.vaadin.data.util.POJOContainer;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.ListSelect;
+import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
@@ -86,11 +86,11 @@ public class RoleView extends CustomComponent {
 
     private final VerticalLayout verticalLayout = new VerticalLayout();
 
-    private final ComboBox userComboBox = new ComboBox("User Name:");
+    private final NativeSelect userSelection = new NativeSelect(ViewConstants.USER_NAME);
 
-    private final ComboBox roleComboBox = new ComboBox("Role:");
+    private final NativeSelect roleSelection = new NativeSelect(ViewConstants.SELECT_ROLE_LABEL);
 
-    private final ComboBox resourceTypeComboBox = new ComboBox(ViewConstants.RESOURCE_TYPE);
+    private final NativeSelect resourcetypeSelection = new NativeSelect(ViewConstants.RESOURCE_TYPE);
 
     final ListSelect resouceResult = new ListSelect();
 
@@ -170,29 +170,29 @@ public class RoleView extends CustomComponent {
     }
 
     private void addUserField() {
-        userComboBox.setWidth(COMPONENT_WIDTH);
-        userComboBox.setNullSelectionAllowed(false);
-        userComboBox.setMultiSelect(false);
-        userComboBox.setRequired(true);
-        mainLayout.addComponent(userComboBox);
+        userSelection.setWidth(COMPONENT_WIDTH);
+        userSelection.setNullSelectionAllowed(false);
+        userSelection.setMultiSelect(false);
+        userSelection.setRequired(true);
+        mainLayout.addComponent(userSelection);
     }
 
     private void addRoleField() {
-        roleComboBox.setWidth(COMPONENT_WIDTH);
-        roleComboBox.setNullSelectionAllowed(false);
-        roleComboBox.setImmediate(true);
-        roleComboBox.setRequired(true);
-        roleComboBox.addListener(new RoleSelectListener(resourceTypeComboBox, searchBox, searchButton));
-        mainLayout.addComponent(roleComboBox);
+        roleSelection.setWidth(COMPONENT_WIDTH);
+        roleSelection.setNullSelectionAllowed(false);
+        roleSelection.setImmediate(true);
+        roleSelection.setRequired(true);
+        roleSelection.addListener(new RoleSelectListener(resourcetypeSelection, searchBox, searchButton));
+        mainLayout.addComponent(roleSelection);
 
     }
 
     private void addResourceType() {
-        resourceTypeComboBox.setEnabled(false);
-        resourceTypeComboBox.setWidth(COMPONENT_WIDTH);
-        resourceTypeComboBox.setImmediate(true);
-        resourceTypeComboBox.setNullSelectionAllowed(false);
-        mainLayout.addComponent(resourceTypeComboBox);
+        resourcetypeSelection.setEnabled(false);
+        resourcetypeSelection.setWidth(COMPONENT_WIDTH);
+        resourcetypeSelection.setImmediate(true);
+        resourcetypeSelection.setNullSelectionAllowed(false);
+        mainLayout.addComponent(resourcetypeSelection);
     }
 
     private void addResourceSearchBox() {
@@ -233,8 +233,8 @@ public class RoleView extends CustomComponent {
         for (final UserAccount user : getAllUserAccounts()) {
             userContainer.addPOJO(user);
         }
-        userComboBox.setContainerDataSource(userContainer);
-        userComboBox.setItemCaptionPropertyId(PropertyId.NAME);
+        userSelection.setContainerDataSource(userContainer);
+        userSelection.setItemCaptionPropertyId(PropertyId.NAME);
     }
 
     private void bindRoleData() {
@@ -243,12 +243,12 @@ public class RoleView extends CustomComponent {
         for (final Role role : getAllRoles()) {
             roleContainer.addPOJO(role);
         }
-        roleComboBox.setContainerDataSource(roleContainer);
-        roleComboBox.setItemCaptionPropertyId(PropertyId.NAME);
+        roleSelection.setContainerDataSource(roleContainer);
+        roleSelection.setItemCaptionPropertyId(PropertyId.NAME);
     }
 
     private void bindResourceTypeData() {
-        resourceTypeComboBox.addListener(new ResourceTypeListener(this));
+        resourcetypeSelection.addListener(new ResourceTypeListener(this));
     }
 
     Collection<Context> getAllContexts() {
@@ -283,7 +283,7 @@ public class RoleView extends CustomComponent {
 
     public void selectUser(final UserAccount userAccount) {
         selectedUser = userAccount;
-        userComboBox.select(userAccount);
+        userSelection.select(userAccount);
     }
 
     private class SaveBtnListener implements Button.ClickListener {
@@ -321,13 +321,13 @@ public class RoleView extends CustomComponent {
 
         private UserAccount getSelectedUser() {
             if (selectedUser == null) {
-                return (UserAccount) userComboBox.getValue();
+                return (UserAccount) userSelection.getValue();
             }
             return selectedUser;
         }
 
         private Role getSelectedRole() {
-            final Object value = roleComboBox.getValue();
+            final Object value = roleSelection.getValue();
             if (value instanceof Role) {
                 return (Role) value;
             }
