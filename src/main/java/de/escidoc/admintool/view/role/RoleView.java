@@ -177,6 +177,7 @@ public class RoleView extends CustomComponent {
         userSelection.setRequired(true);
         userSelection.setNewItemsAllowed(false);
         userSelection.setImmediate(true);
+        userSelection.setRequiredError("User is required");
         mainLayout.addComponent(userSelection);
     }
 
@@ -202,6 +203,7 @@ public class RoleView extends CustomComponent {
         searchBox.setWidth(Integer.toString(3 / 2 * COMPONENT_WIDTH_IN_INTEGER) + "px");
         searchBox.setEnabled(false);
         searchButton.setEnabled(false);
+        searchBox.setReadOnly(true);
         mainLayout.addComponent(searchBox);
         searchButton.addListener(new SearchBtnListener());
     }

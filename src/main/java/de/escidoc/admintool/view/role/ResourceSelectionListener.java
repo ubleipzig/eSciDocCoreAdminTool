@@ -46,10 +46,14 @@ final class ResourceSelectionListener implements ValueChangeListener {
     @Override
     public void valueChange(final ValueChangeEvent event) {
         if (isSelected(event)) {
+            roleView.searchBox.setReadOnly(false);
             roleView.searchBox.setValue(((Resource) event.getProperty().getValue()).getXLinkTitle());
+            roleView.searchBox.setReadOnly(true);
         }
         else {
+            roleView.searchBox.setReadOnly(false);
             roleView.searchBox.setValue(AppConstants.EMPTY_STRING);
+            roleView.searchBox.setReadOnly(true);
         }
     }
 
