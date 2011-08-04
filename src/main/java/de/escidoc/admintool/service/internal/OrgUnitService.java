@@ -48,7 +48,6 @@ import com.google.common.base.Preconditions;
 import de.escidoc.admintool.app.AppConstants;
 import de.escidoc.admintool.exception.ResourceNotFoundException;
 import de.escidoc.core.client.OrganizationalUnitHandlerClient;
-import de.escidoc.core.client.TransportProtocol;
 import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
@@ -65,6 +64,8 @@ public class OrgUnitService {
     private OrganizationalUnitHandlerClientInterface client;
 
     private final Map<String, String> objectIdByTitle = new HashMap<String, String>();
+
+    private final Map<String, OrganizationalUnit> orgUnitById = new HashMap<String, OrganizationalUnit>();
 
     private final String eSciDocUri;
 
@@ -83,11 +84,8 @@ public class OrgUnitService {
 
     private void initClient() throws InternalClientException {
         client = new OrganizationalUnitHandlerClient(eSciDocUri);
-        client.setTransport(TransportProtocol.REST);
         client.setHandle(handle);
     }
-
-    private final Map<String, OrganizationalUnit> orgUnitById = new HashMap<String, OrganizationalUnit>();
 
     public Map<String, OrganizationalUnit> getOrgUnitById() {
         return orgUnitById;
@@ -95,18 +93,12 @@ public class OrgUnitService {
 
     public OrganizationalUnit find(final String objectId) throws EscidocException, InternalClientException,
         TransportException {
-        if (orgUnitById.isEmpty()) {
-            findAll();
-        }
-        return orgUnitById.get(objectId);
+        return client.retrieve(objectId);
     }
 
     public String findOrgUnitTitleById(final String objectId) throws EscidocException, InternalClientException,
         TransportException {
-        if (orgUnitById.isEmpty()) {
-            findAll();
-        }
-        final OrganizationalUnit orgUnit = orgUnitById.get(objectId);
+        final OrganizationalUnit orgUnit = client.retrieve(objectId);
         if (orgUnit == null) {
             throw new ResourceNotFoundException("Can not find resource with object ID: " + objectId);
         }
