@@ -141,7 +141,8 @@ public class ServiceFactory {
     }
 
     public ContentRelationService createContentRelationService() throws InternalClientException {
-        final ContentRelationService relationService = new ContentRelationService(new ContentRelationHandlerClient(serviceUri));
+        final ContentRelationService relationService =
+            new ContentRelationService(new ContentRelationHandlerClient(serviceUri));
         relationService.loginWith(token);
         return relationService;
     }

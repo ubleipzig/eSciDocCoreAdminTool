@@ -34,7 +34,6 @@ import java.util.Map.Entry;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.TextField;
 
-
 final class ShowRepoInfoCommandImpl implements RepositoryInfoView.ShowRepoInfoCommand {
     private final FormLayout formLayout = new FormLayout();
 

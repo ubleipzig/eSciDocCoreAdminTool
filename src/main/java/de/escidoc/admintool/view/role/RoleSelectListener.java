@@ -52,14 +52,10 @@ class RoleSelectListener implements ValueChangeListener {
 
     private final Button searchButton;
 
-    RoleSelectListener(final NativeSelect resourceTypeComboBox,
-        final TextField searchBox, final Button searchButton) {
-        Preconditions.checkNotNull(resourceTypeComboBox,
-            "resourceTypeComboBox is null: %s", resourceTypeComboBox);
-        Preconditions.checkNotNull(searchButton, "searchBox is null: %s",
-            searchButton);
-        Preconditions.checkNotNull(searchBox, "searchButton is null: %s",
-            searchBox);
+    RoleSelectListener(final NativeSelect resourceTypeComboBox, final TextField searchBox, final Button searchButton) {
+        Preconditions.checkNotNull(resourceTypeComboBox, "resourceTypeComboBox is null: %s", resourceTypeComboBox);
+        Preconditions.checkNotNull(searchButton, "searchBox is null: %s", searchButton);
+        Preconditions.checkNotNull(searchBox, "searchButton is null: %s", searchBox);
         this.resourceTypeComboBox = resourceTypeComboBox;
         this.searchBox = searchBox;
         this.searchButton = searchButton;
@@ -72,16 +68,11 @@ class RoleSelectListener implements ValueChangeListener {
 
     private void onSelectedRole(final ValueChangeEvent event) {
         if (event.getProperty().getValue() instanceof Role) {
-            final List<ResourceType> resourceTypeList =
-                new ArrayList<ResourceType>();
-            for (final ScopeDef scopeDef : getScopeDefinitions((Role) event
-                .getProperty().getValue())) {
+            final List<ResourceType> resourceTypeList = new ArrayList<ResourceType>();
+            for (final ScopeDef scopeDef : getScopeDefinitions((Role) event.getProperty().getValue())) {
 
-                ResourceType resourceType =
-                    ResourceType.convert(scopeDef
-                        .getRelationAttributeObjectType());
-                if (resourceType != null
-                    && !resourceType.equals(ResourceType.COMPONENT)) {
+                ResourceType resourceType = ResourceType.convert(scopeDef.getRelationAttributeObjectType());
+                if (resourceType != null && !resourceType.equals(ResourceType.COMPONENT)) {
                     resourceTypeList.add(resourceType);
                 }
             }
@@ -89,11 +80,9 @@ class RoleSelectListener implements ValueChangeListener {
         }
     }
 
-    private void bindView(
-        final List<ResourceType> resourceTypeList, final Role role) {
+    private void bindView(final List<ResourceType> resourceTypeList, final Role role) {
         BeanItemContainer<ResourceType> dataSource =
-            new BeanItemContainer<ResourceType>(ResourceType.class,
-                resourceTypeList);
+            new BeanItemContainer<ResourceType>(ResourceType.class, resourceTypeList);
         resourceTypeComboBox.setContainerDataSource(dataSource);
         if (dataSource.size() > 0) {
             resourceTypeComboBox.setValue(dataSource.getIdByIndex(0));
