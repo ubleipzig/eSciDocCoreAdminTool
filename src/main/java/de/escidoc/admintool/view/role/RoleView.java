@@ -38,6 +38,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Preconditions;
 import com.vaadin.data.util.POJOContainer;
+import com.vaadin.terminal.UserError;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -315,17 +316,17 @@ public class RoleView extends CustomComponent {
 
     private class SaveBtnListener implements Button.ClickListener {
 
-        private static final long serialVersionUID = -7128599340989436927L;
-
         @Override
         public void buttonClick(final ClickEvent event) {
-
             onSaveClick();
         }
 
         private void onSaveClick() {
             if (getSelectedUser() != null) {
                 assignRole();
+            }
+            else {
+                userSelection.setComponentError(new UserError("User is required"));
             }
         }
 
