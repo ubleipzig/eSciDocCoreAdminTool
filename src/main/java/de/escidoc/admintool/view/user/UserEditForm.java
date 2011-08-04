@@ -99,7 +99,7 @@ public class UserEditForm extends CustomComponent implements ClickListener {
 
     private static final int ROLE_LIST_HEIGHT = 200;
 
-    private static final int LABEL_WIDTH = 111;
+    private static final int LABEL_WIDTH = 100;
 
     private static final int LABEL_HEIGHT = 15;
 
@@ -247,7 +247,7 @@ public class UserEditForm extends CustomComponent implements ClickListener {
     }
 
     private VerticalLayout createOrgUnitWidgetWitButtons() {
-        return createLayout(ViewConstants.ORGANIZATION_UNITS_LABEL, orgUnitTable, 120, (int) (0.5 * ROLE_LIST_HEIGHT),
+        return createLayout(ViewConstants.ORGANIZATION_UNITS_LABEL, orgUnitTable, 100, (int) (0.5 * ROLE_LIST_HEIGHT),
             false, new Button[] { editOrgUnitButton, removeOrgUnitButton });
     }
 
@@ -316,8 +316,7 @@ public class UserEditForm extends CustomComponent implements ClickListener {
 
     private void addModified() {
         createModifiedByLink();
-        form.addComponent(LayoutHelper.create("Modified", "by", modifiedOn, modifiedByLink, LABEL_WIDTH, LABEL_HEIGHT,
-            false));
+        form.addComponent(LayoutHelper.create("Modified", "by", modifiedOn, modifiedByLink, 100, LABEL_HEIGHT, false));
     }
 
     private void createModifiedByLink() {
@@ -332,7 +331,7 @@ public class UserEditForm extends CustomComponent implements ClickListener {
     }
 
     private void addObjectIdLabel() {
-        panel.addComponent(LayoutHelper.create(ViewConstants.OBJECT_ID_LABEL, objIdField, LABEL_WIDTH, false));
+        panel.addComponent(LayoutHelper.create(ViewConstants.OBJECT_ID_LABEL, objIdField, 100, false));
     }
 
     private void addPasswordFields() {
@@ -345,7 +344,7 @@ public class UserEditForm extends CustomComponent implements ClickListener {
         loginNameField.setMaxLength(ViewConstants.MAX_TITLE_LENGTH);
         loginNameField.setWidth(ViewConstants.FIELD_WIDTH);
         loginNameField.setReadOnly(true);
-        panel.addComponent(LayoutHelper.create(ViewConstants.LOGIN_NAME_LABEL, loginNameField, LABEL_WIDTH, false));
+        panel.addComponent(LayoutHelper.create(ViewConstants.LOGIN_NAME_LABEL, loginNameField, 100, false));
     }
 
     private void addNameField() {
@@ -353,7 +352,7 @@ public class UserEditForm extends CustomComponent implements ClickListener {
         nameField.setMaxLength(ViewConstants.MAX_TITLE_LENGTH);
         nameField.setWidth(ViewConstants.FIELD_WIDTH);
         nameField.setWriteThrough(false);
-        panel.addComponent(LayoutHelper.create(ViewConstants.NAME_LABEL, nameField, LABEL_WIDTH, true));
+        panel.addComponent(LayoutHelper.create(ViewConstants.NAME_LABEL, nameField, 100, true));
     }
 
     private void createUpdatePasswordView() {
@@ -414,7 +413,7 @@ public class UserEditForm extends CustomComponent implements ClickListener {
         addRoleButton.setStyleName(Reindeer.BUTTON_SMALL);
         removeRoleButton.setStyleName(Reindeer.BUTTON_SMALL);
         final VerticalLayout rolesComponent =
-            createLayout(ViewConstants.ROLES_LABEL, roleTable, 120, ROLE_LIST_HEIGHT, false, new Button[] {
+            createLayout(ViewConstants.ROLES_LABEL, roleTable, 100, ROLE_LIST_HEIGHT, false, new Button[] {
                 addRoleButton, removeRoleButton });
         panel.addComponent(rolesComponent);
     }
@@ -427,12 +426,13 @@ public class UserEditForm extends CustomComponent implements ClickListener {
         hLayout.setHeight(roleListHeight + Constants.PX);
         hLayout.addComponent(new Label(" "));
 
-        final Label textLabel = new Label(Constants.P_ALIGN_RIGHT + rolesLabel + Constants.P, Label.CONTENT_XHTML);
+        final Label textLabel =
+            new Label(Constants.P_ALIGN_RIGHT + rolesLabel + "   " + Constants.P, Label.CONTENT_XHTML);
         textLabel.setSizeUndefined();
         textLabel.setWidth(labelWidth + Constants.PX);
         hLayout.addComponent(textLabel);
         hLayout.setComponentAlignment(textLabel, Alignment.MIDDLE_RIGHT);
-
+        hLayout.addComponent(new Label("&nbsp;", Label.CONTENT_XHTML));
         hLayout.addComponent(table);
         hLayout.setComponentAlignment(table, Alignment.MIDDLE_RIGHT);
         hLayout.addComponent(new Label(" &nbsp; ", Label.CONTENT_XHTML));
