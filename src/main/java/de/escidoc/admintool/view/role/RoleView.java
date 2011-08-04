@@ -260,10 +260,35 @@ public class RoleView extends CustomComponent {
             new POJOContainer<Role>(Role.class, PropertyId.OBJECT_ID,
                 PropertyId.NAME);
         for (final Role role : getAllRoles()) {
-            roleContainer.addPOJO(role);
+            String roleName = role.getProperties().getName();
+            if (notUserGroup(roleName) && notStatistic(roleName)
+                && notContentRelation(roleName) && notAudience(roleName)
+                && notOrgUnitAdmint(roleName)) {
+                roleContainer.addPOJO(role);
+            }
         }
         roleSelection.setContainerDataSource(roleContainer);
         roleSelection.setItemCaptionPropertyId(PropertyId.NAME);
+    }
+
+    private boolean notContentRelation(String roleName) {
+        return !roleName.startsWith("ContentRelation");
+    }
+
+    private boolean notOrgUnitAdmint(String roleName) {
+        return !roleName.startsWith("OU-Admin");
+    }
+
+    private boolean notAudience(String roleName) {
+        return !roleName.startsWith("Audience");
+    }
+
+    private boolean notStatistic(String roleName) {
+        return !roleName.startsWith("Statistics");
+    }
+
+    private boolean notUserGroup(String roleName) {
+        return !roleName.startsWith("User-Group");
     }
 
     private void bindResourceTypeData() {

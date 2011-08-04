@@ -76,8 +76,14 @@ class RoleSelectListener implements ValueChangeListener {
                 new ArrayList<ResourceType>();
             for (final ScopeDef scopeDef : getScopeDefinitions((Role) event
                 .getProperty().getValue())) {
-                resourceTypeList.add(ResourceType.convert(scopeDef
-                    .getRelationAttributeObjectType()));
+
+                ResourceType resourceType =
+                    ResourceType.convert(scopeDef
+                        .getRelationAttributeObjectType());
+                if (resourceType != null
+                    && !resourceType.equals(ResourceType.COMPONENT)) {
+                    resourceTypeList.add(resourceType);
+                }
             }
             bindView(resourceTypeList, (Role) event.getProperty().getValue());
         }
