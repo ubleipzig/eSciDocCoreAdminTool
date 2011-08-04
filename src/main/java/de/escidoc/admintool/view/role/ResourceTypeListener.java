@@ -28,6 +28,7 @@
  */
 package de.escidoc.admintool.view.role;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Set;
@@ -46,6 +47,7 @@ import de.escidoc.admintool.view.admintask.ResourceType;
 import de.escidoc.admintool.view.util.dialog.ErrorDialog;
 import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.resources.Resource;
+import de.escidoc.core.resources.aa.useraccount.UserAccount;
 
 class ResourceTypeListener implements ValueChangeListener {
 
@@ -64,8 +66,8 @@ class ResourceTypeListener implements ValueChangeListener {
             onSelectedResourceType(event);
         }
         catch (final NotImplementedException e) {
-            roleView.mainWindow.addWindow(new ErrorDialog(roleView.mainWindow, ViewConstants.ERROR_DIALOG_CAPTION, e
-                .getMessage()));
+            roleView.mainWindow.addWindow(new ErrorDialog(roleView.mainWindow,
+                ViewConstants.ERROR_DIALOG_CAPTION, e.getMessage()));
         }
     }
 
@@ -92,14 +94,21 @@ class ResourceTypeListener implements ValueChangeListener {
                     newComponent = assignComponent();
                     loadItemData();
                     break;
+                case USERACCOUNT:
+                    newComponent = assignComponent();
+                    loadUserData();
+                    break;
                 default: {
                     clearResourceContainer();
-                    throw new NotImplementedException("Scoping for " + type + " is not yet implemented");
+                    throw new NotImplementedException("Scoping for " + type
+                        + " is not yet implemented");
                 }
             }
-            final Iterator<Component> it = roleView.resourceContainer.getComponentIterator();
+            final Iterator<Component> it =
+                roleView.resourceContainer.getComponentIterator();
             if (it.hasNext()) {
-                roleView.resourceContainer.replaceComponent(it.next(), newComponent);
+                roleView.resourceContainer.replaceComponent(it.next(),
+                    newComponent);
             }
             else {
                 roleView.resourceContainer.addComponent(newComponent);
@@ -107,15 +116,39 @@ class ResourceTypeListener implements ValueChangeListener {
         }
     }
 
+    private void loadUserData() {
+        final POJOContainer<Resource> dataSource =
+            new POJOContainer<Resource>(Resource.class,
+                ViewConstants.X_LINK_TITLE);
+        for (final Resource user : findAllUsers()) {
+            dataSource.addItem(user);
+        }
+        roleView.resouceResult.setContainerDataSource(dataSource);
+        roleView.resouceResult
+            .setItemCaptionPropertyId(ViewConstants.X_LINK_TITLE);
+    }
+
+    private Collection<UserAccount> findAllUsers() {
+        try {
+            return roleView.userService.findAll();
+        }
+        catch (final EscidocClientException e) {
+            handleError(e);
+        }
+        return Collections.emptySet();
+    }
+
     private void loadItemData() {
         final POJOContainer<Resource> itemContainer =
-            new POJOContainer<Resource>(Resource.class, ViewConstants.X_LINK_TITLE);
+            new POJOContainer<Resource>(Resource.class,
+                ViewConstants.X_LINK_TITLE);
         for (final Resource item : findAllItems()) {
             itemContainer.addItem(item);
         }
 
         roleView.resouceResult.setContainerDataSource(itemContainer);
-        roleView.resouceResult.setItemCaptionPropertyId(ViewConstants.X_LINK_TITLE);
+        roleView.resouceResult
+            .setItemCaptionPropertyId(ViewConstants.X_LINK_TITLE);
     }
 
     private Set<Resource> findAllItems() {
@@ -158,8 +191,8 @@ class ResourceTypeListener implements ValueChangeListener {
     }
 
     private void handleError(final EscidocClientException e) {
-        roleView.mainWindow.addWindow(new ErrorDialog(roleView.mainWindow, ViewConstants.ERROR_DIALOG_CAPTION, e
-            .getMessage()));
+        roleView.mainWindow.addWindow(new ErrorDialog(roleView.mainWindow,
+            ViewConstants.ERROR_DIALOG_CAPTION, e.getMessage()));
     }
 
     private void loadOrgUnitData() {

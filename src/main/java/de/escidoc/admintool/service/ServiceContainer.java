@@ -48,4 +48,6 @@ public interface ServiceContainer {
 
     ResourceService getContentRelationService();
 
+    ResourceService getUserService();
+
 }
