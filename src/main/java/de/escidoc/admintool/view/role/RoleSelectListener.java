@@ -36,6 +36,8 @@ import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Component;
+import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.TextField;
 
@@ -52,13 +54,22 @@ class RoleSelectListener implements ValueChangeListener {
 
     private final Button searchButton;
 
-    RoleSelectListener(final NativeSelect resourceTypeComboBox, final TextField searchBox, final Button searchButton) {
+    private final Component footer;
+
+    private final ListSelect resourceResult;
+
+    RoleSelectListener(final NativeSelect resourceTypeComboBox, final TextField searchBox, final Button searchButton,
+        final Component footer, final ListSelect resourceResult) {
         Preconditions.checkNotNull(resourceTypeComboBox, "resourceTypeComboBox is null: %s", resourceTypeComboBox);
         Preconditions.checkNotNull(searchButton, "searchBox is null: %s", searchButton);
         Preconditions.checkNotNull(searchBox, "searchButton is null: %s", searchBox);
+        Preconditions.checkNotNull(footer, "footer is null: %s", footer);
+        Preconditions.checkNotNull(resourceResult, "resouceResult is null: %s", resourceResult);
         this.resourceTypeComboBox = resourceTypeComboBox;
         this.searchBox = searchBox;
         this.searchButton = searchButton;
+        this.footer = footer;
+        this.resourceResult = resourceResult;
     }
 
     @Override
@@ -71,17 +82,22 @@ class RoleSelectListener implements ValueChangeListener {
             final List<ResourceType> resourceTypeList = new ArrayList<ResourceType>();
             for (final ScopeDef scopeDef : getScopeDefinitions((Role) event.getProperty().getValue())) {
 
-                ResourceType resourceType = ResourceType.convert(scopeDef.getRelationAttributeObjectType());
+                final ResourceType resourceType = ResourceType.convert(scopeDef.getRelationAttributeObjectType());
                 if (resourceType != null && !resourceType.equals(ResourceType.COMPONENT)) {
                     resourceTypeList.add(resourceType);
                 }
             }
             bindView(resourceTypeList, (Role) event.getProperty().getValue());
+            showSaveButton();
         }
     }
 
+    private void showSaveButton() {
+        footer.setVisible(true);
+    }
+
     private void bindView(final List<ResourceType> resourceTypeList, final Role role) {
-        BeanItemContainer<ResourceType> dataSource =
+        final BeanItemContainer<ResourceType> dataSource =
             new BeanItemContainer<ResourceType>(ResourceType.class, resourceTypeList);
         resourceTypeComboBox.setContainerDataSource(dataSource);
         if (dataSource.size() > 0) {
@@ -98,5 +114,6 @@ class RoleSelectListener implements ValueChangeListener {
         resourceTypeComboBox.setEnabled(isScopingEnabled);
         searchBox.setEnabled(isScopingEnabled);
         searchButton.setEnabled(isScopingEnabled);
+        resourceResult.setEnabled(isScopingEnabled);
     }
 }

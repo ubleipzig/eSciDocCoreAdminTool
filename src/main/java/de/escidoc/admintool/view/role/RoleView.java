@@ -175,7 +175,6 @@ public class RoleView extends CustomComponent {
         userSelection.setMultiSelect(false);
         userSelection.setRequired(true);
         userSelection.setNewItemsAllowed(false);
-        userSelection.setNullSelectionItemId("");
         userSelection.setImmediate(true);
         mainLayout.addComponent(userSelection);
     }
@@ -185,7 +184,8 @@ public class RoleView extends CustomComponent {
         roleSelection.setNullSelectionAllowed(false);
         roleSelection.setImmediate(true);
         roleSelection.setRequired(true);
-        roleSelection.addListener(new RoleSelectListener(resourcetypeSelection, searchBox, searchButton));
+        roleSelection.addListener(new RoleSelectListener(resourcetypeSelection, searchBox, searchButton, footer,
+            resouceResult));
         mainLayout.addComponent(roleSelection);
     }
 
@@ -319,11 +319,14 @@ public class RoleView extends CustomComponent {
 
         @Override
         public void buttonClick(final ClickEvent event) {
+
             onSaveClick();
         }
 
         private void onSaveClick() {
-            assignRole();
+            if (getSelectedUser() != null) {
+                assignRole();
+            }
         }
 
         private void assignRole() {
