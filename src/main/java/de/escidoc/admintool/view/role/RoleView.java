@@ -90,7 +90,7 @@ public class RoleView extends CustomComponent {
 
     private final NativeSelect roleSelection = new NativeSelect(ViewConstants.SELECT_ROLE_LABEL);
 
-    private final NativeSelect resourcetypeSelection = new NativeSelect(ViewConstants.RESOURCE_TYPE);
+    private final NativeSelect resourceTypeSelection = new NativeSelect(ViewConstants.RESOURCE_TYPE);
 
     final ListSelect resouceResult = new ListSelect();
 
@@ -184,17 +184,17 @@ public class RoleView extends CustomComponent {
         roleSelection.setNullSelectionAllowed(false);
         roleSelection.setImmediate(true);
         roleSelection.setRequired(true);
-        roleSelection.addListener(new RoleSelectListener(resourcetypeSelection, searchBox, searchButton, footer,
+        roleSelection.addListener(new RoleSelectListener(resourceTypeSelection, searchBox, searchButton, footer,
             resouceResult));
         mainLayout.addComponent(roleSelection);
     }
 
     private void addResourceType() {
-        resourcetypeSelection.setEnabled(false);
-        resourcetypeSelection.setWidth(COMPONENT_WIDTH);
-        resourcetypeSelection.setImmediate(true);
-        resourcetypeSelection.setNullSelectionAllowed(false);
-        mainLayout.addComponent(resourcetypeSelection);
+        resourceTypeSelection.setEnabled(false);
+        resourceTypeSelection.setWidth(COMPONENT_WIDTH);
+        resourceTypeSelection.setImmediate(true);
+        resourceTypeSelection.setNullSelectionAllowed(false);
+        mainLayout.addComponent(resourceTypeSelection);
     }
 
     private void addResourceSearchBox() {
@@ -202,7 +202,6 @@ public class RoleView extends CustomComponent {
         searchBox.setEnabled(false);
         searchButton.setEnabled(false);
         mainLayout.addComponent(searchBox);
-        searchButton.addListener(new SearchBtnListener());
     }
 
     private void addResourceSelection() {
@@ -275,7 +274,7 @@ public class RoleView extends CustomComponent {
     }
 
     private void bindResourceTypeData() {
-        resourcetypeSelection.addListener(new ResourceTypeListener(this));
+        resourceTypeSelection.addListener(new ResourceTypeListener(this));
     }
 
     Collection<Context> getAllContexts() {
@@ -370,63 +369,6 @@ public class RoleView extends CustomComponent {
                 return Collections.singleton(new ContextRef(((Context) value).getObjid()));
             }
             return Collections.emptySet();
-        }
-    }
-
-    @SuppressWarnings("unused")
-    private static class CancelBtnListener implements Button.ClickListener {
-
-        private static final long serialVersionUID = -5938771331937438272L;
-
-        @Override
-        public void buttonClick(final ClickEvent event) {
-            onCancelClick();
-        }
-
-        private void onCancelClick() {
-            // TODO implement cancel behaviour
-        }
-    }
-
-    private class SearchBtnListener implements Button.ClickListener {
-
-        private Collection<Context> foundContexts;
-
-        @Override
-        public void buttonClick(final ClickEvent event) {
-            onSearchClick(event);
-        }
-
-        private void onSearchClick(final ClickEvent event) {
-            final Object value = searchBox.getValue();
-
-            if (value instanceof String) {
-                // TODO search resource with type:[resourceType] and
-                // title:[userInput] OR objectID:[userInput]
-                final String userInput = (String) value;
-                foundContexts = seachContextByName(userInput);
-                if (isContextFound()) {
-                    mainWindow.showNotification(foundContexts.iterator().next().getObjid());
-                }
-                mainWindow.showNotification("Not found");
-            }
-        }
-
-        private boolean isContextFound() {
-            return !foundContexts.isEmpty();
-        }
-
-        private Collection<Context> seachContextByName(final String userInput) {
-            try {
-                return contextService.findByTitle(userInput);
-            }
-            catch (final EscidocClientException e) {
-                app.getMainWindow().addWindow(
-                    new ErrorDialog(app.getMainWindow(), ViewConstants.ERROR_DIALOG_CAPTION,
-                        "An unexpected error occured! See LOG for details."));
-                LOG.error("An unexpected error occured! See LOG for details.", e);
-            }
-            return Collections.emptyList();
         }
     }
 }
