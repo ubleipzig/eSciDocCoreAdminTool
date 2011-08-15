@@ -33,8 +33,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.Set;
 
-import org.apache.commons.lang.NotImplementedException;
-
 import com.google.common.base.Preconditions;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
@@ -65,7 +63,7 @@ class ResourceTypeListener implements ValueChangeListener {
         try {
             onSelectedResourceType(event);
         }
-        catch (final NotImplementedException e) {
+        catch (final UnsupportedOperationException e) {
             roleView.mainWindow.addWindow(new ErrorDialog(roleView.mainWindow, ViewConstants.ERROR_DIALOG_CAPTION, e
                 .getMessage()));
         }
@@ -100,7 +98,7 @@ class ResourceTypeListener implements ValueChangeListener {
                     break;
                 default: {
                     clearResourceContainer();
-                    throw new NotImplementedException("Scoping for " + type + " is not yet implemented");
+                    throw new UnsupportedOperationException("Scoping for " + type + " is not yet implemented");
                 }
             }
             final Iterator<Component> it = roleView.resourceContainer.getComponentIterator();

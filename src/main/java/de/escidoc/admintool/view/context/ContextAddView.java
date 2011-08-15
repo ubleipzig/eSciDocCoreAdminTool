@@ -37,7 +37,6 @@ import java.util.Set;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.apache.commons.lang.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
@@ -319,12 +318,11 @@ public class ContextAddView extends CustomComponent implements ClickListener {
             showMessage();
         }
         catch (final EscidocClientException e) {
-            final String rootCauseMessage = ExceptionUtils.getRootCauseMessage(e);
-            LOG.error("root cause: " + ExceptionUtils.getRootCauseMessage(e), e);
-            mainWindow.addWindow(new ErrorDialog(mainWindow, "Error", rootCauseMessage));
+            LOG.error(e.getMessage());
+            mainWindow.addWindow(new ErrorDialog(mainWindow, "Error", e.getMessage()));
         }
         catch (final ParserConfigurationException e) {
-            LOG.error("root cause: " + ExceptionUtils.getRootCauseMessage(e), e);
+            LOG.error(e.getMessage());
             mainWindow.addWindow(new ErrorDialog(mainWindow, "Error", e.getMessage()));
         }
     }
@@ -334,7 +332,7 @@ public class ContextAddView extends CustomComponent implements ClickListener {
             new Notification("Info", "Context is created", Notification.TYPE_TRAY_NOTIFICATION));
     }
 
-    private void addAndSortContextInListView(final Context newContext) throws EscidocClientException {
+    private void addAndSortContextInListView(final Context newContext) {
         contextListView.addContext(newContext);
         contextListView.sort();
         contextListView.select(newContext);
@@ -342,7 +340,7 @@ public class ContextAddView extends CustomComponent implements ClickListener {
         showInEditView(item);
     }
 
-    private void showInEditView(final Item item) throws EscidocClientException {
+    private void showInEditView(final Item item) {
         app.getContextView().showEditView(item);
     }
 
