@@ -171,7 +171,7 @@ public class ContextAddView extends CustomComponent implements ClickListener {
     private void addOrgUnitList() {
         orgUnitList = new ListSelect();
         orgUnitList.setRows(5);
-        orgUnitList.setWidth(ViewConstants.FIELD_WIDTH);
+        orgUnitList.setWidth("350px");
         orgUnitList.setNullSelectionAllowed(true);
         orgUnitList.setMultiSelect(true);
         orgUnitList.setImmediate(false);
