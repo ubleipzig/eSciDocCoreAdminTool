@@ -176,7 +176,8 @@
 				<version>2.1</version>
 				<configuration>
 					<webXml>src/main/webapp/WEB-INF/web.xml</webXml>
-					<warSourceExcludes>WEB-INF/lib/servlet-api-2.3.jar</warSourceExcludes>
+					<warSourceExcludes>WEB-INF/lib/servlet-api-2.3.jar
+					</warSourceExcludes>
 					<archive>
 						<manifestFile>src/main/webapp/META-INF/MANIFEST.MF</manifestFile>
 					</archive>
@@ -190,6 +191,9 @@
 				<configuration>
 					<stopPort>9967</stopPort>
 					<stopKey>admintool</stopKey>
+					<webAppConfig>
+						<extraClasspath>jetty-lib/commons-logging-1.0.3.jar;jetty-lib/slf4j-api-1.6.1.jar</extraClasspath>
+					</webAppConfig>
 					<scanIntervalSeconds>${jetty.scan.sec}</scanIntervalSeconds>
 					<systemProperties>
 						<systemProperty>
@@ -332,7 +336,8 @@
 
 	<name>eSciDoc Admin Tool with Vaadin</name>
 	<description>eSciDoc Admin Tool handles following eSciDoc resouces: org
-		unit, context, user accounts and roles.</description>
+		unit, context, user accounts and roles.
+	</description>
 	<inceptionYear>2010</inceptionYear>
 	<licenses>
 		<license>
