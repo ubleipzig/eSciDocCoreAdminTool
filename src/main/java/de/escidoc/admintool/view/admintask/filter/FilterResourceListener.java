@@ -157,9 +157,7 @@ public class FilterResourceListener implements ClickListener {
         if (value instanceof String) {
             return ((String) value).trim();
         }
-        else {
-            return AppConstants.EMPTY_STRING;
-        }
+        return AppConstants.EMPTY_STRING;
     }
 
     public void setCommand(final ShowFilterResultCommand command) {

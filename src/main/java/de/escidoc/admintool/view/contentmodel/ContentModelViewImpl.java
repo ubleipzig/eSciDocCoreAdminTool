@@ -129,7 +129,8 @@ public class ContentModelViewImpl extends CustomComponent implements ContentMode
 
         listView.setContentModel(contentModel);
         editView.setContentModel(contentModel);
-        showEditView(listView.getItem(contentModel));
+        Item item = listView.getItem(contentModel);
+        showEditView(item);
         hSplitPanel.setSecondComponent(editView);
     }
 
@@ -152,5 +153,10 @@ public class ContentModelViewImpl extends CustomComponent implements ContentMode
         listView.selectFirstItem();
         editView.setContentModel(listView.firstItemId());
         editView.bind(listView.firstItem());
+    }
+
+    @Override
+    public void select(Resource created) {
+        listView.select(created);
     }
 }

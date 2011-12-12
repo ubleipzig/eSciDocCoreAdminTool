@@ -123,7 +123,7 @@ public class MainView extends CustomComponent {
         final HorizontalLayout layout = new HorizontalLayout();
         layout.setSpacing(true);
         layout.setMargin(true);
-        layout.addComponent(new Label("eSciDoc AdminTool " + "1.1.1", Label.CONTENT_XHTML));
+        layout.addComponent(new Label("eSciDoc AdminTool " + "1.1.2-SNAPSHOT", Label.CONTENT_XHTML));
         layout.addComponent(new Label("|", Label.CONTENT_XHTML));
 
         layout.addComponent(new Label("<b>User: " + currentUser.getProperties().getLoginName() + "</b>",

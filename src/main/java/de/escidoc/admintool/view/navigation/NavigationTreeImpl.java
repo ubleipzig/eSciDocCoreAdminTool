@@ -165,4 +165,9 @@ public class NavigationTreeImpl extends CustomComponent implements NavigationTre
     public void collapseItem(final Object itemId) {
         tree.collapseItem(itemId);
     }
+
+    @Override
+    public void selectContenModelView() {
+        tree.select(ViewConstants.CONTENT_MODELS);
+    }
 }

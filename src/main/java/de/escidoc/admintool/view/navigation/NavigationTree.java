@@ -41,4 +41,6 @@ public interface NavigationTree extends Component {
     void expandItem(Object itemId);
 
     void collapseItem(Object itemId);
+
+    void selectContenModelView();
 }

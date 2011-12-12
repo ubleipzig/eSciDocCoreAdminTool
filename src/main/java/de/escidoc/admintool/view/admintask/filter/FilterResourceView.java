@@ -86,6 +86,9 @@ public class FilterResourceView extends AbstractCustomView {
 
     public void init() {
         getViewLayout().setSizeFull();
+        filterLayout = new HorizontalLayout();
+        filterLayout.setMargin(true);
+        filterLayout.setSpacing(true);
         addResourceTypeOption();
         addFilterQueryTexField();
         addFilterButton();
@@ -93,9 +96,7 @@ public class FilterResourceView extends AbstractCustomView {
 
     private void addFilterQueryTexField() {
         rawFilterTextArea.setWidth(800, UNITS_PIXELS);
-        filterLayout = new HorizontalLayout();
-        filterLayout.setMargin(true);
-        filterLayout.setSpacing(true);
+
         final Label popUpContent = new Label(ViewConstants.FILTER_EXAMPLE_TOOLTIP_TEXT, Label.CONTENT_XHTML);
         popUpContent.setWidth(400, UNITS_PIXELS);
         final PopupView popup = new PopupView(ViewConstants.TIP, popUpContent);
