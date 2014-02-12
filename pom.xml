@@ -68,7 +68,7 @@
 		<dependency>
 			<groupId>org.escidoc.core</groupId>
 			<artifactId>escidoc-ijc</artifactId>
-			<version>1.3.2</version>
+			<version>1.3.3</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-discovery</groupId>
@@ -415,7 +415,7 @@
 	<repositories>
 		<repository>
 			<id>org.escidoc.core</id>
-			<url>https://www.escidoc.org/artifactory/repo</url>
+			<url>https://www.escidoc.org/artifactory/anonymous-repo</url>
 			<snapshots>
 				<enabled>true</enabled>
 			</snapshots>

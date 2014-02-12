@@ -411,7 +411,7 @@
 	<repositories>
 		<repository>
 			<id>org.escidoc.core</id>
-			<url>https://www.escidoc.org/artifactory/repo</url>
+			<url>https://www.escidoc.org/artifactory/anonymous-repo</url>
 			<snapshots>
 				<enabled>true</enabled>
 			</snapshots>
