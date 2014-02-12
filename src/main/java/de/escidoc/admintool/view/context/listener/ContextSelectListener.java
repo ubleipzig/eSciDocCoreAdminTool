@@ -28,6 +28,8 @@
  */
 package de.escidoc.admintool.view.context.listener;
 
+import org.apache.commons.lang.NotImplementedException;
+
 import com.vaadin.data.Item;
 import com.vaadin.ui.VerticalLayout;
 
@@ -58,12 +60,12 @@ public class ContextSelectListener extends AbstractResourceSelectListener {
 
         @Override
         public void showAddView() {
-            throw new UnsupportedOperationException(EmptyView.class.getName());
+            throw new NotImplementedException(EmptyView.class);
         }
 
         @Override
         public void showEditView(final Item item) {
-            throw new UnsupportedOperationException(EmptyView.class.getName());
+            throw new NotImplementedException(EmptyView.class);
         }
 
         @Override

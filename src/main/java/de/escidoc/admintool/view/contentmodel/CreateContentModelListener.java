@@ -47,8 +47,9 @@ import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.resources.Resource;
 import de.escidoc.core.resources.cmm.ContentModel;
 
-@SuppressWarnings("serial")
 class CreateContentModelListener implements ResourceBtnListener {
+
+    private static final long serialVersionUID = 1978422911316028641L;
 
     private final Collection<Field> allFields;
 
@@ -63,8 +64,6 @@ class CreateContentModelListener implements ResourceBtnListener {
     private ContentModelView contentModelView;
 
     private ContentModel build;
-
-    private Resource created;
 
     protected CreateContentModelListener(final Collection<Field> allFields, final ResourceService contentModelService,
         final Map<String, Field> fieldByName, final Window mainWindow, final ContentModelContainerImpl container) {
@@ -92,29 +91,7 @@ class CreateContentModelListener implements ResourceBtnListener {
         if (validateAllFields() && saveToReposity()) {
             removeValidationErrors();
             commitAllFields();
-            updateResourceContainer();
-            showInListView();
-            showInEditView();
-            showSuccessMessage();
         }
-    }
-
-    private void showInEditView() {
-        showInEditView(created);
-    }
-
-    private void showInListView() {
-        contentModelView.select(created);
-    }
-
-    private void showSuccessMessage() {
-        mainWindow.showNotification(new Window.Notification("Info", "A new Content Model with the ID "
-            + created.getObjid() + " is created.", Notification.TYPE_TRAY_NOTIFICATION));
-    }
-
-    private void updateResourceContainer() {
-        container.add(created);
-
     }
 
     private boolean saveToReposity() {
@@ -124,8 +101,12 @@ class CreateContentModelListener implements ResourceBtnListener {
 
     private boolean updatePersistence() {
         try {
-            created = contentModelService.create(build);
+            final Resource created = contentModelService.create(build);
             if (created != null && created.getObjid() != null) {
+                mainWindow.showNotification(new Window.Notification("Info", "A new Content Model with the ID "
+                    + created.getObjid() + " is created.", Notification.TYPE_TRAY_NOTIFICATION));
+                container.add(created);
+                showInEditView(created);
                 return true;
             }
             return false;

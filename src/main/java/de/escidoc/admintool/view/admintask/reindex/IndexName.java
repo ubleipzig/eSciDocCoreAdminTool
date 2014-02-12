@@ -36,6 +36,13 @@ import java.util.Set;
 
 public enum IndexName {
 
+    // REINDEX_ALL("all", "All"), CONTEXT_ADMIN("context_admin", "Context Admin"), CONTENT_RELATION_ADMIN(
+    // "content_relation_admin", "Content Relation Admin"), REINDEX_ESCIDOC_OU("escidocou_all", "eSciDoc OU All"),
+    // OU_ADMIN(
+    // "ou_admin", "OU Admin"), ESCIDOCOAIPMH_ALL("escidocoaipmh_all", "eSciDoc OAIPMH All"), ITEM_CONTAINER_ADMIN(
+    // "item_container_admin", "Item Container Admin"), REINDEX_ESCIDOC("escidoc_all", "eSciDoc All"),
+    // CONTENT_MODEL_ADMIN(
+    // "content_model_admin", "Content Model Admin");
     REINDEX_ALL("all"), CONTEXT_ADMIN("context_admin"), CONTENT_RELATION_ADMIN("content_relation_admin"), REINDEX_ESCIDOC_OU(
         "escidocou_all"), OU_ADMIN("ou_admin"), ESCIDOCOAIPMH_ALL("escidocoaipmh_all"), ITEM_CONTAINER_ADMIN(
         "item_container_admin"), REINDEX_ESCIDOC("escidoc_all"), CONTENT_MODEL_ADMIN("content_model_admin");

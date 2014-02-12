@@ -32,9 +32,7 @@ import java.util.Set;
 
 import com.google.common.base.Preconditions;
 import com.vaadin.data.Container;
-import com.vaadin.data.Item;
-import com.vaadin.data.util.BeanItem;
-import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.data.util.POJOContainer;
 
 import de.escidoc.admintool.app.PropertyId;
 import de.escidoc.admintool.service.internal.ResourceService;
@@ -45,18 +43,17 @@ public class ContentModelContainerImpl {
 
     private final ResourceService contentModelService;
 
-    private BeanItemContainer<Resource> itemContainer;
+    private POJOContainer<Resource> itemContainer;
 
     public ContentModelContainerImpl(final ResourceService contentModelService) {
         Preconditions.checkNotNull(contentModelService, "contentModelService is null: %s", contentModelService);
         this.contentModelService = contentModelService;
-        itemContainer = new BeanItemContainer<Resource>(Resource.class);
 
     }
 
     protected void reload() throws EscidocClientException {
         final Set<Resource> allContentModels = contentModelService.findAll();
-        itemContainer.addNestedContainerProperty(PropertyId.X_LINK_TITLE);
+        itemContainer = new POJOContainer<Resource>(Resource.class, PropertyId.X_LINK_TITLE);
         for (final Resource resource : allContentModels) {
             itemContainer.addItem(resource);
         }
@@ -68,18 +65,11 @@ public class ContentModelContainerImpl {
 
     protected void add(final Resource created) {
         Preconditions.checkNotNull(created, "created is null: %s", created);
-        BeanItem<Resource> item = itemContainer.addItem(created);
-        Preconditions.checkNotNull(item, "item is null: %s", item);
-
-        itemContainer.sort(new Object[] { PropertyId.LAST_MODIFICATION_DATE }, new boolean[] { true });
+        itemContainer.addItem(created);
     }
 
     protected void remove(final Resource toBeRemoved) {
         Preconditions.checkNotNull(toBeRemoved, "toBeRemoved is null: %s", toBeRemoved);
         itemContainer.removeItem(toBeRemoved);
-    }
-
-    protected Item getItem(Resource resource) {
-        return itemContainer.getItem(resource);
     }
 }

@@ -40,6 +40,7 @@ import java.util.Set;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
@@ -403,8 +404,9 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
                 showMessage();
             }
             catch (final EscidocClientException e) {
-                LOG.error(e.getMessage());
-                mainWindow.addWindow(new ErrorDialog(mainWindow, ViewConstants.ERROR, e.getMessage()));
+                LOG.error("root cause: " + ExceptionUtils.getRootCauseMessage(e), e);
+                mainWindow.addWindow(new ErrorDialog(mainWindow, ViewConstants.ERROR, ExceptionUtils
+                    .getRootCauseMessage(e)));
             }
         }
     }
@@ -594,20 +596,20 @@ public class ContextEditForm extends CustomComponent implements ClickListener {
             return orgUnitService.findOrgUnitTitleById(resourceRef.getObjid());
         }
         catch (final ResourceNotFoundException e) {
-            LOG.warn(e.getMessage());
+            LOG.error("root cause: " + ExceptionUtils.getRootCauseMessage(e), e);
             mainWindow.addWindow(new ErrorDialog(mainWindow, ViewConstants.ERROR,
                 "Organizational Unit does not exist anymore." + e.getMessage()));
         }
         catch (final EscidocException e) {
-            LOG.error(e.getMessage());
+            LOG.error("root cause: " + ExceptionUtils.getRootCauseMessage(e), e);
             mainWindow.addWindow(new ErrorDialog(mainWindow, ViewConstants.ERROR, e.getMessage()));
         }
         catch (final InternalClientException e) {
-            LOG.error(e.getMessage());
+            LOG.error("root cause: " + ExceptionUtils.getRootCauseMessage(e), e);
             mainWindow.addWindow(new ErrorDialog(mainWindow, ViewConstants.ERROR, e.getMessage()));
         }
         catch (final TransportException e) {
-            LOG.error(e.getMessage());
+            LOG.error("root cause: " + ExceptionUtils.getRootCauseMessage(e), e);
             mainWindow.addWindow(new ErrorDialog(mainWindow, ViewConstants.ERROR, e.getMessage()));
         }
         return "Organization does exist, please remove.";

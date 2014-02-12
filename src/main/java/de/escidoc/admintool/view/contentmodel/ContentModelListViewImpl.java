@@ -102,19 +102,11 @@ public class ContentModelListViewImpl extends CustomComponent implements Content
     public Item getItem(final Resource contentModel) {
         Preconditions.checkNotNull(contentModel, "contentModel is null: %s", contentModel);
         Preconditions.checkNotNull(pagedTable, "table is null: %s", pagedTable);
-        return contentModelContainerImpl.getItem(contentModel);
+        return pagedTable.getItem(contentModel);
     }
 
     @Override
     public Component createControls() {
         return pagedTable.createControls();
-    }
-
-    @Override
-    public void select(Resource created) {
-        Item item = pagedTable.getContainerDataSource().getItem(created);
-        Preconditions.checkNotNull(item, "item is null: %s", item);
-
-        pagedTable.select(created);
     }
 }

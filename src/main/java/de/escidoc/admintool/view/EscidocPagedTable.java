@@ -43,7 +43,6 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.themes.BaseTheme;
 import com.vaadin.ui.themes.Reindeer;
 
 public class EscidocPagedTable extends Table {
@@ -110,7 +109,6 @@ public class EscidocPagedTable extends Table {
 
             public void valueChange(final com.vaadin.data.Property.ValueChangeEvent event) {
                 if (currentPageTextField.isValid() && currentPageTextField.getValue() != null) {
-                    @SuppressWarnings("boxing")
                     final int page = Integer.valueOf(String.valueOf(currentPageTextField.getValue()));
                     setCurrentPage(page);
                 }
@@ -152,10 +150,10 @@ public class EscidocPagedTable extends Table {
                 setCurrentPage(getTotalAmountOfPages());
             }
         });
-        first.setStyleName(BaseTheme.BUTTON_LINK);
-        previous.setStyleName(BaseTheme.BUTTON_LINK);
-        next.setStyleName(BaseTheme.BUTTON_LINK);
-        last.setStyleName(BaseTheme.BUTTON_LINK);
+        first.setStyleName(Reindeer.BUTTON_LINK);
+        previous.setStyleName(Reindeer.BUTTON_LINK);
+        next.setStyleName(Reindeer.BUTTON_LINK);
+        last.setStyleName(Reindeer.BUTTON_LINK);
 
         pageLabel.addStyleName("pagedtable-pagecaption");
         currentPageTextField.addStyleName("pagedtable-pagefield");
@@ -200,7 +198,6 @@ public class EscidocPagedTable extends Table {
         controlBar.setWidth("100%");
         controlBar.setExpandRatio(pageSize, 1);
         addListener(new PageChangeListener() {
-            @SuppressWarnings("boxing")
             public void pageChanged(final PagedTableChangeEvent event) {
                 previous.setEnabled(true);
                 next.setEnabled(true);
@@ -231,8 +228,7 @@ public class EscidocPagedTable extends Table {
         super.setContainerDataSource(shownContainer);
     }
 
-    private void setPageFirstIndex(int param) {
-        int firstIndex = param;
+    private void setPageFirstIndex(int firstIndex) {
         if (realContainer != null) {
             if (firstIndex <= 0) {
                 firstIndex = 0;

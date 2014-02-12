@@ -37,6 +37,7 @@ import java.util.Set;
 
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
@@ -171,7 +172,7 @@ public class ContextAddView extends CustomComponent implements ClickListener {
     private void addOrgUnitList() {
         orgUnitList = new ListSelect();
         orgUnitList.setRows(5);
-        orgUnitList.setWidth("350px");
+        orgUnitList.setWidth(ViewConstants.FIELD_WIDTH);
         orgUnitList.setNullSelectionAllowed(true);
         orgUnitList.setMultiSelect(true);
         orgUnitList.setImmediate(false);
@@ -318,11 +319,12 @@ public class ContextAddView extends CustomComponent implements ClickListener {
             showMessage();
         }
         catch (final EscidocClientException e) {
-            LOG.error(e.getMessage());
-            mainWindow.addWindow(new ErrorDialog(mainWindow, "Error", e.getMessage()));
+            final String rootCauseMessage = ExceptionUtils.getRootCauseMessage(e);
+            LOG.error("root cause: " + ExceptionUtils.getRootCauseMessage(e), e);
+            mainWindow.addWindow(new ErrorDialog(mainWindow, "Error", rootCauseMessage));
         }
         catch (final ParserConfigurationException e) {
-            LOG.error(e.getMessage());
+            LOG.error("root cause: " + ExceptionUtils.getRootCauseMessage(e), e);
             mainWindow.addWindow(new ErrorDialog(mainWindow, "Error", e.getMessage()));
         }
     }
@@ -332,7 +334,7 @@ public class ContextAddView extends CustomComponent implements ClickListener {
             new Notification("Info", "Context is created", Notification.TYPE_TRAY_NOTIFICATION));
     }
 
-    private void addAndSortContextInListView(final Context newContext) {
+    private void addAndSortContextInListView(final Context newContext) throws EscidocClientException {
         contextListView.addContext(newContext);
         contextListView.sort();
         contextListView.select(newContext);
@@ -340,7 +342,7 @@ public class ContextAddView extends CustomComponent implements ClickListener {
         showInEditView(item);
     }
 
-    private void showInEditView(final Item item) {
+    private void showInEditView(final Item item) throws EscidocClientException {
         app.getContextView().showEditView(item);
     }
 

@@ -28,6 +28,7 @@
  */
 package de.escidoc.admintool.view.context;
 
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -104,7 +105,7 @@ public class ContextView extends SplitPanel implements ResourceView {
             contextEditForm.setSelected(item);
         }
         catch (final ResourceNotFoundException e) {
-            LOG.warn(e.getMessage());
+            LOG.error("root cause: " + ExceptionUtils.getRootCauseMessage(e), e);
             ModalDialog.show(app.getMainWindow(), e);
         }
     }

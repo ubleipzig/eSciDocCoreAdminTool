@@ -50,6 +50,4 @@ public interface ContentModelListView extends Component {
     Item getItem(Resource contentModel);
 
     Component createControls();
-
-    void select(Resource created);
 }

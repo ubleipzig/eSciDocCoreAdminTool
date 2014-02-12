@@ -1,2 +1,2 @@
 Manifest-Version: 1.0
-Dependencies: org.slf4j export, org.apache.commons.logging export
+
