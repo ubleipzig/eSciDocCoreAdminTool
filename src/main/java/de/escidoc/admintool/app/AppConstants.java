@@ -78,7 +78,7 @@ public class AppConstants {
 
     public static final String SMALL_BUTTON = "small";
 
-    public static final String ESCIDOC_LOGO = "images/dots-logo-final-single_researcher.png";
+    public static final String ESCIDOC_LOGO = "images/dots-logo-final-single_researcher_small.png";
 
     public static final String ESCIDOC_URL = "escidocurl";
 
