@@ -93,6 +93,9 @@ public class NavigationTreeClickListener implements ItemClickListener {
         else if (ViewConstants.RESOURCES.equals(itemId) || ViewConstants.ADMIN_TASKS_LABEL.equals(itemId)) {
             command.execute(itemId);
         }
+        else if (ViewConstants.GROUPS.equals(itemId)) {
+        	command.execute(itemId);
+        }
         else {
             throw new IllegalArgumentException("Unknown type.");
         }
