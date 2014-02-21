@@ -2,10 +2,12 @@ package de.uni_leipzig.ubl.admintool.view.group;
 
 import com.google.common.base.Preconditions;
 import com.vaadin.data.Item;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.SplitPanel;
 import com.vaadin.ui.VerticalLayout;
 
 import de.escidoc.admintool.app.AdminToolApplication;
+import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.admintool.view.resource.ResourceView;
 import de.escidoc.core.resources.Resource;
 
@@ -29,6 +31,25 @@ public class GroupView extends SplitPanel implements ResourceView {
 		this.groupEditView = groupEditView;
 	}
 	
+	public void init() {
+		setSplitPosition(ViewConstants.SPLIT_POSITION_IN_PERCENT);
+		setOrientation(ORIENTATION_HORIZONTAL);
+		
+		vLayout.setHeight(100, UNITS_PERCENTAGE);
+		addHeader(vLayout);
+		addListView(vLayout);
+		setFirstComponent(vLayout);
+	}
+	
+	private void addHeader(final VerticalLayout vLayout) {
+		vLayout.addComponent(new Label("<b>UserGroups</b>", Label.CONTENT_XHTML));
+	}
+
+	private void addListView(final VerticalLayout vLayout2) {
+		// TODO Auto-generated method stub
+		
+	}
+
 	@Override
 	public void showAddView() {
 		// TODO Auto-generated method stub
