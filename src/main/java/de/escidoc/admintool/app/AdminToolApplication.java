@@ -104,6 +104,7 @@ import de.escidoc.core.client.exceptions.application.security.AuthenticationExce
 import de.escidoc.core.resources.aa.useraccount.UserAccount;
 import de.escidoc.core.resources.aa.useraccount.UserAccountProperties;
 import de.uni_leipzig.ubl.admintool.service.internal.GroupService;
+import de.uni_leipzig.ubl.admintool.view.group.GroupView;
 import de.uni_leipzig.ubl.admintool.view.group.GroupViewComponent;
 
 @SuppressWarnings("serial")
@@ -626,6 +627,13 @@ public class AdminToolApplication extends Application {
 
     public void getUserService() {
         throw new UnsupportedOperationException("Not yet implemented");
+    }
+
+    public void showGroupView() {
+        createGroupViewComponent();
+        groupViewComp.showFirstItemInEditView();
+        final GroupView groupView = groupViewComp.getGroupView();
+        setMainView(groupView);
     }
 
     private void createGroupViewComponent() {
