@@ -11,15 +11,20 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CheckBox;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
+import com.vaadin.ui.FormLayout;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.themes.Reindeer;
 
 import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.app.PropertyId;
 import de.escidoc.admintool.domain.PdpRequest;
+import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.admintool.view.context.LinkClickListener;
 import de.escidoc.admintool.view.navigation.ActionIdConstants;
 import de.escidoc.admintool.view.util.Converter;
@@ -60,7 +65,9 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 	
 	private final Panel panel = new Panel();
 	
-	private final Label header = new Label();
+	private final HorizontalLayout header = new HorizontalLayout();
+	
+	private final FormLayout form = new FormLayout();
 	
 	public GroupEditForm(final AdminToolApplication app, final GroupService groupService, final PdpRequest pdpRequest) {
 		Preconditions.checkNotNull(app, "app is null: %s", app);
@@ -73,10 +80,34 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 		mainWindow = app.getMainWindow();
 	}
 	
-	private final void init() {
-		
+	public final void init() {
+		configureLayout();
 	}
 	
+	private void configureLayout() {
+		setCompositionRoot(panel);
+		panel.setStyleName(Reindeer.PANEL_LIGHT);
+		panel.setCaption(ViewConstants.EDIT_GROUP_VIEW_CAPTION);
+		panel.setContent(form);
+		
+        form.setSpacing(false);
+        form.setWidth(530, UNITS_PIXELS);
+        form.addComponent(createHeader());
+	}
+
+	private HorizontalLayout createHeader() {
+        header.setMargin(true);
+        header.setSpacing(true);
+//        if (isCreateNewUserAllowed()) {
+//            header.addComponent(newUserBtn);
+//        }
+//        header.addComponent(deleteUserBtn);
+        // just for testing
+        header.addComponent(new Label("Edit Group Header"));
+        header.setVisible(true);
+        return header;
+	}
+
 	public void setSelected(final Item item) {
 		if(item == null){
 			return;
