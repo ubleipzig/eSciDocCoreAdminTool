@@ -187,6 +187,8 @@ public class ViewConstants {
     public static final String ORG_UNIT_TREE = "OrgUnitTree";
 
     public static final String EDIT_USER_VIEW_CAPTION = "Edit User Account";
+    
+    public static final String EDIT_GROUP_VIEW_CAPTION = "Edit UserGroup";
 
     public static final String[] ROLE_COLUMN_HEADERS = new String[] { "Title" };
 
