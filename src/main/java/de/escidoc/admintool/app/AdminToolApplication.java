@@ -58,7 +58,8 @@ import de.escidoc.admintool.service.internal.OrgUnitServiceLab;
 import de.escidoc.admintool.service.internal.ResourceService;
 import de.escidoc.admintool.service.internal.RoleService;
 import de.escidoc.admintool.service.internal.ServiceContaiterImpl;
-import de.escidoc.admintool.service.internal.ServiceFactory;
+//import de.escidoc.admintool.service.internal.ServiceFactory;
+import de.uni_leipzig.ubl.admintool.service.internal.UBLServiceFactory;
 import de.escidoc.admintool.service.internal.UserService;
 import de.escidoc.admintool.view.EscidocServiceLocation;
 import de.escidoc.admintool.view.MainView;
@@ -102,6 +103,8 @@ import de.escidoc.core.client.exceptions.TransportException;
 import de.escidoc.core.client.exceptions.application.security.AuthenticationException;
 import de.escidoc.core.resources.aa.useraccount.UserAccount;
 import de.escidoc.core.resources.aa.useraccount.UserAccountProperties;
+import de.uni_leipzig.ubl.admintool.service.internal.GroupService;
+import de.uni_leipzig.ubl.admintool.view.group.GroupViewComponent;
 
 @SuppressWarnings("serial")
 public class AdminToolApplication extends Application {
@@ -118,6 +121,8 @@ public class AdminToolApplication extends Application {
     private final VerticalLayout appLayout = new VerticalLayout();
 
     private UserViewComponent userViewComp;
+    
+    private GroupViewComponent groupViewComp;
 
     private ContextService contextService;
 
@@ -126,6 +131,8 @@ public class AdminToolApplication extends Application {
     private RoleService roleService;
 
     private UserService userService;
+    
+    private GroupService groupService;
 
     private RoleView roleView;
 
@@ -325,7 +332,7 @@ public class AdminToolApplication extends Application {
     private void createServices() throws InternalClientException, EscidocException, TransportException,
         MalformedURLException {
         LOG.info("Using escidoc instance  in: " + escidocServiceLocation.getUri());
-        final ServiceFactory serviceFactory = new ServiceFactory(escidocServiceLocation, token);
+        final UBLServiceFactory serviceFactory = new UBLServiceFactory(escidocServiceLocation, token);
         orgUnitService = serviceFactory.createOrgService();
         userService = serviceFactory.createUserService();
         final ContextServiceLab contextServiceLab = serviceFactory.createContextServiceLab();
@@ -345,6 +352,7 @@ public class AdminToolApplication extends Application {
         pdpService = serviceFactory.createPdpService();
         contentRelationService = serviceFactory.createContentRelationService();
         services.add(contentRelationService);
+        groupService = serviceFactory.createGroupService();
     }
 
     private void buildMainLayout() {
@@ -618,5 +626,10 @@ public class AdminToolApplication extends Application {
 
     public void getUserService() {
         throw new UnsupportedOperationException("Not yet implemented");
+    }
+
+    private void createGroupViewComponent() {
+        groupViewComp = new GroupViewComponent(this, groupService, pdpRequest);
+        userViewComp.init();
     }
 }
