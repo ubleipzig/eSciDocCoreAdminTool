@@ -45,9 +45,11 @@ public class GroupView extends SplitPanel implements ResourceView {
 		vLayout.addComponent(new Label("<b>UserGroups</b>", Label.CONTENT_XHTML));
 	}
 
-	private void addListView(final VerticalLayout vLayout2) {
-		// TODO Auto-generated method stub
-		
+	private void addListView(final VerticalLayout vLayout) {
+		groupList.setSizeFull();
+		vLayout.addComponent(groupList);
+		vLayout.addComponent(groupList.createControls());
+		vLayout.setExpandRatio(groupList, 1.0f);
 	}
 
 	@Override
