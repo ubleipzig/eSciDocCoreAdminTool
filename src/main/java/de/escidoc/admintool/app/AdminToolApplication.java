@@ -638,6 +638,6 @@ public class AdminToolApplication extends Application {
 
     private void createGroupViewComponent() {
         groupViewComp = new GroupViewComponent(this, groupService, pdpRequest);
-        userViewComp.init();
+        groupViewComp.init();
     }
 }
