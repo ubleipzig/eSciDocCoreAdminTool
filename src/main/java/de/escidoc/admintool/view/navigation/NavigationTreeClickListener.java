@@ -94,7 +94,7 @@ public class NavigationTreeClickListener implements ItemClickListener {
             command.execute(itemId);
         }
         else if (ViewConstants.GROUPS.equals(itemId)) {
-        	command.execute(itemId);
+        	app.showGroupView();
         }
         else {
             throw new IllegalArgumentException("Unknown type.");
