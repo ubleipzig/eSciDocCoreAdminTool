@@ -13,7 +13,9 @@
 
 	<appender name="R" class="org.apache.log4j.RollingFileAppender">
 		<param name="Threshold" value="WARN" />
-        <param name="file" value="${jboss.server.home.dir}/log/escidoc-admintool.log"/>
+<!--         <param name="file" value="${jboss.server.home.dir}/log/escidoc-admintool.log"/> -->
+        <!-- for use with Apache Tomcat use ${catalina.home} system variable -->
+        <param name="file" value="${catalina.home}/logs/escidoc-admintool.log"/>
         <!--  param name="file" value="./log/escidoc-admintool.log"/-->
 		<param name="MaxFileSize" value="100KB" />
 		<param name="MaxBackupIndex" value="1" />
