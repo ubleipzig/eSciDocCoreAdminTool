@@ -286,7 +286,7 @@ public class ViewConstants {
 
     public static final String CONTENT_MODELS = "Content Models";
 
-    public static final String[] RESOURCES_NODE = { ORG_UNITS, CONTEXTS, CONTENT_MODELS, USERS, ROLE };
+    public static final String[] RESOURCES_NODE = { ORG_UNITS, CONTEXTS, CONTENT_MODELS, USERS, GROUPS, ROLE };
 
     public static final String[] ADMIN_TASKS_NODE = { LOAD_EXAMPLES_TITLE, FILTERING_RESOURCES_TITLE,
         SHOW_REPOSITORY_INFO, REINDEX };
