@@ -487,6 +487,10 @@ public class AdminToolApplication extends Application {
     public UserView getUserView() {
         return userViewComp.getUserView();
     }
+    
+    public GroupView getGroupView() {
+    	return groupViewComp.getGroupView();
+    }
 
     public void showResourceView() {
         try {

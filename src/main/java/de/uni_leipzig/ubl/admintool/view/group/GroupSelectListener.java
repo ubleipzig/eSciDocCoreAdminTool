@@ -48,7 +48,7 @@ public class GroupSelectListener extends AbstractResourceSelectListener {
 
 	@Override
 	public ResourceView getView() {
-		return app.getUserView();
+		return app.getGroupView();
 	}
 
 }
