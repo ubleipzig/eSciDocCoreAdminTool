@@ -42,7 +42,7 @@ public class GroupView extends SplitPanel implements ResourceView {
 	}
 	
 	private void addHeader(final VerticalLayout vLayout) {
-		vLayout.addComponent(new Label("<b>UserGroups</b>", Label.CONTENT_XHTML));
+		vLayout.addComponent(new Label("<b>User Groups</b>", Label.CONTENT_XHTML));
 	}
 
 	private void addListView(final VerticalLayout vLayout) {
@@ -60,8 +60,8 @@ public class GroupView extends SplitPanel implements ResourceView {
 
 	@Override
 	public void showEditView(Item item) {
-		// TODO Auto-generated method stub
-
+		setSecondComponent(groupEditView);
+		groupEditView.setSelected(item);
 	}
 
 	@Override
