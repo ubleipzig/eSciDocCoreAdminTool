@@ -43,7 +43,7 @@ public class GroupSelectListener extends AbstractResourceSelectListener {
 	private POJOItem<UserGroup> userGroupToItem(final UserGroup userGroup) {
         return new POJOItem<UserGroup>(userGroup, new String[] { PropertyId.OBJECT_ID, PropertyId.NAME,
                 PropertyId.CREATED_ON, PropertyId.CREATED_BY, PropertyId.LAST_MODIFICATION_DATE, PropertyId.MODIFIED_BY,
-                PropertyId.ACTIVE });
+                PropertyId.ACTIVE, PropertyId.DESCRIPTION, PropertyId.PROP_LABEL, PropertyId.EMAIL });
 	}
 
 	@Override

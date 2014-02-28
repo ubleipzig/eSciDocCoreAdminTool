@@ -78,4 +78,9 @@ public class PropertyId {
         LAST_MODIFICATION_DATE, MODIFIED_BY, CREATED_BY, CREATED_ON, PUBLIC_STATUS, PUBLIC_STATUS_COMMENT };
 
     public static final String X_LINK_TITLE = "xLinkTitle";
+
+    public static final String EMAIL = "properties.email";
+    
+    // need properties.label for user-groups
+    public static final String PROP_LABEL = "properties.label";
 }
