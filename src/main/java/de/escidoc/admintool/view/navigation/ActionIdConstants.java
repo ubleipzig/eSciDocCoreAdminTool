@@ -223,4 +223,25 @@ public class ActionIdConstants {
 
     public static final String DELETE_CONTENT_MODEL = "info:escidoc/names:aa:1.0:action:delete-content-model";
 
+    public static final String ACTIVATE_USER_GROUP = "info:escidoc/names:aa:1.0:action:activate-user-group";
+    
+    public static final String ADD_USER_GROUP_SELECTORS =  "info:escidoc/names:aa:1.0:action:add-user-group-selectors";
+	
+	public static final String CREATE_USER_GROUP = "info:escidoc/names:aa:1.0:action:create-user-group";
+
+	public static final String CREATE_USER_GROUP_GRANT = "info:escidoc/names:aa:1.0:action:create-user-group-grant";
+	
+	public static final String DEATIVATE_USER_GROUP = "info:escidoc/names:aa:1.0:action:deactivate-user-group";
+	
+	public static final String DELETE_USER_GROUP = "info:escidoc/names:aa:1.0:action:delete-user-group";
+	
+	public static final String REMOVE_USER_GROUP_SELECTORS = "info:escidoc/names:aa:1.0:action:remove-user-group-selectors";
+
+	public static final String RETRIEVE_USER_GROUP = "info:escidoc/names:aa:1.0:action:retrieve-user-group";
+	
+	public static final String RETRIEVE_USER_GROUP_GRANT = "info:escidoc/names:aa:1.0:action:retrieve-user-group-grant";
+	
+	public static final String REVOKE_USER_GROUP_GRANT = "info:escidoc/names:aa:1.0:action:revoke-user-group-grant";
+	
+	public static final String UPDATE_USER_GROUP = "info:escidoc/names:aa:1.0:action:update-user-group";
 }
