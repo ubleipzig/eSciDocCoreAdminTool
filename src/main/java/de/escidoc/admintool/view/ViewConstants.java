@@ -176,7 +176,7 @@ public class ViewConstants {
 
     public static final String USERS = Messages.getString("NavigationTree.2"); //$NON-NLS-1$
     
-    public static final String GROUPS = "UserGroups";
+    public static final String GROUPS = "User Groups";
 
     public static final String ROLE = "Roles";
 
