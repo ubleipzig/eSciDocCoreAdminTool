@@ -5,13 +5,12 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Preconditions;
 import com.vaadin.data.Item;
-import com.vaadin.data.Property;
 import com.vaadin.data.util.POJOContainer;
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CheckBox;
-import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
@@ -19,6 +18,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.themes.BaseTheme;
 import com.vaadin.ui.themes.Reindeer;
 
 import de.escidoc.admintool.app.AdminToolApplication;
@@ -28,15 +28,22 @@ import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.admintool.view.context.LinkClickListener;
 import de.escidoc.admintool.view.navigation.ActionIdConstants;
 import de.escidoc.admintool.view.util.Converter;
+import de.escidoc.admintool.view.util.LayoutHelper;
+import de.escidoc.admintool.view.validator.EmptyFieldValidator;
 import de.escidoc.core.resources.aa.useraccount.Grant;
 import de.escidoc.core.resources.common.reference.UserAccountRef;
 import de.uni_leipzig.ubl.admintool.service.internal.GroupService;
 
+@SuppressWarnings("serial")
 public class GroupEditForm extends CustomComponent implements ClickListener {
 
 	private static final Logger LOG = LoggerFactory.getLogger(GroupEditForm.class);
 	
-	final AdminToolApplication app;
+    private static final int LABEL_WIDTH = 100;
+
+    private static final int LABEL_HEIGHT = 15;
+
+    final AdminToolApplication app;
 	
 	final GroupService groupService;
 	
@@ -51,6 +58,7 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 	// fields
     private final Label objId = new Label();
     private TextField name;
+    private TextField description;
     private CheckBox activeStatus;
     private final Label modifiedOn = new Label();
     private Button modifiedOnLink;
@@ -67,7 +75,17 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 	
 	private final HorizontalLayout header = new HorizontalLayout();
 	
+	private final HorizontalLayout footer = new HorizontalLayout();
+	
 	private final FormLayout form = new FormLayout();
+	
+	private final Button newGroupBtn = new Button(ViewConstants.NEW, new NewGroupListener());
+	
+	private final Button deleteGroupBtn = new Button(ViewConstants.DELETE, new DeleteGroupListener());
+	
+	private final Button saveBtn = new Button(ViewConstants.SAVE_LABEL, this);
+	
+	private final Button cancelBtn = new Button(ViewConstants.CANCEL, this);
 	
 	public GroupEditForm(final AdminToolApplication app, final GroupService groupService, final PdpRequest pdpRequest) {
 		Preconditions.checkNotNull(app, "app is null: %s", app);
@@ -82,8 +100,72 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 	
 	public final void init() {
 		configureLayout();
+		
+		addName();
+		addDescription();
+		
+		addObjectId();
+
+        addCreated();
+        addModified();
+        addActiveStatus();
+        
+        addFooter();
+}
+	
+	private void addName() {
+		name = new TextField();
+		name.setMaxLength(ViewConstants.MAX_TITLE_LENGTH);
+		name.setWidth(ViewConstants.FIELD_WIDTH);
+		name.setWriteThrough(false);
+		panel.addComponent(LayoutHelper.create(ViewConstants.NAME_LABEL, name, 100, true));
 	}
 	
+	private void addDescription() {
+		description = new TextField();
+		description.setWidth(ViewConstants.FIELD_WIDTH);
+		description.setRows(ViewConstants.DESCRIPTION_ROWS);
+		description.setMaxLength(ViewConstants.MAX_DESC_LENGTH);
+		description.setWriteThrough(false);
+		form.addComponent(LayoutHelper.create(ViewConstants.DESCRIPTION_LABEL, description, LABEL_WIDTH, 80, false));
+	}
+	
+	private void addObjectId() {
+		form.addComponent(LayoutHelper.create(ViewConstants.OBJECT_ID_LABEL, objId, 100, false));
+	}
+	
+	private void addCreated() {
+		createdByLink = new Button();
+		createdByLink.setStyleName(BaseTheme.BUTTON_LINK);
+		createdByLinkListener = new LinkClickListener(app);
+		createdByLink.addListener(createdByLinkListener);
+		form.addComponent(LayoutHelper.create("Created", "by", createdOn, createdByLink, LABEL_WIDTH, LABEL_HEIGHT, false));
+	}
+	
+	private void addModified() {
+		modifiedOnLink = new Button();
+		modifiedOnLink.setStyleName(BaseTheme.BUTTON_LINK);
+		modifiedOnLinkListener = new LinkClickListener(app);
+		modifiedOnLink.addListener(modifiedOnLinkListener);
+		form.addComponent(LayoutHelper.create("Modified", "by", modifiedOn, modifiedOnLink, LABEL_WIDTH, LABEL_HEIGHT, false));
+	}
+	
+	private void addActiveStatus() {
+		activeStatus = new CheckBox();
+		activeStatus.setWriteThrough(false);
+		form.addComponent(LayoutHelper.create(ViewConstants.ACTIVE_STATUS, activeStatus, LABEL_WIDTH, false));
+	}
+	
+	private void addFooter() {
+		footer.setWidth(100, UNITS_PERCENTAGE);
+		final HorizontalLayout hl = new HorizontalLayout();
+		hl.addComponent(saveBtn);
+		hl.addComponent(cancelBtn);
+		footer.addComponent(hl);
+		footer.setComponentAlignment(hl, Alignment.MIDDLE_RIGHT);
+		form.addComponent(footer);
+	}
+
 	private void configureLayout() {
 		setCompositionRoot(panel);
 		panel.setStyleName(Reindeer.PANEL_LIGHT);
@@ -98,12 +180,8 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 	private HorizontalLayout createHeader() {
         header.setMargin(true);
         header.setSpacing(true);
-//        if (isCreateNewUserAllowed()) {
-//            header.addComponent(newUserBtn);
-//        }
-//        header.addComponent(deleteUserBtn);
-        // just for testing
-        header.addComponent(new Label("Edit Group Header"));
+       	header.addComponent(newGroupBtn);
+       	header.addComponent(deleteGroupBtn);        	
         header.setVisible(true);
         return header;
 	}
@@ -122,11 +200,13 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 		setObjectId();
 		bindObjectId();
 		bindName();
+		bindDescription();
 		bindActiveStatus();
         bindCreatedOn();
         bindCreatedBy();
         bindModifiedOn();
         bindModifiedBy();
+        bindUserRightsWithView();
 	}
 
 	private void setObjectId() {
@@ -140,6 +220,10 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 	private void bindName() {
 		name.setPropertyDataSource(item.getItemProperty(PropertyId.NAME));
 	}
+	
+	private void bindDescription() {
+		description.setPropertyDataSource(item.getItemProperty(PropertyId.DESCRIPTION));
+	}
 
 	private void bindActiveStatus() {
 		activeStatus.setPropertyDataSource(item.getItemProperty(PropertyId.ACTIVE));
@@ -151,7 +235,7 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 
 	private void bindCreatedBy() {
 		createdByLink.setCaption(getCreatorName());
-		if(isRetrieveUserPermitted(getCreatorId())) {
+		if(isRetrieveGroupAllowed(getCreatorId())) {
 			createdByLinkListener.setUser(getCreatorId());
 		}
 		else {
@@ -165,11 +249,22 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 
 	private void bindModifiedBy() {
 		modifiedOnLink.setCaption(getModifierName());
-		if(isRetrieveUserPermitted(getModifierId())) {
+		if(isRetrieveGroupAllowed(getModifierId())) {
 			createdByLinkListener.setUser(getModifierId());
 		}
 		else {
 			createdByLink.setEnabled(false);
+		}
+	}
+	
+	private void bindUserRightsWithView() {
+		newGroupBtn.setVisible(isCreateNewGroupAllowed());
+		deleteGroupBtn.setVisible(isDeleteGroupAllowed());
+		name.setReadOnly(isUpdateGroupNotAllowed());
+		description.setReadOnly(isUpdateGroupNotAllowed());
+		activeStatus.setReadOnly(isDeactivateGroupNotAllowed());
+		if (isUpdateGroupNotAllowed()) {
+			form.removeComponent(footer);
 		}
 	}
 
@@ -196,17 +291,82 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
     private UserAccountRef getModifier() {
         return (UserAccountRef) item.getItemProperty(PropertyId.MODIFIED_BY).getValue();
     }
-
-    // permission checks
-    private boolean isRetrieveUserPermitted(final String userId) {
-    	return pdpRequest.isPermitted(ActionIdConstants.RETRIEVE_USER_ACCOUNT, userId);
+    
+    private String getSelectedItemId() {
+    	if (item == null) {
+    		return "";
+    	}
+    	return (String) item.getItemProperty(PropertyId.OBJECT_ID).getValue();
     }
     
+    // permission checks
+    
+    
+    private boolean isRetrieveGroupAllowed(final String userId) {
+    	return pdpRequest.isPermitted(ActionIdConstants.RETRIEVE_USER_GROUP, userId);
+    }
+    
+    private boolean isCreateNewGroupAllowed() {
+    	return pdpRequest.isPermitted(ActionIdConstants.CREATE_USER_GROUP);
+    }
+    
+    private boolean isDeactivateGroupNotAllowed() {
+        return !pdpRequest.isPermitted(ActionIdConstants.DEACTIVATE_USER_GROUP, getSelectedItemId());
+    }
+
+    private boolean isDeleteGroupAllowed() {
+    	return pdpRequest.isPermitted(ActionIdConstants.DELETE_USER_GROUP, getSelectedItemId());
+    }
+    
+    private boolean isUpdateGroupNotAllowed() {
+    	return pdpRequest.isDenied(ActionIdConstants.UPDATE_USER_GROUP, getSelectedItemId());
+    }
     
 	@Override
 	public void buttonClick(ClickEvent event) {
-		// TODO Auto-generated method stub
+		final Button source = event.getButton();
+		if (source.equals(cancelBtn)) {
+			// TODO do something with sense here
+			mainWindow.showNotification("CANCEL CLICKED");
+//            discardFields();
+//            removeAllError();
+		}
+		else if (source.equals(saveBtn) && isValid()) {
+			// TODO do something with sense here
+			mainWindow.showNotification("CANCEL CLICKED");
+//            updateUserGroup();
+//            commitFields();
+//            removeAllError();
+//            showMessage();
+		}
+	}
+	
+	private class NewGroupListener implements Button.ClickListener {
+		private static final long serialVersionUID = -7825175731887685295L;
 
+		@Override
+		public void buttonClick(ClickEvent event) {
+			// TODO do something with sense here
+			mainWindow.showNotification("New Greoup ... will be implemented");
+		}
+	}
+
+	private class DeleteGroupListener implements Button.ClickListener {
+		
+
+		@Override
+		public void buttonClick(ClickEvent event) {
+			// TODO do something with sense here
+			mainWindow.showNotification("Delete Group ... will be implemented");
+		}
+	}
+	
+	// control form
+	
+	private boolean isValid() {
+		boolean isValid = true;
+		isValid = EmptyFieldValidator.isValid(name, "Please enter a " + ViewConstants.NAME_ID);
+		return isValid;
 	}
 
 }
