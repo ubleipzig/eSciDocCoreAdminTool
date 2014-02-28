@@ -1,5 +1,9 @@
 package de.uni_leipzig.ubl.admintool.view.group;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,7 +20,9 @@ import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.BaseTheme;
 import com.vaadin.ui.themes.Reindeer;
@@ -24,13 +30,20 @@ import com.vaadin.ui.themes.Reindeer;
 import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.app.PropertyId;
 import de.escidoc.admintool.domain.PdpRequest;
+import de.escidoc.admintool.view.ModalDialog;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.admintool.view.context.LinkClickListener;
 import de.escidoc.admintool.view.navigation.ActionIdConstants;
+import de.escidoc.admintool.view.util.Constants;
 import de.escidoc.admintool.view.util.Converter;
 import de.escidoc.admintool.view.util.LayoutHelper;
 import de.escidoc.admintool.view.validator.EmptyFieldValidator;
+import de.escidoc.core.client.exceptions.EscidocClientException;
+import de.escidoc.core.client.exceptions.InternalClientException;
+import de.escidoc.core.client.exceptions.TransportException;
 import de.escidoc.core.resources.aa.useraccount.Grant;
+import de.escidoc.core.resources.common.reference.Reference;
+import de.escidoc.core.resources.common.reference.RoleRef;
 import de.escidoc.core.resources.common.reference.UserAccountRef;
 import de.uni_leipzig.ubl.admintool.service.internal.GroupService;
 
@@ -42,6 +55,8 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
     private static final int LABEL_WIDTH = 100;
 
     private static final int LABEL_HEIGHT = 15;
+    
+    private static final int ROLE_LIST_HEIGHT = 200;
 
     final AdminToolApplication app;
 	
@@ -62,6 +77,8 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
     private TextField description;
     private TextField email;
     private CheckBox activeStatus;
+    final Table roles = new Table();
+    final Table selectors = new Table();
     private final Label modifiedOn = new Label();
     private Button modifiedOnLink;
     private LinkClickListener modifiedOnLinkListener;
@@ -89,7 +106,11 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 	
 	private final Button cancelBtn = new Button(ViewConstants.CANCEL, this);
 	
-	public GroupEditForm(final AdminToolApplication app, final GroupService groupService, final PdpRequest pdpRequest) {
+    private final Button addRoleBtn = new Button();
+
+    private final Button removeRoleBtn = new Button();
+
+    public GroupEditForm(final AdminToolApplication app, final GroupService groupService, final PdpRequest pdpRequest) {
 		Preconditions.checkNotNull(app, "app is null: %s", app);
 		Preconditions.checkNotNull(groupService, "groupService is null: %s", groupService);
 		Preconditions.checkNotNull(pdpRequest, "pdpRequest is null: %s", pdpRequest);
@@ -113,6 +134,9 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
         addCreated();
         addModified();
         addActiveStatus();
+        
+        addRoles();
+//        addSelectors();
         
         addFooter();
 }
@@ -176,6 +200,28 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 		form.addComponent(LayoutHelper.create(ViewConstants.ACTIVE_STATUS, activeStatus, LABEL_WIDTH, false));
 	}
 	
+	private void addRoles() {
+        // set table params
+		roles.setHeight(200, UNITS_PIXELS);
+        roles.setWidth("300px");
+        roles.setSelectable(true);
+        roles.setNullSelectionAllowed(true);
+        roles.setMultiSelect(true);
+        roles.setImmediate(true);
+        roles.setColumnHeaderMode(Table.COLUMN_HEADER_MODE_HIDDEN);
+        // set button parameters
+        addRoleBtn.setCaption(ViewConstants.ADD);
+        addRoleBtn.setStyleName(Reindeer.BUTTON_SMALL);
+        removeRoleBtn.setCaption(ViewConstants.REMOVE);
+        removeRoleBtn.setStyleName(Reindeer.BUTTON_SMALL);
+        // create role component
+        final VerticalLayout rolesComponent = 
+        		createLayout(ViewConstants.ROLES_LABEL, roles, ViewConstants.DEFAULT_LABEL_WIDTH, ROLE_LIST_HEIGHT, false, new Button[] {
+        				addRoleBtn, removeRoleBtn
+        		});
+        form.addComponent(rolesComponent);
+	}
+	
 	private void addFooter() {
 		footer.setWidth(100, UNITS_PERCENTAGE);
 		final HorizontalLayout hl = new HorizontalLayout();
@@ -197,7 +243,44 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
         form.addComponent(createHeader());
 	}
 
-	private HorizontalLayout createHeader() {
+    private VerticalLayout createLayout(
+            final String rolesLabel, final Table table, final int labelWidth, final int roleListHeight, final boolean b,
+            final Button[] buttons) {
+
+            final HorizontalLayout hLayout = new HorizontalLayout();
+            hLayout.setHeight(roleListHeight + Constants.PX);
+            hLayout.addComponent(new Label(" "));
+
+            final Label textLabel =
+                new Label(Constants.P_ALIGN_RIGHT + rolesLabel + "   " + Constants.P, Label.CONTENT_XHTML);
+            textLabel.setSizeUndefined();
+            textLabel.setWidth(labelWidth + Constants.PX);
+            hLayout.addComponent(textLabel);
+            hLayout.setComponentAlignment(textLabel, Alignment.MIDDLE_RIGHT);
+            hLayout.addComponent(new Label("&nbsp;", Label.CONTENT_XHTML));
+            hLayout.addComponent(table);
+            hLayout.setComponentAlignment(table, Alignment.MIDDLE_RIGHT);
+            hLayout.addComponent(new Label(" &nbsp; ", Label.CONTENT_XHTML));
+
+            final VerticalLayout vLayout = new VerticalLayout();
+            vLayout.addComponent(hLayout);
+
+            final HorizontalLayout hl = new HorizontalLayout();
+            final Label la = new Label("&nbsp;", Label.CONTENT_XHTML);
+            la.setSizeUndefined();
+            la.setWidth(labelWidth + Constants.PX);
+            hl.addComponent(la);
+
+            for (final Button button : buttons) {
+                hl.addComponent(button);
+            }
+            vLayout.addComponent(hl);
+            hLayout.setSpacing(false);
+
+            return vLayout;
+        }
+
+    private HorizontalLayout createHeader() {
         header.setMargin(true);
         header.setSpacing(true);
        	header.addComponent(newGroupBtn);
@@ -228,6 +311,7 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
         bindCreatedBy();
         bindModifiedOn();
         bindModifiedBy();
+        bindRolesWithView();
         bindUserRightsWithView();
 	}
 
@@ -299,6 +383,32 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 			form.removeComponent(footer);
 		}
 	}
+	
+	private void bindRolesWithView() {
+		final List<Grant> groupGrants = (List<Grant>) getGrants();
+		// don't show any grants if group has no
+		if (groupGrants.isEmpty()) {
+			if (grantContainer != null) {
+				grantContainer.removeAllItems();
+			}
+		}
+		else {
+            grantContainer =
+                    new POJOContainer<Grant>(Grant.class, PropertyId.XLINK_TITLE, PropertyId.OBJECT_ID,
+                        PropertyId.GRANT_ROLE_OBJECT_ID, PropertyId.ASSIGN_ON);
+            roles.setContainerDataSource(grantContainer);
+            roles.setVisibleColumns(new String[] { PropertyId.XLINK_TITLE });
+            roles.setColumnHeaders(ViewConstants.ROLE_COLUMN_HEADERS);
+            
+            for (final Grant grant : groupGrants) {
+				final Reference assignedOn = grant.getProperties().getAssignedOn();
+				if (assignedOn == null) {
+					grant.getProperties().setAssignedOn(new RoleRef("", ""));
+				}
+				grantContainer.addPOJO(grant);
+			}
+		}
+	}
 
     private String getCreatorId() {
         return getCreator().getObjid();
@@ -331,9 +441,32 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
     	return (String) item.getItemProperty(PropertyId.OBJECT_ID).getValue();
     }
     
+    private Collection<Grant> getGrants() {
+    	return retrieveGrantsForGroup(groupObjectId);
+    }
+    
+    private Collection<Grant> retrieveGrantsForGroup(String groupObjectId) {
+		try {
+			return groupService.retrieveCurrentGrants(groupObjectId);
+		}
+        catch (final InternalClientException e) {
+            ModalDialog.show(app.getMainWindow(), e);
+            LOG.error(ViewConstants.AN_UNEXPECTED_ERROR_OCCURED_SEE_LOG_FOR_DETAILS, e);
+        }
+        catch (final TransportException e) {
+            ModalDialog.show(app.getMainWindow(), e);
+            LOG.error(ViewConstants.AN_UNEXPECTED_ERROR_OCCURED_SEE_LOG_FOR_DETAILS, e);
+        }
+        catch (final EscidocClientException e) {
+            ModalDialog.show(app.getMainWindow(), e);
+            LOG.error(ViewConstants.AN_UNEXPECTED_ERROR_OCCURED_SEE_LOG_FOR_DETAILS, e);
+        }
+		return Collections.emptyList();
+	}
+
+    
     // permission checks
-    
-    
+
     private boolean isRetrieveGroupAllowed(final String userId) {
     	return pdpRequest.isPermitted(ActionIdConstants.RETRIEVE_USER_GROUP, userId);
     }
