@@ -444,5 +444,9 @@ public class ViewConstants {
     public static final String SELECT_ROLE_LABEL = "Role:";
 
     public static final String RESOURCE_TITLE = "Resource Title: ";
+    
+    public static final String LABEL = "Label";
+    
+    public static final String EMAIL_LABEL = "Email";
 
 }

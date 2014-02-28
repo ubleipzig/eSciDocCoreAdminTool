@@ -57,8 +57,10 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 	
 	// fields
     private final Label objId = new Label();
-    private TextField name;
+    private TextField name; 		// required
+    private TextField label;		// required
     private TextField description;
+    private TextField email;
     private CheckBox activeStatus;
     private final Label modifiedOn = new Label();
     private Button modifiedOnLink;
@@ -102,7 +104,9 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 		configureLayout();
 		
 		addName();
+		addLabel();
 		addDescription();
+		addEmail();
 		
 		addObjectId();
 
@@ -118,7 +122,15 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 		name.setMaxLength(ViewConstants.MAX_TITLE_LENGTH);
 		name.setWidth(ViewConstants.FIELD_WIDTH);
 		name.setWriteThrough(false);
-		panel.addComponent(LayoutHelper.create(ViewConstants.NAME_LABEL, name, 100, true));
+		form.addComponent(LayoutHelper.create(ViewConstants.NAME_LABEL, name, 100, true));
+	}
+	
+	private void addLabel() {
+		label = new TextField();
+		label.setMaxLength(ViewConstants.MAX_TITLE_LENGTH);
+		label.setWidth(ViewConstants.FIELD_WIDTH);
+		label.setWriteThrough(false);
+		form.addComponent(LayoutHelper.create(ViewConstants.LABEL, label, 100, true));
 	}
 	
 	private void addDescription() {
@@ -128,6 +140,14 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 		description.setMaxLength(ViewConstants.MAX_DESC_LENGTH);
 		description.setWriteThrough(false);
 		form.addComponent(LayoutHelper.create(ViewConstants.DESCRIPTION_LABEL, description, LABEL_WIDTH, 80, false));
+	}
+	
+	private void addEmail() {
+		email = new TextField();
+		email.setMaxLength(ViewConstants.MAX_TITLE_LENGTH);
+		email.setWidth(ViewConstants.FIELD_WIDTH);
+		email.setWriteThrough(false);
+		form.addComponent(LayoutHelper.create(ViewConstants.EMAIL_LABEL, email, 100, true));
 	}
 	
 	private void addObjectId() {
@@ -200,7 +220,9 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 		setObjectId();
 		bindObjectId();
 		bindName();
+		bindLabel();
 		bindDescription();
+		bindEmail();
 		bindActiveStatus();
         bindCreatedOn();
         bindCreatedBy();
@@ -221,10 +243,18 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 		name.setPropertyDataSource(item.getItemProperty(PropertyId.NAME));
 	}
 	
+	private void bindLabel() {
+		label.setPropertyDataSource(item.getItemProperty(PropertyId.PROP_LABEL));
+	}
+	
 	private void bindDescription() {
 		description.setPropertyDataSource(item.getItemProperty(PropertyId.DESCRIPTION));
 	}
 
+	private void bindEmail() {
+		email.setPropertyDataSource(item.getItemProperty(PropertyId.EMAIL));
+	}
+	
 	private void bindActiveStatus() {
 		activeStatus.setPropertyDataSource(item.getItemProperty(PropertyId.ACTIVE));
 	}
@@ -261,7 +291,9 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 		newGroupBtn.setVisible(isCreateNewGroupAllowed());
 		deleteGroupBtn.setVisible(isDeleteGroupAllowed());
 		name.setReadOnly(isUpdateGroupNotAllowed());
+		label.setReadOnly(isUpdateGroupNotAllowed());
 		description.setReadOnly(isUpdateGroupNotAllowed());
+		email.setReadOnly(isUpdateGroupNotAllowed());
 		activeStatus.setReadOnly(isDeactivateGroupNotAllowed());
 		if (isUpdateGroupNotAllowed()) {
 			form.removeComponent(footer);
