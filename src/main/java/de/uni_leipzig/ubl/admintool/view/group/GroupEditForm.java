@@ -42,6 +42,7 @@ import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
 import de.escidoc.core.resources.aa.useraccount.Grant;
+import de.escidoc.core.resources.aa.usergroup.Selector;
 import de.escidoc.core.resources.common.reference.Reference;
 import de.escidoc.core.resources.common.reference.RoleRef;
 import de.escidoc.core.resources.common.reference.UserAccountRef;
@@ -56,8 +57,14 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 
     private static final int LABEL_HEIGHT = 15;
     
-    private static final int ROLE_LIST_HEIGHT = 200;
+    private static final int ROLE_LIST_HEIGHT = 50;
 
+    private static final int SELECTOR_LIST_HEIGHT = 200;
+
+    private static final String RESOURCE_TYPE_GRANT = "grant";
+    
+    private static final String RESOURCE_TYPE_SELECTOR = "selector";
+    
     final AdminToolApplication app;
 	
 	final GroupService groupService;
@@ -69,6 +76,8 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 	String groupObjectId;
 	
 	POJOContainer<Grant> grantContainer;
+	
+	POJOContainer<Selector> selectorContainer;
 	
 	// fields
     private final Label objId = new Label();
@@ -109,6 +118,12 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
     private final Button addRoleBtn = new Button();
 
     private final Button removeRoleBtn = new Button();
+    
+    private final Button addSelectorBtn = new Button();
+    
+    private final Button editSelectorBtn = new Button();
+    
+    private final Button removeSelectorBtn = new Button(); 
 
     public GroupEditForm(final AdminToolApplication app, final GroupService groupService, final PdpRequest pdpRequest) {
 		Preconditions.checkNotNull(app, "app is null: %s", app);
@@ -135,12 +150,18 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
         addModified();
         addActiveStatus();
         
+        addVerticalSpace();
         addRoles();
-//        addSelectors();
+        addVerticalSpace();
+        addSelectors();
         
         addFooter();
 }
 	
+    private void addVerticalSpace() {
+        panel.addComponent(new Label("<br/>", Label.CONTENT_XHTML));
+    }
+
 	private void addName() {
 		name = new TextField();
 		name.setMaxLength(ViewConstants.MAX_TITLE_LENGTH);
@@ -154,6 +175,7 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 		label.setMaxLength(ViewConstants.MAX_TITLE_LENGTH);
 		label.setWidth(ViewConstants.FIELD_WIDTH);
 		label.setWriteThrough(false);
+		label.setReadOnly(true);
 		form.addComponent(LayoutHelper.create(ViewConstants.LABEL, label, 100, true));
 	}
 	
@@ -202,8 +224,8 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 	
 	private void addRoles() {
         // set table params
-		roles.setHeight(200, UNITS_PIXELS);
-        roles.setWidth("300px");
+		roles.setHeight(ROLE_LIST_HEIGHT, UNITS_PIXELS);
+        roles.setWidth(ViewConstants.FIELD_WIDTH);
         roles.setSelectable(true);
         roles.setNullSelectionAllowed(true);
         roles.setMultiSelect(true);
@@ -220,6 +242,28 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
         				addRoleBtn, removeRoleBtn
         		});
         form.addComponent(rolesComponent);
+	}
+	
+	private void addSelectors() {
+		selectors.setHeight(SELECTOR_LIST_HEIGHT, UNITS_PIXELS);
+        selectors.setWidth(ViewConstants.FIELD_WIDTH);
+        selectors.setSelectable(true);
+        selectors.setNullSelectionAllowed(true);
+        selectors.setMultiSelect(true);
+        selectors.setImmediate(true);
+        selectors.setColumnHeaderMode(Table.COLUMN_HEADER_MODE_HIDDEN);
+        addSelectorBtn.setCaption(ViewConstants.ADD);
+        addSelectorBtn.setStyleName(Reindeer.BUTTON_SMALL);
+        editSelectorBtn.setCaption(ViewConstants.EDIT);
+        editSelectorBtn.setStyleName(Reindeer.BUTTON_SMALL);
+        removeSelectorBtn.setCaption(ViewConstants.REMOVE);
+        removeSelectorBtn.setStyleName(Reindeer.BUTTON_SMALL);
+        // create selector component
+        final VerticalLayout selectorsComponent = 
+        		createLayout(ViewConstants.SELECTORS_LABEL, selectors, ViewConstants.DEFAULT_LABEL_WIDTH, SELECTOR_LIST_HEIGHT, false, new Button[] {
+        				addSelectorBtn, editSelectorBtn, removeSelectorBtn
+        		});
+        form.addComponent(selectorsComponent);
 	}
 	
 	private void addFooter() {
@@ -312,6 +356,7 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
         bindModifiedOn();
         bindModifiedBy();
         bindRolesWithView();
+        bindSelectors();
         bindUserRightsWithView();
 	}
 
@@ -371,19 +416,6 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 		}
 	}
 	
-	private void bindUserRightsWithView() {
-		newGroupBtn.setVisible(isCreateNewGroupAllowed());
-		deleteGroupBtn.setVisible(isDeleteGroupAllowed());
-		name.setReadOnly(isUpdateGroupNotAllowed());
-		label.setReadOnly(isUpdateGroupNotAllowed());
-		description.setReadOnly(isUpdateGroupNotAllowed());
-		email.setReadOnly(isUpdateGroupNotAllowed());
-		activeStatus.setReadOnly(isDeactivateGroupNotAllowed());
-		if (isUpdateGroupNotAllowed()) {
-			form.removeComponent(footer);
-		}
-	}
-	
 	private void bindRolesWithView() {
 		final List<Grant> groupGrants = (List<Grant>) getGrants();
 		// don't show any grants if group has no
@@ -409,7 +441,41 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 			}
 		}
 	}
+	
+	private void bindSelectors() {
+		// TODO
+		final List<Selector> groupSelectors = (List<Selector>) getSelectors();
+		if (groupSelectors.isEmpty()) {
+			if (selectorContainer != null) {
+				selectorContainer.removeAllItems();
+			}
+		}
+		else {
+			selectorContainer = 
+					new POJOContainer<Selector>(Selector.class, "content", "name", "type");
+			selectors.setContainerDataSource(selectorContainer);
+			selectors.setVisibleColumns(new String[] { "content", "name" });
+			
+			for (Selector selector : groupSelectors) {
+				selectorContainer.addPOJO(selector);
+			} 
+		}
+	}
 
+	private void bindUserRightsWithView() {
+		newGroupBtn.setVisible(isCreateNewGroupAllowed());
+		deleteGroupBtn.setVisible(isDeleteGroupAllowed());
+		name.setReadOnly(isUpdateGroupNotAllowed());
+		description.setReadOnly(isUpdateGroupNotAllowed());
+		email.setReadOnly(isUpdateGroupNotAllowed());
+		activeStatus.setReadOnly(isDeactivateGroupNotAllowed());
+		if (isUpdateGroupNotAllowed()) {
+			form.removeComponent(footer);
+		}
+		// TODO grants
+		// TODO selectors
+	}
+	
     private String getCreatorId() {
         return getCreator().getObjid();
     }
@@ -441,13 +507,26 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
     	return (String) item.getItemProperty(PropertyId.OBJECT_ID).getValue();
     }
     
-    private Collection<Grant> getGrants() {
-    	return retrieveGrantsForGroup(groupObjectId);
+    @SuppressWarnings("unchecked")
+	private Collection<Grant> getGrants() {
+    	return (Collection<Grant>) retrieveResourcesForGroupByType(groupObjectId, RESOURCE_TYPE_GRANT);
     }
     
-    private Collection<Grant> retrieveGrantsForGroup(String groupObjectId) {
+    @SuppressWarnings("unchecked")
+	private Collection<Selector> getSelectors() {
+    	return (Collection<Selector>) retrieveResourcesForGroupByType(groupObjectId, RESOURCE_TYPE_SELECTOR);
+    }
+    
+    private Collection<?> retrieveResourcesForGroupByType(String groupObjectId, String type) {
 		try {
-			return groupService.retrieveCurrentGrants(groupObjectId);
+			if (type == RESOURCE_TYPE_GRANT) {
+				return groupService.retrieveCurrentGrants(groupObjectId);
+			}
+			else if (type == RESOURCE_TYPE_SELECTOR) {
+//				return groupService.retrieveCurrentSelectors(groupObjectId);
+				return groupService.getGroupById(groupObjectId).getSelectors();
+			}
+			
 		}
         catch (final InternalClientException e) {
             ModalDialog.show(app.getMainWindow(), e);
@@ -463,7 +542,7 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
         }
 		return Collections.emptyList();
 	}
-
+    
     
     // permission checks
 
@@ -491,14 +570,12 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 	public void buttonClick(ClickEvent event) {
 		final Button source = event.getButton();
 		if (source.equals(cancelBtn)) {
-			// TODO do something with sense here
-			mainWindow.showNotification("CANCEL CLICKED");
-//            discardFields();
-//            removeAllError();
+            discardFields();
+            removeAllError();
 		}
 		else if (source.equals(saveBtn) && isValid()) {
 			// TODO do something with sense here
-			mainWindow.showNotification("CANCEL CLICKED");
+			mainWindow.showNotification("SAVE CLICKED");
 //            updateUserGroup();
 //            commitFields();
 //            removeAllError();
@@ -506,13 +583,34 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 		}
 	}
 	
+	private void discardFields() {
+		name.discard();
+		description.discard();
+		email.discard();
+	}
+	
+	private void commitFields() {
+		name.commit();
+		label.commit();
+		description.commit();
+		email.commit();
+	}
+	
+	private void removeAllError() {
+		name.setComponentError(null);
+		label.setComponentError(null);
+		email.setComponentError(null);
+	}
+	
+	// click listener
+	
 	private class NewGroupListener implements Button.ClickListener {
 		private static final long serialVersionUID = -7825175731887685295L;
 
 		@Override
 		public void buttonClick(ClickEvent event) {
 			// TODO do something with sense here
-			mainWindow.showNotification("New Greoup ... will be implemented");
+			mainWindow.showNotification("New Group ... will be implemented");
 		}
 	}
 
@@ -531,6 +629,8 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 	private boolean isValid() {
 		boolean isValid = true;
 		isValid = EmptyFieldValidator.isValid(name, "Please enter a " + ViewConstants.NAME_ID);
+		isValid &= EmptyFieldValidator.isValid(label, "Please enter a " + ViewConstants.LABEL);
+		isValid &= EmptyFieldValidator.isValid(email, "Please enter a " + ViewConstants.EMAIL_LABEL);
 		return isValid;
 	}
 
