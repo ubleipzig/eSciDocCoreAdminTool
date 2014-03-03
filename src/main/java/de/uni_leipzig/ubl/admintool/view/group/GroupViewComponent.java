@@ -5,9 +5,13 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Preconditions;
 import com.vaadin.data.Item;
+import com.vaadin.data.util.POJOItem;
 
 import de.escidoc.admintool.app.AdminToolApplication;
+import de.escidoc.admintool.app.PropertyId;
 import de.escidoc.admintool.domain.PdpRequest;
+import de.escidoc.core.client.exceptions.EscidocClientException;
+import de.escidoc.core.resources.aa.usergroup.UserGroup;
 import de.uni_leipzig.ubl.admintool.service.internal.GroupService;
 
 public class GroupViewComponent {
@@ -88,14 +92,27 @@ public class GroupViewComponent {
 	}
 
 	public void showFirstItemInEditView() {
-		if (groupListView == null) {
+		if (groupListView.firstItemId() == null) {
 			return;
 		}
 		groupListView.select(groupListView.firstItemId());
-		groupView.showEditView(getFirstItem());
+		try {
+			groupView.showEditView(getFirstItem());
+		} catch (EscidocClientException e) {
+			app.getMainWindow().showNotification(e.getMessage());
+		}
 	}
 
-	private Item getFirstItem() {
-		return groupListView.getContainerDataSource().getItem(groupListView.firstItemId());
+	private Item getFirstItem() throws EscidocClientException {
+		// load item from service not from table data source because not all data is given e.g. label, descr., etc...
+		return userGroupToItem(groupService.retrieve((String) groupListView.getContainerProperty(groupListView.firstItemId(), PropertyId.OBJECT_ID).getValue()));
+
 	}
+
+	private POJOItem<UserGroup> userGroupToItem(final UserGroup userGroup) {
+        return new POJOItem<UserGroup>(userGroup, new String[] { PropertyId.OBJECT_ID, PropertyId.NAME,
+                PropertyId.CREATED_ON, PropertyId.CREATED_BY, PropertyId.LAST_MODIFICATION_DATE, PropertyId.MODIFIED_BY,
+                PropertyId.ACTIVE, PropertyId.DESCRIPTION, PropertyId.PROP_LABEL, PropertyId.EMAIL });
+	}
+
 }
