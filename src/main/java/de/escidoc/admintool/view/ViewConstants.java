@@ -449,4 +449,6 @@ public class ViewConstants {
     
     public static final String EMAIL_LABEL = "Email";
 
+	public static final String SELECTORS_LABEL = "Selectors";
+
 }
