@@ -472,8 +472,13 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 		if (isUpdateGroupNotAllowed()) {
 			form.removeComponent(footer);
 		}
-		// TODO grants
-		// TODO selectors
+		roles.setReadOnly(!isCreateUserGroupGrantAllowed() && !isRevokeUserGroupGrantAllowed());
+		addRoleBtn.setVisible(isCreateUserGroupGrantAllowed());
+		removeRoleBtn.setVisible(isRevokeUserGroupGrantAllowed());
+		selectors.setReadOnly(!isAddUserGroupSelectorsAllowed() && !isRemoveUserGroupSelectorsAllowed());
+		addSelectorBtn.setVisible(isAddUserGroupSelectorsAllowed());
+		editSelectorBtn.setVisible(isAddUserGroupSelectorsAllowed());
+		removeSelectorBtn.setVisible(isRemoveUserGroupSelectorsAllowed());
 	}
 	
     private String getCreatorId() {
@@ -563,6 +568,26 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
     
     private boolean isUpdateGroupNotAllowed() {
     	return pdpRequest.isDenied(ActionIdConstants.UPDATE_USER_GROUP, getSelectedItemId());
+    }
+    
+    private boolean isRetrieveUserGroupGrantAllowed() {
+    	return pdpRequest.isPermitted(ActionIdConstants.RETRIEVE_USER_GROUP_GRANT, getSelectedItemId());
+    }
+    
+    private boolean isCreateUserGroupGrantAllowed() {
+    	return pdpRequest.isPermitted(ActionIdConstants.CREATE_USER_GROUP_GRANT, getSelectedItemId());
+    }
+    
+    private boolean isRevokeUserGroupGrantAllowed() {
+    	return pdpRequest.isPermitted(ActionIdConstants.REVOKE_USER_GROUP_GRANT, getSelectedItemId());
+    }
+    
+    private boolean isAddUserGroupSelectorsAllowed() {
+    	return pdpRequest.isPermitted(ActionIdConstants.ADD_USER_GROUP_SELECTORS, getSelectedItemId());
+    }
+    
+    private boolean isRemoveUserGroupSelectorsAllowed() {
+    	return pdpRequest.isPermitted(ActionIdConstants.REMOVE_USER_GROUP_SELECTORS, getSelectedItemId());
     }
     
 	@Override
