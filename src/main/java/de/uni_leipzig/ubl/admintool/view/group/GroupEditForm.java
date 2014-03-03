@@ -523,7 +523,6 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 				return groupService.retrieveCurrentGrants(groupObjectId);
 			}
 			else if (type == RESOURCE_TYPE_SELECTOR) {
-//				return groupService.retrieveCurrentSelectors(groupObjectId);
 				return groupService.getGroupById(groupObjectId).getSelectors();
 			}
 			
