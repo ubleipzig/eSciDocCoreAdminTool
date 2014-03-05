@@ -8,6 +8,8 @@
 
 @import "layout/toolbar.css";
 
+@import "accordion/accordion.css";
+
 .escidoc-toolbar {
 	background: transparent;
 	background-image: url("images/escidoc-logo.jpg");
