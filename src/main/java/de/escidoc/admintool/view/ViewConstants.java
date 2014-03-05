@@ -451,4 +451,10 @@ public class ViewConstants {
 
 	public static final String SELECTORS_LABEL = "Selectors";
 
+	public static final String SELECTORS_INTERNAL_LABEL = "Internal Selectors";
+	
+	public static final String SELECTORS_ATTRIBUTE_LABEL = "User Attribute Selectors";
+	
+	public static final String GROUP_ATTRIBUTES_LABEL = "Group Attributes";
+
 }
