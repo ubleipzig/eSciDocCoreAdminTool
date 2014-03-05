@@ -22,6 +22,7 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Table;
+import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
@@ -87,7 +88,7 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
     private final Label objId = new Label();
     private TextField name; 		// required
     private TextField label;		// required
-    private TextField description;
+    private TextArea description;
     private TextField email;		// FIXME email is optional but implemented as required
     private CheckBox activeStatus;
     final Table roles = new Table();
@@ -199,7 +200,7 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 	}
 	
 	private void addDescription() {
-		description = new TextField();
+		description = new TextArea();
 		description.setWidth(ViewConstants.FIELD_WIDTH);
 		description.setRows(ViewConstants.DESCRIPTION_ROWS);
 		description.setMaxLength(ViewConstants.MAX_DESC_LENGTH);
