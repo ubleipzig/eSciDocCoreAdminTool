@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import com.google.common.base.Preconditions;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.POJOContainer;
+import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -43,6 +44,7 @@ import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
 import de.escidoc.core.resources.aa.useraccount.Grant;
 import de.escidoc.core.resources.aa.usergroup.Selector;
+import de.escidoc.core.resources.aa.usergroup.SelectorType;
 import de.escidoc.core.resources.common.reference.Reference;
 import de.escidoc.core.resources.common.reference.RoleRef;
 import de.escidoc.core.resources.common.reference.UserAccountRef;
@@ -59,7 +61,7 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
     
     private static final int ROLE_LIST_HEIGHT = 50;
 
-    private static final int SELECTOR_LIST_HEIGHT = 200;
+    private static final int SELECTOR_LIST_HEIGHT = 600;
 
     private static final String RESOURCE_TYPE_GRANT = "grant";
     
@@ -77,17 +79,20 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 	
 	POJOContainer<Grant> grantContainer;
 	
-	POJOContainer<Selector> selectorContainer;
+	POJOContainer<Selector> selectorInternalContainer;
+
+	POJOContainer<Selector> selectorAttributeContainer;
 	
 	// fields
     private final Label objId = new Label();
     private TextField name; 		// required
     private TextField label;		// required
     private TextField description;
-    private TextField email;
+    private TextField email;		// FIXME email is optional but implemented as required
     private CheckBox activeStatus;
     final Table roles = new Table();
-    final Table selectors = new Table();
+    final Table selectorsInternal = new Table();
+    final Table selectorsAttribute = new Table();
     private final Label modifiedOn = new Label();
     private Button modifiedOnLink;
     private LinkClickListener modifiedOnLinkListener;
@@ -101,11 +106,19 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 	
 	private final Panel panel = new Panel();
 	
+	private final VerticalLayout base = new VerticalLayout();
+	
+	private final Accordion accordion = new Accordion();
+	
+	private final FormLayout tab1 = new FormLayout();
+	
+	private final VerticalLayout tab2 = new VerticalLayout();
+
+	private final VerticalLayout tab3 = new VerticalLayout();
+	
 	private final HorizontalLayout header = new HorizontalLayout();
 	
 	private final HorizontalLayout footer = new HorizontalLayout();
-	
-	private final FormLayout form = new FormLayout();
 	
 	private final Button newGroupBtn = new Button(ViewConstants.NEW, new NewGroupListener());
 	
@@ -119,12 +132,18 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 
     private final Button removeRoleBtn = new Button();
     
-    private final Button addSelectorBtn = new Button();
+    private final Button addInternalSelectorBtn = new Button();
     
-    private final Button editSelectorBtn = new Button();
+    private final Button editInternalSelectorBtn = new Button();
     
-    private final Button removeSelectorBtn = new Button(); 
+    private final Button removeInternalSelectorBtn = new Button(); 
 
+    private final Button addAttributeSelectorBtn = new Button();
+    
+    private final Button editAttributeSelectorBtn = new Button();
+    
+    private final Button removeAttributeSelectorBtn = new Button(); 
+    
     public GroupEditForm(final AdminToolApplication app, final GroupService groupService, final PdpRequest pdpRequest) {
 		Preconditions.checkNotNull(app, "app is null: %s", app);
 		Preconditions.checkNotNull(groupService, "groupService is null: %s", groupService);
@@ -167,7 +186,7 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 		name.setMaxLength(ViewConstants.MAX_TITLE_LENGTH);
 		name.setWidth(ViewConstants.FIELD_WIDTH);
 		name.setWriteThrough(false);
-		form.addComponent(LayoutHelper.create(ViewConstants.NAME_LABEL, name, 100, true));
+		tab1.addComponent(LayoutHelper.create(ViewConstants.NAME_LABEL, name, 100, true));
 	}
 	
 	private void addLabel() {
@@ -176,7 +195,7 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 		label.setWidth(ViewConstants.FIELD_WIDTH);
 		label.setWriteThrough(false);
 		label.setReadOnly(true);
-		form.addComponent(LayoutHelper.create(ViewConstants.LABEL, label, 100, true));
+		tab1.addComponent(LayoutHelper.create(ViewConstants.LABEL, label, 100, true));
 	}
 	
 	private void addDescription() {
@@ -185,7 +204,7 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 		description.setRows(ViewConstants.DESCRIPTION_ROWS);
 		description.setMaxLength(ViewConstants.MAX_DESC_LENGTH);
 		description.setWriteThrough(false);
-		form.addComponent(LayoutHelper.create(ViewConstants.DESCRIPTION_LABEL, description, LABEL_WIDTH, 80, false));
+		tab1.addComponent(LayoutHelper.create(ViewConstants.DESCRIPTION_LABEL, description, LABEL_WIDTH, 80, false));
 	}
 	
 	private void addEmail() {
@@ -193,11 +212,11 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 		email.setMaxLength(ViewConstants.MAX_TITLE_LENGTH);
 		email.setWidth(ViewConstants.FIELD_WIDTH);
 		email.setWriteThrough(false);
-		form.addComponent(LayoutHelper.create(ViewConstants.EMAIL_LABEL, email, 100, true));
+		tab1.addComponent(LayoutHelper.create(ViewConstants.EMAIL_LABEL, email, 100, true));
 	}
 	
 	private void addObjectId() {
-		form.addComponent(LayoutHelper.create(ViewConstants.OBJECT_ID_LABEL, objId, 100, false));
+		tab1.addComponent(LayoutHelper.create(ViewConstants.OBJECT_ID_LABEL, objId, 100, false));
 	}
 	
 	private void addCreated() {
@@ -205,7 +224,7 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 		createdByLink.setStyleName(BaseTheme.BUTTON_LINK);
 		createdByLinkListener = new LinkClickListener(app);
 		createdByLink.addListener(createdByLinkListener);
-		form.addComponent(LayoutHelper.create("Created", "by", createdOn, createdByLink, LABEL_WIDTH, LABEL_HEIGHT, false));
+		tab1.addComponent(LayoutHelper.create("Created", "by", createdOn, createdByLink, LABEL_WIDTH, LABEL_HEIGHT, false));
 	}
 	
 	private void addModified() {
@@ -213,13 +232,13 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 		modifiedOnLink.setStyleName(BaseTheme.BUTTON_LINK);
 		modifiedOnLinkListener = new LinkClickListener(app);
 		modifiedOnLink.addListener(modifiedOnLinkListener);
-		form.addComponent(LayoutHelper.create("Modified", "by", modifiedOn, modifiedOnLink, LABEL_WIDTH, LABEL_HEIGHT, false));
+		tab1.addComponent(LayoutHelper.create("Modified", "by", modifiedOn, modifiedOnLink, LABEL_WIDTH, LABEL_HEIGHT, false));
 	}
 	
 	private void addActiveStatus() {
 		activeStatus = new CheckBox();
 		activeStatus.setWriteThrough(false);
-		form.addComponent(LayoutHelper.create(ViewConstants.ACTIVE_STATUS, activeStatus, LABEL_WIDTH, false));
+		tab1.addComponent(LayoutHelper.create(ViewConstants.ACTIVE_STATUS, activeStatus, LABEL_WIDTH, false));
 	}
 	
 	private void addRoles() {
@@ -241,29 +260,60 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
         		createLayout(ViewConstants.ROLES_LABEL, roles, ViewConstants.DEFAULT_LABEL_WIDTH, ROLE_LIST_HEIGHT, false, new Button[] {
         				addRoleBtn, removeRoleBtn
         		});
-        form.addComponent(rolesComponent);
+        tab1.addComponent(rolesComponent);
 	}
 	
 	private void addSelectors() {
+		addInternalSelectors();
+		addAttributeSelectors();
+		
+		Button[] selectorButtons = {addInternalSelectorBtn, addAttributeSelectorBtn, editInternalSelectorBtn, editAttributeSelectorBtn,
+				removeInternalSelectorBtn, removeAttributeSelectorBtn};
+		for (Button button : selectorButtons) {
+			button.setStyleName(Reindeer.BUTTON_SMALL);
+		}
+        addInternalSelectorBtn.setCaption(ViewConstants.ADD);
+        editInternalSelectorBtn.setCaption(ViewConstants.EDIT);
+        removeInternalSelectorBtn.setCaption(ViewConstants.REMOVE);
+        addAttributeSelectorBtn.setCaption(ViewConstants.ADD);
+        editAttributeSelectorBtn.setCaption(ViewConstants.EDIT);
+        removeAttributeSelectorBtn.setCaption(ViewConstants.REMOVE);
+
+        HorizontalLayout hlInternal = new HorizontalLayout();
+        hlInternal.addComponent(addInternalSelectorBtn);
+        hlInternal.addComponent(editInternalSelectorBtn);
+        hlInternal.addComponent(removeInternalSelectorBtn);
+
+        HorizontalLayout hlAttribute = new HorizontalLayout();
+        hlAttribute.addComponent(addAttributeSelectorBtn);
+        hlAttribute.addComponent(editAttributeSelectorBtn);
+        hlAttribute.addComponent(removeAttributeSelectorBtn);
+        
+        tab2.addComponent(selectorsInternal);
+        tab2.addComponent(hlInternal);
+
+        tab3.addComponent(selectorsAttribute);
+        tab3.addComponent(hlAttribute);
+	}
+	
+	private void addInternalSelectors() {
+		setupSelectors(selectorsInternal);
+		selectorsInternal.setMultiSelect(true);
+	}
+	
+	private void addAttributeSelectors() {
+		setupSelectors(selectorsAttribute);
+		selectorsAttribute.setMultiSelect(false);
+	}
+	
+	private void setupSelectors(final Table selectors) {
 		selectors.setHeight(SELECTOR_LIST_HEIGHT, UNITS_PIXELS);
-        selectors.setWidth(ViewConstants.FIELD_WIDTH);
+//        selectors.setWidth(ViewConstants.FIELD_WIDTH);
+        selectors.setWidth(100, UNITS_PERCENTAGE);
         selectors.setSelectable(true);
         selectors.setNullSelectionAllowed(true);
-        selectors.setMultiSelect(true);
         selectors.setImmediate(true);
         selectors.setColumnHeaderMode(Table.COLUMN_HEADER_MODE_HIDDEN);
-        addSelectorBtn.setCaption(ViewConstants.ADD);
-        addSelectorBtn.setStyleName(Reindeer.BUTTON_SMALL);
-        editSelectorBtn.setCaption(ViewConstants.EDIT);
-        editSelectorBtn.setStyleName(Reindeer.BUTTON_SMALL);
-        removeSelectorBtn.setCaption(ViewConstants.REMOVE);
-        removeSelectorBtn.setStyleName(Reindeer.BUTTON_SMALL);
-        // create selector component
-        final VerticalLayout selectorsComponent = 
-        		createLayout(ViewConstants.SELECTORS_LABEL, selectors, ViewConstants.DEFAULT_LABEL_WIDTH, SELECTOR_LIST_HEIGHT, false, new Button[] {
-        				addSelectorBtn, editSelectorBtn, removeSelectorBtn
-        		});
-        form.addComponent(selectorsComponent);
 	}
 	
 	private void addFooter() {
@@ -273,30 +323,37 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 		hl.addComponent(cancelBtn);
 		footer.addComponent(hl);
 		footer.setComponentAlignment(hl, Alignment.MIDDLE_RIGHT);
-		form.addComponent(footer);
+		base.addComponent(footer);
 	}
 
 	private void configureLayout() {
 		setCompositionRoot(panel);
 		panel.setStyleName(Reindeer.PANEL_LIGHT);
 		panel.setCaption(ViewConstants.EDIT_GROUP_VIEW_CAPTION);
-		panel.setContent(form);
+		panel.setContent(base);
 		
-        form.setSpacing(false);
-        form.setWidth(530, UNITS_PIXELS);
-        form.addComponent(createHeader());
+		accordion.addTab(tab1, ViewConstants.GROUP_ATTRIBUTES_LABEL, null);
+		accordion.addTab(tab2, ViewConstants.SELECTORS_INTERNAL_LABEL, null);
+		accordion.addTab(tab3, ViewConstants.SELECTORS_ATTRIBUTE_LABEL, null);
+		accordion.setSizeFull();
+		
+        base.setSpacing(false);
+//        base.setWidth(530, UNITS_PIXELS);
+        base.setSizeFull();
+        base.addComponent(createHeader());
+        base.addComponent(accordion);
 	}
 
     private VerticalLayout createLayout(
-            final String rolesLabel, final Table table, final int labelWidth, final int roleListHeight, final boolean b,
+            final String layoutLabel, final Table table, final int labelWidth, final int layoutListHeight, final boolean b,
             final Button[] buttons) {
 
             final HorizontalLayout hLayout = new HorizontalLayout();
-            hLayout.setHeight(roleListHeight + Constants.PX);
+            hLayout.setHeight(layoutListHeight + Constants.PX);
             hLayout.addComponent(new Label(" "));
 
             final Label textLabel =
-                new Label(Constants.P_ALIGN_RIGHT + rolesLabel + "   " + Constants.P, Label.CONTENT_XHTML);
+                new Label(Constants.P_ALIGN_RIGHT + layoutLabel + "   " + Constants.P, Label.CONTENT_XHTML);
             textLabel.setSizeUndefined();
             textLabel.setWidth(labelWidth + Constants.PX);
             hLayout.addComponent(textLabel);
@@ -443,22 +500,39 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 	}
 	
 	private void bindSelectors() {
-		// TODO
 		final List<Selector> groupSelectors = (List<Selector>) getSelectors();
 		if (groupSelectors.isEmpty()) {
-			if (selectorContainer != null) {
-				selectorContainer.removeAllItems();
+			if (selectorInternalContainer != null) {
+				selectorInternalContainer.removeAllItems();
+			}
+			else if (selectorAttributeContainer != null) {
+				selectorAttributeContainer.removeAllItems();
 			}
 		}
 		else {
-			selectorContainer = 
+			selectorInternalContainer = 
 					new POJOContainer<Selector>(Selector.class, "content", "name", "type");
-			selectors.setContainerDataSource(selectorContainer);
-			selectors.setVisibleColumns(new String[] { "content", "name" });
+			selectorsInternal.setContainerDataSource(selectorInternalContainer);
+			selectorsInternal.setVisibleColumns(new String[] { "content", "name" });
+
+			selectorAttributeContainer = 
+					new POJOContainer<Selector>(Selector.class, "content", "name", "type");
+			selectorsAttribute.setContainerDataSource(selectorAttributeContainer);
+			selectorsAttribute.setVisibleColumns(new String[] { "content", "name" });
 			
 			for (Selector selector : groupSelectors) {
-				selectorContainer.addPOJO(selector);
-			} 
+				// split selectors by type
+				if (selector.getType() == SelectorType.INTERNAL) {
+					selectorInternalContainer.addPOJO(selector);
+				}
+				else {
+					selectorAttributeContainer.addPOJO(selector);
+				}
+			}
+			
+			// update label and show number of contained items
+			accordion.setTabCaption(tab2, ViewConstants.SELECTORS_INTERNAL_LABEL + " (" + selectorInternalContainer.size() + ")");
+			accordion.setTabCaption(tab3, ViewConstants.SELECTORS_ATTRIBUTE_LABEL + " (" + selectorAttributeContainer.size() + ")");
 		}
 	}
 
@@ -470,15 +544,15 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 		email.setReadOnly(isUpdateGroupNotAllowed());
 		activeStatus.setReadOnly(isDeactivateGroupNotAllowed());
 		if (isUpdateGroupNotAllowed()) {
-			form.removeComponent(footer);
+			tab1.removeComponent(footer);
 		}
 		roles.setReadOnly(!isCreateUserGroupGrantAllowed() && !isRevokeUserGroupGrantAllowed());
 		addRoleBtn.setVisible(isCreateUserGroupGrantAllowed());
 		removeRoleBtn.setVisible(isRevokeUserGroupGrantAllowed());
-		selectors.setReadOnly(!isAddUserGroupSelectorsAllowed() && !isRemoveUserGroupSelectorsAllowed());
-		addSelectorBtn.setVisible(isAddUserGroupSelectorsAllowed());
-		editSelectorBtn.setVisible(isAddUserGroupSelectorsAllowed());
-		removeSelectorBtn.setVisible(isRemoveUserGroupSelectorsAllowed());
+		selectorsInternal.setReadOnly(!isAddUserGroupSelectorsAllowed() && !isRemoveUserGroupSelectorsAllowed());
+		addInternalSelectorBtn.setVisible(isAddUserGroupSelectorsAllowed());
+		editInternalSelectorBtn.setVisible(isAddUserGroupSelectorsAllowed());
+		removeInternalSelectorBtn.setVisible(isRemoveUserGroupSelectorsAllowed());
 	}
 	
     private String getCreatorId() {
