@@ -212,6 +212,7 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 		email.setMaxLength(ViewConstants.MAX_TITLE_LENGTH);
 		email.setWidth(ViewConstants.FIELD_WIDTH);
 		email.setWriteThrough(false);
+		email.setRequired(false);
 		tab1.addComponent(LayoutHelper.create(ViewConstants.EMAIL_LABEL, email, 100, true));
 	}
 	
@@ -728,7 +729,6 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 		boolean isValid = true;
 		isValid = EmptyFieldValidator.isValid(name, "Please enter a " + ViewConstants.NAME_ID);
 		isValid &= EmptyFieldValidator.isValid(label, "Please enter a " + ViewConstants.LABEL);
-		isValid &= EmptyFieldValidator.isValid(email, "Please enter a " + ViewConstants.EMAIL_LABEL);
 		return isValid;
 	}
 
