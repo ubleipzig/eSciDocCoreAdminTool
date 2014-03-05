@@ -12,7 +12,6 @@ public class UBLServiceFactory extends ServiceFactory {
     
     public UBLServiceFactory(final EscidocServiceLocation escidocServiceLocation, final String token) {
 		super(escidocServiceLocation, token);
-		// TODO Auto-generated constructor stub
 		this.serviceUri = escidocServiceLocation.getUri();
 		this.token = token;
 	}
