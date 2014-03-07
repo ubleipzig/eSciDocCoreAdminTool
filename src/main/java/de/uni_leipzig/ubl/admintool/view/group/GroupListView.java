@@ -84,8 +84,9 @@ public class GroupListView extends EscidocPagedTable {
         sort(new Object[] { PropertyId.LAST_MODIFICATION_DATE }, new boolean[] { false });
 	}
 	
-	public void remove(final UserGroup userGroup) {
-		// TODO
+	public void remove(final UserGroup deletedUserGroup) {
+		final boolean removeItem = groupContainer.removeItem(deletedUserGroup);
+		assert removeItem == true : "Failed to remove user group from the container.";
 	}
 	
 	public POJOItem<UserGroup> addGroup(final UserGroup createdUserGroup) {
