@@ -507,11 +507,14 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 	
 	private void bindSelectors() {
 		final List<Selector> groupSelectors = (List<Selector>) getSelectors();
+		int selectorInternalSize = 0;
+		int selectorAttributeSize = 0;
+
 		if (groupSelectors.isEmpty()) {
 			if (selectorInternalContainer != null) {
 				selectorInternalContainer.removeAllItems();
 			}
-			else if (selectorAttributeContainer != null) {
+			if (selectorAttributeContainer != null) {
 				selectorAttributeContainer.removeAllItems();
 			}
 		}
@@ -535,11 +538,13 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 					selectorAttributeContainer.addPOJO(selector);
 				}
 			}
-			
-			// update label and show number of contained items
-			accordion.setTabCaption(tab2, ViewConstants.SELECTORS_INTERNAL_LABEL + " (" + selectorInternalContainer.size() + ")");
-			accordion.setTabCaption(tab3, ViewConstants.SELECTORS_ATTRIBUTE_LABEL + " (" + selectorAttributeContainer.size() + ")");
+			selectorInternalSize = selectorInternalContainer.size();
+			selectorAttributeSize = selectorAttributeContainer.size();
 		}
+		
+		// update label and show number of contained items
+		accordion.setTabCaption(tab2, ViewConstants.SELECTORS_INTERNAL_LABEL + " (" + selectorInternalSize + ")");
+		accordion.setTabCaption(tab3, ViewConstants.SELECTORS_ATTRIBUTE_LABEL + " (" + selectorAttributeSize + ")");
 	}
 
 	private void bindUserRightsWithView() {
@@ -758,6 +763,7 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 		                PropertyId.ACTIVE, PropertyId.DESCRIPTION, PropertyId.PROP_LABEL, PropertyId.EMAIL });
 		setSelected(pojoItem);
 	}
+	
 
 	// click listener
 	
