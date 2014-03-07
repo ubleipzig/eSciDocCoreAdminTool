@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import com.google.common.base.Preconditions;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.POJOContainer;
+import com.vaadin.data.util.POJOItem;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -26,6 +27,7 @@ import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.Window.Notification;
 import com.vaadin.ui.themes.BaseTheme;
 import com.vaadin.ui.themes.Reindeer;
 
@@ -41,11 +43,13 @@ import de.escidoc.admintool.view.util.Converter;
 import de.escidoc.admintool.view.util.LayoutHelper;
 import de.escidoc.admintool.view.validator.EmptyFieldValidator;
 import de.escidoc.core.client.exceptions.EscidocClientException;
+import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
 import de.escidoc.core.resources.aa.useraccount.Grant;
 import de.escidoc.core.resources.aa.usergroup.Selector;
 import de.escidoc.core.resources.aa.usergroup.SelectorType;
+import de.escidoc.core.resources.aa.usergroup.UserGroup;
 import de.escidoc.core.resources.common.reference.Reference;
 import de.escidoc.core.resources.common.reference.RoleRef;
 import de.escidoc.core.resources.common.reference.UserAccountRef;
@@ -674,13 +678,15 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
             removeAllError();
 		}
 		else if (source.equals(saveBtn) && isValid()) {
-			// TODO do something with sense here
-			mainWindow.showNotification("SAVE CLICKED");
-//            updateUserGroup();
-//            commitFields();
-//            removeAllError();
-//            showMessage();
+            updateUserGroup();
+            commitFields();
+            removeAllError();
+            showMessage();
 		}
+	}
+	
+	private void showMessage() {
+		mainWindow.showNotification("Info", "User Group is updated.", Notification.TYPE_TRAY_NOTIFICATION);
 	}
 	
 	private void discardFields() {
@@ -702,6 +708,57 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 		email.setComponentError(null);
 	}
 	
+	private void updateUserGroup() {
+		try {
+			final UserGroup updatedUserGroup =
+					groupService.update(getSelectedItemId(), (String) name.getValue(), (String) description.getValue(), (String) email.getValue());
+			if ( activeStatus.isModified() ) {
+				changeState(updatedUserGroup);
+			}
+			// TODO seperate methods for updating selectors analogue to OUs for user accounts?
+//			updateSelectors();
+			updateView(groupService.retrieve(getSelectedItemId()));
+		}
+		catch (final EscidocException e) {
+			ModalDialog.show(mainWindow, e);
+			LOG.error(ViewConstants.AN_UNEXPECTED_ERROR_OCCURED_SEE_LOG_FOR_DETAILS, e);
+		}
+		catch (final InternalClientException e) {
+			ModalDialog.show(mainWindow, e);
+			LOG.error(ViewConstants.AN_UNEXPECTED_ERROR_OCCURED_SEE_LOG_FOR_DETAILS, e);
+		}
+		catch (final TransportException e) {
+			ModalDialog.show(mainWindow, e);
+			LOG.error(ViewConstants.AN_UNEXPECTED_ERROR_OCCURED_SEE_LOG_FOR_DETAILS, e);
+		}
+		catch (final EscidocClientException e) {
+			ModalDialog.show(mainWindow, e);
+			LOG.error(ViewConstants.AN_UNEXPECTED_ERROR_OCCURED_SEE_LOG_FOR_DETAILS, e);
+		}
+	}
+	
+	private void changeState(final UserGroup updatedUserGroup) throws EscidocException, InternalClientException, TransportException {
+        final Object value = activeStatus.getPropertyDataSource().getValue();
+        if (!(value instanceof Boolean)) {
+            return;
+        }
+
+        if ((!(Boolean) activeStatus.getPropertyDataSource().getValue())) {
+            groupService.activate(updatedUserGroup);
+        }
+        else {
+            groupService.deactivate(updatedUserGroup);
+        }
+	}
+	
+	private void updateView(UserGroup userGroup) {
+		final POJOItem<UserGroup> pojoItem =
+				new POJOItem<UserGroup>(userGroup, new String[] { PropertyId.OBJECT_ID, PropertyId.NAME,
+		                PropertyId.CREATED_ON, PropertyId.CREATED_BY, PropertyId.LAST_MODIFICATION_DATE, PropertyId.MODIFIED_BY,
+		                PropertyId.ACTIVE, PropertyId.DESCRIPTION, PropertyId.PROP_LABEL, PropertyId.EMAIL });
+		setSelected(pojoItem);
+	}
+
 	// click listener
 	
 	private class NewGroupListener implements Button.ClickListener {

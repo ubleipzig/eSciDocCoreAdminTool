@@ -20,6 +20,8 @@ import de.escidoc.core.client.exceptions.TransportException;
 import de.escidoc.core.client.interfaces.UserGroupHandlerClientInterface;
 import de.escidoc.core.resources.aa.useraccount.Grant;
 import de.escidoc.core.resources.aa.usergroup.UserGroup;
+import de.escidoc.core.resources.common.TaskParam;
+import de.uni_leipzig.ubl.admintool.domain.UserGroupFactory;
 
 public class GroupService {
 	
@@ -70,6 +72,15 @@ public class GroupService {
     	return client.retrieve(groupObjectId);    			
     }
     
+    public UserGroup update (final String objid, final String newName, final String newDescription, final String newEmail) throws EscidocClientException {
+    	assert !(newName == null || newName.isEmpty()) : "name must not be null or empty";
+    	
+    	final UserGroup userGroup = retrieve(objid);
+    	final UserGroup updatedUserGroup = new UserGroupFactory().update(userGroup, newName, newDescription, newEmail).build();
+    	
+    	return client.update(updatedUserGroup);
+    }
+    
     public UserGroup getGroupById(final String groupObjectId) throws EscidocClientException {
     	if (userGroups == null) {
     		findAll();
@@ -87,5 +98,17 @@ public class GroupService {
     	client.setTransport(TransportProtocol.REST);
     	return client;
     }
+
+	public void activate(final UserGroup updatedUserGroup) throws EscidocException, InternalClientException, TransportException {
+		final TaskParam taskParam = new TaskParam();
+		taskParam.setLastModificationDate(updatedUserGroup.getLastModificationDate());
+		client.activate(updatedUserGroup.getObjid(), taskParam);
+	}
+	
+	public void deactivate(final UserGroup updatedUserGroup) throws EscidocException, InternalClientException, TransportException {
+		final TaskParam taskParam = new TaskParam();
+		taskParam.setLastModificationDate(updatedUserGroup.getLastModificationDate());
+		client.deactivate(updatedUserGroup.getObjid(), taskParam);
+	}
 	
 }
