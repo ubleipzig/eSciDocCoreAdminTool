@@ -2,6 +2,8 @@ package de.uni_leipzig.ubl.admintool.service.internal;
 
 import gov.loc.www.zing.srw.SearchRetrieveRequestType;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -29,7 +31,7 @@ public class GroupService {
 	
     private final Map<String, UserGroup> userGroupById = new ConcurrentHashMap<String, UserGroup>();
 
-    private final String eSciDocUri;
+    private final URL eSciDocUri;
 
     private final String handle;
 
@@ -37,15 +39,14 @@ public class GroupService {
 
     private UserGroup group;
 
-    public GroupService(final String eSciDocUri, final String handle) throws InternalClientException {
-        this.eSciDocUri = eSciDocUri;
+    public GroupService(final String eSciDocUri, final String handle) throws InternalClientException, MalformedURLException {
+        this.eSciDocUri = new URL(eSciDocUri);
         this.handle = handle;
         initClient();
     }
     
     private void initClient() throws InternalClientException {
     	client = new UserGroupHandlerClient(eSciDocUri);
-    	client.setTransport(TransportProtocol.REST);
     	client.setHandle(handle);
     }
     
