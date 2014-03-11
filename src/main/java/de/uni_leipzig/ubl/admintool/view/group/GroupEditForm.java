@@ -218,7 +218,7 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 		email.setWidth(ViewConstants.FIELD_WIDTH);
 		email.setWriteThrough(false);
 		email.setRequired(false);
-		tab1.addComponent(LayoutHelper.create(ViewConstants.EMAIL_LABEL, email, 100, true));
+		tab1.addComponent(LayoutHelper.create(ViewConstants.EMAIL_LABEL, email, 100, false));
 	}
 	
 	private void addObjectId() {
@@ -551,8 +551,12 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 		newGroupBtn.setVisible(isCreateNewGroupAllowed());
 		deleteGroupBtn.setVisible(isDeleteGroupAllowed());
 		name.setReadOnly(isUpdateGroupNotAllowed());
-		description.setReadOnly(isUpdateGroupNotAllowed());
-		email.setReadOnly(isUpdateGroupNotAllowed());
+//		description.setReadOnly(isUpdateGroupNotAllowed());
+//		email.setReadOnly(isUpdateGroupNotAllowed());
+		// FIXME As long as description and email aren't updatable caused by a escidoc core bug,
+		//		 they are set read only.
+		description.setReadOnly(true);
+		email.setReadOnly(true);
 		activeStatus.setReadOnly(isDeactivateGroupNotAllowed());
 		if (isUpdateGroupNotAllowed()) {
 			tab1.removeComponent(footer);
