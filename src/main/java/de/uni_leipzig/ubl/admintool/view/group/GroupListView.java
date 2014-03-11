@@ -101,7 +101,6 @@ public class GroupListView extends EscidocPagedTable {
 	
 	public POJOItem<UserGroup> addGroup(final UserGroup createdUserGroup) {
 		final POJOItem<UserGroup> item = groupContainer.addItem(createdUserGroup);
-		System.out.println("sort: " + getSortContainerPropertyId());
 		sort(new Object[] { getSortContainerPropertyId() }, new boolean[] { true });
         return item;
 	}
