@@ -50,7 +50,8 @@ public class GroupListView extends EscidocPagedTable {
 		setImmediate(true);
 		addListener(new GroupSelectListener(app, groupService));
         setNullSelectionAllowed(false);
-        setColumnHeaderMode(Table.COLUMN_HEADER_MODE_HIDDEN);
+        setColumnHeaderMode(1);
+        setColumnCollapsingAllowed(true);
 	}
 
 	private void findAllGroups() {
@@ -79,9 +80,18 @@ public class GroupListView extends EscidocPagedTable {
                 PropertyId.CREATED_ON, PropertyId.CREATED_BY, PropertyId.LAST_MODIFICATION_DATE, PropertyId.MODIFIED_BY,
                 PropertyId.ACTIVE);
 		setContainerDataSource(groupContainer);
-		setVisibleColumns(new Object[] { PropertyId.NAME });
+		
+		setSortContainerPropertyId(PropertyId.NAME);
+		setSortAscending(true);
+
 		setColumnHeader(PropertyId.NAME, ViewConstants.TITLE_LABEL);
-        sort(new Object[] { PropertyId.LAST_MODIFICATION_DATE }, new boolean[] { false });
+		setColumnExpandRatio(PropertyId.NAME, 0.75f);
+		setColumnHeader(PropertyId.ACTIVE, ViewConstants.ACTIVE_STATUS);
+		setColumnExpandRatio(PropertyId.ACTIVE, 0.25f);
+		setColumnHeader(PropertyId.LAST_MODIFICATION_DATE, ViewConstants.MODIFIED_ON_LABEL);
+		setColumnCollapsed(PropertyId.LAST_MODIFICATION_DATE, true);
+		
+		setVisibleColumns(new Object[] { PropertyId.NAME, PropertyId.LAST_MODIFICATION_DATE, PropertyId.ACTIVE });
 	}
 	
 	public void remove(final UserGroup deletedUserGroup) {
@@ -91,7 +101,8 @@ public class GroupListView extends EscidocPagedTable {
 	
 	public POJOItem<UserGroup> addGroup(final UserGroup createdUserGroup) {
 		final POJOItem<UserGroup> item = groupContainer.addItem(createdUserGroup);
-        sort(new Object[] { PropertyId.LAST_MODIFICATION_DATE }, new boolean[] { false });
+		System.out.println("sort: " + getSortContainerPropertyId());
+		sort(new Object[] { getSortContainerPropertyId() }, new boolean[] { true });
         return item;
 	}
 
