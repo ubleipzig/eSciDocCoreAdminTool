@@ -2,8 +2,8 @@ package de.uni_leipzig.ubl.admintool.view.group;
 
 import com.google.common.base.Preconditions;
 import com.vaadin.data.Item;
+import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.SplitPanel;
 import com.vaadin.ui.VerticalLayout;
 
 import de.escidoc.admintool.app.AdminToolApplication;
@@ -13,7 +13,7 @@ import de.escidoc.core.resources.Resource;
 import de.escidoc.core.resources.aa.usergroup.UserGroup;
 
 @SuppressWarnings("serial")
-public class GroupView extends SplitPanel implements ResourceView {
+public class GroupView extends HorizontalSplitPanel implements ResourceView {
 
 	private final AdminToolApplication app;
 	
@@ -34,7 +34,6 @@ public class GroupView extends SplitPanel implements ResourceView {
 	
 	public void init() {
 		setSplitPosition(ViewConstants.SPLIT_POSITION_IN_PERCENT);
-		setOrientation(ORIENTATION_HORIZONTAL);
 		
 		vLayout.setHeight(100, UNITS_PERCENTAGE);
 		addHeader(vLayout);
@@ -79,8 +78,6 @@ public class GroupView extends SplitPanel implements ResourceView {
 	}
 	
 	public void remove(final UserGroup deletedUserGroup) {
-//		groupList.remove(deletedUserGroup);
-//		app.getGroupView().showEditView(groupList.getItem(groupList.firstItemId()));
 		app.showGroupView();
 	}
 	
