@@ -10,6 +10,7 @@ import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.admintool.view.resource.ResourceView;
 import de.escidoc.core.resources.Resource;
+import de.escidoc.core.resources.aa.usergroup.UserGroup;
 
 @SuppressWarnings("serial")
 public class GroupView extends SplitPanel implements ResourceView {
@@ -75,6 +76,12 @@ public class GroupView extends SplitPanel implements ResourceView {
 
 	public Item getSelectedItem() {
 		return groupList.getItem(groupList.getValue());
+	}
+	
+	public void remove(final UserGroup deletedUserGroup) {
+//		groupList.remove(deletedUserGroup);
+//		app.getGroupView().showEditView(groupList.getItem(groupList.firstItemId()));
+		app.showGroupView();
 	}
 	
 }

@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 import com.google.common.base.Preconditions;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.POJOContainer;
-import com.vaadin.data.util.POJOItem;
+import com.vaadin.terminal.SystemError;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -690,12 +690,7 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
             updateUserGroup();
             commitFields();
             removeAllError();
-            showMessage();
 		}
-	}
-	
-	private void showMessage() {
-		mainWindow.showNotification("Info", "User Group is updated.", Notification.TYPE_TRAY_NOTIFICATION);
 	}
 	
 	private void discardFields() {
@@ -747,6 +742,10 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 		}
 	}
 	
+	public UserGroup deleteGroup() throws EscidocClientException {
+		return groupService.delete(getSelectedItemId());
+	}
+	
 	private void changeState(final UserGroup updatedUserGroup) throws EscidocException, InternalClientException, TransportException {
         final Object value = activeStatus.getPropertyDataSource().getValue();
         if (!(value instanceof Boolean)) {
@@ -773,7 +772,14 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 		app.getGroupView().getGroupList().updateGroup(updatedUserGroup);
 		// update all view components
 		app.showGroup(updatedUserGroup);
+		showMessage("User Group »" + updatedUserGroup.getProperties().getName() + "« is updated.");
 	}
+	
+	private void showMessage(String message) {
+		app.getMainWindow().showNotification(
+	            new Notification("Info", message, Notification.TYPE_TRAY_NOTIFICATION));
+	}
+	
 	
 	// click listener
 	
@@ -791,9 +797,29 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 
 		@Override
 		public void buttonClick(ClickEvent event) {
-			// TODO do something with sense here
-			mainWindow.showNotification("Delete Group ... will be implemented");
-		}
+            try {
+                final UserGroup deletedUserGroup = deleteGroup();
+                ((GroupView) getParent().getParent()).remove(deletedUserGroup);
+                showMessage("User Group »" + deletedUserGroup.getProperties().getName() + "« is deleted.");
+            }
+            catch (final InternalClientException e) {
+                setComponentError(new SystemError(e.getMessage()));
+                LOG.error(ViewConstants.AN_UNEXPECTED_ERROR_OCCURED_SEE_LOG_FOR_DETAILS, e);
+            }
+            catch (final TransportException e) {
+                setComponentError(new SystemError(e.getMessage()));
+                LOG.error(ViewConstants.AN_UNEXPECTED_ERROR_OCCURED_SEE_LOG_FOR_DETAILS, e);
+            }
+            catch (final EscidocException e) {
+                LOG.error(ViewConstants.AN_UNEXPECTED_ERROR_OCCURED_SEE_LOG_FOR_DETAILS, e);
+                setComponentError(new SystemError(e.getMessage()));
+            }
+            catch (final EscidocClientException e) {
+                setComponentError(new SystemError(e.getMessage()));
+                LOG.error("An unexpected error occured! See LOG for details.", e);
+                ModalDialog.show(mainWindow, e);
+            }
+        }
 	}
 	
 	// control form

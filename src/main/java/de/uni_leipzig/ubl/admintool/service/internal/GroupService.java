@@ -127,5 +127,10 @@ public class GroupService {
 		assert sizeAfter > sizeBefore : "user group is not added to map.";
 		return createdUserGroup;
 	}
-	
+
+	public UserGroup delete(final String objectId) throws EscidocClientException {
+		client.delete(objectId);
+		return userGroupById.remove(objectId);
+	}
+
 }
