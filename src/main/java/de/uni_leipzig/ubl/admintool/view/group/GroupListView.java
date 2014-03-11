@@ -84,7 +84,7 @@ public class GroupListView extends EscidocPagedTable {
 		setSortContainerPropertyId(PropertyId.NAME);
 		setSortAscending(true);
 
-		setColumnHeader(PropertyId.NAME, ViewConstants.TITLE_LABEL);
+		setColumnHeader(PropertyId.NAME, ViewConstants.NAME_LABEL);
 		setColumnExpandRatio(PropertyId.NAME, 0.75f);
 		setColumnHeader(PropertyId.ACTIVE, ViewConstants.ACTIVE_STATUS);
 		setColumnExpandRatio(PropertyId.ACTIVE, 0.25f);
