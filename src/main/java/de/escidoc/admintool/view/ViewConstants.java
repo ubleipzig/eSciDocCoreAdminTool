@@ -457,4 +457,6 @@ public class ViewConstants {
 	
 	public static final String GROUP_ATTRIBUTES_LABEL = "Group Attributes";
 
+	public static final String GROUP_ADD_VIEW_CAPTION = "Add a new User Group";
+
 }

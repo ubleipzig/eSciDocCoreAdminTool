@@ -19,9 +19,24 @@ public class UserGroupFactory {
 		return this;
 	}
 	
-	public UserGroupFactory create (final String name, final String label) {
-		// TODO implement create user group
-		return null;
+	public UserGroup create (final String name, final String label, final String description, final String email) {
+		assert name != null : "name must not be null";
+		assert label != null : "label must not be null";
+		
+		userGroup = new UserGroup();
+		
+		final UserGroupProperties properties = new UserGroupProperties();
+		properties.setName(name);
+		properties.setLabel(label);
+		if (description != null) {
+			properties.setDescription(description);
+		}
+		if (email != null) {
+			properties.setEmail(email);
+		}
+		userGroup.setProperties(properties);
+		
+		return userGroup;
 	}
 	
 	public UserGroup build() {

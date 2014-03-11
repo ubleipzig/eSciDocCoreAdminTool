@@ -96,7 +96,6 @@ public class GroupService {
     }
     
     private UserGroupHandlerClientInterface getRestClient() {
-    	client.setTransport(TransportProtocol.REST);
     	return client;
     }
 
@@ -110,6 +109,23 @@ public class GroupService {
 		final TaskParam taskParam = new TaskParam();
 		taskParam.setLastModificationDate(updatedUserGroup.getLastModificationDate());
 		client.deactivate(updatedUserGroup.getObjid(), taskParam);
+	}
+
+	public UserGroup create(final String name, final String label, final String description, final String email) throws EscidocException, InternalClientException, TransportException {
+		assert !(name == null || name.isEmpty()) : "name can not be null or empty";
+		assert !(label == null || label.isEmpty()) : "label can not be null or empty";
+		
+		final UserGroup backedUserGroup = new UserGroupFactory().create(name, label, description, email);
+		
+		final UserGroup createdUserGroup = client.create(backedUserGroup);
+		assert createdUserGroup != null : "Got null reference from the server.";
+		assert createdUserGroup.getObjid() != null : "ObjectId can not be null.";
+		assert userGroupById != null : "userGroupById is null";
+		final int sizeBefore = userGroupById.size();
+		userGroupById.put(createdUserGroup.getObjid(), createdUserGroup);
+		final int sizeAfter = userGroupById.size();
+		assert sizeAfter > sizeBefore : "user group is not added to map.";
+		return createdUserGroup;
 	}
 	
 }

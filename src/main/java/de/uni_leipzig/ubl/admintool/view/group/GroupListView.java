@@ -91,8 +91,14 @@ public class GroupListView extends EscidocPagedTable {
 	
 	public POJOItem<UserGroup> addGroup(final UserGroup createdUserGroup) {
 		final POJOItem<UserGroup> item = groupContainer.addItem(createdUserGroup);
-        sort(new Object[] { PropertyId.LAST_MODIFICATION_DATE }, new boolean[] { true });
+        sort(new Object[] { PropertyId.LAST_MODIFICATION_DATE }, new boolean[] { false });
         return item;
+	}
+
+	public void updateGroup(UserGroup updatedUserGroup) {
+		// container has to be updated by removing old item and adding updated item
+		remove(updatedUserGroup);
+		addGroup(updatedUserGroup);		
 	}
 
 }

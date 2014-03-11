@@ -103,7 +103,9 @@ import de.escidoc.core.client.exceptions.TransportException;
 import de.escidoc.core.client.exceptions.application.security.AuthenticationException;
 import de.escidoc.core.resources.aa.useraccount.UserAccount;
 import de.escidoc.core.resources.aa.useraccount.UserAccountProperties;
+import de.escidoc.core.resources.aa.usergroup.UserGroup;
 import de.uni_leipzig.ubl.admintool.service.internal.GroupService;
+import de.uni_leipzig.ubl.admintool.view.group.GroupAddView;
 import de.uni_leipzig.ubl.admintool.view.group.GroupView;
 import de.uni_leipzig.ubl.admintool.view.group.GroupViewComponent;
 
@@ -466,7 +468,14 @@ public class AdminToolApplication extends Application {
         return userAddView;
     }
 
-    public void showContextView() {
+    public GroupAddView newGroupAddView() {
+		final GroupAddView groupAddView =
+				new GroupAddView(this, groupService, groupViewComp.getGroupView().getGroupList());
+		groupAddView.init();
+		return groupAddView;
+	}
+
+	public void showContextView() {
         contextView = contextViewFactory.createContextView(createResourceTreeView());
         contextView.showFirstItemInEditView();
         setMainView(contextView);
@@ -644,4 +653,31 @@ public class AdminToolApplication extends Application {
         groupViewComp = new GroupViewComponent(this, groupService, pdpRequest);
         groupViewComp.init();
     }
+    
+    public void showGroup(final UserGroup createdUserGroup) {
+    	// TODO implement display specific
+    	UserGroup group;
+    	try {
+			group = groupService.getGroupById(createdUserGroup.getObjid());
+			if (groupViewComp == null) {
+				createGroupViewComponent();
+				groupViewComp.getGroupView().getGroupList().select(group);
+			}
+			groupViewComp.showGroupInEditView(group);
+			final GroupView groupView = groupViewComp.getGroupView();
+			setMainView(groupView);
+			selectInGroupListView(group);
+            showGroupInEditView(group);
+		} catch (final EscidocClientException e) {
+			handleException(e);
+		}
+    }
+
+	private void selectInGroupListView(UserGroup group) {
+		groupViewComp.getGroupView().getGroupList().select(group);
+	}
+
+	private void showGroupInEditView(UserGroup group) {
+		groupViewComp.showGroupInEditView(group);
+	}
 }

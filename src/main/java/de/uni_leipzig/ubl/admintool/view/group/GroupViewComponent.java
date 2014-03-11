@@ -103,6 +103,15 @@ public class GroupViewComponent {
 		}
 	}
 
+	public void showGroupInEditView(final UserGroup group) {
+		// FIXME may not work 
+		groupView.showEditView(userGroupToItem(group));
+	}
+	
+	public void showAddView() {
+		groupView.showAddView();
+	}
+
 	private Item getFirstItem() throws EscidocClientException {
 		// load item from service not from table data source because not all data is given e.g. label, descr., etc...
 		return userGroupToItem(groupService.retrieve((String) groupListView.getContainerProperty(groupListView.firstItemId(), PropertyId.OBJECT_ID).getValue()));

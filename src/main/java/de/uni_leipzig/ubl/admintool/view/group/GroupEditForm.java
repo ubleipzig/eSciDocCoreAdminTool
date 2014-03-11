@@ -722,7 +722,8 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 			}
 			// TODO seperate methods for updating selectors analogue to OUs for user accounts?
 //			updateSelectors();
-			updateView(groupService.retrieve(getSelectedItemId()));
+			final UserGroup reloadedUserGroup = groupService.retrieve(getSelectedItemId());
+			updateView(reloadedUserGroup);
 		}
 		catch (final EscidocException e) {
 			ModalDialog.show(mainWindow, e);
@@ -756,15 +757,20 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
         }
 	}
 	
-	private void updateView(UserGroup userGroup) {
-		final POJOItem<UserGroup> pojoItem =
-				new POJOItem<UserGroup>(userGroup, new String[] { PropertyId.OBJECT_ID, PropertyId.NAME,
-		                PropertyId.CREATED_ON, PropertyId.CREATED_BY, PropertyId.LAST_MODIFICATION_DATE, PropertyId.MODIFIED_BY,
-		                PropertyId.ACTIVE, PropertyId.DESCRIPTION, PropertyId.PROP_LABEL, PropertyId.EMAIL });
-		setSelected(pojoItem);
+	private void updateView(UserGroup updatedUserGroup) {
+		try {
+			// group map must be updated, because app.showGroup() gets cached group from map
+			groupService.findAll();
+		} catch (EscidocClientException e) {
+			ModalDialog.show(mainWindow, e);
+			LOG.error(ViewConstants.AN_UNEXPECTED_ERROR_OCCURED_SEE_LOG_FOR_DETAILS, e);
+		}
+		// update group container of ListView
+		app.getGroupView().getGroupList().updateGroup(updatedUserGroup);
+		// update all view components
+		app.showGroup(updatedUserGroup);
 	}
 	
-
 	// click listener
 	
 	private class NewGroupListener implements Button.ClickListener {
@@ -772,8 +778,7 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 
 		@Override
 		public void buttonClick(ClickEvent event) {
-			// TODO do something with sense here
-			mainWindow.showNotification("New Group ... will be implemented");
+			((GroupView) getParent().getParent()).showAddView();
 		}
 	}
 

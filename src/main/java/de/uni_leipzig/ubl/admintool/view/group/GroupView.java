@@ -27,7 +27,7 @@ public class GroupView extends SplitPanel implements ResourceView {
 		Preconditions.checkNotNull(groupListView, "groupListView is null: %s", groupListView);
 		Preconditions.checkNotNull(groupEditView, "groupEditView is null: %s", groupEditView);
 		this.app = app;
-		groupList = groupListView;
+		this.groupList = groupListView;
 		this.groupEditView = groupEditView;
 	}
 	
@@ -54,8 +54,7 @@ public class GroupView extends SplitPanel implements ResourceView {
 
 	@Override
 	public void showAddView() {
-		// TODO Auto-generated method stub
-
+		setSecondComponent(app.newGroupAddView());
 	}
 
 	@Override
@@ -70,4 +69,12 @@ public class GroupView extends SplitPanel implements ResourceView {
 
 	}
 
+	public GroupListView getGroupList() {
+		return groupList;
+	}
+
+	public Item getSelectedItem() {
+		return groupList.getItem(groupList.getValue());
+	}
+	
 }
