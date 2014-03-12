@@ -280,7 +280,7 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 			button.setStyleName(Reindeer.BUTTON_SMALL);
 		}
         addInternalSelectorBtn.setCaption(ViewConstants.ADD);
-        addInternalSelectorBtn.addListener(new AddInternalSelector(app, groupService));
+        addInternalSelectorBtn.addListener(new AddInternalSelector(app, groupService, selectorsInternal));
         editInternalSelectorBtn.setCaption(ViewConstants.EDIT);
         removeInternalSelectorBtn.setCaption(ViewConstants.REMOVE);
         addAttributeSelectorBtn.setCaption(ViewConstants.ADD);

@@ -47,6 +47,8 @@ public final class AddInternalSelector implements ClickListener {
 	
 	private final GroupService groupService;
 	
+	private final Table selectorsInternal;
+	
 	private UserGroup userGroup;
 	
 	private Window mainWindow;
@@ -67,13 +69,15 @@ public final class AddInternalSelector implements ClickListener {
 	
 	
 	
-	public AddInternalSelector(final AdminToolApplication app, final GroupService groupService) {
+	public AddInternalSelector(final AdminToolApplication app, final GroupService groupService, final Table selectorsInternal) {
 		Preconditions.checkNotNull(app, "app is null: %s", app);
 		Preconditions.checkNotNull(groupService, "groupService is null: %s", groupService);
+		Preconditions.checkNotNull(selectorsInternal, "selectorsInternal is null: %s", selectorsInternal);
 		
 		this.app = app;
 		this.userService = app.getUserService();
 		this.groupService = groupService;
+		this.selectorsInternal = selectorsInternal;
 	}
 
 
@@ -177,14 +181,40 @@ public final class AddInternalSelector implements ClickListener {
 
 
 	private void bindData() {
+		prepareUsers();
+		prepareGroups();
 		bindUsers();
 		bindGroups();
 	}
 	
 	
+	private void prepareUsers() {
+		// prepare list of existing escidoc identifiers
+		List<Object> idList = new ArrayList<Object>();
+		for (Object itemId : selectorsInternal.getItemIds()) {
+			// TODO replace "content" with ProperyId.Variable
+			idList.add(selectorsInternal.getItem(itemId).getItemProperty("content").getValue());
+		}
+		
+		// remove users from list, wich are already selected
+		for (Object itemId : userContainer.getItemIds()) {
+			if (idList.contains(userContainer.getItem(itemId).getItemProperty(PropertyId.OBJECT_ID).getValue())) {
+				System.out.println("→→→ removed 1 item from container");
+				userContainer.removeItem(itemId);
+			}
+		}
+	}
+
+
+	private void prepareGroups() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
 	private void bindUsers() {
 		users.setContainerDataSource(userContainer);
-		// TODO init some sorting of user-accounts
+		users.sort();
 	}
 
 
@@ -204,7 +234,6 @@ public final class AddInternalSelector implements ClickListener {
 		
 		selected.addAll(getSelectedUsers());
 		selected.addAll(getSelectedGroups());
-		
 		return selected;
 	}
 	
