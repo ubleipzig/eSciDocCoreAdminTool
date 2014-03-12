@@ -638,8 +638,8 @@ public class AdminToolApplication extends Application {
         return pdpRequest;
     }
 
-    public void getUserService() {
-        throw new UnsupportedOperationException("Not yet implemented");
+    public UserService getUserService() {
+        return userService;
     }
 
     public void showGroupView() {
