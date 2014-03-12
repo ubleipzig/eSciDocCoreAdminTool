@@ -54,6 +54,7 @@ import de.escidoc.core.resources.common.reference.Reference;
 import de.escidoc.core.resources.common.reference.RoleRef;
 import de.escidoc.core.resources.common.reference.UserAccountRef;
 import de.uni_leipzig.ubl.admintool.service.internal.GroupService;
+import de.uni_leipzig.ubl.admintool.view.group.selector.AddInternalSelector;
 
 @SuppressWarnings("serial")
 public class GroupEditForm extends CustomComponent implements ClickListener {
@@ -279,6 +280,7 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 			button.setStyleName(Reindeer.BUTTON_SMALL);
 		}
         addInternalSelectorBtn.setCaption(ViewConstants.ADD);
+        addInternalSelectorBtn.addListener(new AddInternalSelector(app, groupService));
         editInternalSelectorBtn.setCaption(ViewConstants.EDIT);
         removeInternalSelectorBtn.setCaption(ViewConstants.REMOVE);
         addAttributeSelectorBtn.setCaption(ViewConstants.ADD);
