@@ -5,6 +5,7 @@ import gov.loc.www.zing.srw.SearchRetrieveRequestType;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -13,7 +14,6 @@ import org.apache.axis.types.NonNegativeInteger;
 import com.google.common.base.Preconditions;
 
 import de.escidoc.admintool.app.AppConstants;
-import de.escidoc.core.client.TransportProtocol;
 import de.escidoc.core.client.UserGroupHandlerClient;
 import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.client.exceptions.EscidocException;
@@ -21,6 +21,7 @@ import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
 import de.escidoc.core.client.interfaces.UserGroupHandlerClientInterface;
 import de.escidoc.core.resources.aa.useraccount.Grant;
+import de.escidoc.core.resources.aa.usergroup.Selector;
 import de.escidoc.core.resources.aa.usergroup.UserGroup;
 import de.escidoc.core.resources.common.TaskParam;
 import de.uni_leipzig.ubl.admintool.domain.UserGroupFactory;
@@ -131,6 +132,15 @@ public class GroupService {
 	public UserGroup delete(final String objectId) throws EscidocClientException {
 		client.delete(objectId);
 		return userGroupById.remove(objectId);
+	}
+
+	public UserGroup addSelectors(final UserGroup userGroup, final List<Selector> selectors) throws EscidocException, InternalClientException, TransportException {
+		// TODO Auto-generated method stub
+		final TaskParam taskParam = new TaskParam();
+		taskParam.setSelectors(selectors);
+		taskParam.setLastModificationDate(userGroup.getLastModificationDate());
+		UserGroup updatedUserGroup = client.addSelectors(userGroup.getObjid(), taskParam);
+		return updatedUserGroup;
 	}
 
 }
