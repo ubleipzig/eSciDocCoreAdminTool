@@ -140,8 +140,6 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
     
     private final Button addInternalSelectorBtn = new Button();
     
-    private final Button editInternalSelectorBtn = new Button();
-    
     private final Button removeInternalSelectorBtn = new Button(); 
 
     private final Button addAttributeSelectorBtn = new Button();
@@ -274,14 +272,13 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 		addInternalSelectors();
 		addAttributeSelectors();
 		
-		Button[] selectorButtons = {addInternalSelectorBtn, addAttributeSelectorBtn, editInternalSelectorBtn, editAttributeSelectorBtn,
+		Button[] selectorButtons = {addInternalSelectorBtn, addAttributeSelectorBtn, editAttributeSelectorBtn,
 				removeInternalSelectorBtn, removeAttributeSelectorBtn};
 		for (Button button : selectorButtons) {
 			button.setStyleName(Reindeer.BUTTON_SMALL);
 		}
         addInternalSelectorBtn.setCaption(ViewConstants.ADD);
         addInternalSelectorBtn.addListener(new AddInternalSelector(app, groupService, selectorsInternal));
-        editInternalSelectorBtn.setCaption(ViewConstants.EDIT);
         removeInternalSelectorBtn.setCaption(ViewConstants.REMOVE);
         addAttributeSelectorBtn.setCaption(ViewConstants.ADD);
         editAttributeSelectorBtn.setCaption(ViewConstants.EDIT);
@@ -289,7 +286,6 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 
         HorizontalLayout hlInternal = new HorizontalLayout();
         hlInternal.addComponent(addInternalSelectorBtn);
-        hlInternal.addComponent(editInternalSelectorBtn);
         hlInternal.addComponent(removeInternalSelectorBtn);
 
         HorizontalLayout hlAttribute = new HorizontalLayout();
@@ -568,7 +564,6 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 		removeRoleBtn.setVisible(isRevokeUserGroupGrantAllowed());
 		selectorsInternal.setReadOnly(!isAddUserGroupSelectorsAllowed() && !isRemoveUserGroupSelectorsAllowed());
 		addInternalSelectorBtn.setVisible(isAddUserGroupSelectorsAllowed());
-		editInternalSelectorBtn.setVisible(isAddUserGroupSelectorsAllowed());
 		removeInternalSelectorBtn.setVisible(isRemoveUserGroupSelectorsAllowed());
 	}
 	
