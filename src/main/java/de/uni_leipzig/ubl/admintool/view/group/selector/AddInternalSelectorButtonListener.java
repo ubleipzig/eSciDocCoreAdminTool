@@ -149,6 +149,6 @@ public class AddInternalSelectorButtonListener implements ClickListener {
 	
 	private void showMessage() {
 		app.getMainWindow().showNotification(
-	            new Notification("Info", "User Group is created", Notification.TYPE_TRAY_NOTIFICATION));
+	            new Notification("Info", "User Group Selectors are updated", Notification.TYPE_TRAY_NOTIFICATION));
 	}
 }
