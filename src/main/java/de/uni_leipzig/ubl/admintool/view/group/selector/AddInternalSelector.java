@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,11 +49,13 @@ public final class AddInternalSelector implements ClickListener {
 	
 	private final Table selectorsInternal;
 	
+	private List<Object> assignedSelectors;
+	
 	private UserGroup userGroup;
 	
 	private Window mainWindow;
 	
-	private Window modalWindow;
+	private Window modalWindow = new Window();
 	
 	private POJOContainer<UserAccount> userContainer;
 	
@@ -66,6 +69,10 @@ public final class AddInternalSelector implements ClickListener {
 	
 	private final Button cancelButton = new Button(ViewConstants.CANCEL_LABEL);
 	
+	private AddInternalSelectorButtonListener addInternalSelectorButtonListener;
+	
+	private CancelButtonListener cancelButtonListener;
+	
 	
 	
 	public AddInternalSelector(final AdminToolApplication app, final GroupService groupService, final Table selectorsInternal) {
@@ -77,6 +84,7 @@ public final class AddInternalSelector implements ClickListener {
 		this.userService = app.getUserService();
 		this.groupService = groupService;
 		this.selectorsInternal = selectorsInternal;
+		
 	}
 
 
@@ -90,9 +98,12 @@ public final class AddInternalSelector implements ClickListener {
 
 
 	private void init() {
+		// TODO may move some things to constructor, which we needn't called every click
+		
 		final Collection<UserAccount> userList;
 		final Collection<UserGroup> groupList;
 		
+		// set container
 		try {
 			userList = userService.findAll();
 			groupList = groupService.findAll();
@@ -108,6 +119,18 @@ public final class AddInternalSelector implements ClickListener {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		// set userGroup
+		try {
+			this.userGroup = groupService.getGroupById(app.getGroupView().getSelectedItem().getItemProperty(PropertyId.OBJECT_ID).toString());
+		} catch (EscidocClientException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		this.mainWindow = app.getMainWindow();
+		
+		this.assignedSelectors = getAssignedSelectors();
 	}
 	
 	
@@ -139,13 +162,24 @@ public final class AddInternalSelector implements ClickListener {
 	
 	
 	private void addButtons() {
-		okButton.addListener(new AddInternalSelectorButtonListener(app, mainWindow, modalWindow, userGroup, groupService, this));
-		cancelButton.addListener(new CancelButtonListener(mainWindow, modalWindow));
+		createButtonListenerIfNotSet();
+		okButton.addListener(addInternalSelectorButtonListener);
+		cancelButton.addListener(cancelButtonListener);
 		footer.addComponent(okButton);
 		footer.addComponent(cancelButton);
 	}
 	
 	
+	private void createButtonListenerIfNotSet() {
+		if (addInternalSelectorButtonListener == null) {
+			this.addInternalSelectorButtonListener = new AddInternalSelectorButtonListener(app, mainWindow, modalWindow, userGroup, groupService, this);
+		}
+		if (cancelButtonListener == null) {
+			this.cancelButtonListener = new CancelButtonListener(mainWindow, modalWindow);
+		}
+	}
+
+
 	private void configureTable(final Table table) {
 		table.setImmediate(true);
 		table.setColumnHeaderMode(Table.COLUMN_HEADER_MODE_HIDDEN);
@@ -159,20 +193,10 @@ public final class AddInternalSelector implements ClickListener {
 
 
 	private void configure() {
-		// TODO Auto-generated method stub
-		modalWindow = new Window();
 		modalWindow.setModal(true);
 		modalWindow.setCaption("Select Internal Selectors");
 		modalWindow.setHeight("50%");
 		modalWindow.setWidth("50%");
-		
-		try {
-			this.userGroup = groupService.getGroupById(app.getGroupView().getSelectedItem().getItemProperty(PropertyId.OBJECT_ID).toString());
-		} catch (EscidocClientException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		this.mainWindow = app.getMainWindow();
 		
 		modalWindow.addComponent(tables);
 		modalWindow.addComponent(footer);
@@ -188,17 +212,10 @@ public final class AddInternalSelector implements ClickListener {
 	
 	
 	private void prepareUsers() {
-		// prepare list of existing escidoc identifiers
-		List<Object> idList = new ArrayList<Object>();
-		for (Object itemId : selectorsInternal.getItemIds()) {
-			// TODO replace "content" with ProperyId.Variable
-			idList.add(selectorsInternal.getItem(itemId).getItemProperty("content").getValue());
-		}
-		
 		// remove users from list, which are already assigned
 		for (Object itemId : userContainer.getItemIds()) {
-			if (idList.contains(userContainer.getItem(itemId).getItemProperty(PropertyId.OBJECT_ID).getValue())) {
-				System.out.println("→→→ removed 1 item from container");
+			if (assignedSelectors.contains(userContainer.getItem(itemId).getItemProperty(PropertyId.OBJECT_ID).getValue())) {
+				System.out.println("→→→ removed 1 user account from container"); // TODO remove debug output
 				userContainer.removeItem(itemId);
 			}
 		}
@@ -206,11 +223,27 @@ public final class AddInternalSelector implements ClickListener {
 
 
 	private void prepareGroups() {
-		// TODO remove edited user group and already assigned ones from list
-		
+		// remove groups from list, which are already assigned or is the actually edited group
+		for  (Object itemId : groupContainer.getItemIds()) {
+			Object objectId = groupContainer.getItem(itemId).getItemProperty(PropertyId.OBJECT_ID).getValue();
+			if (assignedSelectors.contains(objectId) || objectId.toString().equals(userGroup.getObjid())) {
+				System.out.println("→→→ removed 1 user group from container"); // TODO remove debug output
+				groupContainer.removeItem(itemId);
+			}
+		}
 	}
 
 
+	private List<Object> getAssignedSelectors() {
+		List<Object> assignedSelectors = new ArrayList<Object>();
+		for (Object itemId : selectorsInternal.getItemIds()) {
+			// TODO replace "content" with PropertyId.Variable
+			assignedSelectors.add(selectorsInternal.getItem(itemId).getItemProperty("content").getValue());
+		}
+		return assignedSelectors;
+	}
+	
+	
 	private void bindUsers() {
 		users.setContainerDataSource(userContainer);
 		users.sort();
