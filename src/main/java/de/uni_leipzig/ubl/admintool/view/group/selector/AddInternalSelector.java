@@ -2,10 +2,9 @@ package de.uni_leipzig.ubl.admintool.view.group.selector;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
-
+import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -140,7 +139,7 @@ public final class AddInternalSelector implements ClickListener {
 	
 	
 	private void addButtons() {
-		okButton.addListener(new AddInternalSelectorButtonListener(app, this));
+		okButton.addListener(new AddInternalSelectorButtonListener(app, mainWindow, modalWindow, userGroup, groupService, this));
 		cancelButton.addListener(new CancelButtonListener(mainWindow, modalWindow));
 		footer.addComponent(okButton);
 		footer.addComponent(cancelButton);
@@ -196,7 +195,7 @@ public final class AddInternalSelector implements ClickListener {
 			idList.add(selectorsInternal.getItem(itemId).getItemProperty("content").getValue());
 		}
 		
-		// remove users from list, wich are already selected
+		// remove users from list, which are already assigned
 		for (Object itemId : userContainer.getItemIds()) {
 			if (idList.contains(userContainer.getItem(itemId).getItemProperty(PropertyId.OBJECT_ID).getValue())) {
 				System.out.println("→→→ removed 1 item from container");
@@ -207,7 +206,7 @@ public final class AddInternalSelector implements ClickListener {
 
 
 	private void prepareGroups() {
-		// TODO Auto-generated method stub
+		// TODO remove edited user group and already assigned ones from list
 		
 	}
 
@@ -229,11 +228,11 @@ public final class AddInternalSelector implements ClickListener {
 	}
 	
 	
-	public List<Item> getSelected() {
-		List<Item> selected = new ArrayList<Item>();
+	public Map<String, List<Item>> getSelected() {
+		Map<String, List<Item>> selected = new HashMap<String, List<Item>>();
 		
-		selected.addAll(getSelectedUsers());
-		selected.addAll(getSelectedGroups());
+		selected.put(InternalSelectorName.USER_ACCOUNT.getXmlValue(), getSelectedUsers());
+		selected.put(InternalSelectorName.USER_GROUP.getXmlValue(), getSelectedGroups());
 		return selected;
 	}
 	
