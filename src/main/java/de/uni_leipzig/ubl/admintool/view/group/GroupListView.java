@@ -2,6 +2,7 @@ package de.uni_leipzig.ubl.admintool.view.group;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,7 +67,7 @@ public class GroupListView extends EscidocPagedTable {
 
 	private void bindDataSource() {
 		if(isGroupExist()) {
-			initGroupContainer();
+			initGroupContainer(allUserGroups);
 		}
 	}
 
@@ -74,9 +75,9 @@ public class GroupListView extends EscidocPagedTable {
 		return allUserGroups != null && !allUserGroups.isEmpty();
 	}
 	
-	private void initGroupContainer() {
+	private void initGroupContainer(final Collection<UserGroup> initialUserGroups) {
 		groupContainer =
-				new POJOContainer<UserGroup>(allUserGroups, PropertyId.OBJECT_ID, PropertyId.NAME,
+				new POJOContainer<UserGroup>(initialUserGroups, PropertyId.OBJECT_ID, PropertyId.NAME,
                 PropertyId.CREATED_ON, PropertyId.CREATED_BY, PropertyId.LAST_MODIFICATION_DATE, PropertyId.MODIFIED_BY,
                 PropertyId.ACTIVE);
 		setContainerDataSource(groupContainer);
@@ -100,7 +101,16 @@ public class GroupListView extends EscidocPagedTable {
 	}
 	
 	public POJOItem<UserGroup> addGroup(final UserGroup createdUserGroup) {
-		final POJOItem<UserGroup> item = groupContainer.addItem(createdUserGroup);
+		final POJOItem<UserGroup> item;
+		if (groupContainer == null) {
+			List<UserGroup> initGroup = new ArrayList<UserGroup>();
+			initGroup.add(createdUserGroup);
+			initGroupContainer(initGroup);
+			item = groupContainer.getItem(groupContainer.firstItemId());
+		}
+		else {
+			item = groupContainer.addItem(createdUserGroup);
+		}
 		sort(new Object[] { getSortContainerPropertyId() }, new boolean[] { true });
         return item;
 	}

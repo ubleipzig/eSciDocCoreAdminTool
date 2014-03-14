@@ -93,6 +93,7 @@ public class GroupViewComponent {
 
 	public void showFirstItemInEditView() {
 		if (groupListView.firstItemId() == null) {
+			groupView.showAddView();
 			return;
 		}
 		groupListView.select(groupListView.firstItemId());
