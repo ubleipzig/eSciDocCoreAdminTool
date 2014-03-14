@@ -24,10 +24,12 @@ import com.vaadin.ui.Window;
 import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.app.PropertyId;
 import de.escidoc.admintool.service.internal.UserService;
+import de.escidoc.admintool.view.ModalDialog;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.admintool.view.context.listener.CancelButtonListener;
 import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.resources.aa.useraccount.UserAccount;
+import de.escidoc.core.resources.aa.usergroup.Selector;
 import de.escidoc.core.resources.aa.usergroup.UserGroup;
 import de.uni_leipzig.ubl.admintool.service.internal.GroupService;
 
@@ -223,17 +225,58 @@ public final class AddInternalSelector implements ClickListener {
 
 
 	private void prepareGroups() {
-		// remove groups from list, which are already assigned or is the actually edited group
 		for  (Object itemId : groupContainer.getItemIds()) {
 			Object objectId = groupContainer.getItem(itemId).getItemProperty(PropertyId.OBJECT_ID).getValue();
+
+			// remove groups from list, which are already assigned or is the actually edited group
 			if (assignedSelectors.contains(objectId) || objectId.toString().equals(userGroup.getObjid())) {
+				System.out.println("→→→ removed 1 user group from container"); // TODO remove debug output
+				groupContainer.removeItem(itemId);
+			}
+			// remove groups which are parents of actually edited group
+			else if (isSelectorParent(objectId.toString())) {
 				System.out.println("→→→ removed 1 user group from container"); // TODO remove debug output
 				groupContainer.removeItem(itemId);
 			}
 		}
 	}
-
-
+	
+	
+	private boolean isSelectorParent(final String selectorGroupId) {
+		boolean result = false;
+		System.out.println("check if Selector is parent");
+		
+		// get group and selectors and check recursively if groupId is a child
+		try {
+			UserGroup selector = groupService.getGroupById(selectorGroupId);
+			// if selector == null it is no group selector, so we can skip
+			if (selector != null) {
+				List<Selector> children = selector.getSelectors();
+				if (!children.isEmpty()) {
+					// selectors are canditates, check against actual userGroup
+					for (Selector child : children) {
+						if (userGroup.getObjid().equals(child.getObjid())) {
+							// child is edited user group, therefor selector already is a parent - MATCH
+							System.out.println("→→ match");
+							return true;
+						}
+						else if (isSelectorParent(child.getObjid())) {
+							// any children selector has matched 
+							System.out.println("→→ match");
+							return true;
+						}
+					}
+				}
+			}
+		} catch (EscidocClientException e) {
+			LOG.error(ViewConstants.AN_UNEXPECTED_ERROR_OCCURED_SEE_LOG_FOR_DETAILS, e);
+			ModalDialog.show(mainWindow, e);
+		}
+		
+		return result;
+	}
+	
+	
 	private List<Object> getAssignedSelectors() {
 		List<Object> assignedSelectors = new ArrayList<Object>();
 		for (Object itemId : selectorsInternal.getItemIds()) {
