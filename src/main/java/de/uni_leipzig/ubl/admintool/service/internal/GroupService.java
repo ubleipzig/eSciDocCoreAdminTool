@@ -159,7 +159,10 @@ public class GroupService {
 	
 	public UserGroup removeSelectors(final UserGroup userGroup, final List<Selector> selectors) throws EscidocException, InternalClientException, TransportException {
 		final TaskParam taskParam = new TaskParam();
-		taskParam.setSelectors(selectors);
+		// set IDs of items to delete
+		for (Selector selector : selectors) {
+			taskParam.addResourceRef(selector.getObjid());
+		}
 		taskParam.setLastModificationDate(userGroup.getLastModificationDate());
 		UserGroup updatedUserGroup = client.removeSelectors(userGroup.getObjid(), taskParam);
 		return updatedUserGroup;
