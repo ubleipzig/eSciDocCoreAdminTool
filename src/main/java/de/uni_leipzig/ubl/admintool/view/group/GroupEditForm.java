@@ -55,6 +55,7 @@ import de.escidoc.core.resources.common.reference.RoleRef;
 import de.escidoc.core.resources.common.reference.UserAccountRef;
 import de.uni_leipzig.ubl.admintool.service.internal.GroupService;
 import de.uni_leipzig.ubl.admintool.view.group.selector.AddInternalSelector;
+import de.uni_leipzig.ubl.admintool.view.group.selector.RemoveSelectorButtonListener;
 
 @SuppressWarnings("serial")
 public class GroupEditForm extends CustomComponent implements ClickListener {
@@ -140,13 +141,13 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
     
     private final Button addInternalSelectorBtn = new Button();
     
-    private final Button removeInternalSelectorBtn = new Button(); 
+    private final Button removeInternalSelectorBtn = new Button(ViewConstants.REMOVE, new RemoveSelectorButtonListener(this, selectorsInternal)); 
 
     private final Button addAttributeSelectorBtn = new Button();
     
     private final Button editAttributeSelectorBtn = new Button();
     
-    private final Button removeAttributeSelectorBtn = new Button(); 
+    private final Button removeAttributeSelectorBtn = new Button(ViewConstants.REMOVE, new RemoveSelectorButtonListener(this, selectorsAttribute)); 
     
     public GroupEditForm(final AdminToolApplication app, final GroupService groupService, final PdpRequest pdpRequest) {
 		Preconditions.checkNotNull(app, "app is null: %s", app);
@@ -279,10 +280,8 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 		}
         addInternalSelectorBtn.setCaption(ViewConstants.ADD);
         addInternalSelectorBtn.addListener(new AddInternalSelector(app, groupService, selectorsInternal));
-        removeInternalSelectorBtn.setCaption(ViewConstants.REMOVE);
         addAttributeSelectorBtn.setCaption(ViewConstants.ADD);
         editAttributeSelectorBtn.setCaption(ViewConstants.EDIT);
-        removeAttributeSelectorBtn.setCaption(ViewConstants.REMOVE);
 
         HorizontalLayout hlInternal = new HorizontalLayout();
         hlInternal.addComponent(addInternalSelectorBtn);
@@ -632,6 +631,20 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
         }
 		return Collections.emptyList();
 	}
+    
+    
+    // some public getters
+    public AdminToolApplication getApp() {
+    	return app;
+    }
+    
+    public GroupService getGroupService() {
+    	return groupService;
+    }
+    
+    public String getGroupId() {
+    	return groupObjectId;
+    }
     
     
     // permission checks
