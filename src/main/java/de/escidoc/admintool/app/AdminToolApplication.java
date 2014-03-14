@@ -655,7 +655,6 @@ public class AdminToolApplication extends Application {
     }
     
     public void showGroup(final UserGroup createdUserGroup) {
-    	// TODO implement display specific
     	UserGroup group;
     	try {
 			group = groupService.getGroupById(createdUserGroup.getObjid());
