@@ -537,8 +537,8 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 		}
 		
 		// update label and show number of contained items
-		accordion.setTabCaption(tab2, ViewConstants.SELECTORS_INTERNAL_LABEL + " (" + selectorInternalSize + ")");
-		accordion.setTabCaption(tab3, ViewConstants.SELECTORS_ATTRIBUTE_LABEL + " (" + selectorAttributeSize + ")");
+		accordion.getTab(tab2).setCaption(ViewConstants.SELECTORS_INTERNAL_LABEL + " (" + selectorInternalSize + ")");
+		accordion.getTab(tab3).setCaption(ViewConstants.SELECTORS_ATTRIBUTE_LABEL + " (" + selectorAttributeSize + ")");
 	}
 
 	private void bindUserRightsWithView() {
