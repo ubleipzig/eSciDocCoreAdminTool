@@ -41,33 +41,30 @@ public class AddInternalSelectorButtonListener implements ClickListener {
 	
 	private final GroupService groupService;
 	
-	private final UserGroup userGroup;
-	
 	private final AddInternalSelector addInternalSelector;
+	
+	private UserGroup userGroup;
 	
 	private Map<String, List<Item>> selectedItems;
 	
 	private UserGroup updatedUserGroup;
 	
-	public AddInternalSelectorButtonListener(final AdminToolApplication app, final Window mainWindow, final Window modalWindow, final UserGroup userGroup, final GroupService groupService, final AddInternalSelector addInternalSelector) {
+	public AddInternalSelectorButtonListener(final AdminToolApplication app, final Window mainWindow, final Window modalWindow, final GroupService groupService, final AddInternalSelector addInternalSelector) {
 		Preconditions.checkNotNull(app, "app is null: %s", app);
 		Preconditions.checkNotNull(mainWindow, "mainWindow is null: %s", mainWindow);
 		Preconditions.checkNotNull(modalWindow, "modalWindow is null: %s", modalWindow);
 		Preconditions.checkNotNull(groupService, "groupService is null: %s", groupService);
-		Preconditions.checkNotNull(userGroup, "userGroup is null: %s", userGroup);
 		Preconditions.checkNotNull(addInternalSelector, "addInternal Selector is null: %s", addInternalSelector);
 		
 		this.app = app;
 		this.mainWindow = mainWindow;
 		this.modalWindow = modalWindow;
 		this.groupService = groupService;
-		this.userGroup = userGroup;
 		this.addInternalSelector = addInternalSelector;
 	}
 	
 	@Override
 	public void buttonClick(ClickEvent event) {
-		// TODO Auto-generated method stub
 		selectedItems = addInternalSelector.getSelected();
 		
 		System.out.println("---------------------------------------------");
@@ -78,6 +75,7 @@ public class AddInternalSelectorButtonListener implements ClickListener {
 		System.out.println("---------------------------------------------");
 		System.out.println("Selectors will be send to groupService ...");
 		try {
+			this.userGroup = groupService.getGroupById(app.getGroupView().getSelectedItem().getItemProperty(PropertyId.OBJECT_ID).getValue().toString());
 			updatedUserGroup = groupService.addSelectors(userGroup, newSelectors);
 			System.out.println("---------------------------------------------");
 			System.out.println("Selectors updated!");
@@ -96,6 +94,9 @@ public class AddInternalSelectorButtonListener implements ClickListener {
 			LOG.error(ViewConstants.AN_UNEXPECTED_ERROR_OCCURED_SEE_LOG_FOR_DETAILS, e);
 			ModalDialog.show(mainWindow, e);
 		} catch (final TransportException e) {
+			LOG.error(ViewConstants.AN_UNEXPECTED_ERROR_OCCURED_SEE_LOG_FOR_DETAILS, e);
+			ModalDialog.show(mainWindow, e);
+		} catch (final EscidocClientException e) {
 			LOG.error(ViewConstants.AN_UNEXPECTED_ERROR_OCCURED_SEE_LOG_FOR_DETAILS, e);
 			ModalDialog.show(mainWindow, e);
 		}

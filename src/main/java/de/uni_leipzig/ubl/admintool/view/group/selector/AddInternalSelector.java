@@ -172,7 +172,7 @@ public final class AddInternalSelector implements ClickListener {
 	
 	private void createButtonListenerIfNotSet() {
 		if (addInternalSelectorButtonListener == null) {
-			this.addInternalSelectorButtonListener = new AddInternalSelectorButtonListener(app, mainWindow, modalWindow, userGroup, groupService, this);
+			this.addInternalSelectorButtonListener = new AddInternalSelectorButtonListener(app, mainWindow, modalWindow, groupService, this);
 		}
 		if (cancelButtonListener == null) {
 			this.cancelButtonListener = new CancelButtonListener(mainWindow, modalWindow);
