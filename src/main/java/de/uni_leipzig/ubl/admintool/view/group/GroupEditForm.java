@@ -145,7 +145,6 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 
     private final Button addAttributeSelectorBtn = new Button();
     
-    private final Button editAttributeSelectorBtn = new Button();
     
     private final Button removeAttributeSelectorBtn = new Button(ViewConstants.REMOVE, new RemoveSelectorButtonListener(this, selectorsAttribute)); 
     
@@ -273,15 +272,14 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 		addInternalSelectors();
 		addAttributeSelectors();
 		
-		Button[] selectorButtons = {addInternalSelectorBtn, addAttributeSelectorBtn, editAttributeSelectorBtn,
-				removeInternalSelectorBtn, removeAttributeSelectorBtn};
+		Button[] selectorButtons = {addInternalSelectorBtn, addAttributeSelectorBtn, removeInternalSelectorBtn, 
+				removeAttributeSelectorBtn};
 		for (Button button : selectorButtons) {
 			button.setStyleName(Reindeer.BUTTON_SMALL);
 		}
         addInternalSelectorBtn.setCaption(ViewConstants.ADD);
         addInternalSelectorBtn.addListener(new AddInternalSelector(app, groupService, selectorsInternal));
         addAttributeSelectorBtn.setCaption(ViewConstants.ADD);
-        editAttributeSelectorBtn.setCaption(ViewConstants.EDIT);
 
         HorizontalLayout hlInternal = new HorizontalLayout();
         hlInternal.addComponent(addInternalSelectorBtn);
@@ -289,7 +287,6 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 
         HorizontalLayout hlAttribute = new HorizontalLayout();
         hlAttribute.addComponent(addAttributeSelectorBtn);
-        hlAttribute.addComponent(editAttributeSelectorBtn);
         hlAttribute.addComponent(removeAttributeSelectorBtn);
         
         tab2.addComponent(selectorsInternal);
