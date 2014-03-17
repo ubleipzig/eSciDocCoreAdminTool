@@ -67,38 +67,33 @@ public class AddInternalSelectorButtonListener implements ClickListener {
 	public void buttonClick(ClickEvent event) {
 		selectedItems = addInternalSelector.getSelected();
 		
-		System.out.println("---------------------------------------------");
-		System.out.println("internal Selectors (" + selectedItems + ") will be added ...");
 		List<Selector> newSelectors = createSelectorsList();
-		System.out.println("---------------------------------------------");
-		System.out.println("SELECTORLIST: " + newSelectors);
-		System.out.println("---------------------------------------------");
-		System.out.println("Selectors will be send to groupService ...");
-		try {
-			this.userGroup = groupService.getGroupById(app.getGroupView().getSelectedItem().getItemProperty(PropertyId.OBJECT_ID).getValue().toString());
-			updatedUserGroup = groupService.addSelectors(userGroup, newSelectors);
-			System.out.println("---------------------------------------------");
-			System.out.println("Selectors updated!");
-			
-			// close modal Window and update EditFormView
-			updateView(updatedUserGroup);
-			System.out.println("View updated!");
+		if ( !newSelectors.isEmpty() ) {
+			try {
+				this.userGroup = groupService.getGroupById(app.getGroupView().getSelectedItem().getItemProperty(PropertyId.OBJECT_ID).getValue().toString());
+				updatedUserGroup = groupService.addSelectors(userGroup, newSelectors);
+				
+				// close modal Window and update EditFormView
+				updateView(updatedUserGroup);
+				closeWindow();
+				showMessage();
+			} catch (final EscidocException e) {
+				LOG.error(ViewConstants.AN_UNEXPECTED_ERROR_OCCURED_SEE_LOG_FOR_DETAILS, e);
+				ModalDialog.show(mainWindow, e);
+			} catch (final InternalClientException e) {
+				LOG.error(ViewConstants.AN_UNEXPECTED_ERROR_OCCURED_SEE_LOG_FOR_DETAILS, e);
+				ModalDialog.show(mainWindow, e);
+			} catch (final TransportException e) {
+				LOG.error(ViewConstants.AN_UNEXPECTED_ERROR_OCCURED_SEE_LOG_FOR_DETAILS, e);
+				ModalDialog.show(mainWindow, e);
+			} catch (final EscidocClientException e) {
+				LOG.error(ViewConstants.AN_UNEXPECTED_ERROR_OCCURED_SEE_LOG_FOR_DETAILS, e);
+				ModalDialog.show(mainWindow, e);
+			}
+		}
+		else {
+			// close window if nothing is chosen
 			closeWindow();
-			System.out.println("ModalWindow closed!");
-			showMessage();
-			System.out.println("Message shown to user!");
-		} catch (final EscidocException e) {
-			LOG.error(ViewConstants.AN_UNEXPECTED_ERROR_OCCURED_SEE_LOG_FOR_DETAILS, e);
-			ModalDialog.show(mainWindow, e);
-		} catch (final InternalClientException e) {
-			LOG.error(ViewConstants.AN_UNEXPECTED_ERROR_OCCURED_SEE_LOG_FOR_DETAILS, e);
-			ModalDialog.show(mainWindow, e);
-		} catch (final TransportException e) {
-			LOG.error(ViewConstants.AN_UNEXPECTED_ERROR_OCCURED_SEE_LOG_FOR_DETAILS, e);
-			ModalDialog.show(mainWindow, e);
-		} catch (final EscidocClientException e) {
-			LOG.error(ViewConstants.AN_UNEXPECTED_ERROR_OCCURED_SEE_LOG_FOR_DETAILS, e);
-			ModalDialog.show(mainWindow, e);
 		}
 		
 	}
