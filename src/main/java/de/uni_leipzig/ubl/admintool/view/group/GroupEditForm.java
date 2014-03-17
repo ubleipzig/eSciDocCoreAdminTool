@@ -54,6 +54,8 @@ import de.escidoc.core.resources.common.reference.Reference;
 import de.escidoc.core.resources.common.reference.RoleRef;
 import de.escidoc.core.resources.common.reference.UserAccountRef;
 import de.uni_leipzig.ubl.admintool.service.internal.GroupService;
+import de.uni_leipzig.ubl.admintool.view.group.selector.AddAttributeSelector;
+import de.uni_leipzig.ubl.admintool.view.group.selector.AddAttributeSelectorButtonListener;
 import de.uni_leipzig.ubl.admintool.view.group.selector.AddInternalSelector;
 import de.uni_leipzig.ubl.admintool.view.group.selector.RemoveSelectorButtonListener;
 
@@ -280,6 +282,7 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
         addInternalSelectorBtn.setCaption(ViewConstants.ADD);
         addInternalSelectorBtn.addListener(new AddInternalSelector(app, groupService, selectorsInternal));
         addAttributeSelectorBtn.setCaption(ViewConstants.ADD);
+        addAttributeSelectorBtn.addListener(new AddAttributeSelector(app, groupService, selectorsAttribute));
 
         HorizontalLayout hlInternal = new HorizontalLayout();
         hlInternal.addComponent(addInternalSelectorBtn);
@@ -303,12 +306,11 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 	
 	private void addAttributeSelectors() {
 		setupSelectors(selectorsAttribute);
-		selectorsAttribute.setMultiSelect(false);
+		selectorsAttribute.setMultiSelect(true);
 	}
 	
 	private void setupSelectors(final Table selectors) {
 		selectors.setHeight(SELECTOR_LIST_HEIGHT, UNITS_PIXELS);
-//        selectors.setWidth(ViewConstants.FIELD_WIDTH);
         selectors.setWidth(100, UNITS_PERCENTAGE);
         selectors.setSelectable(true);
         selectors.setNullSelectionAllowed(true);
@@ -338,7 +340,6 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 		accordion.setSizeFull();
 		
         base.setSpacing(false);
-//        base.setWidth(530, UNITS_PIXELS);
         base.setSizeFull();
         base.addComponent(createHeader());
         base.addComponent(accordion);
@@ -560,6 +561,8 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 		removeRoleBtn.setVisible(isRevokeUserGroupGrantAllowed());
 		selectorsInternal.setReadOnly(!isAddUserGroupSelectorsAllowed() && !isRemoveUserGroupSelectorsAllowed());
 		addInternalSelectorBtn.setVisible(isAddUserGroupSelectorsAllowed());
+		removeInternalSelectorBtn.setVisible(isRemoveUserGroupSelectorsAllowed());
+		addAttributeSelectorBtn.setVisible(isAddUserGroupSelectorsAllowed());
 		removeInternalSelectorBtn.setVisible(isRemoveUserGroupSelectorsAllowed());
 	}
 	
