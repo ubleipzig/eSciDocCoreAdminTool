@@ -217,7 +217,6 @@ public final class AddInternalSelector implements ClickListener {
 		// remove users from list, which are already assigned
 		for (Object itemId : userContainer.getItemIds()) {
 			if (assignedSelectors.contains(userContainer.getItem(itemId).getItemProperty(PropertyId.OBJECT_ID).getValue())) {
-				System.out.println("→→→ removed 1 user account from container"); // TODO remove debug output
 				userContainer.removeItem(itemId);
 			}
 		}
@@ -227,15 +226,13 @@ public final class AddInternalSelector implements ClickListener {
 	private void prepareGroups() {
 		for  (Object itemId : groupContainer.getItemIds()) {
 			Object objectId = groupContainer.getItem(itemId).getItemProperty(PropertyId.OBJECT_ID).getValue();
-
+			
 			// remove groups from list, which are already assigned or is the actually edited group
 			if (assignedSelectors.contains(objectId) || objectId.toString().equals(userGroup.getObjid())) {
-				System.out.println("→→→ removed 1 user group from container"); // TODO remove debug output
 				groupContainer.removeItem(itemId);
 			}
 			// remove groups which are parents of actually edited group
 			else if (isSelectorParent(objectId.toString())) {
-				System.out.println("→→→ removed 1 user group from container"); // TODO remove debug output
 				groupContainer.removeItem(itemId);
 			}
 		}
@@ -244,7 +241,6 @@ public final class AddInternalSelector implements ClickListener {
 	
 	private boolean isSelectorParent(final String selectorGroupId) {
 		boolean result = false;
-		System.out.println("check if Selector is parent");
 		
 		// get group and selectors and check recursively if groupId is a child
 		try {
@@ -255,14 +251,12 @@ public final class AddInternalSelector implements ClickListener {
 				if (!children.isEmpty()) {
 					// selectors are canditates, check against actual userGroup
 					for (Selector child : children) {
-						if (userGroup.getObjid().equals(child.getObjid())) {
+						if (userGroup.getObjid().equals(child.getContent())) {
 							// child is edited user group, therefor selector already is a parent - MATCH
-							System.out.println("→→ match");
 							return true;
 						}
-						else if (isSelectorParent(child.getObjid())) {
+						else if (isSelectorParent(child.getContent())) {
 							// any children selector has matched 
-							System.out.println("→→ match");
 							return true;
 						}
 					}
