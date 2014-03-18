@@ -26,9 +26,11 @@ import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 
 import de.escidoc.admintool.app.AdminToolApplication;
+import de.escidoc.admintool.domain.PdpRequest;
 import de.escidoc.admintool.service.internal.UserService;
 import de.escidoc.admintool.view.ErrorMessage;
 import de.escidoc.admintool.view.ViewConstants;
+import de.escidoc.admintool.view.navigation.ActionIdConstants;
 import de.escidoc.admintool.view.user.UserAddView;
 import de.escidoc.admintool.view.user.UserListView;
 import de.escidoc.admintool.view.util.LayoutHelper;
@@ -62,6 +64,8 @@ public class GroupAddView extends CustomComponent implements ClickListener {
     private final GroupListView groupListView;
 
     private final GroupService groupService;
+    
+    private final PdpRequest pdpRequest;
 
     final AdminToolApplication app;
     
@@ -85,13 +89,15 @@ public class GroupAddView extends CustomComponent implements ClickListener {
     
     private ObjectProperty<String> emailProperty;
     
-    public GroupAddView(final AdminToolApplication app, final GroupService groupService, final GroupListView groupListView) {
+    public GroupAddView(final AdminToolApplication app, final GroupService groupService, final PdpRequest pdpRequest, final GroupListView groupListView) {
     	Preconditions.checkNotNull(app, "app is null: %s", app);
     	Preconditions.checkNotNull(groupService, "groupService is null: %s", groupService);
+    	Preconditions.checkNotNull(pdpRequest, "pdpRequest is null: %s", pdpRequest);
     	Preconditions.checkNotNull(groupListView, "groupListView is null: %s", groupListView);
     	
     	this.app = app;
     	this.groupService = groupService;
+    	this.pdpRequest = pdpRequest;
     	this.groupListView = groupListView;
     }
     
@@ -111,16 +117,19 @@ public class GroupAddView extends CustomComponent implements ClickListener {
         panel.setStyleName(Reindeer.PANEL_LIGHT);
         panel.setCaption(ViewConstants.GROUP_ADD_VIEW_CAPTION);
         panel.setContent(form);
+        panel.setVisible(isCreateNewGroupAllowed());
 
         form.setSpacing(false);
         form.setWidth(520, UNITS_PIXELS);
     }
 
+    
     private void addSpace() {
         form.addComponent(new Label("<br/>", Label.CONTENT_XHTML));
         form.addComponent(new Label("<br/>", Label.CONTENT_XHTML));
     }
 
+    
     private void addName() {
     	nameProperty = new ObjectProperty<String>(ViewConstants.EMPTY_STRING, String.class);
     	name = new TextField(nameProperty);
@@ -168,6 +177,12 @@ public class GroupAddView extends CustomComponent implements ClickListener {
 
         form.addComponent(footer);
     }
+    
+
+    private boolean isCreateNewGroupAllowed() {
+    	return pdpRequest.isPermitted(ActionIdConstants.CREATE_USER_GROUP);
+    }
+
     
 	@Override
 	public void buttonClick(ClickEvent event) {

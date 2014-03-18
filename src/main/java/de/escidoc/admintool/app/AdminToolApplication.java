@@ -470,7 +470,7 @@ public class AdminToolApplication extends Application {
 
     public GroupAddView newGroupAddView() {
 		final GroupAddView groupAddView =
-				new GroupAddView(this, groupService, groupViewComp.getGroupView().getGroupList());
+				new GroupAddView(this, groupService, pdpRequest, groupViewComp.getGroupView().getGroupList());
 		groupAddView.init();
 		return groupAddView;
 	}
