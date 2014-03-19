@@ -80,5 +80,9 @@ public class GroupView extends HorizontalSplitPanel implements ResourceView {
 	public void remove(final UserGroup deletedUserGroup) {
 		app.showGroupView();
 	}
+
+	public void showAddRoleToGroupView() {
+		app.showGroupRoleView();
+	}
 	
 }

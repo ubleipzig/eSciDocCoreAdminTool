@@ -7,6 +7,7 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.axis.types.NonNegativeInteger;
@@ -14,16 +15,22 @@ import org.apache.axis.types.NonNegativeInteger;
 import com.google.common.base.Preconditions;
 
 import de.escidoc.admintool.app.AppConstants;
+import de.escidoc.admintool.service.internal.UserService;
 import de.escidoc.core.client.UserGroupHandlerClient;
 import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
 import de.escidoc.core.client.interfaces.UserGroupHandlerClientInterface;
+import de.escidoc.core.resources.aa.role.Role;
 import de.escidoc.core.resources.aa.useraccount.Grant;
+import de.escidoc.core.resources.aa.useraccount.GrantProperties;
 import de.escidoc.core.resources.aa.usergroup.Selector;
 import de.escidoc.core.resources.aa.usergroup.UserGroup;
 import de.escidoc.core.resources.common.TaskParam;
+import de.escidoc.core.resources.common.reference.ContextRef;
+import de.escidoc.core.resources.common.reference.Reference;
+import de.escidoc.core.resources.common.reference.RoleRef;
 import de.uni_leipzig.ubl.admintool.domain.UserGroupFactory;
 
 public class GroupService {
@@ -39,6 +46,8 @@ public class GroupService {
     private Collection<UserGroup> userGroups;
 
     private UserGroup group;
+    
+    private GrantProperties grantProps;
 
     
     public GroupService(final String eSciDocUri, final String handle) throws InternalClientException, MalformedURLException {
@@ -167,5 +176,40 @@ public class GroupService {
 		UserGroup updatedUserGroup = client.removeSelectors(userGroup.getObjid(), taskParam);
 		return updatedUserGroup;
 	}
+
+
+	public GroupService assign(final UserGroup userGroup) {
+		if (userGroup == null) {
+			throw new IllegalArgumentException("UserGroup can not be null");
+		}
+		this.group = userGroup;
+		return this;
+	}
+	
+	public GroupService withRole(final Role selectedRole) {
+		if (selectedRole == null) {
+			throw new IllegalArgumentException("Role can not be null.");
+		}
+		if (group == null) {
+			throw new IllegalArgumentException("You must sign a role to a group.");
+		}
+		grantProps = new GrantProperties();
+		grantProps.setRole(new RoleRef(selectedRole.getObjid()));
+		return this;
+	}
+	
+	public GroupService onResources(final Set<ContextRef> selectedResources) {
+		for (final Reference resourceRef : selectedResources) {
+			grantProps.setAssignedOn(resourceRef);
+		}
+		return this;
+	}
+	
+	public void execute() throws EscidocClientException {
+		final Grant grant = new Grant();
+		grant.setProperties(grantProps);
+		client.createGrant(group.getObjid(), grant);
+	}
+	
 
 }

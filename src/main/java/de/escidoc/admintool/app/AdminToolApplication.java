@@ -67,6 +67,7 @@ import de.escidoc.admintool.view.ModalDialog;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.admintool.view.ViewManager;
 import de.escidoc.admintool.view.ViewManagerImpl;
+import de.escidoc.admintool.view.admintask.ResourceType;
 import de.escidoc.admintool.view.admintask.filter.FilterView;
 import de.escidoc.admintool.view.admintask.loadexamples.LoadExample;
 import de.escidoc.admintool.view.admintask.reindex.ReindexView;
@@ -678,5 +679,17 @@ public class AdminToolApplication extends Application {
 
 	private void showGroupInEditView(UserGroup group) {
 		groupViewComp.showGroupInEditView(group);
+	}
+
+	public void showGroupRoleView() {
+		final de.uni_leipzig.ubl.admintool.view.role.RoleView roleGroupView = new de.uni_leipzig.ubl.admintool.view.role.RoleView(
+				this, roleService, userService, groupService, contextService, services, ResourceType.USERGROUP);
+		try {
+			roleGroupView.selectGroup(groupService.getGroupById(this.getGroupView().getSelectedItem().getItemProperty(PropertyId.OBJECT_ID).getValue().toString()));
+			roleGroupView.init();
+			roleGroupView.show();
+		} catch (EscidocClientException e) {
+			handleException(e);
+		}
 	}
 }

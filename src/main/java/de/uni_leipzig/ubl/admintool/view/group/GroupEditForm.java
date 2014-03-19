@@ -68,7 +68,7 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 
     private static final int LABEL_HEIGHT = 15;
     
-    private static final int ROLE_LIST_HEIGHT = 50;
+    private static final int ROLE_LIST_HEIGHT = 100;
 
     private static final int SELECTOR_LIST_HEIGHT = 600;
 
@@ -137,7 +137,7 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 	
 	private final Button cancelBtn = new Button(ViewConstants.CANCEL, this);
 	
-    private final Button addRoleBtn = new Button();
+    private final Button addRoleBtn = new Button(ViewConstants.ADD_LABEL, new AddRoleListener());
 
     private final Button removeRoleBtn = new Button();
     
@@ -832,6 +832,14 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
         }
 	}
 	
+	private class AddRoleListener implements Button.ClickListener {
+
+		@Override
+		public void buttonClick(ClickEvent event) {
+			((GroupView) getParent().getParent()).showAddRoleToGroupView();
+		}
+	}
+
 	// control form
 	
 	private boolean isValid() {
