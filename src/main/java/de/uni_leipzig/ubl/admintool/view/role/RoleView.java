@@ -360,10 +360,6 @@ public class RoleView extends CustomComponent {
         return !roleName.startsWith("Statistics");
     }
 
-    private boolean notUserGroup(final String roleName) {
-        return !roleName.startsWith("User-Group");
-    }
-
     private void bindResourceTypeData() {
         resourcetypeSelection.addListener(new ResourceTypeListener(this));
     }
@@ -433,7 +429,9 @@ public class RoleView extends CustomComponent {
 
 	private class SaveBtnListener implements Button.ClickListener {
 
-        @Override
+		private static final long serialVersionUID = 1385240583604960734L;
+
+		@Override
         public void buttonClick(final ClickEvent event) {
             onSaveClick(); 
         }
@@ -513,7 +511,6 @@ public class RoleView extends CustomComponent {
         
     }
 
-    @SuppressWarnings("unused")
     private class CancelBtnListener implements Button.ClickListener {
 
         private static final long serialVersionUID = -5938771331937438272L;
@@ -530,7 +527,8 @@ public class RoleView extends CustomComponent {
 
     private class SearchBtnListener implements Button.ClickListener {
 
-        private Collection<Context> foundContexts;
+		private static final long serialVersionUID = -5195195105140856995L;
+		private Collection<Context> foundContexts;
 
         @Override
         public void buttonClick(final ClickEvent event) {
