@@ -2,11 +2,13 @@ package de.uni_leipzig.ubl.admintool.view.group;
 
 import java.util.Set;
 
+import com.vaadin.ui.Window;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Window.Notification;
 
 import de.escidoc.admintool.app.Command;
+import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.admintool.view.role.RevokeGrantWindow;
 import de.escidoc.core.resources.aa.useraccount.Grant;
 import de.uni_leipzig.ubl.admintool.view.group.GroupEditForm;
@@ -32,7 +34,9 @@ public class RemoveRoleButtonListener implements ClickListener {
 		if (selectedGrants instanceof Set<?>) {
 			for (final Object grant : ((Set<?>) selectedGrants)) {
 				if ( grant instanceof Grant) {
-					this.groupEditForm.app.getMainWindow().addWindow(createModalWindow((Grant) grant).getModalWindow());
+					final Window commentWindow = createModalWindow((Grant) grant).getModalWindow();
+					commentWindow.setCaption("Revoke Grant " + ((Grant) grant).getXLinkTitle());
+					this.groupEditForm.app.getMainWindow().addWindow(commentWindow);
 				}
 			}
 		}
