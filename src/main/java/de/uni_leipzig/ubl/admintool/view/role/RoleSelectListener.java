@@ -54,21 +54,21 @@ class RoleSelectListener implements ValueChangeListener {
 
     private final Button searchButton;
 
-    private final Component footer;
+    private final Component saveBtn;
 
     private final ListSelect resourceResult;
 
     RoleSelectListener(final NativeSelect resourceTypeComboBox, final TextField searchBox, final Button searchButton,
-        final Component footer, final ListSelect resourceResult) {
+        final Component saveBtn, final ListSelect resourceResult) {
         Preconditions.checkNotNull(resourceTypeComboBox, "resourceTypeComboBox is null: %s", resourceTypeComboBox);
         Preconditions.checkNotNull(searchButton, "searchBox is null: %s", searchButton);
         Preconditions.checkNotNull(searchBox, "searchButton is null: %s", searchBox);
-        Preconditions.checkNotNull(footer, "footer is null: %s", footer);
+        Preconditions.checkNotNull(saveBtn, "footer is null: %s", saveBtn);
         Preconditions.checkNotNull(resourceResult, "resouceResult is null: %s", resourceResult);
         this.resourceTypeComboBox = resourceTypeComboBox;
         this.searchBox = searchBox;
         this.searchButton = searchButton;
-        this.footer = footer;
+        this.saveBtn = saveBtn;
         this.resourceResult = resourceResult;
     }
 
@@ -93,7 +93,7 @@ class RoleSelectListener implements ValueChangeListener {
     }
 
     private void showSaveButton() {
-        footer.setVisible(true);
+        saveBtn.setVisible(true);
     }
 
     private void bindView(final List<ResourceType> resourceTypeList, final Role role) {

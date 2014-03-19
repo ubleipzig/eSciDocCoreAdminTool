@@ -113,6 +113,8 @@ public class RoleView extends CustomComponent {
     private final HorizontalLayout footer = new HorizontalLayout();
 
     private final Button saveBtn = new Button(ViewConstants.SAVE_LABEL, new SaveBtnListener());
+    
+    private final Button cancelBtn = new Button(ViewConstants.CANCEL, new CancelBtnListener());
 
     private final VerticalLayout footerLayout = new VerticalLayout();
 
@@ -253,7 +255,7 @@ public class RoleView extends CustomComponent {
         roleSelection.setNullSelectionAllowed(false);
         roleSelection.setImmediate(true);
         roleSelection.setRequired(true);
-        roleSelection.addListener(new RoleSelectListener(resourcetypeSelection, searchBox, searchButton, footer,
+        roleSelection.addListener(new RoleSelectListener(resourcetypeSelection, searchBox, searchButton, saveBtn,
             resourceResult));
         mainLayout.addComponent(roleSelection);
     }
@@ -289,9 +291,10 @@ public class RoleView extends CustomComponent {
 
     private void addFooter() {
         footer.addComponent(saveBtn);
+        footer.addComponent(cancelBtn);
         footerLayout.addComponent(footer);
         footerLayout.setComponentAlignment(footer, Alignment.MIDDLE_RIGHT);
-        footer.setVisible(false);
+        saveBtn.setVisible(false);
         mainLayout.addComponent(footerLayout);
     }
 
@@ -331,13 +334,12 @@ public class RoleView extends CustomComponent {
             new POJOContainer<Role>(Role.class, PropertyId.OBJECT_ID, PropertyId.NAME);
         for (final Role role : getAllRoles()) {
             final String roleName = role.getProperties().getName();
-//            if (notUserGroup(roleName) && notStatistic(roleName) && notContentRelation(roleName)
-//                && notAudience(roleName) && notOrgUnitAdmint(roleName)) {
         	if (notStatistic(roleName) && notContentRelation(roleName)
         			&& notAudience(roleName) && notOrgUnitAdmint(roleName)) {
                 roleContainer.addPOJO(role);
             }
         }
+        roleContainer.sort(new Object[] {PropertyId.NAME}, new boolean[] {true});
         roleSelection.setContainerDataSource(roleContainer);
         roleSelection.setItemCaptionPropertyId(PropertyId.NAME);
     }
@@ -420,7 +422,16 @@ public class RoleView extends CustomComponent {
     	}
     }
 
-    private class SaveBtnListener implements Button.ClickListener {
+    private void closeWindow() {
+		mainWindow.removeWindow(modalWindow);
+	}
+
+	private void showMessage() {
+		String message = "Role is updated on " + resourceType.getLabel();
+		mainWindow.showNotification(new Notification("Info", message, Notification.TYPE_TRAY_NOTIFICATION));
+	}
+
+	private class SaveBtnListener implements Button.ClickListener {
 
         @Override
         public void buttonClick(final ClickEvent event) {
@@ -500,19 +511,10 @@ public class RoleView extends CustomComponent {
             return Collections.emptySet();
         }
         
-        private void closeWindow() {
-        	mainWindow.removeWindow(modalWindow);
-        }
-        
-        private void showMessage() {
-        	String message = "Role is updated on " + resourceType.getLabel();
-        	mainWindow.showNotification(new Notification("Info", message, Notification.TYPE_TRAY_NOTIFICATION));
-        }
-        
     }
 
     @SuppressWarnings("unused")
-    private static class CancelBtnListener implements Button.ClickListener {
+    private class CancelBtnListener implements Button.ClickListener {
 
         private static final long serialVersionUID = -5938771331937438272L;
 
@@ -522,7 +524,7 @@ public class RoleView extends CustomComponent {
         }
 
         private void onCancelClick() {
-            // TODO implement cancel behaviour
+            closeWindow();
         }
     }
 
