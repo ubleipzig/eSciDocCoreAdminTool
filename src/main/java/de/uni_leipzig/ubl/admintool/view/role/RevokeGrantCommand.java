@@ -32,20 +32,21 @@ import de.escidoc.admintool.app.Command;
 import de.escidoc.admintool.service.internal.UserService;
 import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.resources.aa.useraccount.Grant;
+import de.uni_leipzig.ubl.admintool.service.internal.GroupService;
 
 public class RevokeGrantCommand implements Command {
 
-    private final UserService userService;
+    private final GroupService groupService;
 
-    private final String userId;
+    private final String groupId;
 
     private final Grant grant;
 
     private String comment;
 
-    public RevokeGrantCommand(final UserService userService, final String userId, final Grant grant) {
-        this.userService = userService;
-        this.userId = userId;
+    public RevokeGrantCommand(final GroupService groupService, final String userId, final Grant grant) {
+        this.groupService = groupService;
+        this.groupId = userId;
         this.grant = grant;
     }
 
@@ -55,6 +56,6 @@ public class RevokeGrantCommand implements Command {
 
     @Override
     public void execute() throws EscidocClientException {
-        userService.revokeGrant(userId, grant, comment);
+        groupService.revokeGrant(groupId, grant, comment);
     }
 }

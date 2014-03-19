@@ -139,7 +139,7 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 	
     private final Button addRoleBtn = new Button(ViewConstants.ADD_LABEL, new AddRoleListener());
 
-    private final Button removeRoleBtn = new Button();
+    private final Button removeRoleBtn = new Button(ViewConstants.REMOVE, new RemoveRoleButtonListener(this));
     
     private final Button addInternalSelectorBtn = new Button();
     

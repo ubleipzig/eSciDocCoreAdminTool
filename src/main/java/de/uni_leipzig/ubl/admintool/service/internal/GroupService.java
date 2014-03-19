@@ -15,7 +15,6 @@ import org.apache.axis.types.NonNegativeInteger;
 import com.google.common.base.Preconditions;
 
 import de.escidoc.admintool.app.AppConstants;
-import de.escidoc.admintool.service.internal.UserService;
 import de.escidoc.core.client.UserGroupHandlerClient;
 import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.client.exceptions.EscidocException;
@@ -210,6 +209,13 @@ public class GroupService {
 		grant.setProperties(grantProps);
 		client.createGrant(group.getObjid(), grant);
 	}
-	
+
+
+	public void revokeGrant(final String groupId, final Grant grant, final String comment) throws EscidocClientException {
+		final TaskParam taskParam = new TaskParam();
+		taskParam.setLastModificationDate(grant.getLastModificationDate());
+		taskParam.setComment(comment);
+		client.revokeGrant(groupId, grant.getObjid(), taskParam);
+	}
 
 }
