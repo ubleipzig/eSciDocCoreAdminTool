@@ -84,5 +84,9 @@ public class GroupView extends HorizontalSplitPanel implements ResourceView {
 	public void showAddRoleToGroupView() {
 		app.showGroupRoleView();
 	}
+
+	public void showSummaryView(UserGroup userGroup) {
+		app.showGroupSummaryView(userGroup);
+	}
 	
 }

@@ -4,6 +4,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import javax.swing.ButtonModel;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -132,6 +134,8 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 	private final Button newGroupBtn = new Button(ViewConstants.NEW, new NewGroupListener());
 	
 	private final Button deleteGroupBtn = new Button(ViewConstants.DELETE, new DeleteGroupListener());
+	
+	private final Button finalBtn = new Button("show final", new GroupSummaryViewListener());
 	
 	private final Button saveBtn = new Button(ViewConstants.SAVE_LABEL, this);
 	
@@ -386,7 +390,8 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
         header.setMargin(true);
         header.setSpacing(true);
        	header.addComponent(newGroupBtn);
-       	header.addComponent(deleteGroupBtn);        	
+       	header.addComponent(deleteGroupBtn);   
+       	header.addComponent(finalBtn);
         header.setVisible(true);
         return header;
 	}
@@ -838,6 +843,20 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 		public void buttonClick(ClickEvent event) {
 			((GroupView) getParent().getParent()).showAddRoleToGroupView();
 		}
+	}
+	
+	private class GroupSummaryViewListener implements Button.ClickListener {
+
+		@Override
+		public void buttonClick(ClickEvent event) {
+			try {
+				((GroupView) getParent().getParent()).showSummaryView(groupService.getGroupById(groupObjectId));
+			} catch (EscidocClientException e) {
+				LOG.error("An unexpected error occured! See LOG for details.", e);
+				ModalDialog.show(mainWindow, e);
+			}
+		}
+		
 	}
 
 	// control form

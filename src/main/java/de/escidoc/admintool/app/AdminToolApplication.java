@@ -107,6 +107,9 @@ import de.escidoc.core.resources.aa.useraccount.UserAccountProperties;
 import de.escidoc.core.resources.aa.usergroup.UserGroup;
 import de.uni_leipzig.ubl.admintool.service.internal.GroupService;
 import de.uni_leipzig.ubl.admintool.view.group.GroupAddView;
+import de.uni_leipzig.ubl.admintool.view.group.GroupEditForm;
+import de.uni_leipzig.ubl.admintool.view.group.GroupEditView;
+import de.uni_leipzig.ubl.admintool.view.group.GroupSummaryView;
 import de.uni_leipzig.ubl.admintool.view.group.GroupView;
 import de.uni_leipzig.ubl.admintool.view.group.GroupViewComponent;
 
@@ -691,5 +694,10 @@ public class AdminToolApplication extends Application {
 		} catch (EscidocClientException e) {
 			handleException(e);
 		}
+	}
+
+	public void showGroupSummaryView(UserGroup userGroup) {
+		final GroupSummaryView gsv = new GroupSummaryView(this, groupService, userService, userGroup, (GroupEditForm) ((GroupEditView) getGroupView().getSecondComponent()).getComponentIterator().next());
+		gsv.show();
 	}
 }
