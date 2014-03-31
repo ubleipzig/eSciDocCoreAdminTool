@@ -7,9 +7,13 @@ import java.util.List;
 import com.google.common.base.Preconditions;
 import com.vaadin.data.util.HierarchicalContainer;
 import com.vaadin.data.util.POJOContainer;
+import com.vaadin.event.ItemClickEvent;
+import com.vaadin.event.ItemClickEvent.ItemClickListener;
+import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.HorizontalSplitPanel;
@@ -79,6 +83,10 @@ public class GroupSummaryView extends CustomComponent {
 	
 	private int numTotalUAs = 0;
 	
+	private int numDirectRoles = 0;
+	
+	private int numInheritedRoles = 0;
+	
 	// components
 	private final Window modalWindow = new Window();
 	
@@ -102,7 +110,9 @@ public class GroupSummaryView extends CustomComponent {
 	
 	private final Table allGrants = new Table();
 	
-	private final Button closeButton = new Button(ViewConstants.CLOSE, new closeButtonListener());
+	private final Button closeButton = new Button(ViewConstants.CLOSE, new CloseButtonListener());
+	
+	private final GroupTreeSelectListener groupTreeSelectListener = new GroupTreeSelectListener();
 	
 	
 	public GroupSummaryView(final AdminToolApplication app, final GroupService groupService, final UserService userService,
@@ -126,8 +136,8 @@ public class GroupSummaryView extends CustomComponent {
 		addHeader();
 		addSplitPanel();
 		addUserAccounts();
-		addUserSummary();
-		addGroupSummary();
+		addSummary();
+		addGroupTree();
 		addGrants();
 		addFooter();
 	}
@@ -165,6 +175,8 @@ public class GroupSummaryView extends CustomComponent {
 		rightSplitPanel.setFirstComponent(topRightPanel);
 		rightSplitPanel.setSecondComponent(bottomRightPanel);
 		
+		topRightPanel.setMargin(false, true, true, true);
+		
 		splitPanel.setLocked(true);
 		splitPanel.setHeight("600px");
 		splitPanel.setSplitPosition(40);
@@ -186,24 +198,52 @@ public class GroupSummaryView extends CustomComponent {
 	}
 	
 	
-	private void addUserSummary() {
+	private void addSummary() {
+		final HorizontalLayout hl = new HorizontalLayout();
+		addUserSummary(hl);
+		addRoleSummary(hl);
+		topRightPanel.addComponent(hl);
+	}
+	
+	private void addUserSummary(final HorizontalLayout hl) {
+		final VerticalLayout vl = new VerticalLayout();
 		final Label totalUserAccountLabel = new Label("Total User Accounts: " + numTotalUAs);
 		final Label directUserAccountLabel = new Label("User Accounts from user account selectors: " + numDirectUAs);
 		final Label groupUserAccountLabel = new Label("User Accounts from user group selectors: " + numGroupUAs);
 		final Label attributeAccountLabel = new Label("User Accounts from user attribute selectors: " + numAttributeUAs + "<br /><br />", Label.CONTENT_XHTML);
 		
-		topRightPanel.setMargin(false, false, true, true);
-		topRightPanel.addComponent(totalUserAccountLabel);
-		topRightPanel.addComponent(directUserAccountLabel);
-		topRightPanel.addComponent(groupUserAccountLabel);
-		topRightPanel.addComponent(attributeAccountLabel);
+		vl.setMargin(false, true, false, false);
+		vl.addComponent(totalUserAccountLabel);
+		vl.addComponent(directUserAccountLabel);
+		vl.addComponent(groupUserAccountLabel);
+		vl.addComponent(attributeAccountLabel);
+		hl.addComponent(vl);
 	}
 	
 	
-	private void addGroupSummary() {
+	private void addRoleSummary(final HorizontalLayout hl) {
+		final VerticalLayout vl = new VerticalLayout();
+		final Label totalRolesLabel = new Label("Total Roles: " + (numDirectRoles + numInheritedRoles));
+		final Label directRolesLabel = new Label("Direct Roles: " + numDirectRoles);
+		final Label inheritedRolesLabel = new Label("Inherited Roles: " + numInheritedRoles);
+		
+		vl.setMargin(false, false, false, true);
+		vl.addComponent(totalRolesLabel);
+		vl.addComponent(directRolesLabel);
+		vl.addComponent(inheritedRolesLabel);
+		hl.addComponent(vl);
+	}
+	
+	
+	private void addGroupTree() {
 		allUserGroups.setCaption("Group Structure:");
 		allUserGroups.setContainerDataSource(allUserGroupContainer);
 		allUserGroups.expandItemsRecursively(userGroup.getXLinkTitle());
+		allUserGroups.select(userGroup.getXLinkTitle());
+		allUserGroups.setMultiSelect(false);
+		allUserGroups.setNullSelectionAllowed(false);
+		allUserGroups.setImmediate(true);
+		allUserGroups.addListener(groupTreeSelectListener);
 		
 		topRightPanel.addComponent(allUserGroups);
 	}
@@ -212,7 +252,7 @@ public class GroupSummaryView extends CustomComponent {
 	private void addGrants() {
 		allGrants.setContainerDataSource(allGrantsContainer);
 		allGrants.setReadOnly(true);
-		allGrants.setSelectable(false);
+		allGrants.setSelectable(false);	
 		allGrants.setSizeFull();
 		allGrants.setColumnHeader(PropertyId.X_LINK_TITLE, "Assigned and inherited roles …");
 		
@@ -390,6 +430,8 @@ public class GroupSummaryView extends CustomComponent {
 		final List<Grant> grants = new ArrayList<Grant>();
 		// add direct assigned Grants to the list
 		grants.addAll(groupService.retrieveCurrentGrants(group.getObjid()));
+		// bind size information
+		numDirectRoles = grants.size();
 		// add grants from parental groups to the list
 		for (final UserGroup parent : getParentUserGroups(group)) {
 			grants.addAll(groupService.retrieveCurrentGrants(parent.getObjid()));
@@ -413,6 +455,9 @@ public class GroupSummaryView extends CustomComponent {
 			}
 		}
 		
+		// bind size information
+		numInheritedRoles = grants.size() - numDirectRoles;
+
 		return filteredGrants;
 	}
 	
@@ -440,6 +485,7 @@ public class GroupSummaryView extends CustomComponent {
 		allUserGroupContainer.addContainerProperty(PropertyId.OBJECT_ID, String.class, "");
 		
 		allUserGroupContainer.addItem(userGroup.getXLinkTitle());
+		allUserGroupContainer.getItem(userGroup.getXLinkTitle()).getItemProperty(PropertyId.OBJECT_ID).setValue(userGroup.getObjid());
 		createGroupTree(userGroup);
 	}
 	
@@ -488,13 +534,41 @@ public class GroupSummaryView extends CustomComponent {
 	}
 	
 	
-	private class closeButtonListener implements Button.ClickListener {
+	private class CloseButtonListener implements Button.ClickListener {
 
 		private static final long serialVersionUID = 218805084731560485L;
 
 		@Override
 		public void buttonClick(ClickEvent event) {
 			app.getMainWindow().removeWindow(modalWindow);
+		}
+		
+	}
+	
+	
+	private class GroupTreeSelectListener implements ItemClickListener {
+
+		private static final long serialVersionUID = 8113178115382201649L;
+
+		@Override
+		public void itemClick(ItemClickEvent event) {
+			// TODO Auto-generated method stub
+			System.out.println("Selected item: " + event);
+			System.out.println("Selected item: " + event.getSource());
+			System.out.println("Selected item: " + event.getItem().getItemProperty(PropertyId.OBJECT_ID));
+			String groupID = event.getItem().getItemProperty(PropertyId.OBJECT_ID).toString();
+			if (groupID != null && !groupID.isEmpty() && !groupID.equals(userGroup.getObjid())) {
+				try {
+					System.out.println("group will be set to: " + groupID);
+					close();
+					System.out.println("modal window closed");
+					app.getGroupView().showSummaryView(groupService.getGroupById(groupID));
+					System.out.println("group setup complete");
+				} catch (EscidocClientException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 		}
 		
 	}
