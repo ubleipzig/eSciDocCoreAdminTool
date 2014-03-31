@@ -5,22 +5,30 @@ import java.util.Collection;
 import java.util.List;
 
 import com.google.common.base.Preconditions;
+import com.vaadin.data.util.HierarchicalContainer;
 import com.vaadin.data.util.POJOContainer;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Table;
+import com.vaadin.ui.Tree;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.VerticalSplitPanel;
 import com.vaadin.ui.Window;
 
 import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.app.PropertyId;
 import de.escidoc.admintool.service.internal.UserService;
+import de.escidoc.admintool.view.EscidocPagedTable;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.core.client.exceptions.EscidocClientException;
+import de.escidoc.core.client.exceptions.EscidocException;
+import de.escidoc.core.client.exceptions.InternalClientException;
+import de.escidoc.core.client.exceptions.TransportException;
 import de.escidoc.core.resources.Resource;
 import de.escidoc.core.resources.aa.useraccount.Grant;
 import de.escidoc.core.resources.aa.useraccount.UserAccount;
@@ -57,7 +65,7 @@ public class GroupSummaryView extends CustomComponent {
 	
 	private POJOContainer<UserAccount> allUserAccountsContainer;
 	
-	private POJOContainer<UserGroup> allUserGroupsContainer;
+	private HierarchicalContainer allUserGroupContainer;
 	
 	private POJOContainer<Grant> allGrantsContainer;
 	
@@ -80,9 +88,17 @@ public class GroupSummaryView extends CustomComponent {
 	
 	private final HorizontalLayout footer = new HorizontalLayout();
 	
-	private final Table allUserAccounts = new Table();
+	private final HorizontalSplitPanel splitPanel = new HorizontalSplitPanel();
 	
-	private final Table allUserGroups = new Table();
+	private final VerticalSplitPanel rightSplitPanel = new VerticalSplitPanel();
+	
+	private final VerticalLayout topRightPanel = new VerticalLayout();
+	
+	private final VerticalLayout bottomRightPanel = new VerticalLayout();
+	
+	private final EscidocPagedTable allUserAccounts = new EscidocPagedTable();
+	
+	private final Tree allUserGroups = new Tree();
 	
 	private final Table allGrants = new Table();
 	
@@ -105,26 +121,14 @@ public class GroupSummaryView extends CustomComponent {
 	}
 	
 	
-	private void bindData() {
-		groupTitle = userGroup.getXLinkTitle();
-		bindUserAccounts();
-	}
-	
-	
-	private void bindUserAccounts() {
-		List<UserAccount> users = getUserAccounts();
-		allUserAccountsContainer = new POJOContainer<UserAccount>(UserAccount.class, PropertyId.NAME);
-		for (final UserAccount user : users) {
-			allUserAccountsContainer.addPOJO(user);
-		}
-		allUserAccountsContainer.sort(new String[] {PropertyId.NAME}, new boolean[] {true});
-	}
-
-
 	private void init() {
 		configure();
 		addHeader();
+		addSplitPanel();
+		addUserAccounts();
 		addUserSummary();
+		addGroupSummary();
+		addGrants();
 		addFooter();
 	}
 	
@@ -132,7 +136,7 @@ public class GroupSummaryView extends CustomComponent {
 	private void configure() {
 		modalWindow.setModal(true);
 		modalWindow.setWidth(WINDOW_WIDTH);
-		modalWindow.setHeight(WINDOW_HEIGHT);
+//		modalWindow.setHeight(WINDOW_HEIGHT);
 		modalWindow.setCaption("Summary Group View");
 		modalWindow.setContent(root);
 		
@@ -155,23 +159,64 @@ public class GroupSummaryView extends CustomComponent {
 	}
 	
 	
-	private void addUserSummary() {
-		final Label totalUserAccountLabel = new Label("Total User Accounts: " + numTotalUAs);
-		final Label directUserAccountLabel = new Label("Direct User Accounts: " + numDirectUAs);
-		final Label groupUserAccountLabel = new Label("User Accounts from child User Groups: " + numGroupUAs);
+	private void addSplitPanel() {
+		rightSplitPanel.setLocked(true);
+		rightSplitPanel.setSplitPosition(70);
+		rightSplitPanel.setFirstComponent(topRightPanel);
+		rightSplitPanel.setSecondComponent(bottomRightPanel);
+		
+		splitPanel.setLocked(true);
+		splitPanel.setHeight("600px");
+		splitPanel.setSplitPosition(40);
+		splitPanel.setFirstComponent(allUserAccounts);
+		splitPanel.setSecondComponent(rightSplitPanel);
+		
+		addSpace();
+		root.addComponent(splitPanel);
+	}
+	
+	
+	private void addUserAccounts() {
 		allUserAccounts.setContainerDataSource(allUserAccountsContainer);
 		allUserAccounts.setReadOnly(true);
 		allUserAccounts.setSelectable(true);
-		allUserAccounts.setWidth("400px");
-		allUserAccounts.setHeight("600px");
+		allUserAccounts.setSizeFull();
 		allUserAccounts.setVisibleColumns(new String [] { PropertyId.NAME });
+		allUserAccounts.setColumnHeader(PropertyId.NAME, "Assigned and inherited user accounts …");
+	}
+	
+	
+	private void addUserSummary() {
+		final Label totalUserAccountLabel = new Label("Total User Accounts: " + numTotalUAs);
+		final Label directUserAccountLabel = new Label("User Accounts from user account selectors: " + numDirectUAs);
+		final Label groupUserAccountLabel = new Label("User Accounts from user group selectors: " + numGroupUAs);
+		final Label attributeAccountLabel = new Label("User Accounts from user attribute selectors: " + numAttributeUAs + "<br /><br />", Label.CONTENT_XHTML);
 		
-		addSpace();
-		root.addComponent(totalUserAccountLabel);
-		root.addComponent(directUserAccountLabel);
-		root.addComponent(groupUserAccountLabel);
-		addSpace();
-		root.addComponent(allUserAccounts);
+		topRightPanel.setMargin(false, false, true, true);
+		topRightPanel.addComponent(totalUserAccountLabel);
+		topRightPanel.addComponent(directUserAccountLabel);
+		topRightPanel.addComponent(groupUserAccountLabel);
+		topRightPanel.addComponent(attributeAccountLabel);
+	}
+	
+	
+	private void addGroupSummary() {
+		allUserGroups.setCaption("Group Structure:");
+		allUserGroups.setContainerDataSource(allUserGroupContainer);
+		allUserGroups.expandItemsRecursively(userGroup.getXLinkTitle());
+		
+		topRightPanel.addComponent(allUserGroups);
+	}
+	
+	
+	private void addGrants() {
+		allGrants.setContainerDataSource(allGrantsContainer);
+		allGrants.setReadOnly(true);
+		allGrants.setSelectable(false);
+		allGrants.setSizeFull();
+		allGrants.setColumnHeader(PropertyId.X_LINK_TITLE, "Assigned and inherited roles …");
+		
+		bottomRightPanel.addComponent(allGrants);
 	}
 	
 	
@@ -235,7 +280,6 @@ public class GroupSummaryView extends CustomComponent {
 			if (!ids.contains(resource.getObjid())) {
 				listWithoutDuplicates.add(resource);
 				ids.add(resource.getObjid());
-				System.out.println("→→ resource added: " + resource.getXLinkTitle());
 			}
 		}
 		return listWithoutDuplicates;
@@ -312,7 +356,141 @@ public class GroupSummaryView extends CustomComponent {
 	}
 	
 	
+	private List<UserGroup> getParentUserGroups(final UserGroup group) {
+		List<UserGroup> parentGroups = new ArrayList<UserGroup>();
+		try {
+			// iterate over all user groups and check if group exists as group selector
+			final Collection<UserGroup> allGroups = groupService.findAll();
+			for (final UserGroup parent : allGroups) {
+				final List<Selector> selectors = getUserGroupSelectors(parent);
+				for (final Selector selector : selectors) {
+					if (selector.getContent().equals(group.getObjid())) {
+						// parent found, add group to list
+						parentGroups.add(parent);
+						// check next parental level
+						final List<UserGroup> nextParentalGroups = getParentUserGroups(parent);
+						if (!nextParentalGroups.isEmpty()) {
+							parentGroups.addAll(nextParentalGroups);
+						}
+						break;
+					}
+				}
+			}
+			
+		} catch (EscidocClientException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return parentGroups;
+	}
+	
+	
+	private List<Grant> getAllGrants(final UserGroup group) throws EscidocException, InternalClientException, TransportException {
+		final List<Grant> grants = new ArrayList<Grant>();
+		// add direct assigned Grants to the list
+		grants.addAll(groupService.retrieveCurrentGrants(group.getObjid()));
+		// add grants from parental groups to the list
+		for (final UserGroup parent : getParentUserGroups(group)) {
+			grants.addAll(groupService.retrieveCurrentGrants(parent.getObjid()));
+		}
+		
+		final List<Grant> filteredGrants = new ArrayList<Grant>();
+		// check all grants back for duplicates
+		for (final Grant uncheckedGrant : grants) {
+			boolean addThis = true;
+			for (final Grant filteredGrant : filteredGrants) {
+				// grant is equal if object equals, role equals and assigned to equals
+				if (uncheckedGrant.getProperties().equals(filteredGrant.getProperties())) {
+					// duplicate detected, switch value of addThis and leave inner loop
+					addThis = false;
+					break;
+				}
+			}
+			if (addThis) {
+				// add grant to filtered list
+				filteredGrants.add(uncheckedGrant);
+			}
+		}
+		
+		return filteredGrants;
+	}
+	
+	
+	private void bindData() {
+		groupTitle = userGroup.getXLinkTitle();
+		bindUserAccounts();
+		bindGroupTree();
+		bindGrants();
+	}
+	
+	
+	private void bindUserAccounts() {
+		List<UserAccount> users = getUserAccounts();
+		allUserAccountsContainer = new POJOContainer<UserAccount>(UserAccount.class, PropertyId.NAME);
+		for (final UserAccount user : users) {
+			allUserAccountsContainer.addPOJO(user);
+		}
+		allUserAccountsContainer.sort(new String[] {PropertyId.NAME}, new boolean[] {true});
+	}
+	
+	
+	private void bindGroupTree() {
+		allUserGroupContainer = new HierarchicalContainer();
+		allUserGroupContainer.addContainerProperty(PropertyId.OBJECT_ID, String.class, "");
+		
+		allUserGroupContainer.addItem(userGroup.getXLinkTitle());
+		createGroupTree(userGroup);
+	}
+	
+	
+	private void createGroupTree(final UserGroup parent) {
+		List<Selector> selectors = getUserGroupSelectors(parent);
+		if (selectors.isEmpty()) {
+			allUserGroupContainer.setChildrenAllowed(parent.getXLinkTitle(), false);
+		}
+		else {
+			for (final Selector selector : selectors) {
+				UserGroup group;
+				try {
+					group = groupService.getGroupById(selector.getContent());
+					allUserGroupContainer.addItem(group.getXLinkTitle());
+					allUserGroupContainer.getItem(group.getXLinkTitle()).getItemProperty(PropertyId.OBJECT_ID).setValue(group.getObjid());
+					allUserGroupContainer.setParent(group.getXLinkTitle(), parent.getXLinkTitle());
+					createGroupTree(group);
+				} catch (EscidocClientException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+	
+	
+	private void bindGrants() {
+			List<Grant> grants;
+			allGrantsContainer = new POJOContainer<Grant>(Grant.class, PropertyId.X_LINK_TITLE);
+			try {
+				grants = (List<Grant>) getAllGrants(userGroup);
+				for (final Grant grant : grants) {
+					allGrantsContainer.addPOJO(grant);
+				}
+			} catch (EscidocException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InternalClientException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (TransportException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	}
+	
+	
 	private class closeButtonListener implements Button.ClickListener {
+
+		private static final long serialVersionUID = 218805084731560485L;
 
 		@Override
 		public void buttonClick(ClickEvent event) {
