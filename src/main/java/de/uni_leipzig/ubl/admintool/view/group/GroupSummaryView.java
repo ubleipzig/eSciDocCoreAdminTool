@@ -2,7 +2,9 @@ package de.uni_leipzig.ubl.admintool.view.group;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.google.common.base.Preconditions;
 import com.vaadin.data.util.HierarchicalContainer;
@@ -22,6 +24,7 @@ import com.vaadin.ui.Tree;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.VerticalSplitPanel;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.Window.Notification;
 
 import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.app.PropertyId;
@@ -84,6 +87,8 @@ public class GroupSummaryView extends CustomComponent {
 	
 	private int numInheritedRoles = 0;
 	
+	private Set<Selector> deadSelectors= new HashSet<Selector>();
+	
 	// components
 	private final Window modalWindow = new Window();
 	
@@ -142,6 +147,7 @@ public class GroupSummaryView extends CustomComponent {
 		addGroupTree();
 		addGrants();
 		addFooter();
+		addErrors();
 	}
 	
 	
@@ -296,6 +302,17 @@ public class GroupSummaryView extends CustomComponent {
 		addSpace();
 		root.addComponent(footer);
 	}
+	
+	
+	private void addErrors() {
+		if (deadSelectors.size() > 0) {
+			String selectorIds = "";
+			for (Selector selector : deadSelectors) {
+				selectorIds += "<br />→ '"+ selector.getObjid() + "', '" + selector.getName() + "', '" + selector.getContent() + "'";
+			}
+			modalWindow.showNotification("info", "There are dead selectors. You should check selectors with id, name and content: " + selectorIds, Notification.TYPE_ERROR_MESSAGE);
+		}
+	}
 
 	
 	public void setGroup(final String groupID) {
@@ -381,11 +398,17 @@ public class GroupSummaryView extends CustomComponent {
 				// get group
 				selectorGroup = groupService.getGroupById(userGroupSelector.getContent());
 				
-				// get direct UAs from group
-				userAccounts.addAll(getDirectUserAccountsFromGroup(selectorGroup));
-				
-				// get group UAs from group
-				userAccounts.addAll(getGroupUserAccountsFromGroup(selectorGroup));
+				if (selectorGroup != null) {
+					// get direct UAs from group
+					userAccounts.addAll(getDirectUserAccountsFromGroup(selectorGroup));
+					
+					// get group UAs from group
+					userAccounts.addAll(getGroupUserAccountsFromGroup(selectorGroup));
+				}
+				else {
+					// user group doesn't exist, so add selector to dead selectors
+					deadSelectors.add(userGroupSelector);
+				}
 			} catch (EscidocClientException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -403,7 +426,16 @@ public class GroupSummaryView extends CustomComponent {
 			for (final Selector selector : selectors) {
 				if (selector.getType().equals(SelectorType.INTERNAL) && selector.getName().equals(InternalSelectorName.USER_ACCOUNT.getXmlValue())) {
 					try {
-						users.add(userService.getUserById(selector.getContent()));
+						UserAccount user = userService.getUserById(selector.getContent()); 
+						// check if user account exists, because it is possible that a selector references a deleted user account
+						// TODO May notify the user that there are dead references
+						if (user != null) {
+							users.add(user);
+						}
+						else {
+							// user account doesn't exist, so add selector to dead selectors
+							deadSelectors.add(selector);
+						}
 					} catch (EscidocClientException e) {
 						// TODO handle exception!
 					}
@@ -557,11 +589,14 @@ public class GroupSummaryView extends CustomComponent {
 	
 	private void bindGroupTree() {
 		allUserGroupContainer = new HierarchicalContainer();
+		allUserGroupContainer.addContainerProperty(PropertyId.NAME, String.class, "");
 		allUserGroupContainer.addContainerProperty(PropertyId.OBJECT_ID, String.class, "");
 		
 		allUserGroupContainer.addItem(userGroup.getXLinkTitle());
+		allUserGroupContainer.getItem(userGroup.getXLinkTitle()).getItemProperty(PropertyId.NAME).setValue(userGroup.getXLinkTitle());
 		allUserGroupContainer.getItem(userGroup.getXLinkTitle()).getItemProperty(PropertyId.OBJECT_ID).setValue(userGroup.getObjid());
 		createGroupTree(userGroup);
+		allUserGroupContainer.sort(new Object[] {PropertyId.NAME}, new boolean[] {true});
 	}
 	
 	
@@ -575,10 +610,20 @@ public class GroupSummaryView extends CustomComponent {
 				UserGroup group;
 				try {
 					group = groupService.getGroupById(selector.getContent());
-					allUserGroupContainer.addItem(group.getXLinkTitle());
-					allUserGroupContainer.getItem(group.getXLinkTitle()).getItemProperty(PropertyId.OBJECT_ID).setValue(group.getObjid());
-					allUserGroupContainer.setParent(group.getXLinkTitle(), parent.getXLinkTitle());
-					createGroupTree(group);
+					if (group != null) {
+						allUserGroupContainer.addItem(group.getXLinkTitle());
+						allUserGroupContainer.getItem(group.getXLinkTitle()).getItemProperty(PropertyId.NAME).setValue(group.getXLinkTitle());
+						allUserGroupContainer.getItem(group.getXLinkTitle()).getItemProperty(PropertyId.OBJECT_ID).setValue(group.getObjid());
+						allUserGroupContainer.setParent(group.getXLinkTitle(), parent.getXLinkTitle());
+						createGroupTree(group);
+					}
+					else {
+						// TODO handle dead selectors, group can be null !!!
+						String deadGroupInfo = "refered user group doesn't exist anymore (" + selector.getContent() + ")";
+						allUserGroupContainer.addItem(deadGroupInfo);
+						allUserGroupContainer.setParent(deadGroupInfo, parent.getXLinkTitle());
+						allUserGroupContainer.setChildrenAllowed(deadGroupInfo, false);
+					}
 				} catch (EscidocClientException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
