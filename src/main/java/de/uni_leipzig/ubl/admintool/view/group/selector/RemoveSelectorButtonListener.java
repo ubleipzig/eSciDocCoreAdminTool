@@ -50,17 +50,14 @@ public class RemoveSelectorButtonListener implements ClickListener {
 	public void buttonClick(final ClickEvent event) {
 		this.app = groupEditForm.getApp();
 		this.groupService = groupEditForm.getGroupService();
-		System.out.println("----------------------------------------");
 		final List<Selector> removableSelectors = prepareRemoveSelectors();
 		if (!removableSelectors.isEmpty()) {
-			System.out.println("perform remove ...");
 			UserGroup updatedUserGroup = removeSelectors(removableSelectors);
 			if (updatedUserGroup != null) {
 				updateView(updatedUserGroup);
 				showMessage();
 			}
 		}
-		System.out.println("----------------------------------------");
 	}
 
 
