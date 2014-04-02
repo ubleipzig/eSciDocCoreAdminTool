@@ -6,6 +6,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.opensaml.xacml.policy.EffectType;
+
 import com.google.common.base.Preconditions;
 import com.vaadin.data.util.HierarchicalContainer;
 import com.vaadin.data.util.POJOContainer;
@@ -83,9 +85,15 @@ public class GroupSummaryView extends CustomComponent {
 	
 	private int numTotalUAs = 0;
 	
+	private int numEffectiveUAs = 0;
+	
 	private int numDirectRoles = 0;
 	
 	private int numInheritedRoles = 0;
+	
+	private int numDuplicateRoles = 0;
+	
+	private int numEffectiveRoles = 0;
 	
 	private Set<Selector> deadSelectors= new HashSet<Selector>();
 	
@@ -221,12 +229,15 @@ public class GroupSummaryView extends CustomComponent {
 	
 	private void addUserSummary(final HorizontalLayout hl) {
 		final VerticalLayout vl = new VerticalLayout();
+		final Label effectiveUserAccountLabel = new Label("(←) Effective User Accounts: " + numEffectiveUAs);
+		effectiveUserAccountLabel.setStyleName("groupViewHighlightedSeperator");
 		final Label totalUserAccountLabel = new Label("Total User Accounts: " + numTotalUAs);
 		final Label directUserAccountLabel = new Label("User Accounts from user account selectors: " + numDirectUAs);
 		final Label groupUserAccountLabel = new Label("User Accounts from user group selectors: " + numGroupUAs);
 		final Label attributeAccountLabel = new Label("User Accounts from user attribute selectors: " + numAttributeUAs + "<br /><br />", Label.CONTENT_XHTML);
 		
 		vl.setMargin(false, true, false, false);
+		vl.addComponent(effectiveUserAccountLabel);
 		vl.addComponent(totalUserAccountLabel);
 		vl.addComponent(directUserAccountLabel);
 		vl.addComponent(groupUserAccountLabel);
@@ -237,14 +248,19 @@ public class GroupSummaryView extends CustomComponent {
 	
 	private void addRoleSummary(final HorizontalLayout hl) {
 		final VerticalLayout vl = new VerticalLayout();
+		final Label effectiveRolesLabel = new Label("Effective Roles (↓): " + numEffectiveRoles);
+		effectiveRolesLabel.setStyleName("groupViewHighlightedSeperator");
 		final Label totalRolesLabel = new Label("Total Roles: " + (numDirectRoles + numInheritedRoles));
-		final Label directRolesLabel = new Label("Direct Roles: " + numDirectRoles);
+		final Label directRolesLabel = new Label("Direct assigned Roles: " + numDirectRoles);
 		final Label inheritedRolesLabel = new Label("Inherited Roles: " + numInheritedRoles);
+		final Label duplicateRolesLabel = new Label("Duplicate Roles: " + numDuplicateRoles);
 		
 		vl.setMargin(false, false, false, true);
+		vl.addComponent(effectiveRolesLabel);
 		vl.addComponent(totalRolesLabel);
 		vl.addComponent(directRolesLabel);
 		vl.addComponent(inheritedRolesLabel);
+		vl.addComponent(duplicateRolesLabel);
 		hl.addComponent(vl);
 	}
 	
@@ -359,7 +375,8 @@ public class GroupSummaryView extends CustomComponent {
 		
 		
 		finalUsers = (List<UserAccount>) removeDuplicates(rawUsers);
-		numTotalUAs = finalUsers.size();
+		numTotalUAs = rawUsers.size();
+		numEffectiveUAs = finalUsers.size();
 		return finalUsers;
 	}
 	
@@ -550,8 +567,10 @@ public class GroupSummaryView extends CustomComponent {
 			}
 		}
 		
-		// bind size information
+		// bind size informations
 		numInheritedRoles = grants.size() - numDirectRoles;
+		numEffectiveRoles = filteredGrants.size();
+		numDuplicateRoles = numDirectRoles + numInheritedRoles - numEffectiveRoles;
 
 		return filteredGrants;
 	}
