@@ -9,11 +9,10 @@ import com.vaadin.data.util.HierarchicalContainer;
 import com.vaadin.data.util.POJOContainer;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
-import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Component;
+import com.vaadin.ui.themes.BaseTheme;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.HorizontalSplitPanel;
@@ -65,8 +64,6 @@ public class GroupSummaryView extends CustomComponent {
 	// data
 	private UserGroup userGroup;
 	
-	private GroupEditForm groupEditForm;
-	
 	private POJOContainer<UserAccount> allUserAccountsContainer;
 	
 	private HierarchicalContainer allUserGroupContainer;
@@ -100,11 +97,13 @@ public class GroupSummaryView extends CustomComponent {
 	
 	private final VerticalSplitPanel rightSplitPanel = new VerticalSplitPanel();
 	
+	private final VerticalLayout leftPanel = new VerticalLayout();
+	
 	private final VerticalLayout topRightPanel = new VerticalLayout();
 	
 	private final VerticalLayout bottomRightPanel = new VerticalLayout();
 	
-	private final EscidocPagedTable allUserAccounts = new EscidocPagedTable();
+	private final Table allUserAccounts = new Table();
 	
 	private final Tree allUserGroups = new Tree();
 	
@@ -114,19 +113,21 @@ public class GroupSummaryView extends CustomComponent {
 	
 	private final GroupTreeSelectListener groupTreeSelectListener = new GroupTreeSelectListener();
 	
+	private final List<Button> parentButtons = new ArrayList<Button>();
+	
+	private final ParentButtonListener parentButtonListener = new ParentButtonListener();
+	
 	
 	public GroupSummaryView(final AdminToolApplication app, final GroupService groupService, final UserService userService,
-			final UserGroup userGroup, final GroupEditForm groupEditForm) {
+			final UserGroup userGroup) {
 		Preconditions.checkNotNull(app, "app is null: %s", app);
 		Preconditions.checkNotNull(groupService, "groupService is null: %s", groupService);
 		Preconditions.checkNotNull(userService, "userService is null: %s", userService);
 		Preconditions.checkNotNull(userGroup, "userGroup is null: %s", userGroup);
-		Preconditions.checkNotNull(groupEditForm, "groupeditForm is null: %s", groupEditForm);
 		this.app = app;
 		this.groupService = groupService;
 		this.userService = userService;
 		this.userGroup = userGroup;
-		this.groupEditForm = groupEditForm;
 		bindData();
 	}
 	
@@ -137,6 +138,7 @@ public class GroupSummaryView extends CustomComponent {
 		addSplitPanel();
 		addUserAccounts();
 		addSummary();
+		addParents();
 		addGroupTree();
 		addGrants();
 		addFooter();
@@ -175,12 +177,15 @@ public class GroupSummaryView extends CustomComponent {
 		rightSplitPanel.setFirstComponent(topRightPanel);
 		rightSplitPanel.setSecondComponent(bottomRightPanel);
 		
+		leftPanel.setHeight(100, UNITS_PERCENTAGE);
+		
 		topRightPanel.setMargin(false, true, true, true);
+		bottomRightPanel.setHeight(100, UNITS_PERCENTAGE);
 		
 		splitPanel.setLocked(true);
-		splitPanel.setHeight("600px");
+		splitPanel.setHeight(600, UNITS_PIXELS);
 		splitPanel.setSplitPosition(40);
-		splitPanel.setFirstComponent(allUserAccounts);
+		splitPanel.setFirstComponent(leftPanel);
 		splitPanel.setSecondComponent(rightSplitPanel);
 		
 		addSpace();
@@ -191,10 +196,13 @@ public class GroupSummaryView extends CustomComponent {
 	private void addUserAccounts() {
 		allUserAccounts.setContainerDataSource(allUserAccountsContainer);
 		allUserAccounts.setReadOnly(true);
-		allUserAccounts.setSelectable(true);
+		allUserAccounts.setSelectable(false);
 		allUserAccounts.setSizeFull();
 		allUserAccounts.setVisibleColumns(new String [] { PropertyId.NAME });
 		allUserAccounts.setColumnHeader(PropertyId.NAME, "Assigned and inherited user accounts …");
+		
+		leftPanel.addComponent(allUserAccounts);
+		leftPanel.setExpandRatio(allUserAccounts, 1.0f);
 	}
 	
 	
@@ -235,6 +243,26 @@ public class GroupSummaryView extends CustomComponent {
 	}
 	
 	
+	private void addParents() {
+		final HorizontalLayout hl = new HorizontalLayout();
+		final Label parentLabel = new Label("Parent(s):&nbsp;", Label.CONTENT_XHTML);
+		final Label delim = new Label(",&nbsp;", Label.CONTENT_XHTML);
+		int i = 1;
+		
+		hl.addComponent(parentLabel);
+		for (Button parentButton : parentButtons) {
+			parentButton.setStyleName(BaseTheme.BUTTON_LINK);
+			parentButton.addListener(parentButtonListener);
+			if (i > 1) {
+				hl.addComponent(delim);
+			}
+			hl.addComponent(parentButton);
+			i++;
+		}
+		topRightPanel.addComponent(hl);
+	}
+	
+	
 	private void addGroupTree() {
 		allUserGroups.setCaption("Group Structure:");
 		allUserGroups.setContainerDataSource(allUserGroupContainer);
@@ -257,6 +285,7 @@ public class GroupSummaryView extends CustomComponent {
 		allGrants.setColumnHeader(PropertyId.X_LINK_TITLE, "Assigned and inherited roles …");
 		
 		bottomRightPanel.addComponent(allGrants);
+		bottomRightPanel.setExpandRatio(allGrants, 1.0f);
 	}
 	
 	
@@ -269,12 +298,17 @@ public class GroupSummaryView extends CustomComponent {
 	}
 
 	
-	public void setGroup(final UserGroup userGroup) {
-		if (userGroup == null) {
+	public void setGroup(final String groupID) {
+		if (groupID == null) {
 			throw new IllegalArgumentException("userGroup must not be null.");
 		}
-		this.userGroup = userGroup;
-		bindData();
+		try {
+			close();
+			app.getGroupView().showSummaryView(groupService.getGroupById(groupID));
+		} catch (EscidocClientException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	
@@ -329,8 +363,9 @@ public class GroupSummaryView extends CustomComponent {
 	private List<UserAccount> getDirectUserAccountsFromGroup(final UserGroup group) {
 		List<UserAccount> userAccounts = new ArrayList<UserAccount>();
 		
-		userAccounts.addAll(getUserAccountsFromSelectors(group.getSelectors()));
-		
+		if (group != null) {
+			userAccounts.addAll(getUserAccountsFromSelectors(group.getSelectors()));
+		}
 		
 		return userAccounts;
 	}
@@ -397,6 +432,11 @@ public class GroupSummaryView extends CustomComponent {
 	
 	
 	private List<UserGroup> getParentUserGroups(final UserGroup group) {
+		return getParentUserGroups(group, true);
+	}
+	
+	
+	private List<UserGroup> getParentUserGroups(final UserGroup group, final boolean allParents) {
 		List<UserGroup> parentGroups = new ArrayList<UserGroup>();
 		try {
 			// iterate over all user groups and check if group exists as group selector
@@ -408,9 +448,11 @@ public class GroupSummaryView extends CustomComponent {
 						// parent found, add group to list
 						parentGroups.add(parent);
 						// check next parental level
-						final List<UserGroup> nextParentalGroups = getParentUserGroups(parent);
-						if (!nextParentalGroups.isEmpty()) {
-							parentGroups.addAll(nextParentalGroups);
+						if (allParents) {
+							final List<UserGroup> nextParentalGroups = getParentUserGroups(parent);
+							if (!nextParentalGroups.isEmpty()) {
+								parentGroups.addAll(nextParentalGroups);
+							}
 						}
 						break;
 					}
@@ -442,8 +484,29 @@ public class GroupSummaryView extends CustomComponent {
 		for (final Grant uncheckedGrant : grants) {
 			boolean addThis = true;
 			for (final Grant filteredGrant : filteredGrants) {
-				// grant is equal if object equals, role equals and assigned to equals
-				if (uncheckedGrant.getProperties().equals(filteredGrant.getProperties())) {
+				/*
+				 * grant is equal if role equals and assigned to equals (grant retrieval ensures that they are granted to actual object)
+				 * 
+				 * unscoped grant equality
+				 * A1=0 & A2=0 & R1=R2
+				 * 
+				 * scoped grant equality
+				 * A1=1 & A2=1 & A1=A2 & R1=R2
+				 * 
+				 * combined condition
+				 * ((A1=0 & A2=0) | (A1=1 & A2=1 & A1=A2)) & R1=R2
+				 */
+				if ( ((
+							uncheckedGrant.getProperties().getAssignedOn() == null 
+							&& filteredGrant.getProperties().getAssignedOn() == null
+						) 
+						|| 
+						(
+							uncheckedGrant.getProperties().getAssignedOn() != null
+							&& filteredGrant.getProperties().getAssignedOn() != null
+							&& uncheckedGrant.getProperties().getAssignedOn().equals(filteredGrant.getProperties().getAssignedOn())
+						)) 
+						&& uncheckedGrant.getProperties().getRole().equals(filteredGrant.getProperties().getRole())) {
 					// duplicate detected, switch value of addThis and leave inner loop
 					addThis = false;
 					break;
@@ -465,6 +528,7 @@ public class GroupSummaryView extends CustomComponent {
 	private void bindData() {
 		groupTitle = userGroup.getXLinkTitle();
 		bindUserAccounts();
+		bindParents();
 		bindGroupTree();
 		bindGrants();
 	}
@@ -477,6 +541,17 @@ public class GroupSummaryView extends CustomComponent {
 			allUserAccountsContainer.addPOJO(user);
 		}
 		allUserAccountsContainer.sort(new String[] {PropertyId.NAME}, new boolean[] {true});
+	}
+	
+	
+	private void bindParents() {
+		List<UserGroup> parents = getParentUserGroups(userGroup, false);
+		for (UserGroup parent : parents) {
+			Button parentButton = new Button();
+			parentButton.setCaption(parent.getXLinkTitle());
+			parentButton.setData(parent.getObjid());
+			parentButtons.add(parentButton);
+		}
 	}
 	
 	
@@ -552,22 +627,25 @@ public class GroupSummaryView extends CustomComponent {
 
 		@Override
 		public void itemClick(ItemClickEvent event) {
-			// TODO Auto-generated method stub
-			System.out.println("Selected item: " + event);
-			System.out.println("Selected item: " + event.getSource());
-			System.out.println("Selected item: " + event.getItem().getItemProperty(PropertyId.OBJECT_ID));
 			String groupID = event.getItem().getItemProperty(PropertyId.OBJECT_ID).toString();
 			if (groupID != null && !groupID.isEmpty() && !groupID.equals(userGroup.getObjid())) {
-				try {
-					System.out.println("group will be set to: " + groupID);
-					close();
-					System.out.println("modal window closed");
-					app.getGroupView().showSummaryView(groupService.getGroupById(groupID));
-					System.out.println("group setup complete");
-				} catch (EscidocClientException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				setGroup(groupID);
+			}
+		}
+		
+	}
+	
+	
+	private class ParentButtonListener implements Button.ClickListener {
+
+		private static final long serialVersionUID = 5807978674342765306L;
+
+		@Override
+		public void buttonClick(ClickEvent event) {
+			// TODO Auto-generated method stub
+			String groupID = (String) event.getButton().getData();
+			if (groupID != null && !groupID.isEmpty() && !groupID.equals(userGroup.getObjid())) {
+				setGroup(groupID);
 			}
 		}
 		
