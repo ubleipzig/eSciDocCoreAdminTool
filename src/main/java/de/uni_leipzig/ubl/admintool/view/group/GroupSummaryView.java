@@ -6,8 +6,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.opensaml.xacml.policy.EffectType;
-
 import com.google.common.base.Preconditions;
 import com.vaadin.data.util.HierarchicalContainer;
 import com.vaadin.data.util.POJOContainer;
@@ -31,7 +29,6 @@ import com.vaadin.ui.Window.Notification;
 import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.app.PropertyId;
 import de.escidoc.admintool.service.internal.UserService;
-import de.escidoc.admintool.view.EscidocPagedTable;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.client.exceptions.EscidocException;
@@ -288,7 +285,8 @@ public class GroupSummaryView extends CustomComponent {
 	private void addGroupTree() {
 		allUserGroups.setCaption("Group Structure:");
 		allUserGroups.setContainerDataSource(allUserGroupContainer);
-		allUserGroups.expandItemsRecursively(userGroup.getXLinkTitle());
+		allUserGroups.setItemCaptionPropertyId(PropertyId.NAME);
+		allUserGroups.expandItemsRecursively(allUserGroupContainer.firstItemId());
 		allUserGroups.select(userGroup.getXLinkTitle());
 		allUserGroups.setMultiSelect(false);
 		allUserGroups.setNullSelectionAllowed(false);
@@ -611,37 +609,39 @@ public class GroupSummaryView extends CustomComponent {
 		allUserGroupContainer.addContainerProperty(PropertyId.NAME, String.class, "");
 		allUserGroupContainer.addContainerProperty(PropertyId.OBJECT_ID, String.class, "");
 		
-		allUserGroupContainer.addItem(userGroup.getXLinkTitle());
-		allUserGroupContainer.getItem(userGroup.getXLinkTitle()).getItemProperty(PropertyId.NAME).setValue(userGroup.getXLinkTitle());
-		allUserGroupContainer.getItem(userGroup.getXLinkTitle()).getItemProperty(PropertyId.OBJECT_ID).setValue(userGroup.getObjid());
-		createGroupTree(userGroup);
+		Object rootId = allUserGroupContainer.addItem();
+		allUserGroupContainer.getItem(rootId).getItemProperty(PropertyId.NAME).setValue(userGroup.getXLinkTitle());
+		allUserGroupContainer.getItem(rootId).getItemProperty(PropertyId.OBJECT_ID).setValue(userGroup.getObjid());
+		createGroupTree(userGroup, rootId);
 		allUserGroupContainer.sort(new Object[] {PropertyId.NAME}, new boolean[] {true});
 	}
 	
 	
-	private void createGroupTree(final UserGroup parent) {
+	private void createGroupTree(final UserGroup parent, final Object parentTreeId) {
 		List<Selector> selectors = getUserGroupSelectors(parent);
 		if (selectors.isEmpty()) {
-			allUserGroupContainer.setChildrenAllowed(parent.getXLinkTitle(), false);
+			allUserGroupContainer.setChildrenAllowed(parent.getObjid(), false);
 		}
 		else {
 			for (final Selector selector : selectors) {
-				UserGroup group;
+				final UserGroup group;
 				try {
 					group = groupService.getGroupById(selector.getContent());
 					if (group != null) {
-						allUserGroupContainer.addItem(group.getXLinkTitle());
-						allUserGroupContainer.getItem(group.getXLinkTitle()).getItemProperty(PropertyId.NAME).setValue(group.getXLinkTitle());
-						allUserGroupContainer.getItem(group.getXLinkTitle()).getItemProperty(PropertyId.OBJECT_ID).setValue(group.getObjid());
-						allUserGroupContainer.setParent(group.getXLinkTitle(), parent.getXLinkTitle());
-						createGroupTree(group);
+						Object itemId = allUserGroupContainer.addItem();
+						allUserGroupContainer.getItem(itemId).getItemProperty(PropertyId.NAME).setValue(group.getXLinkTitle());
+						allUserGroupContainer.getItem(itemId).getItemProperty(PropertyId.OBJECT_ID).setValue(group.getObjid());
+						allUserGroupContainer.setParent(itemId, parentTreeId);
+						createGroupTree(group, itemId);
 					}
 					else {
-						// TODO handle dead selectors, group can be null !!!
+						// handle dead selectors, group can be null !!!
+						// display an informative leaf
 						String deadGroupInfo = "refered user group doesn't exist anymore (" + selector.getContent() + ")";
-						allUserGroupContainer.addItem(deadGroupInfo);
-						allUserGroupContainer.setParent(deadGroupInfo, parent.getXLinkTitle());
-						allUserGroupContainer.setChildrenAllowed(deadGroupInfo, false);
+						Object itemId = allUserGroupContainer.addItem();
+						allUserGroupContainer.getItem(itemId).getItemProperty(PropertyId.NAME).setValue(deadGroupInfo);
+						allUserGroupContainer.setParent(itemId, parentTreeId);
+						allUserGroupContainer.setChildrenAllowed(itemId, false);
 					}
 				} catch (EscidocClientException e) {
 					// TODO Auto-generated catch block
