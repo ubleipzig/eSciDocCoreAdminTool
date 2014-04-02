@@ -56,6 +56,8 @@ public class GroupSummaryView extends CustomComponent {
 	
 	private static final String WINDOW_WIDTH = WINDOW_WIDTH_INT + "%";
 	
+	private static final Object rootGroupTreeId = "tree";
+	
 	// app and services
 	private final AdminToolApplication app;
 	
@@ -286,8 +288,8 @@ public class GroupSummaryView extends CustomComponent {
 		allUserGroups.setCaption("Group Structure:");
 		allUserGroups.setContainerDataSource(allUserGroupContainer);
 		allUserGroups.setItemCaptionPropertyId(PropertyId.NAME);
-		allUserGroups.expandItemsRecursively(allUserGroupContainer.firstItemId());
-		allUserGroups.select(userGroup.getXLinkTitle());
+		allUserGroups.expandItemsRecursively(rootGroupTreeId);
+		allUserGroups.select(rootGroupTreeId);
 		allUserGroups.setMultiSelect(false);
 		allUserGroups.setNullSelectionAllowed(false);
 		allUserGroups.setImmediate(true);
@@ -609,10 +611,10 @@ public class GroupSummaryView extends CustomComponent {
 		allUserGroupContainer.addContainerProperty(PropertyId.NAME, String.class, "");
 		allUserGroupContainer.addContainerProperty(PropertyId.OBJECT_ID, String.class, "");
 		
-		Object rootId = allUserGroupContainer.addItem();
-		allUserGroupContainer.getItem(rootId).getItemProperty(PropertyId.NAME).setValue(userGroup.getXLinkTitle());
-		allUserGroupContainer.getItem(rootId).getItemProperty(PropertyId.OBJECT_ID).setValue(userGroup.getObjid());
-		createGroupTree(userGroup, rootId);
+		allUserGroupContainer.addItem(rootGroupTreeId);
+		allUserGroupContainer.getItem(rootGroupTreeId).getItemProperty(PropertyId.NAME).setValue(userGroup.getXLinkTitle());
+		allUserGroupContainer.getItem(rootGroupTreeId).getItemProperty(PropertyId.OBJECT_ID).setValue(userGroup.getObjid());
+		createGroupTree(userGroup, rootGroupTreeId);
 		allUserGroupContainer.sort(new Object[] {PropertyId.NAME}, new boolean[] {true});
 	}
 	
@@ -620,7 +622,7 @@ public class GroupSummaryView extends CustomComponent {
 	private void createGroupTree(final UserGroup parent, final Object parentTreeId) {
 		List<Selector> selectors = getUserGroupSelectors(parent);
 		if (selectors.isEmpty()) {
-			allUserGroupContainer.setChildrenAllowed(parent.getObjid(), false);
+			allUserGroupContainer.setChildrenAllowed(parentTreeId, false);
 		}
 		else {
 			for (final Selector selector : selectors) {
