@@ -19,12 +19,14 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CheckBox;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Table;
+import com.vaadin.ui.Table.ColumnGenerator;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
@@ -36,6 +38,7 @@ import com.vaadin.ui.themes.Reindeer;
 import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.app.PropertyId;
 import de.escidoc.admintool.domain.PdpRequest;
+import de.escidoc.admintool.service.internal.UserService;
 import de.escidoc.admintool.view.ModalDialog;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.admintool.view.context.LinkClickListener;
@@ -49,6 +52,7 @@ import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
 import de.escidoc.core.resources.aa.useraccount.Grant;
+import de.escidoc.core.resources.aa.useraccount.UserAccount;
 import de.escidoc.core.resources.aa.usergroup.Selector;
 import de.escidoc.core.resources.aa.usergroup.SelectorType;
 import de.escidoc.core.resources.aa.usergroup.UserGroup;
@@ -59,6 +63,7 @@ import de.uni_leipzig.ubl.admintool.service.internal.GroupService;
 import de.uni_leipzig.ubl.admintool.view.group.selector.AddAttributeSelector;
 import de.uni_leipzig.ubl.admintool.view.group.selector.AddAttributeSelectorButtonListener;
 import de.uni_leipzig.ubl.admintool.view.group.selector.AddInternalSelector;
+import de.uni_leipzig.ubl.admintool.view.group.selector.InternalSelectorName;
 import de.uni_leipzig.ubl.admintool.view.group.selector.RemoveSelectorButtonListener;
 
 @SuppressWarnings("serial")
@@ -306,6 +311,9 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 	private void addInternalSelectors() {
 		setupSelectors(selectorsInternal);
 		selectorsInternal.setMultiSelect(true);
+		selectorsInternal.addContainerProperty(PropertyId.NAME, String.class, "", null, null, null);
+		selectorsInternal.addGeneratedColumn(PropertyId.NAME, new InternalSelectorReadableNameColumnGenerator());
+		selectorsInternal.setColumnExpandRatio(PropertyId.NAME, 1.0f);
 	}
 	
 	private void addAttributeSelectors() {
@@ -522,7 +530,7 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 			selectorInternalContainer = 
 					new POJOContainer<Selector>(Selector.class, "content", "name", "type");
 			selectorsInternal.setContainerDataSource(selectorInternalContainer);
-			selectorsInternal.setVisibleColumns(new String[] { "content", "name" });
+			selectorsInternal.setVisibleColumns(new String[] { "content", "name", PropertyId.NAME });
 
 			selectorAttributeContainer = 
 					new POJOContainer<Selector>(Selector.class, "content", "name", "type");
@@ -538,6 +546,7 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 					selectorAttributeContainer.addPOJO(selector);
 				}
 			}
+			selectorInternalContainer.sort(new Object[] { "content" }, new boolean[] { true }); // FIXME - sort didn't work
 			selectorInternalSize = selectorInternalContainer.size();
 			selectorAttributeSize = selectorAttributeContainer.size();
 		}
@@ -855,6 +864,52 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 				LOG.error("An unexpected error occured! See LOG for details.", e);
 				ModalDialog.show(mainWindow, e);
 			}
+		}
+		
+	}
+	
+	// column generators
+	
+	private class InternalSelectorReadableNameColumnGenerator implements ColumnGenerator {
+		
+		private final UserService userService = app.getUserService();
+
+		@Override
+		public Component generateCell(Table source, Object itemId, Object columnId) {
+			// get selector, name and content
+			Selector selector = (Selector) itemId;
+			if (selector != null) {
+				String name = selector.getName();
+				String content = selector.getContent();
+				
+				if (name.equals(InternalSelectorName.USER_ACCOUNT.getXmlValue())) {
+					try {
+						UserAccount ua = userService.getUserById(content);
+						if (ua != null) {
+							return new Label(ua.getXLinkTitle());
+						}
+						else {
+							// TODO possibility to highlight dead references
+						}
+					} catch (EscidocClientException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				else if (name.equals(InternalSelectorName.USER_GROUP.getXmlValue())) {
+					try {
+						UserGroup ug = groupService.getGroupById(content);
+						if (ug != null) {
+							return new Label(ug.getXLinkTitle());
+						}
+					} catch (EscidocClientException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+					
+			return null;
 		}
 		
 	}
