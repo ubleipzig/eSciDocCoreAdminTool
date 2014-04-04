@@ -2,13 +2,16 @@ package de.uni_leipzig.ubl.admintool.view.group;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Preconditions;
 import com.vaadin.data.Item;
+import com.vaadin.data.Property;
 import com.vaadin.data.util.POJOContainer;
 import com.vaadin.terminal.SystemError;
 import com.vaadin.ui.Accordion;
@@ -24,6 +27,7 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Table;
+import com.vaadin.ui.Table.CellStyleGenerator;
 import com.vaadin.ui.Table.ColumnGenerator;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
@@ -84,6 +88,8 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 	
 	final GroupService groupService;
 	
+	final UserService userService;
+	
 	private final PdpRequest pdpRequest;
 	
 	private Item item;
@@ -95,6 +101,8 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 	POJOContainer<Selector> selectorInternalContainer;
 
 	POJOContainer<Selector> selectorAttributeContainer;
+	
+	Map<String, String> selectorsInternalTitles = new HashMap<String, String>();
 	
 	// fields
     private final Label objId = new Label();
@@ -163,6 +171,7 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 		
 		this.app = app;
 		this.groupService = groupService;
+		this.userService = app.getUserService();
 		this.pdpRequest = pdpRequest;
 		mainWindow = app.getMainWindow();
 	}
@@ -310,6 +319,7 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 		selectorsInternal.setMultiSelect(true);
 		selectorsInternal.addContainerProperty(PropertyId.NAME, String.class, "", null, null, null);
 		selectorsInternal.addGeneratedColumn(PropertyId.NAME, new InternalSelectorReadableNameColumnGenerator());
+		selectorsInternal.setCellStyleGenerator(new InternalSelectorHighlightStyleGenerator());
 		selectorsInternal.setColumnExpandRatio(PropertyId.NAME, 1.0f);
 	}
 	
@@ -538,6 +548,8 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 				// split selectors by type
 				if (selector.getType() == SelectorType.INTERNAL) {
 					selectorInternalContainer.addPOJO(selector);
+					// get title of internal selector and store that information
+					selectorsInternalTitles.put(selector.getContent(), getInternalSelectorTitle(selector));
 				}
 				else {
 					selectorAttributeContainer.addPOJO(selector);
@@ -616,6 +628,37 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
     @SuppressWarnings("unchecked")
 	private Collection<Selector> getSelectors() {
     	return (Collection<Selector>) retrieveResourcesForGroupByType(groupObjectId, RESOURCE_TYPE_SELECTOR);
+    }
+    
+    private String getInternalSelectorTitle(final Selector selector) {
+		if (selector != null) {
+			String name = selector.getName();
+			String content = selector.getContent();
+			
+			if (name.equals(InternalSelectorName.USER_ACCOUNT.getXmlValue())) {
+				try {
+					UserAccount ua = userService.getUserById(content);
+					if (ua != null) {
+						return ua.getXLinkTitle();
+					}
+				} catch (EscidocClientException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			else if (name.equals(InternalSelectorName.USER_GROUP.getXmlValue())) {
+				try {
+					UserGroup ug = groupService.getGroupById(content);
+					if (ug != null) {
+						return ug.getXLinkTitle();
+					}
+				} catch (EscidocClientException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		return "";
     }
     
     private Collection<?> retrieveResourcesForGroupByType(String groupObjectId, String type) {
@@ -869,43 +912,27 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 	
 	private class InternalSelectorReadableNameColumnGenerator implements ColumnGenerator {
 		
-		private final UserService userService = app.getUserService();
-
 		@Override
 		public Component generateCell(Table source, Object itemId, Object columnId) {
-			// get selector, name and content
+			// get selector and its title from already prepared map selectorsInternalTitles
 			Selector selector = (Selector) itemId;
 			if (selector != null) {
-				String name = selector.getName();
-				String content = selector.getContent();
-				
-				if (name.equals(InternalSelectorName.USER_ACCOUNT.getXmlValue())) {
-					try {
-						UserAccount ua = userService.getUserById(content);
-						if (ua != null) {
-							return new Label(ua.getXLinkTitle());
-						}
-						else {
-							// TODO possibility to highlight dead references
-						}
-					} catch (EscidocClientException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-				else if (name.equals(InternalSelectorName.USER_GROUP.getXmlValue())) {
-					try {
-						UserGroup ug = groupService.getGroupById(content);
-						if (ug != null) {
-							return new Label(ug.getXLinkTitle());
-						}
-					} catch (EscidocClientException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
+				return new Label(selectorsInternalTitles.get(selector.getContent()));
 			}
 					
+			return null;
+		}
+		
+	}
+	
+	private class InternalSelectorHighlightStyleGenerator implements CellStyleGenerator {
+
+		@Override
+		public String getStyle(Object itemId, Object propertyId) {
+			// if title is empty, add style v-table-row-deadReference
+			if (selectorsInternalTitles.get(((Selector) itemId).getContent()).equals("")) {
+				return "deadReference";
+			}
 			return null;
 		}
 		
