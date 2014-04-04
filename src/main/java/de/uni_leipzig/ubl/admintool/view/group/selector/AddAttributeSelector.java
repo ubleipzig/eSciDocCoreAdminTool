@@ -1,14 +1,10 @@
 package de.uni_leipzig.ubl.admintool.view.group.selector;
 
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Preconditions;
-import com.vaadin.data.Property;
 import com.vaadin.data.util.ObjectProperty;
-import com.vaadin.data.util.POJOItem;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.FormLayout;
@@ -21,14 +17,10 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 
 import de.escidoc.admintool.app.AdminToolApplication;
-import de.escidoc.admintool.app.PropertyId;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.admintool.view.context.listener.CancelButtonListener;
 import de.escidoc.admintool.view.util.LayoutHelper;
 import de.escidoc.admintool.view.validator.EmptyFieldValidator;
-import de.escidoc.core.resources.aa.usergroup.Selector;
-import de.escidoc.core.resources.aa.usergroup.SelectorType;
-import de.escidoc.core.resources.aa.usergroup.UserGroup;
 import de.uni_leipzig.ubl.admintool.service.internal.GroupService;
 
 public class AddAttributeSelector implements ClickListener {
@@ -48,10 +40,6 @@ public class AddAttributeSelector implements ClickListener {
 	protected final GroupService groupService;
 	
 	protected final Table selectorsAttribute;
-	
-	private List<Object> assignedSelectors;
-	
-	private UserGroup userGroup;
 	
 	protected Window mainWindow;
 	

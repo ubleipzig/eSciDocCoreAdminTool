@@ -4,8 +4,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import javax.swing.ButtonModel;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -61,7 +59,6 @@ import de.escidoc.core.resources.common.reference.RoleRef;
 import de.escidoc.core.resources.common.reference.UserAccountRef;
 import de.uni_leipzig.ubl.admintool.service.internal.GroupService;
 import de.uni_leipzig.ubl.admintool.view.group.selector.AddAttributeSelector;
-import de.uni_leipzig.ubl.admintool.view.group.selector.AddAttributeSelectorButtonListener;
 import de.uni_leipzig.ubl.admintool.view.group.selector.AddInternalSelector;
 import de.uni_leipzig.ubl.admintool.view.group.selector.InternalSelectorName;
 import de.uni_leipzig.ubl.admintool.view.group.selector.RemoveSelectorButtonListener;
