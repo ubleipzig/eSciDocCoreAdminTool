@@ -697,7 +697,7 @@ public class AdminToolApplication extends Application {
 	}
 
 	public void showGroupSummaryView(UserGroup userGroup) {
-		final GroupSummaryView gsv = new GroupSummaryView(this, groupService, userService, userGroup);
+		final GroupSummaryView gsv = new GroupSummaryView(this, groupService, userService, orgUnitServiceLab, userGroup);
 		gsv.show();
 	}
 }

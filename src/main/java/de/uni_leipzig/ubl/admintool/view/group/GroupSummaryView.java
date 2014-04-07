@@ -2,8 +2,10 @@ package de.uni_leipzig.ubl.admintool.view.group;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.google.common.base.Preconditions;
@@ -27,7 +29,9 @@ import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.Notification;
 
 import de.escidoc.admintool.app.AdminToolApplication;
+import de.escidoc.admintool.app.AppConstants;
 import de.escidoc.admintool.app.PropertyId;
+import de.escidoc.admintool.service.internal.OrgUnitServiceLab;
 import de.escidoc.admintool.service.internal.UserService;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.core.client.exceptions.EscidocClientException;
@@ -35,12 +39,15 @@ import de.escidoc.core.client.exceptions.EscidocException;
 import de.escidoc.core.client.exceptions.InternalClientException;
 import de.escidoc.core.client.exceptions.TransportException;
 import de.escidoc.core.resources.Resource;
+import de.escidoc.core.resources.aa.useraccount.Attribute;
+import de.escidoc.core.resources.aa.useraccount.Attributes;
 import de.escidoc.core.resources.aa.useraccount.Grant;
 import de.escidoc.core.resources.aa.useraccount.UserAccount;
 import de.escidoc.core.resources.aa.usergroup.Selector;
 import de.escidoc.core.resources.aa.usergroup.SelectorType;
 import de.escidoc.core.resources.aa.usergroup.Selectors;
 import de.escidoc.core.resources.aa.usergroup.UserGroup;
+import de.escidoc.core.resources.oum.OrganizationalUnit;
 import de.uni_leipzig.ubl.admintool.service.internal.GroupService;
 import de.uni_leipzig.ubl.admintool.view.group.selector.InternalSelectorName;
 
@@ -64,6 +71,8 @@ public class GroupSummaryView extends CustomComponent {
 	private final GroupService groupService;
 	
 	private final UserService userService;
+	
+	private final OrgUnitServiceLab orgUnitServiceLab;
 	
 	// data
 	private UserGroup userGroup;
@@ -131,14 +140,16 @@ public class GroupSummaryView extends CustomComponent {
 	
 	
 	public GroupSummaryView(final AdminToolApplication app, final GroupService groupService, final UserService userService,
-			final UserGroup userGroup) {
+			final OrgUnitServiceLab orgUnitServiceLab, final UserGroup userGroup) {
 		Preconditions.checkNotNull(app, "app is null: %s", app);
 		Preconditions.checkNotNull(groupService, "groupService is null: %s", groupService);
 		Preconditions.checkNotNull(userService, "userService is null: %s", userService);
+		Preconditions.checkNotNull(orgUnitServiceLab, "orgUnitServiceLab is null: %s", orgUnitServiceLab);
 		Preconditions.checkNotNull(userGroup, "userGroup is null: %s", userGroup);
 		this.app = app;
 		this.groupService = groupService;
 		this.userService = userService;
+		this.orgUnitServiceLab = orgUnitServiceLab;
 		this.userGroup = userGroup;
 		bindData();
 	}
@@ -371,8 +382,10 @@ public class GroupSummaryView extends CustomComponent {
 		rawUsers.addAll(groupUAs);
 		numGroupUAs = groupUAs.size();
 		
-		// TODO add user accounts from attribute selectors
-		
+		// add user accounts from attribute selectors
+		List<UserAccount> attributeUAs = (List<UserAccount>) removeDuplicates(getAttributedUserAccountsFromGroup(userGroup));
+		rawUsers.addAll(attributeUAs);
+		numAttributeUAs = attributeUAs.size();
 		
 		finalUsers = (List<UserAccount>) removeDuplicates(rawUsers);
 		numTotalUAs = rawUsers.size();
@@ -421,6 +434,9 @@ public class GroupSummaryView extends CustomComponent {
 					
 					// get group UAs from group
 					userAccounts.addAll(getGroupUserAccountsFromGroup(selectorGroup));
+					
+					// get attribute UAs from group
+					userAccounts.addAll(getAttributedUserAccountsFromGroup(selectorGroup));
 				}
 				else {
 					// user group doesn't exist, so add selector to dead selectors
@@ -436,6 +452,56 @@ public class GroupSummaryView extends CustomComponent {
 	}
 
 	
+	private List<UserAccount> getAttributedUserAccountsFromGroup(final UserGroup group) {
+		List<UserAccount> userAccounts = new ArrayList<UserAccount>();
+		
+		// get attribute selectors
+		List<Selector> attributeSelectors = getUserAttributeSelectors(group);		
+		// get all users with user attributes
+		Map<String, Attributes> idsAndAttributes = getAttributedUserAccounts();
+		// check existence of attribute selector in attributed user accounts: match will be added to list
+		for (final Selector selector : attributeSelectors) {
+			// for attribute selectors
+			for (final String id : idsAndAttributes.keySet()) {
+				// for attributed UAs
+				for (final Attribute attribute : idsAndAttributes.get(id)) {
+					// for attributes on user account
+					if (selector.getName().equals(attribute.getName())
+							&& selector.getContent().equals(attribute.getValue())) {
+						// UA matches attributes and will be added to list
+						try {
+							userAccounts.add(userService.getUserById(id));
+						} catch (EscidocClientException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				}
+			}
+		}
+		
+		return userAccounts;
+	}
+
+
+	private Map<String, Attributes> getAttributedUserAccounts() {
+		Map<String, Attributes> idsAndAttributes= new HashMap<String, Attributes>();
+		try {
+			Collection<UserAccount> allUsers = userService.findAll();
+			for (final UserAccount user : allUsers) {
+				Attributes attributes = userService.retrieveAttributes(user.getObjid());
+				if (attributes != null) {
+					idsAndAttributes.put(user.getObjid(), attributes);
+				}
+			}
+		} catch (EscidocClientException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return idsAndAttributes;
+	}
+
+
 	private Collection<UserAccount> getUserAccountsFromSelectors(final Selectors selectors) {
 		List<UserAccount> users = new ArrayList<UserAccount>();
 		
@@ -471,12 +537,70 @@ public class GroupSummaryView extends CustomComponent {
 		if (selectors instanceof Collection<?>) {
 			for (final Selector selector : selectors) {
 				if (selector.getType().equals(SelectorType.INTERNAL) && selector.getName().equals(InternalSelectorName.USER_GROUP.getXmlValue())) {
-						groupSelectors.add(selector);
+					groupSelectors.add(selector);
 				}
 			}
 		} 
 		
 		return groupSelectors;
+	}
+	
+	
+	private List<Selector> getUserAttributeSelectors(final UserGroup group) {
+		List<Selector> attributeSelectors = new ArrayList<Selector>();
+		List<String> addedOrgUnitIds = new ArrayList<String>();
+		final List<Selector> selectors = group.getSelectors();
+		
+		for (final Selector selector : selectors) {
+			if (selector.getType().equals(SelectorType.USER_ATTRIBUTE)) {
+				attributeSelectors.add(selector);
+				addedOrgUnitIds.add(selector.getContent());
+				// if user attribute is organizational unit, user attribute resolve OU dependencies,
+				// that means get OU child structure and get all related user accounts
+				if (selector.getName().equals(AppConstants.ORGANIZATIONAL_UNIT_DEFAULT_ATTRIBUTE_NAME)) {
+					// attribute specify an organizational unit, get the children
+					// and add them to the list of attributed selectors
+					for (OrganizationalUnit ou : getAllChlidrenFromOrgUnitById(selector.getContent())) {
+						if (!addedOrgUnitIds.contains(ou.getObjid())) {
+							attributeSelectors.add(new Selector(ou.getObjid(), AppConstants.ORGANIZATIONAL_UNIT_DEFAULT_ATTRIBUTE_NAME, SelectorType.USER_ATTRIBUTE));
+							addedOrgUnitIds.add(ou.getObjid());
+						}
+						else {
+						}
+					}
+				}
+			}
+		}
+		
+		return attributeSelectors;
+	}
+	
+	
+	private List<OrganizationalUnit> getAllChlidrenFromOrgUnitById(final String orgUnitId) {
+		List<OrganizationalUnit> allOrgUnitChildren = new ArrayList<OrganizationalUnit>();
+		
+		try {
+			Collection<OrganizationalUnit> orgUnitChildren = orgUnitServiceLab.retrieveChildren(orgUnitId);
+			if (orgUnitChildren != null) {
+				for (final OrganizationalUnit ou : orgUnitChildren) {
+					allOrgUnitChildren.add(ou);
+					List<OrganizationalUnit> orgUnitChildChildren = getAllChlidrenFromOrgUnitById(ou.getObjid());
+					if (!orgUnitChildChildren.isEmpty()) {
+						allOrgUnitChildren.addAll(orgUnitChildChildren);
+					}
+				}
+			}
+		} catch (EscidocException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InternalClientException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (TransportException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return allOrgUnitChildren;
 	}
 	
 	
