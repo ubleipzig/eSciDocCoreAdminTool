@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Preconditions;
 import com.vaadin.data.Item;
-import com.vaadin.data.Property;
 import com.vaadin.data.util.POJOContainer;
 import com.vaadin.terminal.SystemError;
 import com.vaadin.ui.Accordion;
@@ -109,7 +108,7 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
     private TextField name; 		// required
     private TextField label;		// required
     private TextArea description;
-    private TextField email;		// FIXME email is optional but implemented as required
+    private TextField email;
     private CheckBox activeStatus;
     final Table roles = new Table();
     final Table selectorsInternal = new Table();
@@ -139,13 +138,13 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 	
 	private final HorizontalLayout header = new HorizontalLayout();
 	
-	private final HorizontalLayout footer = new HorizontalLayout();
+	private final HorizontalLayout saveCancelButtons = new HorizontalLayout();
 	
 	private final Button newGroupBtn = new Button(ViewConstants.NEW, new NewGroupListener());
 	
 	private final Button deleteGroupBtn = new Button(ViewConstants.DELETE, new DeleteGroupListener());
 	
-	private final Button finalBtn = new Button("show final", new GroupSummaryViewListener());
+	private final Button finalBtn = new Button("Show Group Summary", new GroupSummaryViewListener());
 	
 	private final Button saveBtn = new Button(ViewConstants.SAVE_LABEL, this);
 	
@@ -189,13 +188,12 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
         addCreated();
         addModified();
         addActiveStatus();
+        addSaveCancelButtons();
         
         addVerticalSpace();
         addRoles();
         addVerticalSpace();
         addSelectors();
-        
-        addFooter();
 }
 	
     private void addVerticalSpace() {
@@ -261,6 +259,16 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 		activeStatus = new CheckBox();
 		activeStatus.setWriteThrough(false);
 		tab1.addComponent(LayoutHelper.create(ViewConstants.ACTIVE_STATUS, activeStatus, LABEL_WIDTH, false));
+	}
+	
+	private void addSaveCancelButtons() {
+		final Label space  = new Label();
+		space.setWidth(ViewConstants.DEFAULT_LABEL_WIDTH, UNITS_PIXELS);
+		
+		saveCancelButtons.addComponent(space);
+		saveCancelButtons.addComponent(saveBtn);
+		saveCancelButtons.addComponent(cancelBtn);
+		tab1.addComponent(saveCancelButtons);
 	}
 	
 	private void addRoles() {
@@ -337,16 +345,6 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
         selectors.setColumnHeaderMode(Table.COLUMN_HEADER_MODE_HIDDEN);
 	}
 	
-	private void addFooter() {
-		footer.setWidth(100, UNITS_PERCENTAGE);
-		final HorizontalLayout hl = new HorizontalLayout();
-		hl.addComponent(saveBtn);
-		hl.addComponent(cancelBtn);
-		footer.addComponent(hl);
-		footer.setComponentAlignment(hl, Alignment.MIDDLE_RIGHT);
-		base.addComponent(footer);
-	}
-
 	private void configureLayout() {
 		setCompositionRoot(panel);
 		panel.setStyleName(Reindeer.PANEL_LIGHT);
@@ -404,9 +402,13 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
     private HorizontalLayout createHeader() {
         header.setMargin(true);
         header.setSpacing(true);
+        header.setWidth(100, UNITS_PERCENTAGE);
+        header.addComponent(finalBtn);
        	header.addComponent(newGroupBtn);
-       	header.addComponent(deleteGroupBtn);   
-       	header.addComponent(finalBtn);
+       	header.addComponent(deleteGroupBtn);
+       	header.setExpandRatio(finalBtn, 1.0f);
+       	header.setComponentAlignment(newGroupBtn, Alignment.TOP_RIGHT);
+       	header.setComponentAlignment(deleteGroupBtn, Alignment.TOP_RIGHT);
         header.setVisible(true);
         return header;
 	}
@@ -577,7 +579,7 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 		email.setReadOnly(true);
 		activeStatus.setReadOnly(isDeactivateGroupNotAllowed());
 		if (isUpdateGroupNotAllowed()) {
-			tab1.removeComponent(footer);
+			tab1.removeComponent(saveCancelButtons);
 		}
 		roles.setReadOnly(!isCreateUserGroupGrantAllowed() && !isRevokeUserGroupGrantAllowed());
 		addRoleBtn.setVisible(isCreateUserGroupGrantAllowed());
