@@ -2,11 +2,13 @@ package de.uni_leipzig.ubl.admintool.view.group;
 
 import java.util.Set;
 
+import com.google.common.base.Preconditions;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Window.Notification;
 
+import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.app.Command;
 import de.escidoc.admintool.view.ViewConstants;
 import de.escidoc.admintool.view.role.RevokeGrantWindow;
@@ -23,7 +25,8 @@ public class RemoveRoleButtonListener implements ClickListener {
 	/**
 	 * @param groupEditForm
 	 */
-	public RemoveRoleButtonListener(GroupEditForm groupEditForm) {
+	public RemoveRoleButtonListener(final GroupEditForm groupEditForm) {
+		Preconditions.checkNotNull(groupEditForm, "groupEditForm is null: %s", groupEditForm);
 		this.groupEditForm = groupEditForm;
 	}
 
@@ -47,7 +50,7 @@ public class RemoveRoleButtonListener implements ClickListener {
 	}
 
 	private Command createRevokeGrantCommand(final Grant grant) {
-		return new RevokeGrantCommand(this.groupEditForm.groupService, this.groupEditForm.groupObjectId, grant);
+		return new RevokeGrantCommand(this.groupEditForm.app, this.groupEditForm.groupService, this.groupEditForm.groupObjectId, grant);
 	}
 
 }
