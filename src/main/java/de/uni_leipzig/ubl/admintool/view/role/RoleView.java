@@ -542,7 +542,7 @@ public class RoleView extends CustomComponent {
                 // TODO search resource with type:[resourceType] and
                 // title:[userInput] OR objectID:[userInput]
                 final String userInput = (String) value;
-                foundContexts = seachContextByName(userInput);
+                foundContexts = searchContextByName(userInput);
                 if (isContextFound()) {
                     mainWindow.showNotification(foundContexts.iterator().next().getObjid());
                 }
@@ -554,7 +554,7 @@ public class RoleView extends CustomComponent {
             return !foundContexts.isEmpty();
         }
 
-        private Collection<Context> seachContextByName(final String userInput) {
+        private Collection<Context> searchContextByName(final String userInput) {
             try {
                 return contextService.findByTitle(userInput);
             }
