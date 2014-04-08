@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.vaadin.dialogs.ConfirmDialog;
 
 import com.google.common.base.Preconditions;
 import com.vaadin.data.Item;
@@ -808,7 +809,7 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 		}
 	}
 	
-	public UserGroup deleteGroup() throws EscidocClientException {
+	private UserGroup deleteGroup() throws EscidocClientException {
 		return groupService.delete(getSelectedItemId());
 	}
 	
@@ -863,28 +864,37 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 
 		@Override
 		public void buttonClick(ClickEvent event) {
-            try {
-                final UserGroup deletedUserGroup = deleteGroup();
-                ((GroupView) getParent().getParent()).remove(deletedUserGroup);
-                showMessage("User Group »" + deletedUserGroup.getProperties().getName() + "« is deleted.");
-            }
-            catch (final InternalClientException e) {
-                setComponentError(new SystemError(e.getMessage()));
-                LOG.error(ViewConstants.AN_UNEXPECTED_ERROR_OCCURED_SEE_LOG_FOR_DETAILS, e);
-            }
-            catch (final TransportException e) {
-                setComponentError(new SystemError(e.getMessage()));
-                LOG.error(ViewConstants.AN_UNEXPECTED_ERROR_OCCURED_SEE_LOG_FOR_DETAILS, e);
-            }
-            catch (final EscidocException e) {
-                LOG.error(ViewConstants.AN_UNEXPECTED_ERROR_OCCURED_SEE_LOG_FOR_DETAILS, e);
-                setComponentError(new SystemError(e.getMessage()));
-            }
-            catch (final EscidocClientException e) {
-                setComponentError(new SystemError(e.getMessage()));
-                LOG.error("An unexpected error occured! See LOG for details.", e);
-                ModalDialog.show(mainWindow, e);
-            }
+        	// open confirmation dialog
+			ConfirmDialog.show(mainWindow, "Delete User Group?", new ConfirmDialog.Listener() {
+				
+				@Override
+				public void onClose(ConfirmDialog dialog) {
+					if (dialog.isConfirmed()) {
+						try {
+	                		final UserGroup deletedUserGroup = deleteGroup();
+	                		((GroupView) getParent().getParent()).remove(deletedUserGroup);
+	                		showMessage("User Group »" + deletedUserGroup.getProperties().getName() + "« is deleted.");
+						}
+						catch (final InternalClientException e) {
+							setComponentError(new SystemError(e.getMessage()));
+							LOG.error(ViewConstants.AN_UNEXPECTED_ERROR_OCCURED_SEE_LOG_FOR_DETAILS, e);
+						}
+						catch (final TransportException e) {
+							setComponentError(new SystemError(e.getMessage()));
+							LOG.error(ViewConstants.AN_UNEXPECTED_ERROR_OCCURED_SEE_LOG_FOR_DETAILS, e);
+						}
+						catch (final EscidocException e) {
+							LOG.error(ViewConstants.AN_UNEXPECTED_ERROR_OCCURED_SEE_LOG_FOR_DETAILS, e);
+							setComponentError(new SystemError(e.getMessage()));
+						}
+						catch (final EscidocClientException e) {
+							setComponentError(new SystemError(e.getMessage()));
+							LOG.error(ViewConstants.AN_UNEXPECTED_ERROR_OCCURED_SEE_LOG_FOR_DETAILS, e);
+							ModalDialog.show(mainWindow, e);
+						}
+					}
+				}
+			});
         }
 	}
 	
