@@ -55,6 +55,7 @@ public class RemoveSelectorButtonListener implements ClickListener {
 			UserGroup updatedUserGroup = removeSelectors(removableSelectors);
 			if (updatedUserGroup != null) {
 				updateView(updatedUserGroup);
+				LOG.info("Selectors removed from User Group »{}«: {}", updatedUserGroup.getProperties().getName(), removableSelectors);
 				showMessage();
 			}
 		}

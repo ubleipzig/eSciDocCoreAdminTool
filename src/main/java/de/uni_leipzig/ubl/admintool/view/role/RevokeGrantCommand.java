@@ -28,18 +28,22 @@
  */
 package de.uni_leipzig.ubl.admintool.view.role;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.vaadin.ui.Window.Notification;
 
 import de.escidoc.admintool.app.AdminToolApplication;
 import de.escidoc.admintool.app.Command;
-import de.escidoc.admintool.service.internal.UserService;
 import de.escidoc.core.client.exceptions.EscidocClientException;
 import de.escidoc.core.resources.aa.useraccount.Grant;
 import de.uni_leipzig.ubl.admintool.service.internal.GroupService;
 
 public class RevokeGrantCommand implements Command {
 
-    private final AdminToolApplication app;
+    private static final Logger LOG = LoggerFactory.getLogger(RevokeGrantCommand.class);
+	
+	private final AdminToolApplication app;
     
     private final GroupService groupService;
 
@@ -49,10 +53,10 @@ public class RevokeGrantCommand implements Command {
 
     private String comment;
 
-    public RevokeGrantCommand(final AdminToolApplication app, final GroupService groupService, final String userId, final Grant grant) {
+    public RevokeGrantCommand(final AdminToolApplication app, final GroupService groupService, final String grpId, final Grant grant) {
         this.app = app;
     	this.groupService = groupService;
-        this.groupId = userId;
+        this.groupId = grpId;
         this.grant = grant;
     }
 
@@ -63,6 +67,8 @@ public class RevokeGrantCommand implements Command {
     @Override
     public void execute() throws EscidocClientException {
         groupService.revokeGrant(groupId, grant, comment);
+        // FIXME comment not set
+        LOG.info("Grant revoked from  User Group »{}« with comment: '{}'", groupService.getGroupById(groupId).getProperties().getName(), comment);
         app.getMainWindow().showNotification("info", "Grant revoked from group.", Notification.TYPE_TRAY_NOTIFICATION);
     }
 }

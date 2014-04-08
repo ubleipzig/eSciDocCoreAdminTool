@@ -286,6 +286,9 @@ public class GroupAddView extends CustomComponent implements ClickListener {
 	private UserGroup createUserGroup() throws EscidocException, InternalClientException, TransportException {
 		final UserGroup createdUserGroup =
 				groupService.create(nameProperty.getValue(), labelProperty.getValue(), descriptionProperty.getValue(), emailProperty.getValue());
+		if (createdUserGroup != null) {
+			LOG.info("User Group »{}« created.", createdUserGroup.getProperties().getName());
+		}
 		return createdUserGroup;
 	}
 

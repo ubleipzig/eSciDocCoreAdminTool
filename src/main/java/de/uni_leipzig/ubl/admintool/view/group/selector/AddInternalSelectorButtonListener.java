@@ -76,6 +76,7 @@ public class AddInternalSelectorButtonListener implements ClickListener {
 				// close modal Window and update EditFormView
 				updateView(updatedUserGroup);
 				closeWindow();
+				LOG.info("Internal Selector(s) added to User Group »{}«: {}", updatedUserGroup.getProperties().getName(), newSelectors);
 				showMessage();
 			} catch (final EscidocException e) {
 				LOG.error(ViewConstants.AN_UNEXPECTED_ERROR_OCCURED_SEE_LOG_FOR_DETAILS, e);

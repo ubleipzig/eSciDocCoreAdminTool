@@ -452,16 +452,20 @@ public class RoleView extends CustomComponent {
         private void assignRole() {
             try {
                 if (resourceType.equals(ResourceType.USERACCOUNT)) {
-	            	userService
-	                    .assign(getSelectedUser()).withRole(getSelectedRole()).onResources(getSelectedResources())
+	            	UserAccount user = getSelectedUser();
+                	userService
+	                    .assign(user).withRole(getSelectedRole()).onResources(getSelectedResources())
 	                    .execute();
-	                app.showUser(getSelectedUser());
+	            	LOG.info("Role assigned to User Group »{}«", user.getProperties().getName());
+	                app.showUser(user);
                 } 
                 else if (resourceType.equals(ResourceType.USERGROUP)) {
+                	UserGroup group = getSelectedGroup(); 
                 	groupService
-                		.assign(getSelectedGroup()).withRole(getSelectedRole()).onResources(getSelectedResources())
+                		.assign(group).withRole(getSelectedRole()).onResources(getSelectedResources())
                 		.execute();
-                	app.showGroup(getSelectedGroup());
+                	LOG.info("Role assigned to User Group »{}«", group.getProperties().getName());
+                	app.showGroup(group);
                 }
                 closeWindow();
                 showMessage();

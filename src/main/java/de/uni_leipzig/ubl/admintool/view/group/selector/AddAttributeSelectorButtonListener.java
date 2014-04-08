@@ -3,6 +3,7 @@ package de.uni_leipzig.ubl.admintool.view.group.selector;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -74,6 +75,7 @@ public class AddAttributeSelectorButtonListener implements ClickListener {
 				
 				updateView(updatedUserGroup);
 				closeWindow();
+				LOG.info("User-Attribute Selector added to User Group »{}«: {}", updatedUserGroup.getProperties().getName(), newSelectors);
 				showMessage();
 			} catch (EscidocClientException e) {
 				LOG.error(ViewConstants.AN_UNEXPECTED_ERROR_OCCURED_SEE_LOG_FOR_DETAILS, e);

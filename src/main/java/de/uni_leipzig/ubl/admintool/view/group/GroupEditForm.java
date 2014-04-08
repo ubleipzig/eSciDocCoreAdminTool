@@ -873,6 +873,8 @@ public class GroupEditForm extends CustomComponent implements ClickListener {
 						try {
 	                		final UserGroup deletedUserGroup = deleteGroup();
 	                		((GroupView) getParent().getParent()).remove(deletedUserGroup);
+	                		final UserAccount currentUser = userService.getCurrentUser();
+	                		LOG.info("User Group »" + deletedUserGroup.getProperties().getName() + "« deleted by " + currentUser.getProperties().getName());
 	                		showMessage("User Group »" + deletedUserGroup.getProperties().getName() + "« is deleted.");
 						}
 						catch (final InternalClientException e) {
