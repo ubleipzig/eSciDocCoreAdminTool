@@ -55,7 +55,7 @@ public class AdminDescriptorEditView extends AdminDescriptorView {
             final String adminDescriptorContent = (String) adminDescContent.getValue();
             if (validate(adminDescriptorContent)) {
                 getTabTitle().setCaption((String) adminDescNameField.getValue());
-                adminDescriptorAccordion.replaceComponent(adminDescriptorAccordion.getSelectedTab(), new Label(content,
+                adminDescriptorAccordion.replaceComponent(adminDescriptorAccordion.getSelectedTab(), new Label(adminDescriptorContent,
                     Label.CONTENT_PREFORMATTED));
                 closeWindow();
             }
