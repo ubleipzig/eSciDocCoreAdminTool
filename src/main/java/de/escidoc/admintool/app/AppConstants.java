@@ -39,7 +39,6 @@ public class AppConstants {
 
     public static final String REINDEER_MODS_THEME = "reindeermods";
 
-//    public static final String ESCIDOC_THEME = "escidoc";
     public static final String ESCIDOC_THEME = "dots";
 
     public static final String ESCIDOC_METADATA_TERMS_NS = "http://purl.org/escidoc/metadata/terms/0.1/";
@@ -78,7 +77,7 @@ public class AppConstants {
 
     public static final String SMALL_BUTTON = "small";
 
-    public static final String ESCIDOC_LOGO = "images/dots-logo-final-single_researcher_small.png";
+    public static final String ESCIDOC_LOGO = "images/SchriftLogo.jpg";
 
     public static final String ESCIDOC_URL = "escidocurl";
 
