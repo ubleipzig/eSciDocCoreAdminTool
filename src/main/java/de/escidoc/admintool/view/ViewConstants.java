@@ -25,6 +25,21 @@
  * fuer wissenschaftlich-technische Information mbH and Max-Planck-
  * Gesellschaft zur Foerderung der Wissenschaft e.V.
  * All rights reserved.  Use is subject to license terms.
+ * 
+ * Copyright 2015 Leipzig University Library
+ * 
+ * This code is the result of the project
+ * "Die Bibliothek der Milliarden Woerter". This project is funded by
+ * the European Social Fund. "Die Bibliothek der Milliarden Woerter" is
+ * a cooperation project between the Leipzig University Library, the
+ * Natural Language Processing Group at the Institute of Computer
+ * Science at Leipzig University, and the Image and Signal Processing
+ * Group at the Institute of Computer Science at Leipzig University.
+ * 
+ * All rights reserved.  Use is subject to license terms.
+ * 
+ * @author Uwe Kretschmer <u.kretschmer@denk-selbst.de>
+ * 
  */
 package de.escidoc.admintool.view;
 
